@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>类加载子系统 |  Healer</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-类加载子系统"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+	
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  类加载子系统
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/07/07/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%AD%90%E7%B3%BB%E7%BB%9F/" class="article-date">
+  <time datetime="2022-07-07T13:23:15.000Z" itemprop="datePublished">2022-07-07</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/JVM/">JVM</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">3.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">13 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="内存结构概述"><a href="#内存结构概述" class="headerlink" title="内存结构概述"></a>内存结构概述</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/05e32da21f7e001e26951a21a6393db5.png" alt="内存结构图"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/94f3ef5322aa4dd32f2478f49c98a7af.png" alt="内存结构详图"></p>
+<p>假设我们想自己手写一个Java虚拟机的话，必须考虑哪些结构？</p>
+<ul>
+<li>类加载器</li>
+<li>执行引擎</li>
+</ul>
+<h1 id="类加载子系统"><a href="#类加载子系统" class="headerlink" title="类加载子系统"></a>类加载子系统</h1><h2 id="类加载子系统作用"><a href="#类加载子系统作用" class="headerlink" title="类加载子系统作用"></a>类加载子系统作用</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/Snipaste_2022-07-07_15-46-46.png" alt="类加载子系统"></p>
+<ul>
+<li><p><strong>类加载器子系统负责从文件系统或者网络中加载Class文件</strong>，class文件在文件开头有特定的文件标识。</p>
+</li>
+<li><p>ClassLoader<strong>只负责class文件的加载</strong>，至于它是否可以运行，则由Execution Engine决定。</p>
+</li>
+<li><p><strong>加载的类信息存放于一块称为方法区的内存空间</strong>。除了类的信息外，方法区中还会存放运行时常量池信息，可能还包括字符串字面量</p>
+<p>和数字常量（这部分常量信息是Class文件中常量池部分的内存映射）</p>
+</li>
+</ul>
+<h2 id="类加载器ClassLoader角色"><a href="#类加载器ClassLoader角色" class="headerlink" title="类加载器ClassLoader角色"></a>类加载器ClassLoader角色</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/Snipaste_2022-07-07_15-48-00.png" alt="类加载实例"></p>
+<ul>
+<li><p>class file存在于本地硬盘上，可以理解为设计师画在纸上的模板，而最终这个模板在执行的时候是要加载到JVM当中来根据这个文件</p>
+<p>实例化出n个一模一样的实例。</p>
+</li>
+<li><p>class file加载到JVM中，被称为<strong>DNA元数据模板</strong>，放在方法区。</p>
+</li>
+<li><p>在.class文件 –&gt; JVM –&gt; 最终成为元数据模板，此过程就要一个运输工具（类装载器Class Loader），扮演一个<strong>快递员</strong>的角色。</p>
+</li>
+</ul>
+<h2 id="类的加载过程"><a href="#类的加载过程" class="headerlink" title="类的加载过程"></a>类的加载过程</h2><ul>
+<li><p><strong>加载 –&gt; 链接（验证 –&gt; 准备 –&gt; 解析） –&gt; 初始化</strong></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/Snipaste_2022-07-07_15-51-15.png" alt="类的加载过程"></p>
+</li>
+</ul>
+<h3 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h3><ol>
+<li>通过一个类的全限定名获取定义此类的二进制字节流</li>
+<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构</li>
+<li><strong>在内存中生成一个代表这个类的java.lang.Class对象</strong>，作为方法区这个类的各种数据的访问入口</li>
+</ol>
+<h4 id="加载-class文件的方式"><a href="#加载-class文件的方式" class="headerlink" title="加载.class文件的方式"></a>加载.class文件的方式</h4><ul>
+<li><p>从本地系统中直接加载</p>
+</li>
+<li><p>通过网络获取，典型场景：Web Applet</p>
+</li>
+<li><p>从zip压缩包中读取，成为日后jar、war格式的基础</p>
+</li>
+<li><p>运行时计算生成，使用最多的是：动态代理技术</p>
+</li>
+<li><p>由其他文件生成，典型场景：JSP应用从专有数据库中提取.class文件，比较少见</p>
+</li>
+<li><p>从加密文件中获取，典型的防Class文件被反编译的保护措施</p>
+</li>
+</ul>
+<h3 id="链接-Linking"><a href="#链接-Linking" class="headerlink" title="链接(Linking)"></a>链接(Linking)</h3><ul>
+<li>链接分为三个子阶段：<strong>验证 –&gt; 准备 –&gt; 解析</strong></li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/Snipaste_2022-07-07_15-54-50.png" alt="链接阶段"></p>
+<h3 id="初始化-Initialization"><a href="#初始化-Initialization" class="headerlink" title="初始化(Initialization)"></a>初始化(Initialization)</h3><ul>
+<li><p>初始化阶段就是执行类构造器方法<clinit>()的过程</p>
+</li>
+<li><p>此方法不需定义，是javac<strong>编译器自动收集类中的所有类变量的赋值动作和静态代码块中的语句合并而来</strong>。也就是说，当我们代码中包</p>
+</li>
+<li><p>含static变量的时候，就会有<clinit>( )方法；如果当前类不存在static变量，那么它的字节码文件是不会存在<clinit>( )</p>
+<p><clinit>()方法中的指令按语句在源文件中出现的顺序执行</p>
+</li>
+<li><p><clinit>()不同于类的构造器。（关联：构造器是虚拟机视角下的<init>()）</p>
+</li>
+<li><p>若该类具有父类，JVM会保证子类的<clinit>()执行前，父类的<clinit>()已经执行完毕</p>
+</li>
+<li><p>虚拟机必须保证一个类的<clinit>()方法在多线程下被同步加锁</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ClassInitTest</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">num</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        num = <span class="number">3</span>;</span><br><span class="line">        number = <span class="number">20</span>;</span><br><span class="line">        System.out.println(num);</span><br><span class="line">        <span class="comment">//System.out.println(number);    //报错：非法的前向引用（可以赋值，但不能调用）</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//linking之prepare：number = 0 --&gt; initial:20 --&gt; 10</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">number</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(ClassInitTest.num); <span class="comment">//3</span></span><br><span class="line">        System.out.println(ClassInitTest.number); <span class="comment">//10</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//静态变量 number 的值变化过程如下</span></span><br><span class="line"><span class="comment">//1.准备阶段时：默认初始化 0</span></span><br><span class="line"><span class="comment">//2.执行静态代码块：20</span></span><br><span class="line"><span class="comment">//3.执行静态变量初始化：10</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="类加载器的分类"><a href="#类加载器的分类" class="headerlink" title="类加载器的分类"></a>类加载器的分类</h1><ul>
+<li><p>JVM支持两种类型的类加载器 。分别为<strong>引导类加载器（Bootstrap ClassLoader）和自定义类加载器（User-Defined ClassLoader)</strong></p>
+</li>
+<li><p>从概念上来讲，自定义类加载器一般指的是程序中由开发人员自定义的一类类加载器，但是Java虚拟机规范却没有这么定义，而是将</p>
+<p><strong>所有派生于抽象类ClassLoader的类加载器都划分为自定义类加载器</strong></p>
+</li>
+<li><p>无论类加载器的类型如何划分，在程序中我们最常见的类加载器始终只有3个，如下所示</p>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/9d1ee398a719d8c95024a6311be0d4d6.png" alt="类加载器的类型"></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzI3MTcwODM3NTM4LnBuZw?x-oss-process=image/format.png" alt="ExtClassLoader继承树"></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2hleWdvLm9zcy1jbi1zaGFuZ2hhaS5hbGl5dW5jcy5jb20vaW1hZ2VzL2ltYWdlLTIwMjAwNzI3MTcwOTE4MDM3LnBuZw?x-oss-process=image/format.png" alt="AppClassLoader继承树"></p>
+<h2 id="虚拟机自带的加载器"><a href="#虚拟机自带的加载器" class="headerlink" title="虚拟机自带的加载器"></a>虚拟机自带的加载器</h2><h3 id="启动类加载器-引导类加载器，Bootstrap-ClassLoader"><a href="#启动类加载器-引导类加载器，Bootstrap-ClassLoader" class="headerlink" title="启动类加载器(引导类加载器，Bootstrap ClassLoader)"></a>启动类加载器(引导类加载器，Bootstrap ClassLoader)</h3><ul>
+<li><p>这个类加载使用<strong>C&#x2F;C++语言</strong>实现的，嵌套在JVM内部</p>
+</li>
+<li><p>它用来<strong>加载Java的核心库（JAVA_HOME &#x2F; jre &#x2F; lib &#x2F; rt.jar、resources.jar 或 sun.boot.class.path 路径下的内容）</strong>，用于提</p>
+<p>供JVM自身需要的类</p>
+</li>
+<li><p><strong>并不继承自java.lang.ClassLoader，没有父加载器</strong></p>
+</li>
+<li><p><strong>加载扩展类和应用程序类加载器</strong>，并作为他们的父类加载器（当他俩的爹）</p>
+</li>
+<li><p>出于安全考虑，Bootstrap启动类加载器只加载包名为<strong>java、javax、sun</strong>等开头的类</p>
+</li>
+</ul>
+<h3 id="扩展类加载器（Extension-ClassLoader）"><a href="#扩展类加载器（Extension-ClassLoader）" class="headerlink" title="扩展类加载器（Extension ClassLoader）"></a>扩展类加载器（Extension ClassLoader）</h3><ul>
+<li><p><strong>Java语言编写</strong>，由<strong>sun.misc.Launcher$ExtClassLoader</strong>实现</p>
+</li>
+<li><p><strong>派生于ClassLoader类</strong></p>
+</li>
+<li><p><strong>父类加载器为启动类加载器</strong></p>
+</li>
+<li><p>从java.ext.dirs系统属性所指定的目录中加载类库，或从JDK的安装目录的 <strong>jre &#x2F; lib &#x2F; ext子目录（扩展目录）</strong>下加载类库。<strong>如果用户</strong></p>
+<p><strong>创建的 JAR 放在此目录下，也会自动由扩展类加载器加载</strong></p>
+</li>
+</ul>
+<h3 id="应用程序类加载器（系统类加载器，AppClassLoader）"><a href="#应用程序类加载器（系统类加载器，AppClassLoader）" class="headerlink" title="应用程序类加载器（系统类加载器，AppClassLoader）"></a>应用程序类加载器（系统类加载器，AppClassLoader）</h3><ul>
+<li><strong>Java语言编写</strong>，由<strong>sun.misc.LaunchersAppClassLoader</strong>实现</li>
+<li><strong>派生于ClassLoader类</strong></li>
+<li><strong>父类加载器为扩展类加载器</strong></li>
+<li>它负责加载<strong>环境变量 classpath 或 系统属性java.class.path指定路径下的类库</strong></li>
+<li><strong>该类加载是程序中默认的类加载器</strong>，一般来说，Java应用的类都是由它来完成加载的</li>
+<li>通过<strong>classLoader.getSystemclassLoader( )方法</strong>可以获取到该类加载器</li>
+</ul>
+<h2 id="用户自定义类加载器"><a href="#用户自定义类加载器" class="headerlink" title="用户自定义类加载器"></a>用户自定义类加载器</h2><p>在Java的日常应用程序开发中，类的加载几乎是由上述3种类加载器相互配合执行的，在必要时，我们还可以自定义类加载器，来定制类</p>
+<p>的加载方式。</p>
+<ul>
+<li><p>为什么需要自定义类加载器？</p>
+<ol>
+<li><p>隔离加载类</p>
+<p>在某个应用中需要使用中间件，这个中间件有自己的依赖的jar包，在同一个工程里面，如果引用多个框架的话，有可能会出现某</p>
+<p>些类的路径一样、类名也相同，这样就会出现类的冲突了，这个时候就需要做一个类的仲裁，像现在主流的容器类的框架一样，</p>
+<p>它们都会自定义类的加载器，实现不同的中间件隔离，避免类的冲突</p>
+</li>
+<li><p>修改类加载的方式</p>
+<p>在整个类的加载过程中，bootstrap引导类加载器是一定被使用的，用来加载系统需要的核心API，除了bootstrap引导类加载器</p>
+<p>之外，其他的类加载器也不是必须的，我们可以根据实际情况中修改类的加载方式，具体要用的时候我们再引用</p>
+</li>
+<li><p>扩展加载源</p>
+<p>加载的类除了可以在网络、本地物理磁盘、jar包去加载之外，我们还可以考虑通过数据库、电视机的机顶盒等等来扩展加载源</p>
+</li>
+<li><p>防止源码泄露</p>
+<p>当有了字节码文件或者没有反编译的手段，java代码是很容易被编译和篡改，所以，为了防止编译和篡改，我们可以对字节码文</p>
+<p>件进行加密，当我们需要运行这个字节码文件时候，我们需要解密来还原成内存中的类，而这个解密的操作，就需要自定义类的</p>
+<p>加载器来实现</p>
+</li>
+</ol>
+</li>
+<li><p>如何自定义类加载器？</p>
+<ul>
+<li><p>开发人员可以通过<strong>继承抽象类java.lang.ClassLoader类</strong>的方式，实现自己的类加载器，以满足一些特殊的需求</p>
+</li>
+<li><p>在<strong>JDK1.2之前</strong>，在自定义类加载器时，总会去继承ClassLoader类并<strong>重写loadClass( )方法</strong>，从而实现自定义的类加载类，但是在</p>
+<p><strong>JDK1.2之后</strong>已不再建议用户去覆盖loadClass( )方法，而是建议把自定义的类加载逻辑写在<strong>findclass( )方法</strong>中</p>
+</li>
+<li><p>在编写自定义类加载器时，如果没有太过于复杂的需求，可以<strong>直接继承URIClassLoader类</strong>，这样就可以避免自己去编写</p>
+<p>findclass( )方法及其获取字节码流的方式，使自定义类加载器编写更加简洁。</p>
+</li>
+<li><p>代码举例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomClassLoader</span> <span class="keyword">extends</span> <span class="title class_">ClassLoader</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;    </span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">byte</span>[] result = getClassFromCustomPath(name);</span><br><span class="line">            <span class="keyword">if</span> (result == <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">FileNotFoundException</span>();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> defineClass(name, result, <span class="number">0</span>, result.length);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ClassNotFoundException</span>(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">byte</span>[] getClassFromCustomPath(String name) &#123;</span><br><span class="line">        <span class="comment">//从自定义路径中加载指定类:细节略</span></span><br><span class="line">        <span class="comment">//如果指定路径的字节码文件进行了加密，则需要在此方法中进行解密操作。</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">CustomClassLoader</span> <span class="variable">customClassLoader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CustomClassLoader</span>();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Class&lt;?&gt; clazz = Class.forName(<span class="string">&quot;One&quot;</span>, <span class="literal">true</span>, customClassLoader);</span><br><span class="line">            <span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> clazz.newInstance();</span><br><span class="line">            System.out.println(obj.getClass().getClassLoader());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="ClassLoader"><a href="#ClassLoader" class="headerlink" title="ClassLoader"></a>ClassLoader</h2><ul>
+<li>ClassLoader类，它是一个<code>抽象类</code>，其后所有的类加载器都继承自ClassLoader（<code>不包括启动类加载器</code>）</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>方法名称</strong></th>
+<th align="center"><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">getParent( )</td>
+<td align="center">返回该类加载器的超类加载器</td>
+</tr>
+<tr>
+<td align="center">loadClass(String name)</td>
+<td align="center">加载名称为name的类，返回结果为java.lang.Class类的实例</td>
+</tr>
+<tr>
+<td align="center">findClass(String name)</td>
+<td align="center">查找名称为name的类，返回结果为java.lang.Class类的实例</td>
+</tr>
+<tr>
+<td align="center">findLoadedClass(String name)</td>
+<td align="center">查找名称为name的已经被加载过的类，返回结果为java.lang.Class类的实例</td>
+</tr>
+<tr>
+<td align="center">defineClass(String name,byte[ ] b,int len)</td>
+<td align="center">把字节数组b中的内容转换为一个Java类，返回结果为java.lang.Class类的实例</td>
+</tr>
+<tr>
+<td align="center">resolveClass(Class&lt;?&gt; c)</td>
+<td align="center">连接指定的一个Java类</td>
+</tr>
+</tbody></table>
+<ul>
+<li>sun.misc.Launcher 它是一个java虚拟机的入口应用</li>
+</ul>
+<h3 id="获取-ClassLoader-的途径"><a href="#获取-ClassLoader-的途径" class="headerlink" title="获取 ClassLoader 的途径"></a>获取 ClassLoader 的途径</h3><ul>
+<li><p>方式一:<strong>获取当前类的ClassLoader</strong></p>
+<p><code>clazz.getClassLoader()</code></p>
+</li>
+<li><p>方式二:<strong>获取当前线程上下文的ClassLoader</strong></p>
+<p><code>Thread.currentThread().getContextClassLoader()</code></p>
+</li>
+<li><p>方式三:<strong>获取系统的ClassLoader</strong></p>
+<p><code>ClassLoader.getSystemClassLoader()</code></p>
+</li>
+<li><p>方式四:<strong>获取调用者的ClassLoader</strong></p>
+<p><code>DriverManager.getCallerClassLoader()</code></p>
+</li>
+</ul>
+<h1 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><ul>
+<li><p>Java虚拟机对 class 文件采用的是<strong>按需加载</strong>的方式，也就是说当需要使用该类时才会将它的 class 文件加载到内存中生成 class 对象。</p>
+<p>而且加载某个类的class文件时，Java虚拟机采用的是<strong>双亲委派模式</strong>，即把请求交由父类处理，它是一种任务委派模式</p>
+</li>
+<li><p>工作原理</p>
+<ol>
+<li><p>如果一个类加载器收到了类加载请求，它并不会自己先去加载，而是把这个请求委托给父类的加载器去执行</p>
+</li>
+<li><p>如果父类加载器还存在其父类加载器，则进一步向上委托，依次递归，请求最终将到达顶层的启动类加载器</p>
+</li>
+<li><p>如果父类加载器可以完成类加载任务，就成功返回，倘若父类加载器无法完成此加载任务，子加载器才会尝试自己去加载，这就</p>
+<p>是双亲委派模式</p>
+</li>
+<li><p>父类加载器一层一层往下分配任务，如果子类加载器能加载，则加载此类，如果将加载任务分配至系统类加载器也无法加载此</p>
+<p>类，则抛出异常</p>
+</li>
+</ol>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/Snipaste_2022-07-07_19-53-32.png" alt="双亲委派机制工作原理"></p>
+<ul>
+<li><p>SPI接口是由引导类加载器加载的，接口具体的实现类是由线程上下文类加载器加载的，而线程上下文类加载器就是系统类加载器，</p>
+<p>所以我们在加载的时候，会先进行双亲委派，在引导类加载器加载SPI核心类，然后加载SPI接口，最后在反向委托，通过系统类加载</p>
+<p>器进行实现类 jdbc.jar 的加载</p>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/Snipaste_2022-07-07_19-59-19.png" alt="双亲委派实例"></p>
+<h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><ul>
+<li><p>避免类的重复加载</p>
+</li>
+<li><p>保护程序安全，防止核心API被随意篡改</p>
+<ul>
+<li><p>自定义类：java.lang.String 没有调用</p>
+</li>
+<li><p>自定义类：java.lang.ShkStart（报错：阻止创建 java.lang开头的类）</p>
+<p>异常：<code>java.lang.SecurityException: Prohibited package name: java.lang</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="沙箱安全机制"><a href="#沙箱安全机制" class="headerlink" title="沙箱安全机制"></a>沙箱安全机制</h1><ul>
+<li><p>自定义String类时：在加载自定义String类的时候会率先使用引导类加载器加载，而引导类加载器在加载的过程中会先加载jdk自带的</p>
+<p>文件（rt.jar包中java.lang.String.class），报错信息说没有main方法，就是因为加载的是rt.jar包中的String类。这样可以保证对java</p>
+<p>核心源代码的保护，这就是沙箱安全机制。</p>
+</li>
+</ul>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><ul>
+<li><p>如何判断两个class对象是否相同？</p>
+<ul>
+<li>在JVM中表示两个class对象是否为同一个类存在两个必要条件：<ol>
+<li>类的完整类名必须一致，包括<code>包名</code></li>
+<li>加载这个类的 ClassLoader（指ClassLoader实例对象）必须相同</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>对类加载器的引用</p>
+<ul>
+<li>JVM必须知道一个类型是由<strong>启动加载器加载的还是由用户类加载器加载的</strong></li>
+<li>如果一个类型是由用户类加载器加载的，那么<strong>JVM会将这个类加载器的一个引用作为类型信息的一部分保存在方法区中</strong></li>
+<li>当解析一个类型到另一个类型的引用的时候，JVM需要保证这两个类型的类加载器是相同的</li>
+</ul>
+</li>
+<li><p>类的<strong>主动使用和被动使用</strong></p>
+<ul>
+<li><p>主动使用，分为七种情况：</p>
+<ol>
+<li><p>创建类的实例</p>
+</li>
+<li><p>访问某个类或接口的静态变量，或者对该静态变量赋值</p>
+</li>
+<li><p>调用类的静态方法</p>
+</li>
+<li><p>反射（ 比如：Class.forName(“cn.sxt.Test”) )</p>
+</li>
+<li><p>初始化一个类的子类</p>
+</li>
+<li><p>Java虚拟机启动时被标明为启动类的类</p>
+</li>
+<li><p>JDK7开始提供的动态语言支持：java.lang.invoke.MethodHandle实例的解析结果REF_getStatic、REF putStatic、</p>
+<p>REF_invokeStatic句柄对应的类没有初始化，则初始化</p>
+</li>
+</ol>
+</li>
+<li><p>除了以上七种情况，其他使用Java类的方式都被看作是对类的被动使用，都不会导致类的初始化，即<strong>不会执行初始化阶段</strong>（<strong>不会</strong></p>
+<p><strong>调用 clinit( ) 方法和 init( ) 方法</strong>）</p>
+</li>
+</ul>
+</li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/07/07/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%AD%90%E7%B3%BB%E7%BB%9F/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2022/07/07/%E5%9F%BA%E4%BA%8E%E7%89%B9%E5%BE%81%E6%B7%B7%E5%90%88%E7%9A%84%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Active Learning by Feature Mixing</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2022
+        <i class="ri-heart-fill heart_icon"></i> Shiyu Yang
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Healer"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>
