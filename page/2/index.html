@@ -149,6 +149,81 @@
     
     
     <article
+  id="post-任务感知变分对抗性主动学习"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+	
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/07/08/%E4%BB%BB%E5%8A%A1%E6%84%9F%E7%9F%A5%E5%8F%98%E5%88%86%E5%AF%B9%E6%8A%97%E6%80%A7%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0/"
+    >Task-Aware Variational Adversarial Active Learning</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/07/08/%E4%BB%BB%E5%8A%A1%E6%84%9F%E7%9F%A5%E5%8F%98%E5%88%86%E5%AF%B9%E6%8A%97%E6%80%A7%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0/" class="article-date">
+  <time datetime="2022-07-08T01:20:17.000Z" itemprop="datePublished">2022-07-08</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0/">深度主动学习</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="任务感知变分对抗性主动学习（CVPR2021）"><a href="#任务感知变分对抗性主动学习（CVPR2021）" class="headerlink" title="任务感知变分对抗性主动学习（CVPR2021）"></a>任务感知变分对抗性主动学习（CVPR2021）</h1><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
+<li><p>最近对人工智能的两个有前景的研究方向</p>
+<ol>
+<li>task-agnostic approach to select data points that are far from the current labeled pool</li>
+<li>task-aware approach that relies on the perspective of task model.</li>
+</ol>
+</li>
+<li><p>前者没有利用任务相关的知识，而后者似乎没有得到很好的利用总体数据分布</p>
+</li>
+<li><p>提出了任务感知的 Task-Aware Variational Adversarial Active Learning（TA-VAAL），是任务不可知性的初代VAAL的改进，考虑了标签和未标记池，把学习任务损失松弛化，转化为用Rank Conditional GAN预测对任务损失的排序。</p>
+</li>
+<li><p>将主动学习先前工作中任务模型输出引导型的《Learning Loss for Active Learning》和数据引导型的《Variational Adversarial Active Learning》有效结合，提出了一种结合数据特征和任务学习效果驱动的一种可行的思路</p>
+</li>
+</ul>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li>主动学习基于池的选择策略，即是在所有未标注数据集中选择一批最有价值的送去专家标注，新增加到已标注集合中，然后再在所有已标注数据集上训练下游任务模型（分类、分割等等）。</li>
+<li>本文主要将近年来深度主动学习的方法分成了task-aware（任务可知）和task-agnostic（任务不可知）两种，两者的区别在于选择待标注样本时是否用到了任务的引导，如果使用了下游任务引导则时任务可知的，否则为任务不可知。</li>
+<li>本文的动机是采用一种综合两种方式的主动学习算法，可以同时利用任务不可知方法把握标注和未标注数据的分布差异，同时兼容任务可知方法能够结合学习任务的目标引导，来选择待标注样本。</li>
+<li>提出将损失预测模块的目标从准确的损失预测放宽为损失排名预测，仍然与任务直接相关。这种放松导致改变学习预测模块的损失，以去除排名的边缘，并增加排名损失。</li>
+<li>提出任务感知型变分对抗主动学习(TA-VAAL)，通过排序条件生成对抗网络(RankCGAN)，将任何给定任务学习者(有或没有潜在空间)的归一化排名损失信息嵌入到VAAL的潜在空间上，重塑其潜在空间。这种方法比原来的学习损失方法具有更强的鲁棒性，特别是在早期阶段。通过将这两种算法与我们的嵌入策略相结合，我们的方法提供了识别困难和有影响的数据点的能力</li>
+</ul>
+<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/Network.png" alt="TA-VAAL示意图"></p>
+<h2 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220708094423566.png" alt="TA-VAAL伪代码"></p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220708094511578.png" alt="TA-VAAL实验结果图"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-类加载子系统"
   class="article article-type-post"
   itemscope
@@ -1143,7 +1218,7 @@
 
     
     <article
-  id="post-spring"
+  id="post-Spring"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -1155,8 +1230,8 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2022/06/28/spring/"
-    >spring</a> 
+  <a class="article-title" href="/2022/06/28/Spring/"
+    >Spring</a> 
 </h2>
  
 
@@ -1164,7 +1239,7 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2022/06/28/spring/" class="article-date">
+      <a href="/2022/06/28/Spring/" class="article-date">
   <time datetime="2022-06-28T06:42:51.000Z" itemprop="datePublished">2022-06-28</time>
 </a> 
   <div class="article-category">
