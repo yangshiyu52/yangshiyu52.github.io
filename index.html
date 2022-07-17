@@ -1222,6 +1222,100 @@
 
     
     <article
+  id="post-约瑟夫环"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+	
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/07/16/%E7%BA%A6%E7%91%9F%E5%A4%AB%E7%8E%AF/"
+    >(单向环形链表)约瑟夫环</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/07/16/%E7%BA%A6%E7%91%9F%E5%A4%AB%E7%8E%AF/" class="article-date">
+  <time datetime="2022-07-16T13:31:05.000Z" itemprop="datePublished">2022-07-16</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a> / <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E9%93%BE%E8%A1%A8/">链表</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="应用实例"><a href="#应用实例" class="headerlink" title="应用实例"></a>应用实例</h1><ul>
+<li>Joseph(约瑟夫、约瑟夫环)问题<ul>
+<li>设编号为1，2，… n的n个人围坐一圈，约定编号为k (&lt;&#x3D;k&lt;&#x3D;n)的人从1开始报数，数到m 的那个人出列,它的下一位又从1开始报数，数到m的那个人又出列，依次类推，直到所有人出列为止，由此产生一个出队编号的序列。</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220716213807128.png" alt="image-20220716213807128"></p>
+<ul>
+<li><p>提示</p>
+<ul>
+<li>用一个不带头结点的循环链表来处理Josephu问题:先构成一个有n个结点的单循环链表，然后由k结点起从1开始计数，计到m时，对应结点从链表中删除，然后再从被删除结点的下一个结点又从1开始计数，直到最后一个结点从链表中删除算法结束。</li>
+</ul>
+</li>
+<li><p>Joseph问题–&gt;创建单向环形链表思路</p>
+<ul>
+<li><p>构建一个单向的环形链表思路</p>
+<ol>
+<li>先创建第一个节点,让 first 指向该节点,并形成环形</li>
+<li>后面当我们每创建一个新的节点，就把该节点，加入到已有的环形链表中即可</li>
+</ol>
+</li>
+<li><p>遍历环形链表</p>
+<ol>
+<li>先让一个辅助指针(变量)curBoy，指向first节点</li>
+<li>然后通过一个while循环遍历该环形链表即可 <strong>curBoy.next &#x3D;&#x3D; first</strong> 结束</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>Joseph问题–&gt;小孩出圈思路</p>
+<ul>
+<li>根据用户的输入，生成一个小孩出圈的顺序：n &#x3D; 5 ,即有5个人；k &#x3D; 1,从第一个人开始报数；m &#x3D; 2,数2下<ol>
+<li>需求创建一个<strong>辅助指针(变量) helper ,事先应该指向环形链表的最后这个节点</strong>.<br>补充:小孩报数前，先让first和 helper移动k-1次</li>
+<li>当小孩报数时，让first和helper指针同时的移动 <strong>m -1</strong>次</li>
+<li>这时就可以将first指向的小孩节点出圈<br><strong>first &#x3D; first.next</strong><br><strong>helper.next &#x3D;first</strong><br>原来first指向的节点就没有任何引用，就会被回收</li>
+<li>出圈的顺序<br>2-&gt;4-&gt;1-&gt;5-&gt;3</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ysy.linkedlist;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Joseph</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//测试构建环形链表，并遍历</span></span><br><span class="line">        <span class="type">CircleSingleLinkedList</span> <span class="variable">circleSingleLinkedList</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CircleSingleLinkedList</span>();</span><br><span class="line">        circleSingleLinkedList.addBoy(<span class="number">5</span>);</span><br><span class="line">        circleSingleLinkedList.showBoy();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//测试小孩出圈</span></span><br><span class="line">        circleSingleLinkedList.countBoy(<span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建一个环形的单向链表</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CircleSingleLinkedList</span>&#123;</span><br><span class="line">    <span class="comment">//创建一个first节点，当前没有编号</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">Boy</span> <span class="variable">first</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Boy</span>(-<span class="number">1</span>);</span><br><span class="line">    <span class="comment">//添加小孩节点，构成一个环形的单向链表</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addBoy</span><span class="params">(<span class="type">int</span> nums)</span>&#123;</span><br><span class="line">        <span class="comment">//nums做一个校验</span></span><br><span class="line">        <span class="keyword">if</span>(nums &lt; <span class="number">1</span>)&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;nums值不正确&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">Boy</span> <span class="variable">curBoy</span> <span class="operator">=</span> <span class="literal">null</span>;<span class="comment">//辅助指针，帮助构建环形链表</span></span><br><span class="line">        <span class="comment">//使用for循环创建环形链表</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= nums; i++)&#123;</span><br><span class="line">            <span class="comment">//根据编号创建小孩节点</span></span><br><span class="line">            <span class="type">Boy</span> <span class="variable">boy</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Boy</span>(i);</span><br><span class="line">            <span class="comment">//如果i=1</span></span><br><span class="line">            <span class="keyword">if</span>(i == <span class="number">1</span>)&#123;</span><br><span class="line">                first = boy;</span><br><span class="line">                first.setNext(first);<span class="comment">//构成环</span></span><br><span class="line">                curBoy = first;<span class="comment">//让curBoy指向第一个节点</span></span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                curBoy.setNext(boy);</span><br><span class="line">                boy.setNext(first);</span><br><span class="line">                curBoy = boy;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//遍历当前环形链表</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">showBoy</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="comment">//判断链表是否为空</span></span><br><span class="line">        <span class="keyword">if</span>(first == <span class="literal">null</span>)&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;没有任何小孩~&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//first不能动，使用辅助指针</span></span><br><span class="line">        <span class="type">Boy</span> <span class="variable">curBoy</span> <span class="operator">=</span> first;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">            System.out.printf(<span class="string">&quot;小孩的编号%d \n&quot;</span>, curBoy.getNumber());</span><br><span class="line">            <span class="keyword">if</span>(curBoy.getNext() == first)&#123;</span><br><span class="line">                <span class="comment">//遍历完毕</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            curBoy = curBoy.getNext();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//根据用户的输入，计算出小孩的出圈顺序</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> startNumber 表示从第几个小孩开始数数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> countNumber 表示数几下</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> nums 表示小孩个数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">countBoy</span><span class="params">(<span class="type">int</span> startNumber, <span class="type">int</span> countNumber, <span class="type">int</span> nums)</span>&#123;</span><br><span class="line">        <span class="comment">//先对数据校验</span></span><br><span class="line">        <span class="keyword">if</span>(first == <span class="literal">null</span> || startNumber &lt; <span class="number">1</span> || startNumber &gt; nums)&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;参数输入有误，请重新输入~&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//辅助指针first，帮助小孩出圈</span></span><br><span class="line">        <span class="type">Boy</span> <span class="variable">helper</span> <span class="operator">=</span> first;</span><br><span class="line">        <span class="comment">//创建辅助指针helper，事先指向环形链表的最后一个节点</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(helper.getNext() == first)&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            helper = helper.getNext();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//小孩报数前，先让first和 helper移动k-1次</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span><span class="number">0</span>; j &lt; startNumber - <span class="number">1</span>; j++)&#123;</span><br><span class="line">            first = first.getNext();</span><br><span class="line">            helper = helper.getNext();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//当小孩报数时，让first和helper指针同时的移动 m-1 次，然后出圈</span></span><br><span class="line">        <span class="comment">//循环操作，直到圈中只有一个小孩</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span>(helper == first)&#123;</span><br><span class="line">                <span class="comment">//只有一个小孩</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//让first和helper指针同时的移动 countNumber-1 次</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; countNumber - <span class="number">1</span>; j++)&#123;</span><br><span class="line">                first = first.getNext();</span><br><span class="line">                helper = helper.getNext();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//这时first指向的节点就是要出圈的小孩</span></span><br><span class="line">            System.out.printf(<span class="string">&quot;小孩%d出圈 \n&quot;</span>, first.getNumber());</span><br><span class="line">            <span class="comment">//小孩出圈</span></span><br><span class="line">            first = first.getNext();</span><br><span class="line">            helper.setNext(first);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.printf(<span class="string">&quot;最后留在圈中的小孩编号为%d \n&quot;</span>, first.getNumber());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建一个Boy类，表示一个节点</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Boy</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> number;<span class="comment">//编号</span></span><br><span class="line">    <span class="keyword">private</span> Boy next;<span class="comment">//指向下一个节点</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Boy</span><span class="params">(<span class="type">int</span> number)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.number = number;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getNumber</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> number;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setNumber</span><span class="params">(<span class="type">int</span> number)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.number = number;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Boy <span class="title function_">getNext</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setNext</span><span class="params">(Boy next)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.next = next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-堆"
   class="article article-type-post"
   itemscope
@@ -3260,106 +3354,6 @@
 </ul>
 <p><code>并行(多个线程同时执行) 一定是并发，并不一定意味着并发一定要求是并行（包含关系）</code></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20200118140353442.png" alt="并发和并行"></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-运行时数据区概述及线程"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-	
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2022/07/08/%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E6%A6%82%E8%BF%B0%E5%8F%8A%E7%BA%BF%E7%A8%8B/"
-    >运行时数据区概述及线程</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2022/07/08/%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E6%A6%82%E8%BF%B0%E5%8F%8A%E7%BA%BF%E7%A8%8B/" class="article-date">
-  <time datetime="2022-07-08T06:42:42.000Z" itemprop="datePublished">2022-07-08</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/JVM/">JVM</a> / <a class="article-category-link" href="/categories/JVM/1-%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AF%87/">1.内存与垃圾回收篇</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/f6c83bec90974ab2b54c644e05f869d8.png" alt="JVM结构"></p>
-<h1 id="运行时数据区"><a href="#运行时数据区" class="headerlink" title="运行时数据区"></a>运行时数据区</h1><h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><ul>
-<li>内存是非常重要的系统资源，是硬盘和CPU的中间仓库及桥梁，承载着操作系统和应用程序的实时运行。JVM内存布局规定了Java在<strong>运行过程中内存申请、分配、管理的策略</strong>，保证了JVM的高效稳定运行。</li>
-<li><strong>不同的JVM对于内存的划分方式和管理机制存在着部分差异</strong>。结合JVM虚拟机规范，来探讨一下经典的JVM内存布局。</li>
-<li>我们通过磁盘或者网络IO得到的数据，都需要先加载到内存中，然后CPU从内存中获取数据进行读取，也就是说内存充当了CPU和磁盘之间的桥梁</li>
-</ul>
-<h2 id="运行时数据区-1"><a href="#运行时数据区-1" class="headerlink" title="运行时数据区"></a>运行时数据区</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/Snipaste_2022-07-08_14-26-43.png" alt="运行时数据区结构"></p>
-<ul>
-<li>方法区在JVM规范中是一个逻辑概念，由虚拟机自己进行具体实现，<strong>jdk7和以前</strong>的版本使用的是<strong>堆上的永久代实现的方法区</strong>，而在<strong>jdk8及以后</strong>使用的是<strong>元数据区实现方法区</strong></li>
-</ul>
-<h1 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h1><h2 id="线程的内存空间"><a href="#线程的内存空间" class="headerlink" title="线程的内存空间"></a>线程的内存空间</h2><ul>
-<li>Java虚拟机定义了若干种程序运行期间会使用到的运行时数据区，其中有一些会随着虚拟机启动而创建，随着虚拟机的退出而销毁。另外一些则是与线程一一对应的，这些与线程对应的数据区域会随着线程开始和结束而创建和销毁。</li>
-</ul>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220708150614885.png" alt="image-20220708150614885"></p>
-<ul>
-<li><p>灰色的为单独线程私有的，红色的为多个线程共享的。即：</p>
-<ol>
-<li><strong>线程独有</strong>：独立包括程序计数器、栈、本地方法栈</li>
-<li><strong>线程间共享</strong>：堆、堆外内存（永久代或元空间、代码缓存）</li>
-</ol>
-</li>
-<li><p><code>每个JVM只有一个Runtime实例</code>。即为运行时环境，相当于内存结构的中间的那个框框：运行时环境。</p>
-</li>
-</ul>
-<h2 id="JVM线程"><a href="#JVM线程" class="headerlink" title="JVM线程"></a>JVM线程</h2><ul>
-<li><p>线程是一个程序里的运行单元。<strong>JVM允许一个应用有多个线程并行的执行</strong></p>
-</li>
-<li><p><strong>在Hotspot JVM里，每个线程都与操作系统的本地线程直接映射</strong></p>
-<ul>
-<li>当一个Java线程准备好执行以后，此时一个操作系统的本地线程也同时创建。Java线程执行终止后，本地线程也会回收</li>
-</ul>
-</li>
-<li><p>操作系统负责将线程安排调度到任何一个可用的CPU上。<strong>一旦本地线程初始化成功，它就会调用Java线程中的run( )方法</strong></p>
-</li>
-<li><p>如果一个线程抛异常，并且该线程是进程中最后一个守护线程，那么进程将停止</p>
-</li>
-</ul>
-<h2 id="JVM系统线程"><a href="#JVM系统线程" class="headerlink" title="JVM系统线程"></a>JVM系统线程</h2><ul>
-<li>使用 <code>jconsole</code> 或者是任何一个调试工具，都能看到在后台有许多线程在运行。</li>
-<li><code>这些后台线程不包括调用public static void main(String [ ])的main线程</code>以及<code>所有由这个main方法自己创建的线程</code>。</li>
-<li>这些主要的后台系统线程在Hotspot JVM里主要是以下几个：<ul>
-<li><strong>虚拟机线程</strong>：这种线程的操作是需要JVM达到安全点才会出现。这些操作必须在不同的线程中发生的原因是他们都需要JVM达到安全点，这样堆才不会变化。这种线程的执行类型括”stop-the-world”的垃圾收集，线程栈收集，线程挂起以及偏向锁撤销</li>
-<li><strong>周期任务线程</strong>：这种线程是时间周期事件的体现（比如中断），他们一般用于周期性操作的调度执行</li>
-<li><strong>GC线程</strong>：这种线程对在JVM里不同种类的垃圾收集行为提供了支持（重点）</li>
-<li><strong>编译线程</strong>：这种线程在运行时会将字节码编译成 本地代码</li>
-<li><strong>信号调度线程</strong>：这种线程接收信号并发送给JVM，在它内部通过调用适当的方法进行处理</li>
-</ul>
-</li>
-</ul>
  
       <!-- reward -->
       
