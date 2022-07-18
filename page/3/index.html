@@ -149,6 +149,189 @@
     
     
     <article
+  id="post-JVM与Java体系结构"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+	
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/07/01/JVM%E4%B8%8EJava%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"
+    >JVM与Java体系结构</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/07/01/JVM%E4%B8%8EJava%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" class="article-date">
+  <time datetime="2022-07-01T07:12:57.000Z" itemprop="datePublished">2022-07-01</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/JVM/">JVM</a> / <a class="article-category-link" href="/categories/JVM/1-%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AF%87/">1.内存与垃圾回收篇</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Java-VS-C"><a href="#Java-VS-C" class="headerlink" title="Java VS C++"></a>Java VS C++</h1><ul>
+<li>内存动态分配</li>
+<li>垃圾收集技术</li>
+</ul>
+<h1 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h1><ul>
+<li><p>所谓虚拟机(Virtual Machine)，就是一台<strong>虚拟的计算机</strong>。它是一款软件，用来执行一系列虚拟计算机指令。大体上，虚拟机可以分为</p>
+<p><strong>系统虚拟机和程序虚拟机</strong>。</p>
+<p>➢ 大名鼎鼎的Visual Box, VMware就属于系统虚拟机，它们<strong>完全是对物理计算机的仿真</strong>，提供了一个可运行完整操作系统的软件平</p>
+<p>台。<br>➢ 程序虚拟机的典型代表就是Java虚拟机，它<strong>专门为执行单个计算机程序而设计</strong>，在Java虚拟机中执行的指令我们]称为Java字节码指</p>
+<p>令。</p>
+</li>
+<li><p>无论是系统虚拟机还是程序虚拟机，在上面运行的软件都被限制于虛拟机提供的资源中。</p>
+</li>
+</ul>
+<h1 id="Java虚拟机"><a href="#Java虚拟机" class="headerlink" title="Java虚拟机"></a>Java虚拟机</h1><ul>
+<li>Java虚拟机是一台<strong>执行Java字节码的虚拟计算机</strong>，它拥有独立的运行机制，其运行的Java字节码也未必由Java语言编译而成。</li>
+<li>JVM平台的各种语言可以共享Java虛拟机带来的跨平台性、优秀的垃圾回器，以及可靠的即时编译器。</li>
+<li><strong>Java技术的核心就是Java虚拟机</strong>(JVM，Java Virtual Machine) ，因为所有的Java程序都运行在Java虚拟机内部。</li>
+</ul>
+<h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><p><strong>Java虚拟机就是二进制字节码的运行环境</strong>，负责装载字节码到其内部，解释&#x2F;编译为对应平台上的机器指令执行。每一条Java指令，Java虚</p>
+<p>拟机规范中都有详细定义，如怎么取操作数，怎么处理操作数，处理结果放在哪里。</p>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><p>➢ 一次编译，到处运行</p>
+<p>➢ 自动内存管理</p>
+<p>➢ 自动垃圾回收功能</p>
+<h1 id="JVM的位置"><a href="#JVM的位置" class="headerlink" title="JVM的位置"></a>JVM的位置</h1><p>JVM是运行在操作系统上的，它与硬件没有直接的交互。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220701162836820.png" alt="JVM的位置"></p>
+<h2 id="JDK，JRE"><a href="#JDK，JRE" class="headerlink" title="JDK，JRE"></a>JDK，JRE</h2><p>1）JDK 的全称(Java Development Kit Java 开发工具包)</p>
+<pre><code>     **JDK = JRE + java 开发工具集** [java, javac,javadoc,javap,java编译工具等] 
+</code></pre>
+<p>​		JDK 是提供给 Java 开发人员使用的，其中包含了 java 的开发工具，也包括了 JRE。所以安装了 JDK，就不用在单独安装 JRE了</p>
+<p>2）JRE(Java Runtime Environment Java 运行环境)</p>
+<p>​		 <strong>JRE &#x3D; JVM + Java 的核心类库[类]</strong> </p>
+<p>​		包括 Java 虚拟机(JVM Java Virtual Machine)和 Java 程序所需的核心类库等，如果想要运行一个开发好的 Java 程序， 计算机中只需要安装 JRE 即可。</p>
+<h1 id="JVM整体结构"><a href="#JVM整体结构" class="headerlink" title="JVM整体结构"></a>JVM整体结构</h1><ul>
+<li>HotSpot VM是目前市面上高性能虚拟机的代表作之一。</li>
+<li>它采用<strong>解释器与即时编译器并存</strong>的架构。</li>
+<li>在今天，Java程序的运行性能早已脱胎换骨，已经达到了可以和C&#x2F;C+ +程序一较高下的地步</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220701163406875.png" alt="内存图"></p>
+<h1 id="Java代码的执行流程"><a href="#Java代码的执行流程" class="headerlink" title="Java代码的执行流程"></a>Java代码的执行流程</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220701164056894.png" alt="Java代码的执行流程图"></p>
+<p>JIT编译器：热点代码</p>
+<p>Java编译器：基于<strong>栈的指令集</strong>架构</p>
+<p>​						跨平台性、指令集小、指令多；执行性能比寄存器差</p>
+<h1 id="JVM的架构模型"><a href="#JVM的架构模型" class="headerlink" title="JVM的架构模型"></a>JVM的架构模型</h1><p>Java编译器输入的指令流基本上是一种<strong>基于栈的指令集架构</strong>，另外一种指令集架构则是<strong>基于寄存器的指令集架构</strong>。</p>
+<p>两种架构之间的区别:</p>
+<ul>
+<li><p>基于栈式架构的特点**(8位)**</p>
+<p>​	➢ <strong>设计和实现更简单</strong>，适用于<strong>资源受限的系统</strong></p>
+<p>​	➢ 避开了寄存器的分配难题：使用零地址指令方式分配</p>
+<p>​	➢ 指令流中的指令大部分是零地址指令，其执行过程依赖于操作栈。<strong>指令集更小，编译器容易实现</strong>。</p>
+<p>​	➢ 不需要硬件支持，<strong>可移植性更好，</strong>更好实现<strong>跨平台</strong></p>
+</li>
+<li><p>基于寄存器架构的特点**(16位)**</p>
+<p>​	➢ 典型的应用是x86的二进制指令集：比如传统的PC以及Android的Davlik虛拟机</p>
+<p>​	➢ <strong>指令集架构则完全依赖硬件，可移植性差</strong></p>
+<p>​	➢ <strong>性能优秀和执行更高效</strong></p>
+<p>​	➢ 花费更少的指令去完成一项操作</p>
+<p>​	➢ 在大部分情况下，基于寄存器架构的指令集往往都以一地址指令、二地址指令和三地址指令为主，而基于栈式架构的指令集却是</p>
+<p>以零地址指令为主</p>
+</li>
+</ul>
+<p><strong>由于跨平台的设计，Java的指令都是根据栈来设计的</strong></p>
+<h1 id="JVM的生命周期"><a href="#JVM的生命周期" class="headerlink" title="JVM的生命周期"></a>JVM的生命周期</h1><ul>
+<li><p><strong>启动</strong></p>
+<p>通过引导类加载器(bootstrap class loader)创建一个初始类(initial class)来完成的，这个类是由虚拟机的具体实现指定的</p>
+</li>
+<li><p><strong>执行</strong></p>
+<ol>
+<li>一个运行中的Java虚拟机有着一个清晰的任务：执行Java程序</li>
+<li>随着程序的开始而开始，结束而结束</li>
+<li>执行一个Java程序的时候，实际上执行的是一个<strong>Java虚拟机的进程</strong></li>
+</ol>
+</li>
+<li><p><strong>退出</strong></p>
+<ol>
+<li>程序<strong>正常执行结束</strong></li>
+<li>程序在执行过程中遇到了<strong>异常或错误而异常终止</strong></li>
+<li>由于<strong>操作系统出现错误</strong>而导致Java虚拟机进程终止</li>
+<li>某线程调用Runtime类或System类的<strong>exit方法</strong>，或Runtime类的<strong>halt方法</strong>，并且Java安全管理器也允许这次exit或halt操作</li>
+</ol>
+</li>
+</ul>
+<h1 id="JVM发展历程"><a href="#JVM发展历程" class="headerlink" title="JVM发展历程"></a>JVM发展历程</h1><h2 id="Sun-Classic-VM"><a href="#Sun-Classic-VM" class="headerlink" title="Sun Classic VM"></a>Sun Classic VM</h2><ul>
+<li><p>早在1996年Javal.0版本的时候，Sun公司发布了一 款名为Sun ClassicVM的Java虛拟机，它同时也是<strong>世界上第一款商用Java虚拟机</strong>，JDK1. 4时完全被淘汰。</p>
+</li>
+<li><p>这款虚拟机内部<strong>只提供解释器</strong>。</p>
+</li>
+<li><p>如果使用JIT编译器，就需要进行外挂。但是一旦使用了JIT编译器，JIT就会接管虚拟机的执行系统。解释器就不再工作。<strong>解释器和编译器不能配合工作</strong>。</p>
+</li>
+<li><p>现在hotspot内置了此虚拟机。</p>
+</li>
+</ul>
+<h2 id="Exact-VM"><a href="#Exact-VM" class="headerlink" title="Exact VM"></a>Exact VM</h2><ul>
+<li><p>为了解决上一个虚拟机问题，jdk1.2时， sun提供了此虚拟机。</p>
+</li>
+<li><p>Exact Memory Management: <strong>准确式内存管理</strong></p>
+<p>➢ 也可以叫Non-Conservative&#x2F; Accurate Memory Management</p>
+<p>➢ 虚拟机可以知道内存中某个位置的数据具体是什么类型。</p>
+</li>
+<li><p>具备现代高性能虚拟机的雏形</p>
+<p>➢ 热点探测</p>
+<p>➢ <strong>编译器与解释器混合工作模式</strong></p>
+</li>
+<li><p>只在Solaris平台短暂使用，其他平台上还是classic vm</p>
+<p>➢ 英雄气短，终被Hotspot虚拟机替换</p>
+</li>
+</ul>
+<h2 id="SUN公司的Hotspot-VM"><a href="#SUN公司的Hotspot-VM" class="headerlink" title="SUN公司的Hotspot VM"></a>SUN公司的Hotspot VM</h2><p>HotSpot历史</p>
+<p>​	➢ 最初由一家名为“Longview Technologies”的小公司设计</p>
+<p>​	➢ 1997年，此公司被Sun收购;2009年， Sun公司被甲骨文收购。</p>
+<p>​    ➢ JDK1.3时，HotSpot VM成为默认虚拟机</p>
+<p>●  目前<strong>Hotspot占有绝对的市场地位</strong>，称霸武林</p>
+<p>​	➢ 不管是现在仍在广泛使用的JDK6，还是使用比例较多的JDK8中，默认的虛拟机都是HotSpot</p>
+<p>​	➢ Sun&#x2F;Oracle JDK 和 OpenJDK 的默认虚拟机</p>
+<p>●  从服务器、桌面到移动端、嵌入式都有应用</p>
+<p>●  名称中的HotSpot指的就是它的<strong>热点代码探测技术</strong></p>
+<p>​	➢ <strong>通过计数器找到最具编译价值代码，触发即时编译或栈上替换</strong></p>
+<p>​	➢ <strong>通过编译器与解释器协同工作，在最优化的程序响应时间与最佳执行性能中取得平衡</strong></p>
+<h2 id="BEA的JRockit"><a href="#BEA的JRockit" class="headerlink" title="BEA的JRockit"></a>BEA的JRockit</h2><p>●  <strong>专注于服务器端应用</strong></p>
+<p>​	➢ 它可以不太关注程序启动速度，因此 <strong>JRockit内部不包含解析器实现，全部代码都靠即时编译器编译后执行</strong>。</p>
+<p>●  大量的行业基准测试显示，JRockit JVM是世界上最快的JVM。</p>
+<p>​	➢ 使用JRockit产品，客户已经体验到了显著的性能提高(一些超过了70%)和硬件成本的减少(达50%)。</p>
+<p>●  优势:全面的Java运行时解决方案组合</p>
+<p>​	➢ JRockit面向延迟敏感型应用的解决方案JRockit Real Time提供以毫秒或微秒级的JVM响应时间，适合财务、军事指挥、电信网络的需要</p>
+<p>​	➢ MissionControl服务套件，它是一组以极低的开销来监控、管理和分析生产环境中的应用程序的工具。</p>
+<p>●  2008年，BEA被Oracle收购。</p>
+<p>●  Oracle 整合两大优秀虚拟机的工作，大致在JDK 8中完成。整合的方式是<strong>在HotSpot的基础上，移植JRockit的优秀特性</strong>。</p>
+<h2 id="IBM的J9"><a href="#IBM的J9" class="headerlink" title="IBM的J9"></a>IBM的J9</h2><p>全称: IBM Technology for Java Virtual Machine， 简称IT4J， 内部代号: J9</p>
+<p>● 市场定位与HotSpot接近，服务器端、桌面应用、嵌入式等多用途VM</p>
+<p>● 广泛用于IBM的各种Java产品。</p>
+<p>● 目前，有影响力的三大商用服务器之一，也号称是世界上最快的Java虚拟机</p>
+<p>● 2017年左右，IBM发布了开源J9 VM， 命名为openJ9， 交给Eclipse基金会管理，也称为Ecilpse OpenJ9</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-Spring"
   class="article article-type-post"
   itemscope
