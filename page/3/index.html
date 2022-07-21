@@ -149,7 +149,7 @@
     
     
     <article
-  id="post-队列"
+  id="post-主动学习：基于特征混合的主动学习"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -161,7 +161,114 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2022/07/06/%E9%98%9F%E5%88%97/"
+  <a class="article-title" href="/2022/07/07/%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0%EF%BC%9A%E5%9F%BA%E4%BA%8E%E7%89%B9%E5%BE%81%E6%B7%B7%E5%90%88%E7%9A%84%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0/"
+    >Active Learning by Feature Mixing</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/07/07/%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0%EF%BC%9A%E5%9F%BA%E4%BA%8E%E7%89%B9%E5%BE%81%E6%B7%B7%E5%90%88%E7%9A%84%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0/" class="article-date">
+  <time datetime="2022-07-07T02:04:24.000Z" itemprop="datePublished">2022-07-07</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0/">深度主动学习</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="基于特征混合的主动学习（CVPR2022）"><a href="#基于特征混合的主动学习（CVPR2022）" class="headerlink" title="基于特征混合的主动学习（CVPR2022）"></a>基于特征混合的主动学习（CVPR2022）</h1><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
+<li><p>主动学习(AL)的前景是，通过从未标记的数据池中选择最有价值的数据进行注释，从而降低标注成本。</p>
+</li>
+<li><p>一种新的批处理AL的方法，称为ALFA-Mix。</p>
+</li>
+<li><p>通过寻找由于对其特征的干预而导致的预测不一致来识别具有足够明显特征的未标记实例。</p>
+</li>
+<li><p>在有标记和无标记实例的特征之间构造插值，然后检查预测的标签。</p>
+</li>
+<li><p>预测中的不一致性有助于发现模型在未标记的实例中无法识别的特征。</p>
+</li>
+<li><p>一个有效的实现基于一个封闭的形式的导致预测变化的最优插值解决方案。</p>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220707102537822.png" alt="ALFA-Mix原理图"></p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<li><p>机器学习应用的成功取决于带注释数据集的质量和数量。高质量的数据注释可能速度慢且成本高。主动学习旨在在训练过程中迭代地主动选择最有价值的样本进行标记，以提高预测性能。</p>
+</li>
+<li><p>一种称为batch AL的 popular setting 固定了发送给oracle进行标记的实例批次大小的预算。该过程在多轮中重复，允许迭代更新模型。因此，核心挑战是根据当前的模型，在每一轮中确定最有价值的实例。</p>
+</li>
+<li><p>不同的人工智能查询策略</p>
+<ol>
+<li><p>一个特定的未标记实例的信息量(即<strong>不确定性估计</strong>[Adversarial active learning for deep networks: a margin based approach, Deep Bayesian active learning with image data, Margin-based active learning for structured output spaces, A new active labeling method for deep learning])</p>
+</li>
+<li><p>一组实例的多样性(即<strong>多样性估计</strong>[Active learning for convolutional neural networks: A core-set approach.,Multi-class active learning by uncertainty sampling with diversity maximization])</p>
+</li>
+<li><p>不确定性和多样性结合[Contextual diversity for active learning, Active learning by learning, Active learning by querying informative and representative examples]</p>
+</li>
+<li><p>最近基于深度学习的AL技术包括，例如，使用辅助网络来估计未标记实例[Learning loss for active learning]的损失，使用VAEs等生成模型来捕获分布差异[Task-aware variational adversarial active learning, Variational adversarial active learning]，以及使用图卷积网络来关联未标记和已标记实例[Sequential graph convolutional network for active learning]。</p>
+</li>
+</ol>
+</li>
+<li><p>尽管取得了很多进展，但目前的AL方法在应用于高维数据和低数据环境下的深层神经网络时仍然很艰难。我们假设，在深度神经网络中学习到的特征可以被用来推理模型的不确定性，同时缓解与高维数据相关的挑战。一些现有的方法只考虑模型的输出，但我们认为这不能表达模型当前状态的完整情况。评估模型的不确定性在低数据环境下尤为重要，因为可用的训练实例数量很少。这一动机导致了像BADGE[Deep batch active learning by diverse, uncertain gradient lower bounds]这样的方法，它通过网络的分类器层使用梯度。除了在低数据环境下性能相对较差外，其缺点是由于梯度嵌入的高维度而导致计算成本较高，这使得该方法对于具有高维、大数据集和大量类的潜在表示的深度模型不切实际。</p>
+</li>
+<li><p>插值等价于考虑</p>
+<ol>
+<li>未标记实例和已标记实例的特征之间的差异</li>
+<li>模型在未标记点的特征的梯度</li>
+</ol>
+<p>在考虑(1)和(2)的情况下发现新特征，可以让我们以最小的计算成本确定地找到最优插值点。不使用这些插值的所有标记数据，而是选择一个称为锚的子集来捕获每个类的公共特性。随后，通过从未标记的集合中选择实例来构建一个候选集，当这些实例与这些锚混合时，会导致模型对这些实例的预测发生变化。然后，为了确保所选实例的多样性，在候选集中进行简单聚类，并选择它们的质心作为要查询的点。</p>
+</li>
+<li><p>贡献</p>
+<ol>
+<li><p>不是直接查询未标记的实例，而是从标记的实例中插入它的表示特征，以发现它隐藏的特征。与仅根据预测输出进行响应的现有方法不同，利用来自特征表示的有用信息来指示哪些特征对模型来说是新的。</p>
+</li>
+<li><p>展示了每个实例的最优插值，强调了模型可以改变预测的新特性，有一个封闭的解决方案，使方法高效和可伸缩。</p>
+</li>
+<li><p>展示了方法在不同的架构、网络初始化和预算选择设置下，超过了9个图像、2个OpenML和一个视频数据集。始终达到比现有方法更高的精度，在低数据的情况下尤其显著。</p>
+</li>
+<li><p>提供了在  vision transformers 中使用AL的首次调查：证明了ALFA-Mix在self-trained vision transformer上的有效性，在所有测试中表现优于随机选择。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220707110405973.png" alt="ALFA-Mix伪代码"></p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220707110814721.png" alt="测试精度"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
+  id="post-数据结构与算法：队列"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+	
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/07/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%9A%E9%98%9F%E5%88%97/"
     >队列queue</a> 
 </h2>
  
@@ -170,7 +277,7 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2022/07/06/%E9%98%9F%E5%88%97/" class="article-date">
+      <a href="/2022/07/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%9A%E9%98%9F%E5%88%97/" class="article-date">
   <time datetime="2022-07-06T12:34:46.000Z" itemprop="datePublished">2022-07-06</time>
 </a> 
   <div class="article-category">
@@ -319,7 +426,7 @@
 
     
     <article
-  id="post-稀疏sparsearray数组"
+  id="post-数据结构与算法：稀疏sparsearray数组"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -331,7 +438,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2022/07/05/%E7%A8%80%E7%96%8Fsparsearray%E6%95%B0%E7%BB%84/"
+  <a class="article-title" href="/2022/07/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%9A%E7%A8%80%E7%96%8Fsparsearray%E6%95%B0%E7%BB%84/"
     >稀疏sparsearray数组</a> 
 </h2>
  
@@ -340,7 +447,7 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2022/07/05/%E7%A8%80%E7%96%8Fsparsearray%E6%95%B0%E7%BB%84/" class="article-date">
+      <a href="/2022/07/05/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%9A%E7%A8%80%E7%96%8Fsparsearray%E6%95%B0%E7%BB%84/" class="article-date">
   <time datetime="2022-07-05T14:30:52.000Z" itemprop="datePublished">2022-07-05</time>
 </a> 
   <div class="article-category">
@@ -672,7 +779,7 @@
 
     
     <article
-  id="post-Spring"
+  id="post-框架：Spring"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -684,7 +791,7 @@
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2022/06/28/Spring/"
+  <a class="article-title" href="/2022/06/28/%E6%A1%86%E6%9E%B6%EF%BC%9ASpring/"
     >Spring</a> 
 </h2>
  
@@ -693,7 +800,7 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2022/06/28/Spring/" class="article-date">
+      <a href="/2022/06/28/%E6%A1%86%E6%9E%B6%EF%BC%9ASpring/" class="article-date">
   <time datetime="2022-06-28T06:42:51.000Z" itemprop="datePublished">2022-06-28</time>
 </a> 
   <div class="article-category">
@@ -1095,7 +1202,7 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 
     
     <article
-  id="post-SpringAop"
+  id="post-框架：SpringAop"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -1107,7 +1214,7 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
     <header class="article-header">
        
 <h2 itemprop="name">
-  <a class="article-title" href="/2022/06/27/SpringAop/"
+  <a class="article-title" href="/2022/06/27/%E6%A1%86%E6%9E%B6%EF%BC%9ASpringAop/"
     >SpringAop</a> 
 </h2>
  
@@ -1116,7 +1223,7 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
     </header>
      
     <div class="article-meta">
-      <a href="/2022/06/27/SpringAop/" class="article-date">
+      <a href="/2022/06/27/%E6%A1%86%E6%9E%B6%EF%BC%9ASpringAop/" class="article-date">
   <time datetime="2022-06-27T08:52:57.000Z" itemprop="datePublished">2022-06-27</time>
 </a> 
   <div class="article-category">
