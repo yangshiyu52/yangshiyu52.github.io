@@ -149,6 +149,84 @@
     
     
     <article
+  id="post-本地方法接口"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+	
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/07/11/%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%8E%A5%E5%8F%A3/"
+    >本地方法接口</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/07/11/%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%8E%A5%E5%8F%A3/" class="article-date">
+  <time datetime="2022-07-11T11:21:28.000Z" itemprop="datePublished">2022-07-11</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/JVM/">JVM</a> / <a class="article-category-link" href="/categories/JVM/1-%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AF%87/">1.内存与垃圾回收篇</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220711192334155.png" alt="image-20220711192334155"></p>
+<ul>
+<li>简单地讲，<strong>一个Native Method就是一个Java调用非Java代码的接口</strong>。一个Native Method是这样一个Java方法:该方法的实现由非Java语言实现，比如<br>c。这个特征并非Java所特有，很多其它的编程语言都有这一机制，比如在c++中，你可以用extern “c”告知C++编译器去调用一个c的函数。</li>
+<li>“Anative methoq ia code Whose implemetation is provided by non-java code. “</li>
+<li>在定义一个native method时，并<strong>不提供实现体</strong>（有些像定义一个Javainterface) ，因为其实现体是由非java语言在外面实现的。</li>
+<li>本地接口的作用是<strong>融合不同的编程语言为Java所用</strong>，它的初衷是融合c&#x2F;C++程序。</li>
+<li>标识符native可以与所有其它的java标识符连用，但是<strong>abstract除外</strong></li>
+</ul>
+<h1 id="为什么使用Native-Method"><a href="#为什么使用Native-Method" class="headerlink" title="为什么使用Native Method?"></a>为什么使用Native Method?</h1><p>Java使用起来非常方便，然而有些层次的任务用Java实现起来不容易，或者我们对程序的效率很在意时，问题就来了。</p>
+<ul>
+<li><p><strong>与Java环境外交互</strong></p>
+<ul>
+<li>有时<strong>Java应用需要与Java外面的环境交互，这是本地方法存在的主要原因</strong>。你可以想想Java需要与一些底层系统，如操作系统或某些硬件交换信息时的情况。本地方法正是这样一种交流机制:它为我们提供了一个非常简洁的接口，而且我们无需去了解Java应用之外的繁琐的细节。</li>
+</ul>
+</li>
+<li><p><strong>与操作系统交互</strong></p>
+<ul>
+<li>JVM支持着Java语言本身和运行时库，它是Java程序赖以生存的平台，它由一个解释器（解释字节码）和一些连接到本地代码的库组成。然而不管怎样，它毕竟不是一个完整的系统，它经常依赖于一些底层系统的支持。这些底层系统常常是强大的操作系统。<strong>通过使用本地方法。我们得以用Java实现了jre的与底层系统的交互，甚至JVM的一些部分就是用c写的</strong>。还有，如果我们要使用一些Java语言本身没有提供封装的操作系统的特性时，我们也需要使用本地方法。</li>
+</ul>
+</li>
+<li><p><strong>sun ‘s Java</strong></p>
+<ul>
+<li><strong>sun的解释器是用c实现的，这使得它能像一些普通的c一样与外部交互</strong>。jre大部分是用Java实现的，它也通过一些本地方法与外界交互。例如:类java. lang.Thread的 setPriority()方法是用Java实现的，但是它实现调用的是该类里的本地方法setPriority0()。这个本地方法是用c实现的，并被植入JVM内部，在windows 95的平台上，这个本地方法最终将调用win32 setPriority () API。这是一个本地方法的具体实现由JVM直接提供，更多的情况是本地方法由外部的动态链接库(external dynamic link library）提供，然后被JVM调用。</li>
+</ul>
+</li>
+</ul>
+<h1 id="现状"><a href="#现状" class="headerlink" title="现状"></a>现状</h1><p><strong>目前该方法使用的越来越少了，除非是与硬件有关的应用</strong>，比如通过Java程序驱动打印机或者Java系统管理生产设备，在企业级应用中已经比较少见。因为现在的异构领域间的通信很发达，比如可以使用socket通信，也可以使用web service等等，不多做介绍。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-虚拟机栈"
   class="article article-type-post"
   itemscope
@@ -1719,59 +1797,40 @@
 </ul>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220707102537822.png" alt="ALFA-Mix原理图"></p>
 <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
-<li><p>机器学习应用的成功取决于带注释数据集的质量和数量。高质量的数据注释可能速度慢且成本高。主动学习旨在在训练过程中迭代地</p>
-<p>主动选择最有价值的样本进行标记，以提高预测性能。</p>
+<li><p>机器学习应用的成功取决于带注释数据集的质量和数量。高质量的数据注释可能速度慢且成本高。主动学习旨在在训练过程中迭代地主动选择最有价值的样本进行标记，以提高预测性能。</p>
 </li>
-<li><p>一种称为batch AL的 popular setting 固定了发送给oracle进行标记的实例批次大小的预算。该过程在多轮中重复，允许迭代更新模</p>
-<p>型。因此，核心挑战是根据当前的模型，在每一轮中确定最有价值的实例。</p>
+<li><p>一种称为batch AL的 popular setting 固定了发送给oracle进行标记的实例批次大小的预算。该过程在多轮中重复，允许迭代更新模型。因此，核心挑战是根据当前的模型，在每一轮中确定最有价值的实例。</p>
 </li>
 <li><p>不同的人工智能查询策略</p>
 <ol>
-<li><p>一个特定的未标记实例的信息量(即<strong>不确定性估计</strong>[Adversarial active learning for deep networks: a margin based approach, </p>
-<p>Deep Bayesian active learning with image data, Margin-based active learning for structured output spaces, A new active </p>
-<p>labeling method for deep learning])</p>
+<li><p>一个特定的未标记实例的信息量(即<strong>不确定性估计</strong>[Adversarial active learning for deep networks: a margin based approach, Deep Bayesian active learning with image data, Margin-based active learning for structured output spaces, A new active labeling method for deep learning])</p>
 </li>
-<li><p>一组实例的多样性(即<strong>多样性估计</strong>[Active learning for convolutional neural networks: A core-set approach.,Multi-class </p>
-<p>active learning by uncertainty sampling with diversity maximization])</p>
+<li><p>一组实例的多样性(即<strong>多样性估计</strong>[Active learning for convolutional neural networks: A core-set approach.,Multi-class active learning by uncertainty sampling with diversity maximization])</p>
 </li>
-<li><p>不确定性和多样性结合[Contextual diversity for active learning, Active learning by learning, Active learning by querying </p>
-<p>informative and representative examples]</p>
+<li><p>不确定性和多样性结合[Contextual diversity for active learning, Active learning by learning, Active learning by querying informative and representative examples]</p>
 </li>
-<li><p>最近基于深度学习的AL技术包括，例如，使用辅助网络来估计未标记实例[Learning loss for active learning]的损失，使用VAEs</p>
-<p>等生成模型来捕获分布差异[Task-aware variational adversarial active learning, Variational adversarial active learning]，以及</p>
-<p>使用图卷积网络来关联未标记和已标记实例[Sequential graph convolutional network for active learning]。</p>
+<li><p>最近基于深度学习的AL技术包括，例如，使用辅助网络来估计未标记实例[Learning loss for active learning]的损失，使用VAEs等生成模型来捕获分布差异[Task-aware variational adversarial active learning, Variational adversarial active learning]，以及使用图卷积网络来关联未标记和已标记实例[Sequential graph convolutional network for active learning]。</p>
 </li>
 </ol>
 </li>
-<li><p>尽管取得了很多进展，但目前的AL方法在应用于高维数据和低数据环境下的深层神经网络时仍然很艰难。我们假设，在深度神经网络</p>
-<p>中学习到的特征可以被用来推理模型的不确定性，同时缓解与高维数据相关的挑战。一些现有的方法只考虑模型的输出，但我们认为</p>
-<p>这不能表达模型当前状态的完整情况。评估模型的不确定性在低数据环境下尤为重要，因为可用的训练实例数量很少。这一动机导致</p>
-<p>了像BADGE[Deep batch active learning by diverse, uncertain gradient lower bounds]这样的方法，它通过网络的分类器层使用梯</p>
-<p>度。除了在低数据环境下性能相对较差外，其缺点是由于梯度嵌入的高维度而导致计算成本较高，这使得该方法对于具有高维、大数</p>
-<p>据集和大量类的潜在表示的深度模型不切实际。</p>
+<li><p>尽管取得了很多进展，但目前的AL方法在应用于高维数据和低数据环境下的深层神经网络时仍然很艰难。我们假设，在深度神经网络中学习到的特征可以被用来推理模型的不确定性，同时缓解与高维数据相关的挑战。一些现有的方法只考虑模型的输出，但我们认为这不能表达模型当前状态的完整情况。评估模型的不确定性在低数据环境下尤为重要，因为可用的训练实例数量很少。这一动机导致了像BADGE[Deep batch active learning by diverse, uncertain gradient lower bounds]这样的方法，它通过网络的分类器层使用梯度。除了在低数据环境下性能相对较差外，其缺点是由于梯度嵌入的高维度而导致计算成本较高，这使得该方法对于具有高维、大数据集和大量类的潜在表示的深度模型不切实际。</p>
 </li>
 <li><p>插值等价于考虑</p>
 <ol>
 <li>未标记实例和已标记实例的特征之间的差异</li>
 <li>模型在未标记点的特征的梯度</li>
 </ol>
-<p>在考虑(1)和(2)的情况下发现新特征，可以让我们以最小的计算成本确定地找到最优插值点。</p>
-<p>不使用这些插值的所有标记数据，而是选择一个称为锚的子集来捕获每个类的公共特性。随后，通过从未标记的集合中选择实例来构</p>
-<p>建一个候选集，当这些实例与这些锚混合时，会导致模型对这些实例的预测发生变化。然后，为了确保所选实例的多样性，在候选集</p>
-<p>中进行简单聚类，并选择它们的质心作为要查询的点。</p>
+<p>在考虑(1)和(2)的情况下发现新特征，可以让我们以最小的计算成本确定地找到最优插值点。不使用这些插值的所有标记数据，而是选择一个称为锚的子集来捕获每个类的公共特性。随后，通过从未标记的集合中选择实例来构建一个候选集，当这些实例与这些锚混合时，会导致模型对这些实例的预测发生变化。然后，为了确保所选实例的多样性，在候选集中进行简单聚类，并选择它们的质心作为要查询的点。</p>
 </li>
 <li><p>贡献</p>
 <ol>
-<li><p>不是直接查询未标记的实例，而是从标记的实例中插入它的表示特征，以发现它隐藏的特征。与仅根据预测输出进行响应的现有</p>
-<p>方法不同，利用来自特征表示的有用信息来指示哪些特征对模型来说是新的。</p>
+<li><p>不是直接查询未标记的实例，而是从标记的实例中插入它的表示特征，以发现它隐藏的特征。与仅根据预测输出进行响应的现有方法不同，利用来自特征表示的有用信息来指示哪些特征对模型来说是新的。</p>
 </li>
 <li><p>展示了每个实例的最优插值，强调了模型可以改变预测的新特性，有一个封闭的解决方案，使方法高效和可伸缩。</p>
 </li>
-<li><p>展示了方法在不同的架构、网络初始化和预算选择设置下，超过了9个图像、2个OpenML和一个视频数据集。始终达到比现有方</p>
-<p>法更高的精度，在低数据的情况下尤其显著。</p>
+<li><p>展示了方法在不同的架构、网络初始化和预算选择设置下，超过了9个图像、2个OpenML和一个视频数据集。始终达到比现有方法更高的精度，在低数据的情况下尤其显著。</p>
 </li>
-<li><p>提供了在  vision transformers 中使用AL的首次调查：证明了ALFA-Mix在self-trained vision transformer上的有效性，在所有测</p>
-<p>试中表现优于随机选择。</p>
+<li><p>提供了在  vision transformers 中使用AL的首次调查：证明了ALFA-Mix在self-trained vision transformer上的有效性，在所有测试中表现优于随机选择。</p>
 </li>
 </ol>
 </li>
@@ -1887,68 +1946,6 @@
 </li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ysy.queue;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CircleArrayQueueDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//测试</span></span><br><span class="line">        <span class="comment">//创建一个环形队列</span></span><br><span class="line">        <span class="type">CircleArrayQueue</span> <span class="variable">queue</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CircleArrayQueue</span>(<span class="number">4</span>);</span><br><span class="line">        <span class="type">char</span> <span class="variable">key</span> <span class="operator">=</span> <span class="string">&#x27; &#x27;</span>;<span class="comment">//接收用户输入</span></span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">scanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">loop</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="comment">//输出一个菜单</span></span><br><span class="line">        <span class="keyword">while</span> (loop)&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;s(show)：显示队列&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;e(exit)：退出程序&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;a(add)：添加数据到队列&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;g(get)：从队列取出数据&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;h(head)：查看队列头的数据&quot;</span>);</span><br><span class="line">            key = scanner.next().charAt(<span class="number">0</span>);<span class="comment">//接收一个字符</span></span><br><span class="line">            <span class="keyword">switch</span> (key)&#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;s&#x27;</span>:</span><br><span class="line">                    queue.showQueue();</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;a&#x27;</span>:</span><br><span class="line">                    System.out.println(<span class="string">&quot;请输入一个数&quot;</span>);</span><br><span class="line">                    <span class="type">int</span> <span class="variable">value</span> <span class="operator">=</span> scanner.nextInt();</span><br><span class="line">                    queue.addQueue(value);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;g&#x27;</span>: <span class="comment">//取出数据</span></span><br><span class="line">                    <span class="keyword">try</span>&#123;</span><br><span class="line">                        <span class="type">int</span> <span class="variable">res</span> <span class="operator">=</span> queue.getQueue();</span><br><span class="line">                        System.out.printf(<span class="string">&quot;取出的数据是%d\n&quot;</span>, res);</span><br><span class="line">                    &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">                        <span class="comment">//<span class="doctag">TODO:</span> hadle exception</span></span><br><span class="line">                        System.out.println(e.getMessage());</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;h&#x27;</span>: <span class="comment">//查看队列头的数据</span></span><br><span class="line">                    <span class="keyword">try</span>&#123;</span><br><span class="line">                        <span class="type">int</span> <span class="variable">res</span> <span class="operator">=</span> queue.headQueue();</span><br><span class="line">                        System.out.printf(<span class="string">&quot;队列头的数据是%d\n&quot;</span>, res);</span><br><span class="line">                    &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">                        <span class="comment">//<span class="doctag">TODO:</span> hadle exception</span></span><br><span class="line">                        System.out.println(e.getMessage());</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&#x27;e&#x27;</span>: <span class="comment">//退出</span></span><br><span class="line">                    scanner.close();</span><br><span class="line">                    loop = <span class="literal">false</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;程序退出&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CircleArrayQueue</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> maxSize;<span class="comment">//表示数组的最大容量</span></span><br><span class="line">    <span class="comment">//front 变量的含义做一个调整 : **front 就指向队列的第一个元素**，也就是说ar[front]就是队列的第一个元素。</span></span><br><span class="line">    <span class="comment">// front的初始值= 0</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> front;<span class="comment">//队列头</span></span><br><span class="line">    <span class="comment">//rear 变量的含义做一个调整: **rear 指向队列的最后一个元素的后一个位置**，因为希望空出一个空间做为约定。</span></span><br><span class="line">    <span class="comment">// rear的初始值=0</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> rear;<span class="comment">//队列尾</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span>[] arr;<span class="comment">//用于存放数据，模拟队列</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建队列的构造器</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">CircleArrayQueue</span><span class="params">(<span class="type">int</span> arrMaxSize)</span>&#123;</span><br><span class="line">        maxSize = arrMaxSize;</span><br><span class="line">        arr = <span class="keyword">new</span> <span class="title class_">int</span>[maxSize];</span><br><span class="line">        front = <span class="number">0</span>;<span class="comment">//指向队列头部，分析出front是指向队列头的前一个位置</span></span><br><span class="line">        rear = <span class="number">0</span>;<span class="comment">//指向队列尾部，指向队列尾的数据(即就是队列的最后一个数据)</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//判读队列是否满</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">inFull</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (rear + <span class="number">1</span>) % maxSize == front;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//判断队列是否空</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isEmpty</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">return</span> <span class="variable">rear</span> <span class="operator">=</span>= front;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//添加数据到队列</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addQueue</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">        <span class="comment">//判断队列是否满</span></span><br><span class="line">        <span class="keyword">if</span>(inFull())&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;队列满，不能加入数据~&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//直接将数据加入</span></span><br><span class="line">        arr[rear] = n;</span><br><span class="line">        <span class="comment">//rear后移，必须考虑取模</span></span><br><span class="line">        rear = (rear + <span class="number">1</span>) % maxSize;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取队列数据，出队列</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getQueue</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="comment">//判断队列是否空</span></span><br><span class="line">        <span class="keyword">if</span>(isEmpty())&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;队列空，不能取数据&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//front是指向队列的第一个元素</span></span><br><span class="line">        <span class="comment">//先把front对应的值保存到一个临时变量</span></span><br><span class="line">        <span class="comment">//将front后移，考虑取模</span></span><br><span class="line">        <span class="comment">//将保存的临时变量返回</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">value</span> <span class="operator">=</span> arr[front];</span><br><span class="line">        front = (front + <span class="number">1</span>) % maxSize;</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//显示队列的所有数据</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">showQueue</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="comment">//遍历</span></span><br><span class="line">        <span class="keyword">if</span>(isEmpty())&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;队列空，没有数据&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//从front开始遍历，遍历多少个元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> front; i &lt; front + size(); i++) &#123;</span><br><span class="line">            System.out.printf(<span class="string">&quot;arr[%d]=%d\n&quot;</span>, i % maxSize, arr[i % maxSize]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//显示队列的头数据，注意不是取数据</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">headQueue</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="comment">//判断</span></span><br><span class="line">        <span class="keyword">if</span>(isEmpty()) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;队列空，没有数据&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> arr[front];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//求出当前队列的有效数据的个数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (rear + maxSize - front) % maxSize;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-IDEA的使用"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-	
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2022/07/06/IDEA%E7%9A%84%E4%BD%BF%E7%94%A8/"
-    >IDEA的使用</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2022/07/06/IDEA%E7%9A%84%E4%BD%BF%E7%94%A8/" class="article-date">
-  <time datetime="2022-07-06T08:21:13.000Z" itemprop="datePublished">2022-07-06</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/IDEA%E7%9A%84%E4%BD%BF%E7%94%A8/">IDEA的使用</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h1><p>打开Terminal，cd到需要反编译的.class文件目录下，输入：<strong>javap -v 文件名.class</strong>，回车</p>
-<h1 id="查看源码"><a href="#查看源码" class="headerlink" title="查看源码"></a>查看源码</h1><p>ctrl+shift+t</p>
-<h1 id="Terminal命令"><a href="#Terminal命令" class="headerlink" title="Terminal命令"></a>Terminal命令</h1><ul>
-<li>jps：查看本机java进程信息。</li>
-<li>jstack：打印线程的栈信息，制作线程dump文件。</li>
-<li>jmap：打印内存映射，制作堆dump文件</li>
-<li>jstat：性能监控工具</li>
-<li>jhat：内存分析工具</li>
-<li>jconsole：简易的可视化控制台</li>
-<li>jvisualvm：功能强大的控制台</li>
-</ul>
- 
       <!-- reward -->
       
     </div>

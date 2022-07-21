@@ -11,7 +11,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title>Active Learning by Feature Mixing |  Healer</title>
+      <title>直接内存（Direct Memory） |  Healer</title>
   <meta name="generator" content="hexo-theme-ayer">
       
       <link rel="shortcut icon" href="/favicon.ico" />
@@ -53,7 +53,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-基于特征混合的主动学习"
+  id="post-直接内存(DirectMemory)"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -65,7 +65,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  Active Learning by Feature Mixing
+  直接内存（Direct Memory）
 </h1>
  
 
@@ -73,11 +73,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2022/07/07/%E5%9F%BA%E4%BA%8E%E7%89%B9%E5%BE%81%E6%B7%B7%E5%90%88%E7%9A%84%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0/" class="article-date">
-  <time datetime="2022-07-07T02:04:24.000Z" itemprop="datePublished">2022-07-07</time>
+      <a href="/2022/07/20/%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98(DirectMemory)/" class="article-date">
+  <time datetime="2022-07-20T06:22:57.000Z" itemprop="datePublished">2022-07-20</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0/">深度主动学习</a>
+    <a class="article-category-link" href="/categories/JVM/">JVM</a> / <a class="article-category-link" href="/categories/JVM/1-%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AF%87/">1.内存与垃圾回收篇</a>
   </div>
   
 <div class="word_count">
@@ -85,7 +85,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">1.3k</span>
+            <span class="post-count">782</span>
         </span>
     </span>
 
@@ -94,7 +94,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">4 min</span>
+            <span class="post-count">3 min</span>
         </span>
     </span>
 </div>
@@ -109,62 +109,52 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="基于特征混合的主动学习（CVPR2022）"><a href="#基于特征混合的主动学习（CVPR2022）" class="headerlink" title="基于特征混合的主动学习（CVPR2022）"></a>基于特征混合的主动学习（CVPR2022）</h1><h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><ul>
-<li><p>主动学习(AL)的前景是，通过从未标记的数据池中选择最有价值的数据进行注释，从而降低标注成本。</p>
+  <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><ul>
+<li><p>在jdk8的时候引入了元空间，而元空间使用的就是直接内存。</p>
 </li>
-<li><p>一种新的批处理AL的方法，称为ALFA-Mix。</p>
+<li><p>直接内存不是虚拟机运行时数据区的一部分，也不是《Java虚拟机规范》中定义的内存区域。</p>
 </li>
-<li><p>通过寻找由于对其特征的干预而导致的预测不一致来识别具有足够明显特征的未标记实例。</p>
+<li><p>直接内存是在Java堆外的、直接向系统申请的内存区间。</p>
 </li>
-<li><p>在有标记和无标记实例的特征之间构造插值，然后检查预测的标签。</p>
+<li><p>来源于NIO(其实在jdk1.4引入NIO时就有了操作本地内存的概念，后来在jdk1.7时引入了NIO2)，通过存在堆中的DirectByteBuffer操作Native内存</p>
 </li>
-<li><p>预测中的不一致性有助于发现模型在未标记的实例中无法识别的特征。</p>
-</li>
-<li><p>一个有效的实现基于一个封闭的形式的导致预测变化的最优插值解决方案。</p>
+<li><p>通常，<strong>访问直接内存的速度会优于Java堆</strong>。即读写性能高。</p>
+<ul>
+<li>因此出于性能考虑，读写频繁的场合可能会考虑使用直接内存。</li>
+<li>Java的NIO库允许Java程序使用直接内存，用于数据缓冲区</li>
+</ul>
 </li>
 </ul>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220707102537822.png" alt="ALFA-Mix原理图"></p>
-<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
-<li><p>机器学习应用的成功取决于带注释数据集的质量和数量。高质量的数据注释可能速度慢且成本高。主动学习旨在在训练过程中迭代地主动选择最有价值的样本进行标记，以提高预测性能。</p>
-</li>
-<li><p>一种称为batch AL的 popular setting 固定了发送给oracle进行标记的实例批次大小的预算。该过程在多轮中重复，允许迭代更新模型。因此，核心挑战是根据当前的模型，在每一轮中确定最有价值的实例。</p>
-</li>
-<li><p>不同的人工智能查询策略</p>
-<ol>
-<li><p>一个特定的未标记实例的信息量(即<strong>不确定性估计</strong>[Adversarial active learning for deep networks: a margin based approach, Deep Bayesian active learning with image data, Margin-based active learning for structured output spaces, A new active labeling method for deep learning])</p>
-</li>
-<li><p>一组实例的多样性(即<strong>多样性估计</strong>[Active learning for convolutional neural networks: A core-set approach.,Multi-class active learning by uncertainty sampling with diversity maximization])</p>
-</li>
-<li><p>不确定性和多样性结合[Contextual diversity for active learning, Active learning by learning, Active learning by querying informative and representative examples]</p>
-</li>
-<li><p>最近基于深度学习的AL技术包括，例如，使用辅助网络来估计未标记实例[Learning loss for active learning]的损失，使用VAEs等生成模型来捕获分布差异[Task-aware variational adversarial active learning, Variational adversarial active learning]，以及使用图卷积网络来关联未标记和已标记实例[Sequential graph convolutional network for active learning]。</p>
-</li>
-</ol>
-</li>
-<li><p>尽管取得了很多进展，但目前的AL方法在应用于高维数据和低数据环境下的深层神经网络时仍然很艰难。我们假设，在深度神经网络中学习到的特征可以被用来推理模型的不确定性，同时缓解与高维数据相关的挑战。一些现有的方法只考虑模型的输出，但我们认为这不能表达模型当前状态的完整情况。评估模型的不确定性在低数据环境下尤为重要，因为可用的训练实例数量很少。这一动机导致了像BADGE[Deep batch active learning by diverse, uncertain gradient lower bounds]这样的方法，它通过网络的分类器层使用梯度。除了在低数据环境下性能相对较差外，其缺点是由于梯度嵌入的高维度而导致计算成本较高，这使得该方法对于具有高维、大数据集和大量类的潜在表示的深度模型不切实际。</p>
-</li>
-<li><p>插值等价于考虑</p>
-<ol>
-<li>未标记实例和已标记实例的特征之间的差异</li>
-<li>模型在未标记点的特征的梯度</li>
-</ol>
-<p>在考虑(1)和(2)的情况下发现新特征，可以让我们以最小的计算成本确定地找到最优插值点。不使用这些插值的所有标记数据，而是选择一个称为锚的子集来捕获每个类的公共特性。随后，通过从未标记的集合中选择实例来构建一个候选集，当这些实例与这些锚混合时，会导致模型对这些实例的预测发生变化。然后，为了确保所选实例的多样性，在候选集中进行简单聚类，并选择它们的质心作为要查询的点。</p>
-</li>
-<li><p>贡献</p>
-<ol>
-<li><p>不是直接查询未标记的实例，而是从标记的实例中插入它的表示特征，以发现它隐藏的特征。与仅根据预测输出进行响应的现有方法不同，利用来自特征表示的有用信息来指示哪些特征对模型来说是新的。</p>
-</li>
-<li><p>展示了每个实例的最优插值，强调了模型可以改变预测的新特性，有一个封闭的解决方案，使方法高效和可伸缩。</p>
-</li>
-<li><p>展示了方法在不同的架构、网络初始化和预算选择设置下，超过了9个图像、2个OpenML和一个视频数据集。始终达到比现有方法更高的精度，在低数据的情况下尤其显著。</p>
-</li>
-<li><p>提供了在  vision transformers 中使用AL的首次调查：证明了ALFA-Mix在self-trained vision transformer上的有效性，在所有测试中表现优于随机选择。</p>
-</li>
-</ol>
-</li>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  IO                  NIO (New IO / Non-Blocking IO)</span></span><br><span class="line"><span class="comment"> *  byte[] / char[]     Buffer</span></span><br><span class="line"><span class="comment"> *  Stream              Channel</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 查看直接内存的占用与释放</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BufferTest</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">BUFFER</span> <span class="operator">=</span> <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">1024</span>;<span class="comment">//1GB</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line">        <span class="comment">//直接分配本地内存空间</span></span><br><span class="line">        <span class="type">ByteBuffer</span> <span class="variable">byteBuffer</span> <span class="operator">=</span> ByteBuffer.allocateDirect(BUFFER);</span><br><span class="line">        System.out.println(<span class="string">&quot;直接内存分配完毕，请求指示！&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">scanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        scanner.next();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;直接内存开始释放！&quot;</span>);</span><br><span class="line">        byteBuffer = <span class="literal">null</span>;</span><br><span class="line">        System.gc();</span><br><span class="line">        scanner.next();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>直接占用了1G的本地内存</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220720164700347.png" alt="image-20220720164700347"></p>
+<p> 当控制台输入”释放内存”后，占用内存明显减少</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220720164913719.png" alt="image-20220720164913719"></p>
+<h1 id="BIO与NIO"><a href="#BIO与NIO" class="headerlink" title="BIO与NIO"></a>BIO与NIO</h1><h2 id="非直接缓存区（BIO）"><a href="#非直接缓存区（BIO）" class="headerlink" title="非直接缓存区（BIO）"></a>非直接缓存区（BIO）</h2><ul>
+<li>原来采用BIO的架构，在读写本地文件时，我们需要从用户态切换成内核态<img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/2073658-20210308165244606-163178566.png" alt="img"></li>
 </ul>
-<h2 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220707110405973.png" alt="ALFA-Mix伪代码"></p>
-<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220707110814721.png" alt="测试精度"></p>
+<h2 id="直接缓冲区（NIO）"><a href="#直接缓冲区（NIO）" class="headerlink" title="直接缓冲区（NIO）"></a>直接缓冲区（NIO）</h2><ul>
+<li>NIO 直接操作物理磁盘，省去了中间过程</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/2073658-20210308165422888-1665701747.png" alt="img"></p>
+<p>如何理解上面的内容：我们的java程序，想要操作本地磁盘，首先命令会到用户地址空间(jvm中)，然后这个jvm映射会到内核地址空间(这个应该是操作系统提供的映射物理磁盘的)，最终到物理磁盘。而NIO直接操作一个映射文件，是java程序直接到物理磁盘的。</p>
+<h1 id="直接内存与OOM"><a href="#直接内存与OOM" class="headerlink" title="直接内存与OOM"></a>直接内存与OOM</h1><ul>
+<li>直接内存也可能导致OutofMemoryError异常</li>
+<li>由于直接内存在Java堆外，因此它的大小不会直接受限于-Xmx指定的最大堆大小，但是系统内存是有限的，Java堆和直接内存的总和依然受限于操作系统能给出的最大内存。</li>
+<li>直接内存的缺点为：<ul>
+<li>分配回收成本较高</li>
+<li>不受JVM内存回收管理</li>
+</ul>
+</li>
+<li>直接内存大小可以通过<strong>MaxDirectMemorySize</strong>设置</li>
+<li>如果不指定，默认与堆的最大值-Xmx参数值一致</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 本地内存的OOM:  OutOfMemoryError: Direct buffer memory</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BufferTest2</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">BUFFER</span> <span class="operator">=</span> <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">20</span>;<span class="comment">//20MB</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        ArrayList&lt;ByteBuffer&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span>(<span class="literal">true</span>)&#123;  <span class="comment">// 不断使用</span></span><br><span class="line">                <span class="type">ByteBuffer</span> <span class="variable">byteBuffer</span> <span class="operator">=</span> ByteBuffer.allocateDirect(BUFFER);   <span class="comment">// 使用本地内存</span></span><br><span class="line">                list.add(byteBuffer);</span><br><span class="line">                count++;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">100</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            System.out.println(count);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">181</span></span><br><span class="line">Exception in thread <span class="string">&quot;main&quot;</span> java.lang.OutOfMemoryError: Direct buffer memory</span><br><span class="line">	at java.nio.Bits.reserveMemory(Bits.java:<span class="number">694</span>)</span><br><span class="line">	at java.nio.DirectByteBuffer.&lt;init&gt;(DirectByteBuffer.java:<span class="number">123</span>)</span><br><span class="line">	at java.nio.ByteBuffer.allocateDirect(ByteBuffer.java:<span class="number">311</span>)</span><br><span class="line">	at com.ysy.methodarea.BufferTest2.main(BufferTest2.java:<span class="number">19</span>)</span><br></pre></td></tr></table></figure>
+
  
       <!-- reward -->
       
@@ -217,7 +207,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/07/07/%E5%9F%BA%E4%BA%8E%E7%89%B9%E5%BE%81%E6%B7%B7%E5%90%88%E7%9A%84%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/07/20/%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98(DirectMemory)/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -228,19 +218,10 @@
    
   <nav class="article-nav">
     
-      <a href="/2022/07/07/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%AD%90%E7%B3%BB%E7%BB%9F/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            类加载子系统
-          
-        </div>
-      </a>
     
-    
-      <a href="/2022/07/06/%E9%98%9F%E5%88%97/" class="article-nav-link">
+      <a href="/2022/07/19/%E5%AF%B9%E8%B1%A1%E5%AE%9E%E4%BE%8B%E5%8C%96%E3%80%81%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80%E4%B8%8E%E8%AE%BF%E9%97%AE%E5%AE%9A%E4%BD%8D/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">队列queue</div>
+        <div class="article-nav-title">对象实例化、内存布局与访问定位</div>
       </a>
     
   </nav>
