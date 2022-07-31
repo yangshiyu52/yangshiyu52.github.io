@@ -1226,6 +1226,883 @@
 
     
     <article
+  id="post-JVM：垃圾回收器"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+	
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/07/31/JVM%EF%BC%9A%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/"
+    >垃圾回收器</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/07/31/JVM%EF%BC%9A%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/" class="article-date">
+  <time datetime="2022-07-31T03:17:19.000Z" itemprop="datePublished">2022-07-31</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/JVM/">JVM</a> / <a class="article-category-link" href="/categories/JVM/1-%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AF%87/">1.内存与垃圾回收篇</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="GC-分类与性能指标"><a href="#GC-分类与性能指标" class="headerlink" title="GC 分类与性能指标"></a>GC 分类与性能指标</h1><h2 id="垃圾回收器概述"><a href="#垃圾回收器概述" class="headerlink" title="垃圾回收器概述"></a>垃圾回收器概述</h2><ul>
+<li>垃圾收集器没有在规范中进行过多的规定，可以由不同的厂商、不同版本的JVM来实现。</li>
+<li>由于JDK的版本处于高速迭代过程中，因此Java发展至今已经衍生了众多的GC版本。</li>
+<li>从不同角度分析垃圾收集器，可以将GC分为不同的类型。</li>
+</ul>
+<p><strong>Java不同版本新特性</strong></p>
+<ul>
+<li><strong>语法层面</strong>：Lambda表达式、switch、自动拆箱装箱、enum、泛型</li>
+<li><strong>API层面</strong>：Stream API、新的日期时间、Optional、String、集合框架</li>
+<li><strong>底层优化</strong>：JVM优化、GC的变化、元空间、静态域、字符串常量池等</li>
+</ul>
+<h2 id="垃圾回收器分类"><a href="#垃圾回收器分类" class="headerlink" title="垃圾回收器分类"></a>垃圾回收器分类</h2><ul>
+<li><strong>按<code>线程数</code>分（垃圾回收线程数），可以分为串行垃圾回收器和并行垃圾回收器。</strong></li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220726210912537.png" alt="image-20220726210912537"></p>
+<ol>
+<li>串行回收指的是在同一时间段内只允许有一个CPU用于执行垃圾回收操作，此时工作线程被暂停，直至垃圾收集工作结束。<ul>
+<li>在诸如单CPU处理器或者较小的应用内存等硬件平台不是特别优越的场合，串行回收器的性能表现可以超过并行回收器和并发回收器。所以，串<strong>行回收默认被应用在客户端的Client模式下的JVM中</strong></li>
+<li>在并发能力比较强的CPU上，并行回收器产生的停顿时间要短于串行回收器</li>
+</ul>
+</li>
+<li>和串行回收相反，并行收集可以运用多个CPU同时执行垃圾回收，因此提升了应用的吞吐量，不过并行回收仍然与串行回收一样，采用独占式，使用了“Stop-the-World”机制。</li>
+</ol>
+<ul>
+<li><strong>按照<code>工作模式</code>分，可以分为并发式垃圾回收器和独占式垃圾回收器。</strong></li>
+</ul>
+<ol>
+<li>并发式垃圾回收器与应用程序线程交替工作，以尽可能减少应用程序的停顿时间。</li>
+<li>独占式垃圾回收器（Stop the World）一旦运行，就停止应用程序中的所有用户线程，直到垃圾回收过程完全结束。</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220726211056288.png" alt="image-20220726211056288"></p>
+<ul>
+<li><strong>按<code>碎片处理方式</code>分，可分为压缩式垃圾回收器和非压缩式垃圾回收器。</strong></li>
+</ul>
+<ol>
+<li>压缩式垃圾回收器会在回收完成后，对存活对象进行压缩整理，消除回收后的碎片。再分配对象空间使用指针碰撞<ul>
+<li>再分配对象空间使用：指针碰撞</li>
+</ul>
+</li>
+<li>非压缩式的垃圾回收器不进行这步操作，分配对象空间使用空闲列表<ul>
+<li>再分配对象空间使用：空闲列表</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><strong>按<code>工作的内存区间</code>分，又可分为年轻代垃圾回收器和老年代垃圾回收器。</strong></li>
+</ul>
+<h2 id="评估-GC-的性能指标"><a href="#评估-GC-的性能指标" class="headerlink" title="评估 GC 的性能指标"></a>评估 GC 的性能指标</h2><h3 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h3><ol>
+<li><strong>吞吐量：运行用户代码的时间占总运行时间的比例</strong>（总运行时间 &#x3D; 程序的运行时间 + 内存回收的时间）</li>
+<li>垃圾收集开销：吞吐量的补数，垃圾收集所用时间与总运行时间的比例。</li>
+<li><strong>暂停时间：执行垃圾收集时，程序的工作线程被暂停的时间</strong>。</li>
+<li>收集频率：相对于应用程序的执行，收集操作发生的频率。</li>
+<li><strong>内存占用：Java堆区所占的内存大小</strong>。</li>
+<li>快速：一个对象从诞生到被回收所经历的时间。</li>
+</ol>
+<ul>
+<li>吞吐量、暂停时间、内存占用这三者共同构成一个“不可能三角”。三者总体的表现会随着技术进步而越来越好。一款优秀的收集器通常最多同时满足其中的两项。</li>
+<li>这三项里，暂停时间的重要性日益凸显。因为随着硬件发展，内存占用多些越来越能容忍，硬件性能的提升也有助于降低收集器运行时对应用程序的影响，即提高了吞吐量。而内存的扩大，对延迟反而带来负面效果。</li>
+<li>简单来说，主要抓住两点：<ul>
+<li><strong>吞吐量</strong></li>
+<li><strong>暂停时间</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="吞吐量（throughput）"><a href="#吞吐量（throughput）" class="headerlink" title="吞吐量（throughput）"></a>吞吐量（throughput）</h3><ol>
+<li>吞吐量就是CPU用于运行用户代码的时间与CPU总消耗时间的比值，即<strong>吞吐量&#x3D;运行用户代码时间 &#x2F;（运行用户代码时间+垃圾收集时间）</strong><ul>
+<li>比如：虚拟机总共运行了100分钟，其中垃圾收集花掉1分钟，那吞吐量就是99%。</li>
+</ul>
+</li>
+<li>这种情况下，应用程序能容忍较高的暂停时间，因此，高吞吐量的应用程序有更长的时间基准，快速响应是不必考虑的</li>
+<li><strong>吞吐量优先，意味着在单位时间内，STW的时间最短</strong>：0.2+0.2&#x3D;0.4</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220726211854440.png" alt="image-20220726211854440"></p>
+<h3 id="暂停时间（pause-time）"><a href="#暂停时间（pause-time）" class="headerlink" title="暂停时间（pause time）"></a>暂停时间（pause time）</h3><ol>
+<li>“暂停时间”是指一个时间段内应用程序线程暂停，让GC线程执行的状态。<ul>
+<li>例如，GC期间100毫秒的暂停时间意味着在这100毫秒期间内没有应用程序线程是活动的</li>
+</ul>
+</li>
+<li><strong>暂停时间优先，意味着尽可能让单次STW的时间最短</strong>：0.1+0.1 + 0.1+ 0.1+ 0.1&#x3D;0.5，但是总的GC时间可能会长</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220726211948109.png" alt="image-20220726211948109"></p>
+<h3 id="吞吐量-vs-暂停时间"><a href="#吞吐量-vs-暂停时间" class="headerlink" title="吞吐量 vs 暂停时间"></a>吞吐量 vs 暂停时间</h3><ol>
+<li><p><strong>高吞吐量较好</strong>因为这会让应用程序的最终用户感觉只有应用程序线程在做“生产性”工作。直觉上，吞吐量越高程序运行越快。</p>
+</li>
+<li><p><strong>低暂停时间（低延迟）较好</strong>，是从最终用户的角度来看，不管是GC还是其他原因导致一个应用被挂起始终是不好的。这取决于应用程序的类型，<strong>有时候甚至短暂的200毫秒暂停都可能打断终端用户体验</strong>。因此，具有较低的暂停时间是非常重要的，特别是对于一个<strong>交互式应用程序</strong>（就是和用户交互比较多的场景）。</p>
+</li>
+<li><p>不幸的是”高吞吐量”和”低暂停时间”是一对相互竞争的目标（矛盾）。</p>
+<ul>
+<li>因为如果选择以吞吐量优先，那么<strong>必然需要降低内存回收的执行频率</strong>，但是这样会导致GC需要更长的暂停时间来执行内存回收。</li>
+<li>相反的，如果选择以低延迟优先为原则，那么为了降低每次执行内存回收时的暂停时间，也只能<strong>频繁地执行内存回收</strong>，但这又引起了年轻代内存的缩减和导致程序吞吐量的下降。</li>
+</ul>
+</li>
+<li><p>在设计（或使用）GC算法时，我们必须确定我们的目标：<strong>一个GC算法只可能针对两个目标之一（即只专注于较大吞吐量或最小暂停时间），或尝试找到一个二者的折衷。</strong></p>
+</li>
+<li><p>现在标准：**<code>在最大吞吐量优先的情况下，降低停顿时间</code>**</p>
+</li>
+</ol>
+<h1 id="不同的垃圾回收器概述"><a href="#不同的垃圾回收器概述" class="headerlink" title="不同的垃圾回收器概述"></a>不同的垃圾回收器概述</h1><ol>
+<li>垃圾收集机制是Java的招牌能力，极大地提高了开发效率。这当然也是面试的热点。</li>
+<li>那么，Java常见的垃圾收集器有哪些？</li>
+</ol>
+<h2 id="垃圾收集器发展史"><a href="#垃圾收集器发展史" class="headerlink" title="垃圾收集器发展史"></a>垃圾收集器发展史</h2><p>有了虚拟机，就一定需要收集垃圾的机制，这就是Garbage Collection，对应的产品我们称为Garbage Collector。</p>
+<ol>
+<li>1999年随JDK1.3.1一起来的是串行方式的Serial GC，它是第一款GC。ParNew垃圾收集器是Serial收集器的多线程版本</li>
+<li>2002年2月26日，Parallel GC和Concurrent Mark Sweep GC跟随JDK1.4.2一起发布·</li>
+<li>Parallel GC在JDK6之后成为HotSpot默认GC。</li>
+<li>2012年，在JDK1.7u4版本中，G1可用。</li>
+<li>2017年，JDK9中G1变成默认的垃圾收集器，以替代CMS。</li>
+<li>2018年3月，JDK10中G1垃圾回收器的并行完整垃圾回收，实现并行性来改善最坏情况下的延迟。</li>
+<li>2018年9月，JDK11发布。引入Epsilon 垃圾回收器，又被称为 “No-Op(无操作)“ 回收器。同时，引入ZGC：可伸缩的低延迟垃圾回收器（Experimental）</li>
+<li>2019年3月，JDK12发布。增强G1，自动返回未用堆内存给操作系统。同时，引入Shenandoah GC：低停顿时间的GC（Experimental）。</li>
+<li>2019年9月，JDK13发布。增强ZGC，自动返回未用堆内存给操作系统。</li>
+<li>2020年3月，JDK14发布。删除CMS垃圾回收器。扩展ZGC在macOS和Windows上的应用</li>
+</ol>
+<h2 id="7款经典的垃圾收集器"><a href="#7款经典的垃圾收集器" class="headerlink" title="7款经典的垃圾收集器"></a>7款经典的垃圾收集器</h2><ol>
+<li>串行回收器：**<code>Serial、Serial old</code>**</li>
+<li>并行回收器：**<code>ParNew、Parallel Scavenge、Parallel old</code>**</li>
+<li>并发回收器：**<code>CMS、G1</code>**</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220726213224809.png" alt="image-20220726213224809"></p>
+<p><strong>7款经典回收器与垃圾分代之间的关系</strong></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220726213341676.png" alt="image-20220726213341676"></p>
+<ol>
+<li><p>新生代收集器：Serial、ParNew、Parallel Scavenge；</p>
+</li>
+<li><p>老年代收集器：Serial old、Parallel old、CMS；</p>
+</li>
+<li><p>整堆收集器：G1；</p>
+</li>
+</ol>
+<h2 id="垃圾收集器的组合关系"><a href="#垃圾收集器的组合关系" class="headerlink" title="垃圾收集器的组合关系"></a>垃圾收集器的组合关系</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220726213425161.png" alt="image-20220726213425161"></p>
+<ol>
+<li>两个收集器间有连线，表明它们可以搭配使用：<ul>
+<li>Serial&#x2F;Serial old</li>
+<li>Serial&#x2F;CMS    （JDK9废弃）</li>
+<li>ParNew&#x2F;Serial Old （JDK9废弃）</li>
+<li>ParNew&#x2F;CMS</li>
+<li>Parallel Scavenge&#x2F;Serial Old  （预计废弃）</li>
+<li>Parallel Scavenge&#x2F;Parallel Old</li>
+<li>G1</li>
+</ul>
+</li>
+<li>其中Serial Old作为CMS出现”Concurrent Mode Failure”失败的后备预案。</li>
+<li>（红色虚线）由于维护和兼容性测试的成本，在JDK 8时将Serial+CMS、ParNew+Serial Old这两个组合声明为废弃（JEP173），并在JDK9中完全取消了这些组合的支持（JEP214），即：移除。</li>
+<li>（绿色虚线）JDK14中：弃用Parallel Scavenge和Serial Old GC组合（JEP366）</li>
+<li>（青色虚线）JDK14中：删除CMS垃圾回收器（JEP363）</li>
+</ol>
+<ul>
+<li>为什么要有很多收集器，一个不够吗？<ul>
+<li>因为Java的使用场景很多，移动端，服务器等。所以就需要针对不同的场景，提供不同的垃圾收集器，提高垃圾收集的性能。</li>
+</ul>
+</li>
+<li>虽然我们会对各个收集器进行比较，但并非为了挑选一个最好的收集器出来。没有一种放之四海皆准、任何场景下都适用的完美收集器存在，更加没有万能的收集器。所以<strong>我们选择的只是对具体应用最合适的收集器</strong>。</li>
+</ul>
+<h2 id="查看默认垃圾收集器"><a href="#查看默认垃圾收集器" class="headerlink" title="查看默认垃圾收集器"></a>查看默认垃圾收集器</h2><ol>
+<li><strong>-XX:+PrintCommandLineFlags</strong>：查看命令行相关参数（包含使用的垃圾收集器）</li>
+<li>使用命令行指令：<strong>jinfo -flag 相关垃圾回收器参数 进程ID</strong></li>
+</ol>
+<h3 id="JDK8"><a href="#JDK8" class="headerlink" title="JDK8"></a>JDK8</h3><p><strong>在 JDK 8 下，设置 JVM 参数</strong></p>
+<p>-XX:+PrintCommandLineFlags</p>
+<p>程序打印输出：-XX:+UseParallelGC 表示使用使用 ParallelGC ，ParallelGC 默认和 Parallel Old 绑定使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-XX:InitialHeapSize=<span class="number">266620736</span> -XX:MaxHeapSize=<span class="number">4265931776</span> -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:-UseLargePagesIndividualAllocation -XX:+UseParallelGC </span><br></pre></td></tr></table></figure>
+
+<p><strong>通过命令行指令查看</strong></p>
+<p>命令行命令</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jps</span><br><span class="line">jinfo -flag UseParallelGC 进程id</span><br><span class="line">jinfo -flag UseParallelOldGC 进程id</span><br></pre></td></tr></table></figure>
+
+<p>JDK 8 中默认使用 <strong>ParallelGC 和 ParallelOldGC 的组合</strong></p>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0009.png">
+
+<h3 id="JDK9"><a href="#JDK9" class="headerlink" title="JDK9"></a>JDK9</h3><img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0010.png">
+
+<h1 id="Serial-回收器：串行回收"><a href="#Serial-回收器：串行回收" class="headerlink" title="Serial 回收器：串行回收"></a>Serial 回收器：串行回收</h1><p><strong>Serial 回收器：串行回收</strong></p>
+<ol>
+<li>Serial收集器是最基本、历史最悠久的垃圾收集器了。JDK1.3之前回收新生代唯一的选择。</li>
+<li>Serial收集器作为HotSpot中Client模式下的默认新生代垃圾收集器。</li>
+<li><strong>Serial收集器采用复制算法、串行回收和”Stop-the-World”机制的方式执行内存回收。</strong></li>
+<li>除了年轻代之外，Serial收集器还提供用于执行老年代垃圾收集的Serial Old收集器。<strong>Serial old收集器同样也采用了串行回收和”Stop the World”机制，只不过内存回收算法使用的是标记-压缩算法。</strong></li>
+</ol>
+<ul>
+<li><p>Serial Old是运行在Client模式下默认的老年代的垃圾回收器</p>
+</li>
+<li><p>Serial Old在Server模式下主要有两个用途：①与新生代的Parallel Scavenge配合使用②作为老年代CMS收集器的后备垃圾收集方案</p>
+</li>
+<li><p>这个收集器是一个单线程的收集器，“单线程”的意义：它<strong>只会使用一个CPU（串行）或一条收集线程去完成垃圾收集工作</strong>。更重要的是在它进行垃圾收集时，<strong>必须暂停其他所有的工作线程</strong>，直到它收集结束（Stop The World）</p>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220726214837404.png" alt="image-20220726214837404"></p>
+<p><strong>Serial 回收器的优势</strong></p>
+<ol>
+<li><strong>简单而高效</strong>（与其他收集器的单线程比），对于限定单个CPU的环境来说，Serial收集器由于没有线程交互的开销，专心做垃圾收集自然可以获得最高的单线程收集效率。<ul>
+<li>运行在Client模式下的虚拟机是个不错的选择。</li>
+</ul>
+</li>
+<li>在用户的桌面应用场景中，可用内存一般不大（几十MB至一两百MB），可以在较短时间内完成垃圾收集（几十ms至一百多ms），只要不频繁发生，使用串行回收器是可以接受的。</li>
+<li>在HotSpot虚拟机中，使用**-XX:+UseSerialGC**参数可以指定年轻代和老年代都使用串行收集器。<ul>
+<li>等价于新生代用Serial GC，且老年代用Serial Old GC</li>
+</ul>
+</li>
+</ol>
+<p><strong>总结</strong></p>
+<ol>
+<li><p>这种垃圾收集器大家了解，现在已经不用串行的了。而且在限定单核CPU才可以用。现在都不是单核的了。</p>
+</li>
+<li><p>对于交互较强的应用而言，这种垃圾收集器是不能接受的。一般在Java Web应用程序中是不会采用串行垃圾收集器的。</p>
+</li>
+</ol>
+<h1 id="ParNew-回收器：并行回收"><a href="#ParNew-回收器：并行回收" class="headerlink" title="ParNew 回收器：并行回收"></a>ParNew 回收器：并行回收</h1><ol>
+<li>如果说Serial GC是年轻代中的单线程垃圾收集器，那么ParNew收集器则是Serial收集器的多线程版本。<ul>
+<li>Par是Parallel的缩写，New：只能处理新生代</li>
+</ul>
+</li>
+<li>ParNew 收集器除了采用<strong>并行回收</strong>的方式执行内存回收外，两款垃圾收集器之间几乎没有任何区别。ParNew收集器在年轻代中同样也是采用**复制算法、”Stop-the-World”**机制。</li>
+<li><strong>ParNew 是很多JVM运行在Server模式下新生代的默认垃圾收集器</strong>。</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220729160617268.png" alt="image-20220729160617268"></p>
+<ul>
+<li>对于新生代，回收次数频繁，使用并行方式高效。</li>
+<li>对于老年代，回收次数少，使用串行方式节省资源。（CPU并行需要切换线程，串行可以省去切换线程的资源）</li>
+</ul>
+<p><strong>ParNew 回收器与 Serial 回收器比较</strong></p>
+<p>Q：由于ParNew收集器基于并行回收，那么是否可以断定ParNew收集器的回收效率在任何场景下都会比Serial收集器更高效？</p>
+<p>A：<strong>不能</strong></p>
+<ol>
+<li>ParNew收集器运行在多CPU的环境下，由于可以充分利用多CPU、多核心等物理硬件资源优势，可以更快速地完成垃圾收集，提升程序的吞吐量。</li>
+<li>但是<strong>在单个CPU的环境下，ParNew收集器不比Serial收集器更高效</strong>。虽然Serial收集器是基于串行回收，但是由于CPU不需要频繁地做任务切换，因此可以有效避免多线程交互过程中产生的一些额外开销。</li>
+<li>除Serial外，目前只有ParNew GC能与CMS收集器配合工作</li>
+</ol>
+<p><strong>设置 ParNew 垃圾回收器</strong></p>
+<ol>
+<li><p>在程序中，开发人员可以通过选项”<strong>-XX:+UseParNewGC</strong>“手动指定使用ParNew收集器执行内存回收任务。它表示年轻代使用并行收集器，不影响老年代。</p>
+</li>
+<li><p><strong>-XX:ParallelGCThreads</strong>限制线程数量，默认开启和CPU数据相同的线程数。</p>
+</li>
+</ol>
+<h1 id="Parallel-Scavenge回收器：吞吐量优先"><a href="#Parallel-Scavenge回收器：吞吐量优先" class="headerlink" title="Parallel Scavenge回收器：吞吐量优先"></a>Parallel Scavenge回收器：吞吐量优先</h1><p><strong>Parallel Scavenge 回收器：吞吐量优先</strong></p>
+<ol>
+<li><p>HotSpot的年轻代中除了拥有ParNew收集器是基于并行回收的以外，Parallel Scavenge收集器同样也采用了**复制算法、并行回收和”Stop the World”**机制。</p>
+</li>
+<li><p>那么Parallel收集器的出现是否多此一举？</p>
+<ul>
+<li>和ParNew收集器不同，Parallel Scavenge收集器的目标则是达到一个<strong>可控制的吞吐量</strong>（Throughput），它也被称为吞吐量优先的垃圾收集器。</li>
+<li><strong>自适应调节策略</strong>也是Parallel Scavenge与ParNew一个重要区别。（动态调整内存分配情况，以达到一个最优的吞吐量或低延迟）</li>
+</ul>
+</li>
+<li><p>高吞吐量则可以高效率地利用CPU时间，尽快完成程序的运算任务，<strong>主要适合在后台运算而不需要太多交互的任务</strong>。因此，常见在服务器环境中使用。例如，那些执行批量处理、订单处理、工资支付、科学计算的应用程序。</p>
+</li>
+<li><p>Parallel收集器在JDK1.6时提供了用于执行老年代垃圾收集的Parallel Old收集器，用来代替老年代的Serial Old收集器。</p>
+</li>
+<li><p>Parallel Old收集器采用了<strong>标记-压缩</strong>算法，但同样也是基于**并行回收和”Stop-the-World”**机制。</p>
+</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220729161553622.png" alt="image-20220729161553622"></p>
+<ol>
+<li>在程序吞吐量优先的应用场景中，Parallel收集器和Parallel Old收集器的组合，在server模式下的内存回收性能很不错。</li>
+<li><strong>在Java8中，默认是此垃圾收集器。</strong></li>
+</ol>
+<p><strong>Parallel Scavenge 回收器参数设置</strong></p>
+<ol>
+<li><p><strong>-XX:+UseParallelGC</strong> ：手动指定年轻代使用Parallel并行收集器执行内存回收任务。</p>
+</li>
+<li><p><strong>-XX:+UseParallelOldGC</strong>：手动指定老年代都是使用并行回收收集器。</p>
+</li>
+</ol>
+<ul>
+<li><p>分别适用于新生代和老年代</p>
+</li>
+<li><p>上面两个参数分别适用于新生代和老年代。默认jdk8是开启的。默认开启一个，另一个也会被开启。（互相激活）</p>
+</li>
+</ul>
+<ol start="3">
+<li><p><strong>-XX:ParallelGCThreads</strong>：设置年轻代并行收集器的线程数。一般地，<strong>最好与CPU数量相等</strong>，以避免过多的线程数影响垃圾收集性能。</p>
+</li>
+<li><p>在默认情况下，当CPU数量小于8个，ParallelGCThreads的值等于CPU数量。</p>
+<ol start="2">
+<li>当CPU数量大于8个，ParallelGCThreads的值等于3+[5*CPU_Count]&#x2F;8]</li>
+</ol>
+</li>
+<li><p><strong>-XX:MaxGCPauseMillis</strong> ：设置垃圾收集器最大停顿时间（即STW的时间）。单位是毫秒。</p>
+<ol>
+<li>为了尽可能地把停顿时间控制在XX:MaxGCPauseMillis 以内，收集器在工作时会调整Java堆大小或者其他一些参数。</li>
+<li>对于用户来讲，停顿时间越短体验越好。但是在服务器端，我们注重高并发，整体的吞吐量。所以服务器端适合Parallel，进行控制。</li>
+<li>该参数使用需谨慎。</li>
+</ol>
+</li>
+<li><p><strong>-XX:GCTimeRatio</strong>：垃圾收集时间占总时间的比例，即等于 <strong>1 &#x2F; (N+1)</strong> ，用于衡量吞吐量的大小。</p>
+<ol>
+<li><p>取值范围(0, 100)。默认值99，也就是垃圾回收时间占比不超过1。</p>
+</li>
+<li><p>与前一个-XX:MaxGCPauseMillis参数有一定矛盾性，STW暂停时间越长，Radio参数就容易超过设定的比例。</p>
+</li>
+</ol>
+</li>
+<li><p><strong>-XX:+UseAdaptiveSizePolicy</strong> ：设置Parallel Scavenge收集器具有<strong>自适应调节策略</strong></p>
+<ol>
+<li><p>在这种模式下，年轻代的大小、Eden和Survivor的比例、晋升老年代的对象年龄等参数会被自动调整，已达到在堆大小、吞吐量和停顿时间之间的平衡点。</p>
+</li>
+<li><p>在手动调优比较困难的场合，可以直接使用这种自适应的方式，仅指定虚拟机的最大堆、目标的吞吐量（GCTimeRatio）和停顿时间（MaxGCPauseMillis），让虚拟机自己完成调优工作。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h1 id="CMS-回收器：低延迟"><a href="#CMS-回收器：低延迟" class="headerlink" title="CMS 回收器：低延迟"></a>CMS 回收器：低延迟</h1><h2 id="CMS-回收器"><a href="#CMS-回收器" class="headerlink" title="CMS 回收器"></a>CMS 回收器</h2><ol>
+<li>在JDK1.5时期，Hotspot推出了一款在<strong>强交互应用中（就是和用户打交道的引用）</strong>几乎可认为有划时代意义的垃圾收集器：<code>CMS（Concurrent-Mark-Sweep）</code>收集器，<strong>这款收集器是HotSpot虚拟机中第一款真正意义上的并发收集器，它第一次实现了让垃圾收集线程与用户线程同时工作。</strong></li>
+<li>CMS收集器的关注点是尽可能缩短垃圾收集时用户线程的停顿时间。停顿时间越短（低延迟）就越适合与用户交互的程序，良好的响应速度能提升用户体验。<ul>
+<li><strong>目前很大一部分的Java应用集中在互联网站或者B&#x2F;S系统的服务端上，这类应用尤其重视服务的响应速度，希望系统停顿时间最短</strong>，以给用户带来较好的体验。CMS收集器就非常符合这类应用的需求。</li>
+</ul>
+</li>
+<li>CMS的垃圾收集算法采用<strong>标记-清除</strong>算法，并且也会**”Stop-the-World”**</li>
+<li>不幸的是，CMS作为老年代的收集器，却无法与JDK1.4.0中已经存在的新生代收集器Parallel Scavenge配合工作（因为实现的框架不一样，没办法兼容使用），所以在JDK1.5中使用CMS来收集老年代的时候，新生代只能选择ParNew或者Serial收集器中的一个。</li>
+<li>在G1出现之前，CMS使用还是非常广泛的。一直到今天，仍然有很多系统使用CMS GC。</li>
+</ol>
+<h2 id="CMS-工作原理（过程）"><a href="#CMS-工作原理（过程）" class="headerlink" title="CMS 工作原理（过程）"></a>CMS 工作原理（过程）</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220729172255112.png" alt="image-20220729172255112"></p>
+<p>CMS整个过程比之前的收集器要复杂，整个过程分为4个主要阶段，即<strong>初始标记阶段、并发标记阶段、重新标记阶段和并发清除阶段</strong>。(涉及STW的阶段主要是：初始标记 和 重新标记)</p>
+<ol>
+<li>初始标记（Initial-Mark）阶段：在这个阶段中，程序中所有的工作线程都将会因为“Stop-the-World”机制而出现短暂的暂停，<strong>这个阶段的主要任务仅仅只是标记出GC Roots能直接关联到的对象</strong>。一旦标记完成之后就会恢复之前被暂停的所有应用线程。由于直接关联对象比较小，所以这里的<strong>速度非常快</strong>。</li>
+<li>并发标记（Concurrent-Mark）阶段：从GC Roots的<strong>直接关联对象开始遍历整个对象图的过程</strong>，这个过程<strong>耗时较长</strong>但是<strong>不需要停顿用户线程</strong>，<strong>可以与垃圾收集线程一起并发运行</strong>。</li>
+<li>重新标记（Remark）阶段：由于在并发标记阶段中，程序的工作线程会和垃圾收集线程同时运行或者交叉运行，<strong>因此为了修正并发标记期间，因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录，</strong>这个阶段的停顿时间通常会比初始标记阶段稍长一些，并且也会导致“Stop-the-World”的发生，但也远比并发标记阶段的时间短。</li>
+<li>并发清除（Concurrent-Sweep）阶段：此阶段<strong>清理删除掉标记阶段判断的已经死亡的对象，释放内存空间</strong>。<strong>由于不需要移动存活对象，所以这个阶段也是可以与用户线程同时并发的</strong></li>
+</ol>
+<h2 id="CMS分析"><a href="#CMS分析" class="headerlink" title="CMS分析"></a>CMS分析</h2><ul>
+<li>尽管CMS收集器采用的是并发回收（非独占式），<strong>但是在其初始化标记和再次标记这两个阶段中仍然需要执行“Stop-the-World”机制</strong>暂停程序中的工作线程，不过暂停时间并不会太长，因此可以说明目前所有的垃圾收集器都做不到完全不需要“Stop-the-World”，只是尽可能地缩短暂停时间。</li>
+<li><strong>由于最耗费时间的并发标记与并发清除阶段都不需要暂停工作，所以整体的回收是低停顿的</strong>。</li>
+<li>另外，由于在垃圾收集阶段用户线程没有中断，所以<strong>在CMS回收过程中，还应该确保应用程序用户线程有足够的内存可用</strong>。因此，CMS收集器不能像其他收集器那样等到老年代几乎完全被填满了再进行收集，<strong>而是当堆内存使用率达到某一阈值时，便开始进行回收</strong>，以确保应用程序在CMS工作过程中依然有足够的空间支持应用程序运行。要是CMS运行期间预留的内存无法满足程序需要，就会出现一次<strong>“Concurrent Mode Failure”</strong> 失败，这时虚拟机将启动后备预案：临时启用Serial old收集器来重新进行老年代的垃圾收集，这样停顿时间就很长了。</li>
+<li>CMS收集器的垃圾收集算法采用的是<strong>标记-清除算法</strong>，这意味着每次执行完内存回收后，由于被执行内存回收的无用对象所占用的内存空间极有可能是不连续的一些内存块，<strong>不可避免地将会产生一些内存碎片</strong>。那么CMS在为新对象分配内存空间时，将无法使用指针碰撞（Bump the Pointer）技术，而只能够选择空闲列表（Free List）执行内存分配。</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220729172849771.png" alt="image-20220729172849771"></p>
+<p><strong>为什么 CMS 不采用标记-压缩算法呢？</strong></p>
+<ul>
+<li>答案其实很简答，因为当并发清除的时候，用Compact整理内存的话，原来的用户线程使用的内存还怎么用呢？<strong>要保证用户线程能继续执行，前提的它运行的资源不受影响</strong>嘛。Mark Compact更适合“stop the world”这种场景下使用</li>
+</ul>
+<h2 id="CMS-的优点与弊端"><a href="#CMS-的优点与弊端" class="headerlink" title="CMS 的优点与弊端"></a>CMS 的优点与弊端</h2><p><strong>优点</strong></p>
+<ol>
+<li><strong>并发收集</strong></li>
+<li><strong>低延迟</strong></li>
+</ol>
+<p><strong>弊端</strong></p>
+<ol>
+<li><strong>会产生内存碎片</strong>，导致并发清除后，用户线程可用的空间不足。在无法分配大对象的情况下，不得不提前触发Full GC。</li>
+<li><strong>CMS收集器对CPU资源非常敏感</strong>。在并发阶段，它虽然不会导致用户停顿，但是会因为占用了一部分线程而导致应用程序变慢，总吞吐量会降低。</li>
+<li><strong>CMS收集器无法处理浮动垃圾</strong>。可能出现“Concurrent Mode Failure”失败而导致另一次Full GC的产生。在并发标记阶段由于程序的工作线程和垃圾收集线程是同时运行或者交叉运行的，<strong>那么在并发标记阶段如果产生新的垃圾对象，CMS将无法对这些垃圾对象进行标记，最终会导致这些新产生的垃圾对象没有被及时回收，</strong>从而只能在下一次执行GC时释放这些之前未被回收的内存空间。</li>
+</ol>
+<h2 id="CMS-参数配置"><a href="#CMS-参数配置" class="headerlink" title="CMS 参数配置"></a>CMS 参数配置</h2><ul>
+<li><p><strong>-XX:+UseConcMarkSweepGC</strong>：手动指定使用CMS收集器执行内存回收任务。</p>
+</li>
+<li><p>开启该参数后会自动将-XX:+UseParNewGC打开。即：<strong>ParNew（Young区）+CMS（Old区）+Serial Old</strong>（Old区备选方案）的组合。</p>
+</li>
+<li><p><strong>-XX:CMSInitiatingOccupanyFraction</strong>：设置堆内存使用率的阈值，一旦达到该阈值，便开始进行回收。</p>
+<ul>
+<li><strong>JDK5及以前版本的默认值为68</strong>，即当老年代的空间使用率达到68%时，会执行一次CMS回收。<strong>JDK6及以上版本默认值为92%</strong></li>
+<li>如果内存增长缓慢，则可以设置一个稍大的值，大的阀值可以有效降低CMS的触发频率，减少老年代回收的次数可以较为明显地改善应用程序性能。反之，如果应用程序内存使用率增长很快，则应该降低这个阈值，以避免频繁触发老年代串行收集器。因此<strong>通过该选项便可以有效降低Full GC的执行次数</strong>。</li>
+</ul>
+</li>
+<li><p><strong>-XX:+UseCMSCompactAtFullCollection</strong>：用于指定在执行完Full GC后对内存空间进行压缩整理，以此避免内存碎片的产生。不过由于内存压缩整理过程无法并发执行，所带来的问题就是停顿时间变得更长了。</p>
+</li>
+<li><p><strong>-XX:CMSFullGCsBeforeCompaction</strong>：设置在执行多少次Full GC后对内存空间进行压缩整理。</p>
+</li>
+<li><p><strong>-XX:ParallelCMSThreads</strong>：设置CMS的线程数量。</p>
+<ul>
+<li>CMS默认启动的线程数是 <strong>(ParallelGCThreads + 3) &#x2F; 4</strong>，ParallelGCThreads是年轻代并行收集器的线程数，可以当做是 CPU 最大支持的线程数。当CPU资源比较紧张时，受到CMS收集器线程的影响，应用程序的性能在垃圾回收阶段可能会非常糟糕。</li>
+</ul>
+</li>
+</ul>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>HotSpot有这么多的垃圾回收器，那么如果有人问，Serial GC、Parallel GC、Concurrent Mark Sweep GC这三个GC有什么不同呢？</p>
+<ol>
+<li>如果你想要最小化地使用内存和并行开销，请选Serial GC；</li>
+<li>如果你想要最大化应用程序的吞吐量，请选Parallel GC；</li>
+<li>如果你想要最小化GC的中断或停顿时间，请选CMS GC。</li>
+</ol>
+<h2 id="JDK-后续版本中-CMS-的变化"><a href="#JDK-后续版本中-CMS-的变化" class="headerlink" title="JDK 后续版本中 CMS 的变化"></a>JDK 后续版本中 CMS 的变化</h2><ol>
+<li>JDK9新特性：CMS被标记为Deprecate了（JEP291）<ul>
+<li>如果对JDK9及以上版本的HotSpot虚拟机使用参数-XX:+UseConcMarkSweepGC来开启CMS收集器的话，用户会收到一个警告信息，提示CMS未来将会被废弃。</li>
+</ul>
+</li>
+<li>JDK14新特性：删除CMS垃圾回收器（JEP363）移除了CMS垃圾收集器，<ul>
+<li>如果在JDK14中使用XX:+UseConcMarkSweepGC的话，JVM不会报错，只是给出一个warning信息，但是不会exit。JVM会自动回退以默认GC方式启动JVM</li>
+</ul>
+</li>
+</ol>
+<h1 id="G1-回收器：区域化分代式"><a href="#G1-回收器：区域化分代式" class="headerlink" title="G1 回收器：区域化分代式"></a>G1 回收器：区域化分代式</h1><h2 id="为什么还需要G1"><a href="#为什么还需要G1" class="headerlink" title="为什么还需要G1"></a>为什么还需要G1</h2><p><strong>既然我们已经有了前面几个强大的 GC ，为什么还要发布 Garbage First（G1）GC？</strong></p>
+<ol>
+<li>原因就在于应用程序所应对<strong>的业务越来越庞大、复杂，用户越来越多</strong>，没有GC就不能保证应用程序正常进行，而经常造成STW的GC又跟不上实际的需求，所以才会不断地尝试对GC进行优化。</li>
+<li>G1（Garbage-First）垃圾回收器是在Java7 update4之后引入的一个新的垃圾回收器，是当今收集器技术发展的最前沿成果之一。</li>
+<li>与此同时，<strong>为了适应现在不断扩大的内存和不断增加的处理器数量</strong>，进一步降低暂停时间（pause time），同时兼顾良好的吞吐量。</li>
+<li><strong><code>官方给G1设定的目标是在延迟可控的情况下获得尽可能高的吞吐量，所以才担当起“全功能收集器”的重任与期望。</code></strong></li>
+</ol>
+<h2 id="为什么名字叫Garbage-First-G1-呢？"><a href="#为什么名字叫Garbage-First-G1-呢？" class="headerlink" title="为什么名字叫Garbage First(G1)呢？"></a>为什么名字叫Garbage First(G1)呢？</h2><ol>
+<li>因为G1是一个并行回收器，它把堆内存分割为很多不相关的区域（Region）（物理上不连续的）。使用不同的Region来表示Eden、幸存者0区，幸存者1区，老年代等。</li>
+<li>G1 GC有计划地避免在整个Java堆中进行全区域的垃圾收集。G1跟踪各个Region里面的垃圾堆积的价值大小（回收所获得的空间大小以及回收所需时间的经验值），在后台维护一个优先列表，<strong>每次根据允许的收集时间，优先回收价值最大的Region。</strong></li>
+<li>由于这种方式的侧重点在于<strong>回收垃圾最大量的区间</strong>（Region），所以我们给G1一个名字：<strong>垃圾优先（Garbage First）</strong>。</li>
+<li>G1（Garbage-First）是一款面向服务端应用的垃圾收集器，<strong>主要针对配备多核CPU及大容量内存的机器</strong>，以极高概率满足GC停顿时间的同时，还兼具高吞吐量的性能特征。</li>
+<li>在JDK1.7版本正式启用，移除了Experimental的标识，<strong>是JDK9以后的默认垃圾回收器</strong>，取代了CMS回收器以及Parallel+Parallel Old组合。被Oracle官方称为<strong>“全功能的垃圾收集器”</strong>。</li>
+<li>与此同时，CMS已经在JDK9中被标记为废弃（deprecated）。<strong>G1在JDK8中还不是默认的垃圾回收器</strong>，需要使用**-XX:+UseG1GC**来启用。</li>
+</ol>
+<h2 id="G1-回收器的优势"><a href="#G1-回收器的优势" class="headerlink" title="G1 回收器的优势"></a>G1 回收器的优势</h2><p>与其他GC收集器相比，G1使用了全新的分区算法，其特点如下所示：</p>
+<ol>
+<li><strong>并行与并发兼备</strong><ul>
+<li>并行性：G1在回收期间，可以有多个GC线程同时工作，有效利用多核计算能力。此时用户线程STW</li>
+<li>并发性：G1拥有与应用程序交替执行的能力，部分工作可以和应用程序同时执行，因此，一般来说，不会在整个回收阶段发生完全阻塞应用程序的情况</li>
+</ul>
+</li>
+<li><strong>分代收集</strong><ul>
+<li>从分代上看，<strong>G1依然属于分代型垃圾回收器</strong>，它会区分年轻代和老年代，年轻代依然有Eden区和Survivor区。但从堆的结构上看，它不要求整个Eden区、年轻代或者老年代都是连续的，也不再坚持固定大小和固定数量。</li>
+<li>将堆空间分为若干个区域（Region），这些区域中包含了逻辑上的年轻代和老年代。</li>
+<li>和之前的各类回收器不同，它<strong>同时兼顾年轻代和老年代</strong>。对比其他回收器，或者工作在年轻代，或者工作在老年代；</li>
+</ul>
+</li>
+</ol>
+<p>G1的分代，已经不是下面这样的了</p>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0016.png">
+
+<p>G1的分区是这样的一个区域</p>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0017.png">
+
+<ol start="3">
+<li><p><strong>空间整合</strong></p>
+<ul>
+<li>CMS：“标记-清除”算法、内存碎片、若干次GC后进行一次碎片整理</li>
+<li>G1将内存划分为一个个的region。内存的回收是以region作为基本单位的。<strong>Region之间是复制算法，但整体上实际可看作是标记-压缩（Mark-Compact）算法</strong>，两种算法都可以避免内存碎片。这种特性有利于程序长时间运行，分配大对象时不会因为无法找到连续内存空间而提前触发下一次GC。尤其是当Java堆非常大的时候，G1的优势更加明显。</li>
+</ul>
+</li>
+<li><p><strong>可预测的停顿时间模型（即：软实时soft real-time）</strong></p>
+</li>
+</ol>
+<p>这是G1相对于CMS的另一大优势，G1除了追求低停顿外，还能建立可预测的停顿时间模型，能让使用者<strong>明确指定在一个长度为M毫秒的时间片段内，消耗在垃圾收集上的时间不得超过N毫秒。</strong></p>
+<ol>
+<li>由于分区的原因，G1可以只选取部分区域进行内存回收，这样缩小了回收的范围，因此对于全局停顿情况的发生也能得到较好的控制。</li>
+<li>G1跟踪各个Region里面的垃圾堆积的价值大小（回收所获得的空间大小以及回收所需时间的经验值），在后台维护一个优先列表，<strong>每次根据允许的收集时间，优先回收价值最大的Region</strong>。保证了G1收集器在有限的时间内可以获取尽可能高的收集效率。</li>
+<li>相比于CMS GC，G1未必能做到CMS在最好情况下的延时停顿，但是最差情况要好很多。</li>
+</ol>
+<h2 id="G1-回收器的缺点"><a href="#G1-回收器的缺点" class="headerlink" title="G1 回收器的缺点"></a>G1 回收器的缺点</h2><ol>
+<li>相较于CMS，G1还不具备全方位、压倒性优势。比如在用户程序运行过程中，G1无论是为了垃圾收集产生的内存占用（Footprint）还是程序运行时的额外执行负载（overload）都要比CMS要高。</li>
+<li>从经验上来说，在小内存应用上CMS的表现大概率会优于G1，而G1在大内存应用上则发挥其优势。平衡点在<strong>6-8GB</strong>之间。</li>
+</ol>
+<h2 id="G1-参数设置"><a href="#G1-参数设置" class="headerlink" title="G1 参数设置"></a>G1 参数设置</h2><ul>
+<li><p><strong>-XX:+UseG1GC</strong>：手动指定使用G1垃圾收集器执行内存回收任务</p>
+</li>
+<li><p><strong>-XX:G1HeapRegionSize</strong>：设置每个Region的大小。<strong>值是2的幂</strong>，<strong>范围是1MB到32MB之间</strong>，目标是根据最小的Java堆大小划分出约2048个区域。默认是堆内存的1&#x2F;2000。</p>
+</li>
+<li><p><strong>-XX:MaxGCPauseMillis</strong>：设置期望达到的最大GC停顿时间指标，JVM会尽力实现，但不保证达到。<strong>默认值是200ms</strong></p>
+</li>
+<li><p><strong>-XX:+ParallelGCThread</strong>：设置STW时GC线程数的值。<strong>最多设置为8</strong></p>
+</li>
+<li><p><strong>-XX:ConcGCThreads</strong>：设置并发标记的线程数。将n设置为并行垃圾回收线程数（ParallelGcThreads）的1&#x2F;4左右。</p>
+</li>
+<li><p><strong>-XX:InitiatingHeapOccupancyPercent</strong>：设置触发并发GC周期的Java堆占用率阈值。超过此值，就触发GC。<strong>默认值是45</strong>。</p>
+</li>
+</ul>
+<h2 id="G1-收集器的常见操作步骤"><a href="#G1-收集器的常见操作步骤" class="headerlink" title="G1 收集器的常见操作步骤"></a>G1 收集器的常见操作步骤</h2><p>G1的设计原则就是简化JVM性能调优，开发人员只需要简单的三步即可完成调优：</p>
+<ol>
+<li>第一步：开启G1垃圾收集器</li>
+<li>第二步：设置堆的最大内存</li>
+<li>第三步：设置最大的停顿时间</li>
+</ol>
+<p>G1中提供了三种垃圾回收模式：YoungGC、Mixed GC和Full GC，在不同的条件下被触发。</p>
+<h2 id="G1-的适用场景"><a href="#G1-的适用场景" class="headerlink" title="G1 的适用场景"></a>G1 的适用场景</h2><ol>
+<li>面向<strong>服务端</strong>应用，针对具有<strong>大内存、多处理器</strong>的机器。（在普通大小的堆里表现并不惊喜）</li>
+<li>最主要的应用是需要<strong>低GC延迟，并具有大堆的应用程序</strong>提供解决方案；<ul>
+<li>如：在堆大小约6GB或更大时，可预测的暂停时间可以低于0.5秒；（G1通过每次只清理一部分而不是全部的Region的增量式清理来保证每次GC停顿时间不会过长）。</li>
+</ul>
+</li>
+<li>用来替换掉JDK1.5中的CMS收集器；在下面的情况时，使用G1可能比CMS好：<ul>
+<li>超过50%的Java堆被活动数据占用；</li>
+<li>对象分配频率或年代提升频率变化很大；</li>
+<li>GC停顿时间过长（长于0.5至1秒）</li>
+</ul>
+</li>
+<li>HotSpot垃圾收集器里，除了G1以外，其他的垃圾收集器均使用内置的JVM线程执行GC的多线程操作，而G1 GC可以采用应用线程承担后台运行的GC工作，即当JVM的GC线程处理速度慢时，系统会调用应用程序线程帮助加速垃圾回收过程。</li>
+</ol>
+<h2 id="分区-Region"><a href="#分区-Region" class="headerlink" title="分区 Region"></a>分区 Region</h2><p><strong>分区 Region：化整为零</strong></p>
+<ol>
+<li><p>使用G1收集器时，它将整个Java堆划分成约2048个大小相同的独立Region块，每个Region块大小根据堆空间的实际大小而定，整体被控制在1MB到32MB之间，且为2的N次幂，即1MB，2MB，4MB，8MB，16MB，32MB。可以通过 <strong>-XX:G1HeapRegionSize</strong> 设定。<strong>所有的Region大小相同，且在JVM生命周期内不会被改变。</strong></p>
+</li>
+<li><p>虽然还保留有新生代和老年代的概念，但新生代和老年代不再是物理隔离的了，它们都是一部分Region（不需要连续）的集合。通过Region的动态分配方式实现逻辑上的连续。</p>
+</li>
+<li><p>一个Region有可能属于Eden，Survivor或者Old&#x2F;Tenured内存区域。但是一个Region只可能属于一个角色，但是不固定，谁占用属于谁。图中的E表示该Region属于Eden内存区域，S表示属于Survivor内存区域，O表示属于Old内存区域。图中空白的表示未使用的内存空间。</p>
+</li>
+<li><p>G1垃圾收集器还增加了一种新的内存区域，叫做Humongous内存区域，如图中的H块。主要用于存储大对象，如果超过1.5个Region，就放到H。</p>
+</li>
+</ol>
+<blockquote>
+<p>纠错：尚硅谷视频里这里写的是超过1.5个region。根据<a target="_blank" rel="noopener" href="https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html">官方文档</a>:  <strong>The G1 Garbage Collector Step by Step</strong></p>
+<p>As shown regions can be allocated into Eden, survivor, and old generation regions. In addition, there is a fourth type of object known as Humongous regions. These regions are designed to hold objects that are 50% the size of a standard region or larger. They are stored as a set of contiguous regions. Finally the last type of regions would be the unused areas of the heap.</p>
+<p>翻译：</p>
+<p>如图所示，可以将区域分配到Eden，幸存者和旧时代区域。 此外，还有第四种类型的物体被称为巨大区域。 这些区域旨在容纳标准区域大小的50％或更大的对象。 它们存储为一组连续区域。 最后，最后一种区域类型是堆的未使用区域。</p>
+</blockquote>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0018.png">
+
+<p><strong>设置 H 的原因</strong></p>
+<p>对于堆中的大对象，默认直接会被分配到老年代，但是如果<strong>它是一个短期存在的大对象</strong>就会对垃圾收集器造成负面影响。为了解决这个问题，G1划分了一个Humongous区，它用来专门存放大对象。如<strong>果一个H区装不下一个大对象，那么G1会寻找连续的H区来存储</strong>。为了能找到连续的H区，有时候不得不启动Full GC。G1的大多数行为都把H区作为老年代的一部分来看待。</p>
+<p><strong>Regio的细节</strong></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220730205740527.png" alt="image-20220730205740527"></p>
+<ol>
+<li>每个Region都是通过指针碰撞来分配空间</li>
+<li>G1为每一个Region设计了两个名为TAMS（Top at Mark Start）的指针，把Region中的一部分空间划分出来用于并发回收过程中的新对象分配，并发回收时新分配的对象地址都必须要在这两个指针位置以上。</li>
+<li>TLAB还是用来保证并发性</li>
+</ol>
+<h2 id="G1-垃圾回收流程"><a href="#G1-垃圾回收流程" class="headerlink" title="G1 垃圾回收流程"></a>G1 垃圾回收流程</h2><p>G1 GC的垃圾回收过程主要包括如下三个环节：</p>
+<ul>
+<li>年轻代GC（Young GC）</li>
+<li>老年代并发标记过程（Concurrent Marking）</li>
+<li>混合回收（Mixed GC）</li>
+<li>（如果需要，单线程、独占式、高强度的Full GC还是继续存在的。它针对GC的评估失败提供了一种失败保护机制，即强力回收。）</li>
+</ul>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0020.png">
+
+<p>顺时针，Young GC –&gt; Young GC+Concurrent Marking –&gt; Mixed GC顺序，进行垃圾回收</p>
+<p><strong>回收流程</strong></p>
+<ol>
+<li>应用程序分配内存，<strong>当年轻代的Eden区用尽时开始年轻代回收过程</strong>；G1的年轻代收集阶段是一个<strong>并行的独占式收集器</strong>。在年轻代回收期，G1 GC暂停所有应用程序线程，启动多线程执行年轻代回收。然后<strong>从年轻代区间移动存活对象到Survivor区间或者老年区间，也有可能是两个区间都会涉及。</strong></li>
+<li>当堆内存使用达到一定值（默认**45%**）时，开始老年代并发标记过程。</li>
+<li>标记完成马上开始混合回收过程。对于一个混合回收期，G1 GC从老年区间移动存活对象到空闲区间，这些空闲区间也就成为了老年代的一部分。和年轻代不同，老年代的G1回收器和其他GC不同，<strong>G1的老年代回收器不需要整个老年代被回收，一次只需要扫描&#x2F;回收一小部分老年代的Region就可以了</strong>。同时，这个老年代Region是和年轻代一起被回收的。</li>
+<li>举个例子：一个Web服务器，Java进程最大堆内存为4G，每分钟响应1500个请求，每45秒钟会新分配大约2G的内存。G1会每45秒钟进行一次年轻代回收，每31个小时整个堆的使用率会达到45%，会开始老年代并发标记过程，标记完成后开始四到五次的混合回收。</li>
+</ol>
+<h2 id="Remembered-Set（记忆集）"><a href="#Remembered-Set（记忆集）" class="headerlink" title="Remembered Set（记忆集）"></a>Remembered Set（记忆集）</h2><p><strong>问题：</strong></p>
+<ol>
+<li><p>一个对象被不同区域引用的问题</p>
+</li>
+<li><p>一个Region不可能是孤立的，一个Region中的对象可能被其他任意Region中对象引用，判断对象存活时，是否需要扫描整个Java堆才能保证准确？</p>
+</li>
+<li><p>在其他的分代收集器，也存在这样的问题（而G1更突出，因为G1主要针对大堆）</p>
+</li>
+<li><p>回收新生代也不得不同时扫描老年代？这样的话会降低Minor GC的效率</p>
+</li>
+</ol>
+<p><strong>解决方法：</strong></p>
+<ol>
+<li><p>无论G1还是其他分代收集器，JVM都是使用Remembered Set来避免全堆扫描；</p>
+</li>
+<li><p><strong>每个Region都有一个对应的Remembered Set</strong></p>
+</li>
+<li><p>每次Reference类型数据写操作时，都会产生一个Write Barrier暂时中断操作；</p>
+</li>
+<li><p>然后检查将要写入的引用指向的对象是否和该Reference类型数据在不同的Region（其他收集器：检查老年代对象是否引用了新生代对象）；</p>
+</li>
+<li><p>如果不同，通过CardTable把相关引用信息记录到引用指向对象的所在Region对应的Remembered Set中；</p>
+</li>
+<li><p>当进行垃圾收集时，在GC根节点的枚举范围加入Remembered Set；就可以保证不进行全局扫描，也不会有遗漏。</p>
+</li>
+</ol>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0021.png">
+
+<ol>
+<li>在回收 Region 时，为了不进行全堆的扫描，引入了 Remembered Set</li>
+<li>Remembered Set 记录了当前 Region 中的对象被哪个对象引用了</li>
+<li>这样在进行 Region 复制时，就不要扫描整个堆，只需要去 Remembered Set 里面找到引用了当前 Region 的对象</li>
+<li>Region 复制完毕后，修改 Remembered Set 中对象的引用即可</li>
+</ol>
+<h2 id="G1回收过程一：年轻代-GC"><a href="#G1回收过程一：年轻代-GC" class="headerlink" title="G1回收过程一：年轻代 GC"></a>G1回收过程一：年轻代 GC</h2><ol>
+<li>JVM启动时，G1先准备好Eden区，程序在运行过程中不断创建对象到Eden区，当Eden空间耗尽时，G1会启动一次年轻代垃圾回收过程。</li>
+<li><strong>年轻代回收只回收Eden区和Survivor区</strong></li>
+<li>YGC时，首先G1停止应用程序的执行（Stop-The-World），G1创建回收集（Collection Set），回收集是指需要被回收的内存分段的集合，年轻代回收过程的回收集包含年轻代Eden区和Survivor区所有的内存分段。</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220730211000278.png" alt="image-20220730211000278"></p>
+<p>图的大致意思就是：</p>
+<p>1、回收完E和S区，剩余存活的对象会复制到新的S区</p>
+<p>2、S区达到一定的阈值可以晋升为O区</p>
+<p><strong>细致过程：</strong></p>
+<ol>
+<li><p>第一阶段，<strong>扫描根</strong></p>
+<ul>
+<li>根是指GC Roots，根引用连同RSet记录的外部引用作为扫描存活对象的入口。</li>
+</ul>
+</li>
+<li><p>第二阶段，<strong>更新RSet</strong></p>
+<ul>
+<li>处理dirty card queue(见备注)中的card，更新RSet。此阶段完成后，<strong>RSet可以准确的反映老年代对所在的内存分段中对象的引用</strong></li>
+</ul>
+</li>
+<li><p>第三阶段，<strong>处理RSet</strong></p>
+<ul>
+<li>识别被老年代对象指向的Eden中的对象，这些被指向的Eden中的对象被认为是存活的对象。</li>
+</ul>
+</li>
+<li><p>第四阶段，<strong>复制对象</strong></p>
+<ul>
+<li>此阶段，对象树被遍历，Eden区内存段中存活的对象会被复制到Survivor区中空的内存分段，Survivor区内存段中存活的对象</li>
+<li>如果年龄未达阈值，年龄会加1，达到阀值会被会被复制到Old区中空的内存分段。</li>
+<li>如果Survivor空间不够，Eden空间的部分数据会直接晋升到老年代空间。</li>
+</ul>
+</li>
+<li><p>第五阶段，<strong>处理引用</strong></p>
+<ul>
+<li>处理Soft，Weak，Phantom，Final，JNI Weak 等引用。最终Eden空间的数据为空，GC停止工作，而目标内存中的对象都是连续存储的，没有碎片，所以复制过程可以达到内存整理的效果，减少碎片。</li>
+</ul>
+</li>
+</ol>
+<p><strong>备注：</strong></p>
+<ol>
+<li>对于应用程序的引用赋值语句 oldObject.field（这个是老年代）&#x3D;object（这个是新生代），JVM会在之前和之后执行特殊的操作以在dirty card queue中入队一个保存了对象引用信息的card。在年轻代回收的时候，G1会对Dirty Card Queue中所有的card进行处理，以更新RSet，保证RSet实时准确的反映引用关系。</li>
+<li>那为什么不在引用赋值语句处直接更新RSet呢？这是为了性能的需要，RSet的处理需要线程同步，开销会很大，使用队列性能会好很多。</li>
+</ol>
+<h2 id="G1回收过程二：并发标记过程"><a href="#G1回收过程二：并发标记过程" class="headerlink" title="G1回收过程二：并发标记过程"></a>G1回收过程二：并发标记过程</h2><ol>
+<li><strong>初始标记阶段</strong>：标记从根节点直接可达的对象。这个阶段是STW的，并且会触发一次年轻代GC。正是由于该阶段时STW的，所以我们只扫描根节点可达的对象，以节省时间。</li>
+<li><strong>根区域扫描（Root Region Scanning）</strong>：G1 GC扫描Survivor区直接可达的老年代区域对象，并标记被引用的对象。这一过程必须在Young GC之前完成，因为Young GC会使用复制算法对Survivor区进行GC。</li>
+<li><strong>并发标记（Concurrent Marking）</strong>：<ul>
+<li>在整个堆中进行并发标记（和应用程序并发执行），此过程可能被Young GC中断。</li>
+<li><strong>在并发标记阶段，若发现区域对象中的所有对象都是垃圾，那这个区域会被立即回收。</strong></li>
+<li>同时，并发标记过程中，会计算每个区域的对象活性（区域中存活对象的比例）。</li>
+</ul>
+</li>
+<li><strong>再次标记（Remark）</strong>：由于应用程序持续进行，需要修正上一次的标记结果。是STW的。G1中采用了比CMS更快的原始快照算法：Snapshot-At-The-Beginning（SATB）。</li>
+<li><strong>独占清理（cleanup，STW）</strong>：计算各个区域的存活对象和GC回收比例，并进行排序，识别可以混合回收的区域。为下阶段做铺垫。是STW的。这个阶段并不会实际上去做垃圾的收集</li>
+<li><strong>并发清理阶段</strong>：识别并清理完全空闲的区域。</li>
+</ol>
+<h2 id="G1回收过程三：混合回收过程"><a href="#G1回收过程三：混合回收过程" class="headerlink" title="G1回收过程三：混合回收过程"></a>G1回收过程三：混合回收过程</h2><p>当越来越多的对象晋升到老年代Old Region时，为了避免堆内存被耗尽，虚拟机会触发一个混合的垃圾收集器，即Mixed GC，该算法并不是一个Old GC，除了回收整个Young Region，还会回收一部分的Old Region。这里需要注意：<strong>是一部分老年代，而不是全部老年代</strong>。可以选择哪些Old Region进行收集，从而可以对垃圾回收的耗时时间进行控制。也要注意的是Mixed GC并不是Full GC。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220730212004610.png" alt="image-20220730212004610"></p>
+<p><strong>混合回收的细节</strong></p>
+<ol>
+<li>并发标记结束以后，老年代中百分百为垃圾的内存分段被回收了，部分为垃圾的内存分段被计算了出来。默认情况下，这些老年代的内存分段会分8次（可以通过-XX:G1MixedGCCountTarget设置）被回收。【意思就是一个Region会被分为8个内存段】</li>
+<li>混合回收的回收集（Collection Set）包括八分之一的老年代内存分段，Eden区内存分段，Survivor区内存分段。混合回收的算法和年轻代回收的算法完全一样，只是回收集多了老年代的内存分段。具体过程请参考上面的年轻代回收过程。</li>
+<li>由于老年代中的内存分段默认分8次回收，G1会优先回收垃圾多的内存分段。垃圾占内存分段比例越高的，越会被先回收。并且有一个阈值会决定内存分段是否被回收。XX:G1MixedGCLiveThresholdPercent，默认为65%，意思是垃圾占内存分段比例要达到65%才会被回收。如果垃圾占比太低，意味着存活的对象占比高，在复制的时候会花费更多的时间。</li>
+<li>混合回收并不一定要进行8次。有一个阈值**-XX:G1HeapWastePercent**，默认值为10%，意思是允许整个堆内存中有10%的空间被浪费，意味着如果发现可以回收的垃圾占堆内存的比例低于10%，则不再进行混合回收。因为GC会花费很多的时间但是回收到的内存却很少。</li>
+</ol>
+<h2 id="G1-回收可选的过程四：Full-GC"><a href="#G1-回收可选的过程四：Full-GC" class="headerlink" title="G1 回收可选的过程四：Full GC"></a>G1 回收可选的过程四：Full GC</h2><ol>
+<li><p>G1的初衷就是要避免Full GC的出现。但是如果上述方式不能正常工作，<strong>G1会停止应用程序的执行（Stop-The-World）</strong>，使用<strong>单线程</strong>的内存回收算法进行垃圾回收，性能会非常差，应用程序停顿时间会很长。</p>
+</li>
+<li><p>要避免Full GC的发生，一旦发生Full GC，需要对JVM参数进行调整。什么时候会发生Ful1GC呢？比如<strong>堆内存太小</strong>，当G1在复制存活对象的时候没有空的内存分段可用，则会回退到Full GC，这种情况可以通过增大内存解决。</p>
+</li>
+</ol>
+<p><strong>导致G1 Full GC的原因可能有两个：</strong></p>
+<ol>
+<li>EVacuation的时候没有足够的to-space来存放晋升的对象；</li>
+<li>并发处理过程完成之前空间耗尽。</li>
+</ol>
+<h2 id="G1补充"><a href="#G1补充" class="headerlink" title="G1补充"></a>G1补充</h2><p>从Oracle官方透露出来的信息可获知，回收阶段（Evacuation）其实本也有想过设计成与用户程序一起并发执行，但这件事情做起来比较复杂，考虑到G1只是回一部分Region，停顿时间是用户可控制的，所以并不迫切去实现，<strong>而选择把这个特性放到了G1之后出现的低延迟垃圾收集器（即ZGC）中。</strong>另外，还考虑到G1不是仅仅面向低延迟，停顿用户线程能够最大幅度提高垃圾收集效率，为了保证吞吐量所以才选择了完全暂停用户线程的实现方案。</p>
+<p><strong>G1 回收器的优化建议</strong></p>
+<ol>
+<li>年轻代大小<ul>
+<li>避免使用-Xmn或-XX:NewRatio等相关选项显式设置年轻代大小，因为固定年轻代的大小会覆盖可预测的暂停时间目标。我们让G1自己去调整</li>
+</ul>
+</li>
+<li>暂停时间目标不要太过严苛<ul>
+<li>G1 GC的吞吐量目标是90%的应用程序时间和10%的垃圾回收时间</li>
+<li>评估G1 GC的吞吐量时，暂停时间目标不要太严苛。目标太过严苛表示你愿意承受更多的垃圾回收开销，而这些会直接影响到吞吐量。</li>
+</ul>
+</li>
+</ol>
+<h1 id="垃圾回收器总结"><a href="#垃圾回收器总结" class="headerlink" title="垃圾回收器总结"></a>垃圾回收器总结</h1><h2 id="7-种垃圾回收器的比较"><a href="#7-种垃圾回收器的比较" class="headerlink" title="7 种垃圾回收器的比较"></a>7 种垃圾回收器的比较</h2><p>截止JDK1.8，一共有7款不同的垃圾收集器。每一款的垃圾收集器都有不同的特点，在具体使用的时候，需要根据具体的情况选用不同的垃圾收集器。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220730212626643.png" alt="image-20220730212626643"></p>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0024.png">
+
+<h2 id="怎么选择垃圾回收器"><a href="#怎么选择垃圾回收器" class="headerlink" title="怎么选择垃圾回收器"></a>怎么选择垃圾回收器</h2><p>Java垃圾收集器的配置对于JVM优化来说是一个很重要的选择，选择合适的垃圾收集器可以让JVM的性能有一个很大的提升。怎么选择垃圾收集器？</p>
+<ol>
+<li>优先调整堆的大小让JVM自适应完成。</li>
+<li>如果内存小于100M，使用串行收集器</li>
+<li>如果是单核、单机程序，并且没有停顿时间的要求，串行收集器</li>
+<li>如果是多CPU、需要高吞吐量、允许停顿时间超过1秒，选择并行或者JVM自己选择</li>
+<li>如果是多CPU、追求低停顿时间，需快速响应（比如延迟不能超过1秒，如互联网应用），使用并发收集器</li>
+<li>官方推荐G1，性能高。现在互联网的项目，基本都是使用G1。</li>
+</ol>
+<p>最后需要明确一个观点：</p>
+<ol>
+<li>没有最好的收集器，更没有万能的收集算法</li>
+<li>调优永远是针对特定场景、特定需求，不存在一劳永逸的收集器</li>
+</ol>
+<p><strong>面试</strong></p>
+<ol>
+<li>对于垃圾收集，面试官可以循序渐进从理论、实践各种角度深入，也未必是要求面试者什么都懂。但如果你懂得原理，一定会成为面试中的加分项。</li>
+<li>这里较通用、基础性的部分如下：<ul>
+<li>垃圾收集的算法有哪些？如何判断一个对象是否可以回收？</li>
+<li>垃圾收集器工作的基本流程。</li>
+</ul>
+</li>
+<li>另外，大家需要多关注垃圾回收器这一章的各种常用的参数</li>
+</ol>
+<h1 id="GC-日志分析"><a href="#GC-日志分析" class="headerlink" title="GC 日志分析"></a>GC 日志分析</h1><h2 id="常用参数配置"><a href="#常用参数配置" class="headerlink" title="常用参数配置"></a>常用参数配置</h2><blockquote>
+<p><strong>GC 日志参数设置</strong></p>
+</blockquote>
+<p><strong>通过阅读GC日志，我们可以了解Java虚拟机内存分配与回收策略。</strong></p>
+<p>内存分配与垃圾回收的参数列表</p>
+<ol>
+<li><strong>-XX:+PrintGC</strong> ：输出GC日志。类似：-verbose:gc</li>
+<li><strong>-XX:+PrintGCDetails</strong> ：输出GC的详细日志</li>
+<li><strong>-XX:+PrintGCTimestamps</strong> ：输出GC的时间戳（以基准时间的形式）</li>
+<li><strong>-XX:+PrintGCDatestamps</strong> ：输出GC的时间戳（以日期的形式，如2013-05-04T21: 53: 59.234 +0800）</li>
+<li><strong>-XX:+PrintHeapAtGC</strong> ：在进行GC的前后打印出堆的信息</li>
+<li><strong>-Xloggc:…&#x2F;logs&#x2F;gc.log</strong> ：日志文件的输出路径</li>
+</ol>
+<blockquote>
+<p><strong>verbose:gc</strong></p>
+</blockquote>
+<p>1、JVM 参数</p>
+<p><code>-verbose:gc</code></p>
+<p>2、这个只会显示总的GC堆的变化，如下：</p>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0025.png">
+
+<p>3、参数解析</p>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0026.png">
+
+<blockquote>
+<p><strong>PrintGCDetails</strong></p>
+</blockquote>
+<p>1、JVM 参数</p>
+<p><code>-XX:+PrintGCDetails</code></p>
+<p>2、输入信息如下</p>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0027.png">
+
+<p>3、参数解析</p>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0028.png">
+
+<blockquote>
+<p><strong>PrintGCTimestamps 和 PrintGCDatestamps</strong></p>
+</blockquote>
+<p>1、JVM 参数</p>
+<p><code>-XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps</code></p>
+<p>2、输出信息如下</p>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0029.png">
+
+<p>3、说明：日志带上了日期和时间</p>
+<h2 id="GC-日志补充说明"><a href="#GC-日志补充说明" class="headerlink" title="GC 日志补充说明"></a>GC 日志补充说明</h2><ol>
+<li><p>“[GC”和”[Full GC”说明了这次垃圾收集的停顿类型，如果有”Full”则说明GC发生了”Stop The World”</p>
+</li>
+<li><p>使用Serial收集器在新生代的名字是Default New Generation，因此显示的是”[DefNew”</p>
+</li>
+<li><p>使用ParNew收集器在新生代的名字会变成”[ParNew”，意思是”Parallel New Generation”</p>
+</li>
+<li><p>使用Parallel scavenge收集器在新生代的名字是”[PSYoungGen”</p>
+</li>
+<li><p>老年代的收集和新生代道理一样，名字也是收集器决定的</p>
+</li>
+<li><p>使用G1收集器的话，会显示为”garbage-first heap”</p>
+</li>
+<li><p>Allocation Failure表明本次引起GC的原因是因为在年轻代中没有足够的空间能够存储新的数据了。</p>
+</li>
+<li><p>[ PSYoungGen: 5986K-&gt;696K(8704K) ] 5986K-&gt;704K (9216K)</p>
+<ul>
+<li>中括号内：GC回收前年轻代大小，回收后大小，（年轻代总大小）</li>
+<li>括号外：GC回收前年轻代和老年代大小，回收后大小，（年轻代和老年代总大小）</li>
+</ul>
+</li>
+<li><p>user代表用户态回收耗时，sys内核态回收耗时，real实际耗时。由于多核线程切换的原因，时间总和可能会超过real时间</p>
+</li>
+</ol>
+<h3 id="Young-GC"><a href="#Young-GC" class="headerlink" title="Young GC"></a>Young GC</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220730214301391.png" alt="image-20220730214301391"></p>
+<h3 id="Full-GC"><a href="#Full-GC" class="headerlink" title="Full GC"></a>Full GC</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220730214415439.png" alt="image-20220730214415439"></p>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 在jdk7 和 jdk8中分别执行</span></span><br><span class="line"><span class="comment"> * -verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8 -XX:+UseSerialGC</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GCLogTest1</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">_1MB</span> <span class="operator">=</span> <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">testAllocation</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">byte</span>[] allocation1, allocation2, allocation3, allocation4;</span><br><span class="line">        allocation1 = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation2 = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation3 = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation4 = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">4</span> * _1MB];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] agrs)</span> &#123;</span><br><span class="line">        testAllocation();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>JDK7 中的情况</strong></p>
+<p>1、首先我们会将3个2M的数组存放到Eden区，然后后面4M的数组来了后，将无法存储，因为Eden区只剩下2M的剩余空间了，那么将会进行一次Young GC操作，将原来Eden区的内容，存放到Survivor区，但是Survivor区也存放不下，那么就会直接晋级存入Old 区</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220730214824946.png" alt="image-20220730214824946"></p>
+<p>2、然后我们将4M对象存入到Eden区中</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220730215136327.png" alt="image-20220730215136327"></p>
+<p>老年代图画的有问题，free应该是4M</p>
+<p><strong>JDK8 中的情况</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">com.atguigu.java.GCLogTest1</span><br><span class="line">[GC (Allocation Failure) [DefNew: 6322K-&gt;668K(9216K), <span class="number">0.0034812</span> secs] 6322K-&gt;4764K(19456K), <span class="number">0.0035169</span> secs] [Times: user=<span class="number">0.00</span> sys=<span class="number">0.00</span>, real=<span class="number">0.00</span> secs] </span><br><span class="line">Heap</span><br><span class="line"> def <span class="keyword">new</span> <span class="title class_">generation</span>   total 9216K, used 7050K [<span class="number">0x00000000fec00000</span>, <span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ff600000</span>)</span><br><span class="line">  eden space 8192K,  <span class="number">77</span>% used [<span class="number">0x00000000fec00000</span>, <span class="number">0x00000000ff23b668</span>, <span class="number">0x00000000ff400000</span>)</span><br><span class="line">  from space 1024K,  <span class="number">65</span>% used [<span class="number">0x00000000ff500000</span>, <span class="number">0x00000000ff5a71d8</span>, <span class="number">0x00000000ff600000</span>)</span><br><span class="line">  to   space 1024K,   <span class="number">0</span>% used [<span class="number">0x00000000ff400000</span>, <span class="number">0x00000000ff400000</span>, <span class="number">0x00000000ff500000</span>)</span><br><span class="line"> tenured generation   total 10240K, used 4096K [<span class="number">0x00000000ff600000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">   the space 10240K,  <span class="number">40</span>% used [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ffa00020</span>, <span class="number">0x00000000ffa00200</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line"> Metaspace       used 3469K, capacity 4496K, committed 4864K, reserved 1056768K</span><br><span class="line">  <span class="keyword">class</span> <span class="title class_">space</span>    used 381K, capacity 388K, committed 512K, reserved 1048576K</span><br><span class="line"></span><br><span class="line">Process finished with exit code <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0035.jpg">
+
+<p>与 JDK7 不同的是，JDK8 直接判定 4M 的数组为大对象，直接怼到老年区去了</p>
+<h2 id="常用日志分析工具"><a href="#常用日志分析工具" class="headerlink" title="常用日志分析工具"></a>常用日志分析工具</h2><p><strong>保存日志文件</strong></p>
+<p><strong>JVM参数</strong>：<code>-XLoggc:./logs/gc.log</code>，  .&#x2F; 表示当前目录，在 IDEA中程序运行的当前目录是工程的根目录，而不是模块的根目录</p>
+<p>可以用一些工具去分析这些GC日志，常用的日志分析工具有：</p>
+<p>GCViewer(Github上的jar包)、GCEasy、GCHisto、GCLogViewer、Hpjmeter、garbagecat等</p>
+<p><strong>推荐：GCeasy</strong></p>
+<p>在线分析网址：gceasy.io</p>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0036.jpg">
+
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0037.png">
+
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0038.png">
+
+<h1 id="垃圾回收器的新发展"><a href="#垃圾回收器的新发展" class="headerlink" title="垃圾回收器的新发展"></a>垃圾回收器的新发展</h1><h2 id="垃圾回收器的发展过程"><a href="#垃圾回收器的发展过程" class="headerlink" title="垃圾回收器的发展过程"></a>垃圾回收器的发展过程</h2><ol>
+<li>GC仍然处于飞速发展之中，目前的默认选项<strong>G1 GC在不断的进行改进</strong>，很多我们原来认为的缺点，例如串行的Full GC、Card Table扫描的低效等，都已经被大幅改进，例如，JDK10以后，Fu11GC已经是并行运行，在很多场景下，其表现还略优于ParallelGC的并行Ful1GC实现。</li>
+<li>即使是SerialGC，虽然比较古老，但是简单的设计和实现未必就是过时的，它本身的开销，不管是GC相关数据结构的开销，还是线程的开销，都是非常小的，所以随着云计算的兴起，<strong>在serverless等新的应用场景下，Serial Gc找到了新的舞台</strong>。</li>
+<li>比较不幸的是CMSGC，因为其算法的理论缺陷等原因，虽然现在还有非常大的用户群体，但在JDK9中已经被标记为废弃，并在JDK14版本中移除</li>
+<li>现在G1回收器已成为默认回收器好几年了。我们还看到了引入了两个新的收集器：<strong>ZGC（JDK11出现）和Shenandoah（Open JDK12）</strong>，其特点：<strong>主打低停顿时间</strong></li>
+</ol>
+<h2 id="Shenandoah-GC"><a href="#Shenandoah-GC" class="headerlink" title="Shenandoah GC"></a>Shenandoah GC</h2><p><strong>Open JDK12的Shenandoash GC：低停顿时间的GC（实验性）</strong></p>
+<ol>
+<li><p>Shenandoah无疑是众多GC中最孤独的一个。是第一款不由Oracle公司团队领导开发的Hotspot垃圾收集器。不可避免的受到官方的排挤。比如号称openJDK和OracleJDK没有区别的Oracle公司仍拒绝在OracleJDK12中支持Shenandoah。</p>
+</li>
+<li><p>Shenandoah垃圾回收器最初由RedHat进行的一项垃圾收集器研究项目Pauseless GC的实现，<strong>旨在针对JVM上的内存回收实现低停顿的需求</strong>。在2014年贡献给OpenJDK。</p>
+</li>
+<li><p>Red Hat研发Shenandoah团队对外宣称，<strong>Shenandoah垃圾回收器的暂停时间与堆大小无关，这意味着无论将堆设置为200MB还是200GB，99.9%的目标都可以把垃圾收集的停顿时间限制在十毫秒以内</strong>。不过实际使用性能将取决于实际工作堆的大小和工作负载。</p>
+</li>
+</ol>
+<p>这是RedHat在2016年发表的论文数据，测试内容是使用ES对200GB的维基百科数据进行索引。从结果看：</p>
+<ol>
+<li>停顿时间比其他几款收集器确实有了质的飞跃，但也未实现最大停顿时间控制在十毫秒以内的目标。</li>
+<li>而吞吐量方面出现了明显的下降，总运行时间是所有测试收集器里最长的。</li>
+</ol>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0039.png">
+
+<p>总结</p>
+<ol>
+<li>Shenandoah GC的弱项：<strong>高运行负担下的吞吐量下降。</strong></li>
+<li>Shenandoah GC的强项：<strong>低延迟时间。</strong></li>
+</ol>
+<h2 id="令人震惊、革命性的-ZGC"><a href="#令人震惊、革命性的-ZGC" class="headerlink" title="令人震惊、革命性的 ZGC"></a>令人震惊、革命性的 ZGC</h2><ol>
+<li><p>官方文档：<a target="_blank" rel="noopener" href="https://docs.oracle.com/en/java/javase/12/gctuning/">https://docs.oracle.com/en/java/javase/12/gctuning/</a></p>
+</li>
+<li><p>ZGC与Shenandoah目标高度相似，<strong>在尽可能对吞吐量影响不大的前提下，实现在任意堆内存大小下都可以把垃圾收集的停颇时间限制在十毫秒以内的低延迟。</strong></p>
+</li>
+<li><p>《深入理解Java虚拟机》一书中这样定义ZGC：ZGC收集器是一款基于Region内存布局的，（暂时）不设分代的，使用了读屏障、染色指针和内存多重映射等技术来实现<strong>可并发的标记-压缩算法</strong>的，以<strong>低延迟为首要目标</strong>的一款垃圾收集器。</p>
+</li>
+<li><p>ZGC的工作过程可以分为4个阶段：<strong>并发标记 - 并发预备重分配 - 并发重分配 - 并发重映射</strong> 等。</p>
+</li>
+<li><p>ZGC几乎在所有地方并发执行的，除了初始标记的是STW的。所以停顿时间几乎就耗费在初始标记上，这部分的实际时间是非常少的。</p>
+</li>
+</ol>
+<p><strong>吞吐量</strong></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220731111325771.png" alt="image-20220731111325771"></p>
+<p>max-JOPS：以低延迟为首要前提下的数据</p>
+<p>critical-JOPS：不考虑低延迟下的数据</p>
+<p><strong>低延迟</strong></p>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0041.png">
+
+<p>在ZGC的强项停顿时间测试上，它毫不留情的将Parallel、G1拉开了两个数量级的差距。无论平均停顿、95%停顿、998停顿、99. 98停顿，还是最大停顿时间，ZGC都能毫不费劲控制在10毫秒以内。</p>
+<p>虽然ZGC还在试验状态，没有完成所有特性，但此时性能已经相当亮眼，用“令人震惊、革命性”来形容，不为过。</p>
+<p><strong>未来将在服务端、大内存、低延迟应用的首选垃圾收集器。</strong></p>
+<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_012/0042.png">
+
+
+
+<ol>
+<li><p>JDK14之前，ZGC仅Linux才支持。</p>
+</li>
+<li><p>尽管许多使用ZGC的用户都使用类Linux的环境，但在Windows和macOS上，人们也需要ZGC进行开发部署和测试。许多桌面应用也可以从ZGC中受益。因此，ZGC特性被移植到了Windows和macOS上。</p>
+</li>
+<li><p>现在mac或Windows上也能使用ZGC了，示例如下：</p>
+<p>-XX:+UnlockExperimentalVMOptions-XX：+UseZGC</p>
+</li>
+</ol>
+<h2 id="面向大堆的-AliGC"><a href="#面向大堆的-AliGC" class="headerlink" title="面向大堆的 AliGC"></a>面向大堆的 AliGC</h2><p>AliGC是阿里巴巴JVM团队基于G1算法，面向大堆（LargeHeap）应用场景。指定场景下的对比：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220731111601134.png" alt="image-20220731111601134"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+    
+</article>
+
+    
+    <article
   id="post-JVM：垃圾回收相关概念"
   class="article article-type-post"
   itemscope
@@ -3363,506 +4240,6 @@
 <li>缺点：对象被移动（垃圾收集时移动对象很普遍）时需要修改 reference 的值</li>
 </ol>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719192138715.png" alt="image-20220719192138715"></p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-    
-</article>
-
-    
-    <article
-  id="post-JVM：方法区"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-	
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2022/07/19/JVM%EF%BC%9A%E6%96%B9%E6%B3%95%E5%8C%BA/"
-    >方法区</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2022/07/19/JVM%EF%BC%9A%E6%96%B9%E6%B3%95%E5%8C%BA/" class="article-date">
-  <time datetime="2022-07-19T07:56:03.000Z" itemprop="datePublished">2022-07-19</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/JVM/">JVM</a> / <a class="article-category-link" href="/categories/JVM/1-%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AF%87/">1.内存与垃圾回收篇</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="栈、堆、方法区的交互关系"><a href="#栈、堆、方法区的交互关系" class="headerlink" title="栈、堆、方法区的交互关系"></a>栈、堆、方法区的交互关系</h1><p><strong>从线程共享与否的角度来看</strong></p>
-<p>ThreadLocal：如何保证多个线程在并发环境下的安全性？典型场景就是数据库连接管理，以及会话管理。</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220717145145582.png" alt="image-20220717145145582"></p>
-<p><strong>栈、堆、方法区的交互关系</strong></p>
-<p><strong>下面涉及了对象的访问定位</strong></p>
-<ol>
-<li>Person 类的 .class 信息存放在方法区中</li>
-<li>person 变量存放在 Java 栈的局部变量表中</li>
-<li>真正的 person 对象存放在 Java 堆中</li>
-<li>在 person 对象中，有个指针指向方法区中的 person 类型数据，表明这个 person 对象是用方法区中的 Person 类 new 出来的</li>
-</ol>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220717145450730.png" alt="image-20220717145450730"></p>
-<h1 id="方法区的理解"><a href="#方法区的理解" class="headerlink" title="方法区的理解"></a>方法区的理解</h1><blockquote>
-<p><strong>官方文档</strong>：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.4">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.4</a></p>
-</blockquote>
-<h2 id="方法区在哪里？"><a href="#方法区在哪里？" class="headerlink" title="方法区在哪里？"></a>方法区在哪里？</h2><ol>
-<li>《Java虚拟机规范》中明确说明：尽管所有的方法区在逻辑上是属于堆的一部分，但一些简单的实现可能不会选择去进行垃圾收集或者进行压缩。但对于HotSpotJVM而言，方法区还有一个别名叫做Non-Heap（非堆），目的就是要和堆分开。</li>
-<li>所以，<strong>方法区可以看作是一块独立于Java堆的内存空间</strong>。</li>
-</ol>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220717150314133.png" alt="image-20220717150314133"></p>
-<h2 id="方法区的基本理解"><a href="#方法区的基本理解" class="headerlink" title="方法区的基本理解"></a>方法区的基本理解</h2><p><strong>方法区主要存放的是 Class，而堆中主要存放的是实例化的对象</strong></p>
-<ol>
-<li>方法区（Method Area）与Java堆一样，是各个线程共享的内存区域。多个线程同时加载同一个类时，只能有一个线程能加载该类，其他线程只能等待该线程加载完毕，然后直接使用该类，即类只能加载一次。</li>
-<li>方法区在JVM启动的时候被创建，并且它的实际的物理内存空间中和Java堆区一样都可以是不连续的。</li>
-<li>方法区的大小，跟堆空间一样，可以选择固定大小或者可扩展。</li>
-<li>方法区的大小决定了系统可以保存多少个类，如果系统定义了太多的类，导致方法区溢出，虚拟机同样会抛出内存溢出错误：<code>java.lang.OutofMemoryError:PermGen space</code>或者<code>java.lang.OutOfMemoryError:Metaspace</code><ul>
-<li>加载大量的第三方的jar包</li>
-<li>Tomcat部署的工程过多（30~50个）</li>
-<li>大量动态的生成反射类</li>
-</ul>
-</li>
-<li>关闭JVM就会释放这个区域的内存</li>
-</ol>
-<p><strong>代码举例</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MethodAreaDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;start...&quot;</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">1000000</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;end...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>简单的程序，加载了1600多个类</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220717151239529.png" alt="image-20220717151239529"></p>
-<h2 id="HotSpot中方法区的演进"><a href="#HotSpot中方法区的演进" class="headerlink" title="HotSpot中方法区的演进"></a>HotSpot中方法区的演进</h2><ol>
-<li>在 JDK7 及以前，习惯上把方法区，称为永久代。JDK8开始，使用元空间取代了永久代。我们可以将方法区类比为Java中的接口，将永久代或元空间类比为Java中具体的实现类</li>
-<li>本质上，方法区和永久代并不等价。仅是对Hotspot而言的可以看作等价。《Java虚拟机规范》对如何实现方法区，不做统一要求。例如：BEAJRockit &#x2F; IBM J9 中不存在永久代的概念。<ul>
-<li>现在来看，当年使用永久代，不是好的idea。导致Java程序更容易OOm（超过** **上限）</li>
-</ul>
-</li>
-<li>而到了JDK8，终于完全废弃了永久代的概念，改用与JRockit、J9一样在本地内存中实现的元空间（Metaspace）来代替</li>
-<li>元空间的本质和永久代类似，都是对JVM规范中方法区的实现。不过元空间与永久代最大的区别在于：<strong>元空间不在虚拟机设置的内存中，而是使用本地内存</strong>。</li>
-<li>永久代、元空间二者并不只是名字变了，内部结构也调整了</li>
-<li>根据《Java虚拟机规范》的规定，如果方法区无法满足新的内存分配需求时，将抛出OOM异常</li>
-</ol>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220718151943873.png" alt="image-20220718151943873"></p>
-<h1 id="设置方法区大小与-OOM"><a href="#设置方法区大小与-OOM" class="headerlink" title="设置方法区大小与 OOM"></a>设置方法区大小与 OOM</h1><p>方法区的大小不必是固定的，JVM可以根据应用的需要动态调整。</p>
-<h2 id="JDK7及以前-永久代"><a href="#JDK7及以前-永久代" class="headerlink" title="JDK7及以前(永久代)"></a>JDK7及以前(永久代)</h2><ol>
-<li>通过**-XX:Permsize<strong>来设置永久代初始分配空间。</strong>默认值是20.75M**</li>
-<li><strong>-XX:MaxPermsize</strong>来设定永久代最大可分配空间。<strong>32位机器默认是64M，64位机器模式是82M</strong></li>
-<li>当JVM加载的类信息容量超过了这个值，会报异常OutofMemoryError:PermGen space。</li>
-</ol>
-<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_006/0006.png">
-
-<h2 id="JDK8及以后-元空间"><a href="#JDK8及以后-元空间" class="headerlink" title="JDK8及以后(元空间)"></a>JDK8及以后(元空间)</h2><blockquote>
-<p><strong>JDK8 版本设置元空间大小</strong></p>
-</blockquote>
-<ol>
-<li><p>元数据区大小可以使用参数 <strong>-XX:MetaspaceSize</strong> 和 <strong>-XX:MaxMetaspaceSize</strong> 指定</p>
-</li>
-<li><p>默认值依赖于平台，<strong>Windows下，-XX:MetaspaceSize 约为21M，-XX:MaxMetaspaceSize的值是-1，即没有限制</strong>。</p>
-</li>
-<li><p>与永久代不同，如果不指定大小，默认情况下，虚拟机会耗尽所有的可用系统内存。如果元数据区发生溢出，虚拟机一样会抛出异常OutOfMemoryError:Metaspace</p>
-</li>
-<li><p>-XX:MetaspaceSize：设置初始的元空间大小。对于一个 64位 的服务器端 JVM 来说，其默认的 -XX:MetaspaceSize值为21MB。这就是初始的高水位线，一旦触及这个水位线，Full GC将会被触发并卸载没用的类（即这些类对应的类加载器不再存活），然后这个高水位线将会重置。新的高水位线的值取决于GC后释放了多少元空间。如果释放的空间不足，那么在不超过MaxMetaspaceSize时，适当提高该值。如果释放空间过多，则适当降低该值。</p>
-</li>
-<li><p>如果初始化的高水位线设置过低，上述高水位线调整情况会发生很多次。通过垃圾回收器的日志可以观察到Full GC多次调用。为了避免频繁地GC，<strong>建议将-XX:MetaspaceSize设置为一个相对较高的值</strong>。</p>
-</li>
-</ol>
-<h2 id="方法区OOM"><a href="#方法区OOM" class="headerlink" title="方法区OOM"></a>方法区OOM</h2><p>举例：</p>
-<p>代码：OOMTest 类继承 ClassLoader 类，获得 defineClass() 方法，可自己进行类的加载</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * jdk6/7中：</span></span><br><span class="line"><span class="comment"> * -XX:PermSize=10m -XX:MaxPermSize=10m</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * jdk8中：</span></span><br><span class="line"><span class="comment"> * -XX:MetaspaceSize=10m -XX:MaxMetaspaceSize=10m</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OOMTest</span> <span class="keyword">extends</span> <span class="title class_">ClassLoader</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">OOMTest</span> <span class="variable">test</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OOMTest</span>();</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">                <span class="comment">//创建ClassWriter对象，用于生成类的二进制字节码</span></span><br><span class="line">                <span class="type">ClassWriter</span> <span class="variable">classWriter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ClassWriter</span>(<span class="number">0</span>);</span><br><span class="line">                <span class="comment">//指明版本号，修饰符，类名，包名，父类，接口</span></span><br><span class="line">                classWriter.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, <span class="string">&quot;Class&quot;</span> + i, <span class="literal">null</span>, <span class="string">&quot;java/lang/Object&quot;</span>, <span class="literal">null</span>);</span><br><span class="line">                <span class="comment">//返回byte[]</span></span><br><span class="line">                <span class="type">byte</span>[] code = classWriter.toByteArray();</span><br><span class="line">                <span class="comment">//类的加载</span></span><br><span class="line">                test.defineClass(<span class="string">&quot;Class&quot;</span> + i, code, <span class="number">0</span>, code.length);<span class="comment">//Class对象</span></span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            System.out.println(j);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>不设置元空间的上限</strong></p>
-<p>使用默认的 JVM 参数，元空间不设置上限</p>
-<p>输出结果：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">10000</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>设置元空间的上限</strong></p>
-<p>JVM 参数</p>
-<p>-XX:MetaspaceSize&#x3D;10m -XX:MaxMetaspaceSize&#x3D;10m</p>
-<p>输出结果：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3331</span></span><br><span class="line">Exception in thread <span class="string">&quot;main&quot;</span> java.lang.OutOfMemoryError: Compressed <span class="keyword">class</span> <span class="title class_">space</span></span><br><span class="line">	at java.lang.ClassLoader.defineClass1(Native Method)</span><br><span class="line">	at java.lang.ClassLoader.defineClass(ClassLoader.java:<span class="number">763</span>)</span><br><span class="line">	at java.lang.ClassLoader.defineClass(ClassLoader.java:<span class="number">642</span>)</span><br><span class="line">	at com.ysy.methodarea.OOMTest.main(OOMTest.java:<span class="number">29</span>)</span><br><span class="line"></span><br><span class="line">Process finished with exit code <span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="如何解决OOM"><a href="#如何解决OOM" class="headerlink" title="如何解决OOM"></a>如何解决OOM</h3><ol>
-<li>要解决<strong>OOM异常或heap space的异常</strong>，一般的手段是首先通过内存映像分析工具（如Ec1ipse Memory Analyzer）对dump出来的堆转储快照进行分析，重点是确认内存中的对象是否是必要的，也就是要先分清楚到底是出现了<strong>内存泄漏（Memory Leak）还是内存溢出（Memory Overflow）</strong></li>
-<li><strong>内存泄漏</strong>就是有大量的引用指向某些对象，但是这些对象以后不会使用了，但是因为它们还和<strong>GC ROOT</strong>有关联，所以导致以后这些对象也不会被回收，这就是内存泄漏的问题</li>
-<li>如果是内存泄漏，可进一步通过工具查看泄漏对象到<strong>GC Roots</strong>的引用链。于是就能找到泄漏对象是通过怎样的路径与<strong>GC Roots</strong>相关联并导致垃圾收集器无法自动回收它们的。掌握了泄漏对象的类型信息，以及<strong>GC Roots</strong>引用链的信息，就可以比较准确地定位出泄漏代码的位置。</li>
-<li>如果不存在内存泄漏，换句话说就是内存中的对象确实都还必须存活着，那就应当检查虚拟机的堆参数（**-Xmx与-Xms**），与机器物理内存对比看是否还可以调大，从代码上检查是否存在某些对象生命周期过长、持有状态时间过长的情况，尝试减少程序运行期的内存消耗。</li>
-</ol>
-<h1 id="方法区的内部结构"><a href="#方法区的内部结构" class="headerlink" title="方法区的内部结构"></a>方法区的内部结构</h1><h2 id="方法区存储什么？"><a href="#方法区存储什么？" class="headerlink" title="方法区存储什么？"></a>方法区存储什么？</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719133159128.png" alt="image-20220719133159128"></p>
-<ul>
-<li>《深入理解Java虚拟机》书中对方法区（Method Area）存储内容描述如下：它用于存储已被虚拟机加载的<strong>类型信息、常量、静态变量、即时编译器编译后的代码缓存</strong>等。</li>
-</ul>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719133402240.png" alt="image-20220719133402240"></p>
-<p><strong>类型信息</strong></p>
-<p>对每个加载的类型（类class、接口interface、枚举enum、注解annotation），JVM必须在方法区中存储以下类型信息：</p>
-<ol>
-<li>这个类型的完整有效名称（全名&#x3D;包名.类名）</li>
-<li>这个类型直接父类的完整有效名（对于interface或是java.lang.Object，都没有父类）</li>
-<li>这个类型的修饰符（public，abstract，final的某个子集）</li>
-<li>这个类型直接接口的一个有序列表</li>
-</ol>
-<p><strong>域（Field）信息</strong></p>
-<blockquote>
-<p>也就是我们常说的成员变量，域信息是比较官方的称呼</p>
-</blockquote>
-<ol>
-<li><p>JVM必须在方法区中保存类型的所有域的相关信息以及域的声明顺序。</p>
-</li>
-<li><p>域的相关信息包括：域名称，域类型，域修饰符（public，private，protected，static，final，volatile，transient的某个子集）</p>
-</li>
-</ol>
-<p><strong>方法（Method）信息</strong></p>
-<p>JVM必须保存所有方法的以下信息，同域信息一样包括声明顺序：</p>
-<ol>
-<li>方法名称</li>
-<li>方法的返回类型（包括 void 返回类型），void 在 Java 中对应的为 void.class</li>
-<li>方法参数的数量和类型（按顺序）</li>
-<li>方法的修饰符（public，private，protected，static，final，synchronized，native，abstract的一个子集）</li>
-<li>方法的字节码（bytecodes）、操作数栈、局部变量表及大小（abstract和native方法除外）</li>
-<li>异常表（abstract和native方法除外），异常表记录每个异常处理的开始位置、结束位置、代码处理在程序计数器中的偏移地址、被捕获的异常类的常量池索引</li>
-</ol>
-<p><strong>举例</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 测试方法区的内部构成</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MethodInnerStrucTest</span> <span class="keyword">extends</span> <span class="title class_">Object</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;String&gt;,Serializable &#123;</span><br><span class="line">    <span class="comment">//属性</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="variable">num</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> <span class="string">&quot;测试方法的内部结构&quot;</span>;</span><br><span class="line">    <span class="comment">//构造器</span></span><br><span class="line">    <span class="comment">//方法</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test1</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">20</span>;</span><br><span class="line">        System.out.println(<span class="string">&quot;count = &quot;</span> + count);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">test2</span><span class="params">(<span class="type">int</span> cal)</span>&#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">value</span> <span class="operator">=</span> <span class="number">30</span>;</span><br><span class="line">            result = value / cal;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(String o)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>javap -v -p MethodInnerStrucTest.class &gt; test.txt</code></p>
-<ul>
-<li>反编译字节码文件，并输出值文本文件中，便于查看。参数 -p 确保能查看 private 权限类型的字段或方法</li>
-</ul>
-<p>字节码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br></pre></td><td class="code"><pre><span class="line">Classfile /D:/JavaProjects/jvm/out/production/jvm02/com/ysy/methodarea/MethodInnerStrucTest.<span class="keyword">class</span></span><br><span class="line">  <span class="title class_">Last</span> modified <span class="number">2022</span>-<span class="number">7</span>-<span class="number">19</span>; size <span class="number">1630</span> bytes</span><br><span class="line">  MD5 checksum 7f8bc6364c6d3121721810737a6d4d24</span><br><span class="line">  Compiled from <span class="string">&quot;MethodInnerStrucTest.java&quot;</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">com</span>.ysy.methodarea.MethodInnerStrucTest <span class="keyword">extends</span> <span class="title class_">java</span>.lang.Object <span class="keyword">implements</span> <span class="title class_">java</span>.lang.Comparable&lt;java.lang.String&gt;, java.io.Serializable</span><br><span class="line">  minor version: <span class="number">0</span></span><br><span class="line">  major version: <span class="number">52</span></span><br><span class="line">  flags: ACC_PUBLIC, ACC_SUPER</span><br><span class="line">Constant pool:</span><br><span class="line">   #<span class="number">1</span> = Methodref          #<span class="number">18.</span>#<span class="number">52</span>        <span class="comment">// java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">   #<span class="number">2</span> = Fieldref           #<span class="number">17.</span>#<span class="number">53</span>        <span class="comment">// com/ysy/methodarea/MethodInnerStrucTest.num:I</span></span><br><span class="line">   #<span class="number">3</span> = Fieldref           #<span class="number">54.</span>#<span class="number">55</span>        <span class="comment">// java/lang/System.out:Ljava/io/PrintStream;</span></span><br><span class="line">   #<span class="number">4</span> = Class              #<span class="number">56</span>            <span class="comment">// java/lang/StringBuilder</span></span><br><span class="line">   #<span class="number">5</span> = Methodref          #<span class="number">4.</span>#<span class="number">52</span>         <span class="comment">// java/lang/StringBuilder.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">   #<span class="number">6</span> = String             #<span class="number">57</span>            <span class="comment">// count =</span></span><br><span class="line">   #<span class="number">7</span> = Methodref          #<span class="number">4.</span>#<span class="number">58</span>         <span class="comment">// java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</span></span><br><span class="line">   #<span class="number">8</span> = Methodref          #<span class="number">4.</span>#<span class="number">59</span>         <span class="comment">// java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;</span></span><br><span class="line">   #<span class="number">9</span> = Methodref          #<span class="number">4.</span>#<span class="number">60</span>         <span class="comment">// java/lang/StringBuilder.toString:()Ljava/lang/String;</span></span><br><span class="line">  #<span class="number">10</span> = Methodref          #<span class="number">61.</span>#<span class="number">62</span>        <span class="comment">// java/io/PrintStream.println:(Ljava/lang/String;)V</span></span><br><span class="line">  #<span class="number">11</span> = Class              #<span class="number">63</span>            <span class="comment">// java/lang/Exception</span></span><br><span class="line">  #<span class="number">12</span> = Methodref          #<span class="number">11.</span>#<span class="number">64</span>        <span class="comment">// java/lang/Exception.printStackTrace:()V</span></span><br><span class="line">  #<span class="number">13</span> = Class              #<span class="number">65</span>            <span class="comment">// java/lang/String</span></span><br><span class="line">  #<span class="number">14</span> = Methodref          #<span class="number">17.</span>#<span class="number">66</span>        <span class="comment">// com/ysy/methodarea/MethodInnerStrucTest.compareTo:(Ljava/lang/String;)I</span></span><br><span class="line">  #<span class="number">15</span> = String             #<span class="number">67</span>            <span class="comment">// 测试方法的内部结构</span></span><br><span class="line">  #<span class="number">16</span> = Fieldref           #<span class="number">17.</span>#<span class="number">68</span>        <span class="comment">// com/ysy/methodarea/MethodInnerStrucTest.str:Ljava/lang/String;</span></span><br><span class="line">  #<span class="number">17</span> = Class              #<span class="number">69</span>            <span class="comment">// com/ysy/methodarea/MethodInnerStrucTest</span></span><br><span class="line">  #<span class="number">18</span> = Class              #<span class="number">70</span>            <span class="comment">// java/lang/Object</span></span><br><span class="line">  #<span class="number">19</span> = Class              #<span class="number">71</span>            <span class="comment">// java/lang/Comparable</span></span><br><span class="line">  #<span class="number">20</span> = Class              #<span class="number">72</span>            <span class="comment">// java/io/Serializable</span></span><br><span class="line">  #<span class="number">21</span> = Utf8               num</span><br><span class="line">  #<span class="number">22</span> = Utf8               I</span><br><span class="line">  #<span class="number">23</span> = Utf8               str</span><br><span class="line">  #<span class="number">24</span> = Utf8               Ljava/lang/String;</span><br><span class="line">  #<span class="number">25</span> = Utf8               &lt;init&gt;</span><br><span class="line">  #<span class="number">26</span> = Utf8               ()V</span><br><span class="line">  #<span class="number">27</span> = Utf8               Code</span><br><span class="line">  #<span class="number">28</span> = Utf8               LineNumberTable</span><br><span class="line">  #<span class="number">29</span> = Utf8               LocalVariableTable</span><br><span class="line">  #<span class="number">30</span> = Utf8               <span class="built_in">this</span></span><br><span class="line">  #<span class="number">31</span> = Utf8               Lcom/ysy/methodarea/MethodInnerStrucTest;</span><br><span class="line">  #<span class="number">32</span> = Utf8               test1</span><br><span class="line">  #<span class="number">33</span> = Utf8               count</span><br><span class="line">  #<span class="number">34</span> = Utf8               test2</span><br><span class="line">  #<span class="number">35</span> = Utf8               (I)I</span><br><span class="line">  #<span class="number">36</span> = Utf8               value</span><br><span class="line">  #<span class="number">37</span> = Utf8               e</span><br><span class="line">  #<span class="number">38</span> = Utf8               Ljava/lang/Exception;</span><br><span class="line">  #<span class="number">39</span> = Utf8               cal</span><br><span class="line">  #<span class="number">40</span> = Utf8               result</span><br><span class="line">  #<span class="number">41</span> = Utf8               StackMapTable</span><br><span class="line">  #<span class="number">42</span> = Class              #<span class="number">63</span>            <span class="comment">// java/lang/Exception</span></span><br><span class="line">  #<span class="number">43</span> = Utf8               compareTo</span><br><span class="line">  #<span class="number">44</span> = Utf8               (Ljava/lang/String;)I</span><br><span class="line">  #<span class="number">45</span> = Utf8               o</span><br><span class="line">  #<span class="number">46</span> = Utf8               (Ljava/lang/Object;)I</span><br><span class="line">  #<span class="number">47</span> = Utf8               &lt;clinit&gt;</span><br><span class="line">  #<span class="number">48</span> = Utf8               Signature</span><br><span class="line">  #<span class="number">49</span> = Utf8               Ljava/lang/Object;Ljava/lang/Comparable&lt;Ljava/lang/String;&gt;;Ljava/io/Serializable;</span><br><span class="line">  #<span class="number">50</span> = Utf8               SourceFile</span><br><span class="line">  #<span class="number">51</span> = Utf8               MethodInnerStrucTest.java</span><br><span class="line">  #<span class="number">52</span> = NameAndType        #<span class="number">25</span>:#<span class="number">26</span>        <span class="comment">// &quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">  #<span class="number">53</span> = NameAndType        #<span class="number">21</span>:#<span class="number">22</span>        <span class="comment">// num:I</span></span><br><span class="line">  #<span class="number">54</span> = Class              #<span class="number">73</span>            <span class="comment">// java/lang/System</span></span><br><span class="line">  #<span class="number">55</span> = NameAndType        #<span class="number">74</span>:#<span class="number">75</span>        <span class="comment">// out:Ljava/io/PrintStream;</span></span><br><span class="line">  #<span class="number">56</span> = Utf8               java/lang/StringBuilder</span><br><span class="line">  #<span class="number">57</span> = <span class="type">Utf8</span>               <span class="variable">count</span> <span class="operator">=</span></span><br><span class="line">  #<span class="number">58</span> = NameAndType        #<span class="number">76</span>:#<span class="number">77</span>        <span class="comment">// append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</span></span><br><span class="line">  #<span class="number">59</span> = NameAndType        #<span class="number">76</span>:#<span class="number">78</span>        <span class="comment">// append:(I)Ljava/lang/StringBuilder;</span></span><br><span class="line">  #<span class="number">60</span> = NameAndType        #<span class="number">79</span>:#<span class="number">80</span>        <span class="comment">// toString:()Ljava/lang/String;</span></span><br><span class="line">  #<span class="number">61</span> = Class              #<span class="number">81</span>            <span class="comment">// java/io/PrintStream</span></span><br><span class="line">  #<span class="number">62</span> = NameAndType        #<span class="number">82</span>:#<span class="number">83</span>        <span class="comment">// println:(Ljava/lang/String;)V</span></span><br><span class="line">  #<span class="number">63</span> = Utf8               java/lang/Exception</span><br><span class="line">  #<span class="number">64</span> = NameAndType        #<span class="number">84</span>:#<span class="number">26</span>        <span class="comment">// printStackTrace:()V</span></span><br><span class="line">  #<span class="number">65</span> = Utf8               java/lang/String</span><br><span class="line">  #<span class="number">66</span> = NameAndType        #<span class="number">43</span>:#<span class="number">44</span>        <span class="comment">// compareTo:(Ljava/lang/String;)I</span></span><br><span class="line">  #<span class="number">67</span> = Utf8               测试方法的内部结构</span><br><span class="line">  #<span class="number">68</span> = NameAndType        #<span class="number">23</span>:#<span class="number">24</span>        <span class="comment">// str:Ljava/lang/String;</span></span><br><span class="line">  #<span class="number">69</span> = Utf8               com/ysy/methodarea/MethodInnerStrucTest</span><br><span class="line">  #<span class="number">70</span> = Utf8               java/lang/Object</span><br><span class="line">  #<span class="number">71</span> = Utf8               java/lang/Comparable</span><br><span class="line">  #<span class="number">72</span> = Utf8               java/io/Serializable</span><br><span class="line">  #<span class="number">73</span> = Utf8               java/lang/System</span><br><span class="line">  #<span class="number">74</span> = Utf8               out</span><br><span class="line">  #<span class="number">75</span> = Utf8               Ljava/io/PrintStream;</span><br><span class="line">  #<span class="number">76</span> = Utf8               append</span><br><span class="line">  #<span class="number">77</span> = Utf8               (Ljava/lang/String;)Ljava/lang/StringBuilder;</span><br><span class="line">  #<span class="number">78</span> = Utf8               (I)Ljava/lang/StringBuilder;</span><br><span class="line">  #<span class="number">79</span> = Utf8               toString</span><br><span class="line">  #<span class="number">80</span> = Utf8               ()Ljava/lang/String;</span><br><span class="line">  #<span class="number">81</span> = Utf8               java/io/PrintStream</span><br><span class="line">  #<span class="number">82</span> = Utf8               println</span><br><span class="line">  #<span class="number">83</span> = Utf8               (Ljava/lang/String;)V</span><br><span class="line">  #<span class="number">84</span> = Utf8               printStackTrace</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span> num;</span><br><span class="line">    descriptor: I</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> java.lang.String str;</span><br><span class="line">    descriptor: Ljava/lang/String;</span><br><span class="line">    flags: ACC_PRIVATE, ACC_STATIC</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> com.ysy.methodarea.MethodInnerStrucTest();</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">2</span>, locals=<span class="number">1</span>, args_size=<span class="number">1</span></span><br><span class="line">         <span class="number">0</span>: aload_0</span><br><span class="line">         <span class="number">1</span>: invokespecial #<span class="number">1</span>                  <span class="comment">// Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">         <span class="number">4</span>: aload_0</span><br><span class="line">         <span class="number">5</span>: bipush        <span class="number">10</span></span><br><span class="line">         <span class="number">7</span>: putfield      #<span class="number">2</span>                  <span class="comment">// Field num:I</span></span><br><span class="line">        <span class="number">10</span>: <span class="keyword">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">7</span>: <span class="number">0</span></span><br><span class="line">        line <span class="number">9</span>: <span class="number">4</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>      <span class="number">11</span>     <span class="number">0</span>  <span class="built_in">this</span>   Lcom/ysy/methodarea/MethodInnerStrucTest;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test1</span><span class="params">()</span>;</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">3</span>, locals=<span class="number">2</span>, args_size=<span class="number">1</span></span><br><span class="line">         <span class="number">0</span>: bipush        <span class="number">20</span></span><br><span class="line">         <span class="number">2</span>: istore_1</span><br><span class="line">         <span class="number">3</span>: getstatic     #<span class="number">3</span>                  <span class="comment">// Field java/lang/System.out:Ljava/io/PrintStream;</span></span><br><span class="line">         <span class="number">6</span>: <span class="keyword">new</span>           #<span class="number">4</span>                  <span class="comment">// class java/lang/StringBuilder</span></span><br><span class="line">         <span class="number">9</span>: dup</span><br><span class="line">        <span class="number">10</span>: invokespecial #<span class="number">5</span>                  <span class="comment">// Method java/lang/StringBuilder.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">        <span class="number">13</span>: ldc           #<span class="number">6</span>                  <span class="comment">// String count =</span></span><br><span class="line">        <span class="number">15</span>: invokevirtual #<span class="number">7</span>                  <span class="comment">// Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</span></span><br><span class="line">        <span class="number">18</span>: iload_1</span><br><span class="line">        <span class="number">19</span>: invokevirtual #<span class="number">8</span>                  <span class="comment">// Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;</span></span><br><span class="line">        <span class="number">22</span>: invokevirtual #<span class="number">9</span>                  <span class="comment">// Method java/lang/StringBuilder.toString:()Ljava/lang/String;</span></span><br><span class="line">        <span class="number">25</span>: invokevirtual #<span class="number">10</span>                 <span class="comment">// Method java/io/PrintStream.println:(Ljava/lang/String;)V</span></span><br><span class="line">        <span class="number">28</span>: <span class="keyword">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">14</span>: <span class="number">0</span></span><br><span class="line">        line <span class="number">15</span>: <span class="number">3</span></span><br><span class="line">        line <span class="number">16</span>: <span class="number">28</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>      <span class="number">29</span>     <span class="number">0</span>  <span class="built_in">this</span>   Lcom/ysy/methodarea/MethodInnerStrucTest;</span><br><span class="line">            <span class="number">3</span>      <span class="number">26</span>     <span class="number">1</span> count   I</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">test2</span><span class="params">(<span class="type">int</span>)</span>;</span><br><span class="line">    descriptor: (I)I</span><br><span class="line">    flags: ACC_PUBLIC, ACC_STATIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">2</span>, locals=<span class="number">3</span>, args_size=<span class="number">1</span></span><br><span class="line">         <span class="number">0</span>: iconst_0</span><br><span class="line">         <span class="number">1</span>: istore_1</span><br><span class="line">         <span class="number">2</span>: bipush        <span class="number">30</span></span><br><span class="line">         <span class="number">4</span>: istore_2</span><br><span class="line">         <span class="number">5</span>: iload_2</span><br><span class="line">         <span class="number">6</span>: iload_0</span><br><span class="line">         <span class="number">7</span>: idiv</span><br><span class="line">         <span class="number">8</span>: istore_1</span><br><span class="line">         <span class="number">9</span>: goto          <span class="number">17</span></span><br><span class="line">        <span class="number">12</span>: astore_2</span><br><span class="line">        <span class="number">13</span>: aload_2</span><br><span class="line">        <span class="number">14</span>: invokevirtual #<span class="number">12</span>                 <span class="comment">// Method java/lang/Exception.printStackTrace:()V</span></span><br><span class="line">        <span class="number">17</span>: iload_1</span><br><span class="line">        <span class="number">18</span>: ireturn</span><br><span class="line">      Exception table:</span><br><span class="line">         from    to  target type</span><br><span class="line">             <span class="number">2</span>     <span class="number">9</span>    <span class="number">12</span>   Class java/lang/Exception</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">18</span>: <span class="number">0</span></span><br><span class="line">        line <span class="number">20</span>: <span class="number">2</span></span><br><span class="line">        line <span class="number">21</span>: <span class="number">5</span></span><br><span class="line">        line <span class="number">24</span>: <span class="number">9</span></span><br><span class="line">        line <span class="number">22</span>: <span class="number">12</span></span><br><span class="line">        line <span class="number">23</span>: <span class="number">13</span></span><br><span class="line">        line <span class="number">25</span>: <span class="number">17</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">5</span>       <span class="number">4</span>     <span class="number">2</span> value   I</span><br><span class="line">           <span class="number">13</span>       <span class="number">4</span>     <span class="number">2</span>     e   Ljava/lang/Exception;</span><br><span class="line">            <span class="number">0</span>      <span class="number">19</span>     <span class="number">0</span>   cal   I</span><br><span class="line">            <span class="number">2</span>      <span class="number">17</span>     <span class="number">1</span> result   I</span><br><span class="line">      StackMapTable: number_of_entries = <span class="number">2</span></span><br><span class="line">        frame_type = <span class="number">255</span> <span class="comment">/* full_frame */</span></span><br><span class="line">          offset_delta = <span class="number">12</span></span><br><span class="line">          locals = [ <span class="type">int</span>, <span class="type">int</span> ]</span><br><span class="line">          stack = [ <span class="keyword">class</span> <span class="title class_">java</span>/lang/Exception ]</span><br><span class="line">        frame_type = <span class="number">4</span> <span class="comment">/* same */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(java.lang.String)</span>;</span><br><span class="line">    descriptor: (Ljava/lang/String;)I</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">1</span>, locals=<span class="number">2</span>, args_size=<span class="number">2</span></span><br><span class="line">         <span class="number">0</span>: iconst_0</span><br><span class="line">         <span class="number">1</span>: ireturn</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">30</span>: <span class="number">0</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>       <span class="number">2</span>     <span class="number">0</span>  <span class="built_in">this</span>   Lcom/ysy/methodarea/MethodInnerStrucTest;</span><br><span class="line">            <span class="number">0</span>       <span class="number">2</span>     <span class="number">1</span>     o   Ljava/lang/String;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(java.lang.Object)</span>;</span><br><span class="line">    descriptor: (Ljava/lang/Object;)I</span><br><span class="line">    flags: ACC_PUBLIC, ACC_BRIDGE, ACC_SYNTHETIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">2</span>, locals=<span class="number">2</span>, args_size=<span class="number">2</span></span><br><span class="line">         <span class="number">0</span>: aload_0</span><br><span class="line">         <span class="number">1</span>: aload_1</span><br><span class="line">         <span class="number">2</span>: checkcast     #<span class="number">13</span>                 <span class="comment">// class java/lang/String</span></span><br><span class="line">         <span class="number">5</span>: invokevirtual #<span class="number">14</span>                 <span class="comment">// Method compareTo:(Ljava/lang/String;)I</span></span><br><span class="line">         <span class="number">8</span>: ireturn</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">7</span>: <span class="number">0</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>       <span class="number">9</span>     <span class="number">0</span>  <span class="built_in">this</span>   Lcom/ysy/methodarea/MethodInnerStrucTest;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> &#123;&#125;;</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_STATIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">1</span>, locals=<span class="number">0</span>, args_size=<span class="number">0</span></span><br><span class="line">         <span class="number">0</span>: ldc           #<span class="number">15</span>                 <span class="comment">// String 测试方法的内部结构</span></span><br><span class="line">         <span class="number">2</span>: putstatic     #<span class="number">16</span>                 <span class="comment">// Field str:Ljava/lang/String;</span></span><br><span class="line">         <span class="number">5</span>: <span class="keyword">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">10</span>: <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line">Signature: #<span class="number">49</span>                          <span class="comment">// Ljava/lang/Object;Ljava/lang/Comparable&lt;Ljava/lang/String;&gt;;Ljava/io/Serializable;</span></span><br><span class="line">SourceFile: <span class="string">&quot;MethodInnerStrucTest.java&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>类型信息</strong></p>
-<p>在运行时方法区中，类信息中记录了哪个加载器加载了该类，同时类加载器也记录了它加载了哪些类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//类型信息      </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">com</span>.atguigu.java.MethodInnerStrucTest <span class="keyword">extends</span> <span class="title class_">java</span>.lang.Object <span class="keyword">implements</span> <span class="title class_">java</span>.lang.Comparable&lt;java.lang.String&gt;, java.io.Serializable</span><br></pre></td></tr></table></figure>
-
-<p><strong>域信息</strong></p>
-<ol>
-<li>descriptor: I 表示字段类型为 Integer</li>
-<li>flags: ACC_PUBLIC 表示字段权限修饰符为 public</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//域信息</span></span><br><span class="line">  <span class="keyword">public</span> <span class="type">int</span> num;</span><br><span class="line">    descriptor: I</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> java.lang.String str;</span><br><span class="line">    descriptor: Ljava/lang/String;</span><br><span class="line">    flags: ACC_PRIVATE, ACC_STATIC</span><br></pre></td></tr></table></figure>
-
-<p><strong>方法信息</strong></p>
-<ol>
-<li>descriptor: ()V 表示方法返回值类型为 void</li>
-<li>flags: ACC_PUBLIC 表示方法权限修饰符为 public</li>
-<li>stack&#x3D;3 表示操作数栈深度为 3</li>
-<li>locals&#x3D;2 表示局部变量个数为 2 个（实例方法包含 this）</li>
-<li>test1() 方法虽然没有参数，但是其 args_size&#x3D;1 ，这时因为将 this 作为了参数</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test1</span><span class="params">()</span>;</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">3</span>, locals=<span class="number">2</span>, args_size=<span class="number">1</span></span><br><span class="line">         <span class="number">0</span>: bipush        <span class="number">20</span></span><br><span class="line">         <span class="number">2</span>: istore_1</span><br><span class="line">         <span class="number">3</span>: getstatic     #<span class="number">3</span>                  <span class="comment">// Field java/lang/System.out:Ljava/io/PrintStream;</span></span><br><span class="line">         <span class="number">6</span>: <span class="keyword">new</span>           #<span class="number">4</span>                  <span class="comment">// class java/lang/StringBuilder</span></span><br><span class="line">         <span class="number">9</span>: dup</span><br><span class="line">        <span class="number">10</span>: invokespecial #<span class="number">5</span>                  <span class="comment">// Method java/lang/StringBuilder.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">        <span class="number">13</span>: ldc           #<span class="number">6</span>                  <span class="comment">// String count =</span></span><br><span class="line">        <span class="number">15</span>: invokevirtual #<span class="number">7</span>                  <span class="comment">// Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</span></span><br><span class="line">        <span class="number">18</span>: iload_1</span><br><span class="line">        <span class="number">19</span>: invokevirtual #<span class="number">8</span>                  <span class="comment">// Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;</span></span><br><span class="line">        <span class="number">22</span>: invokevirtual #<span class="number">9</span>                  <span class="comment">// Method java/lang/StringBuilder.toString:()Ljava/lang/String;</span></span><br><span class="line">        <span class="number">25</span>: invokevirtual #<span class="number">10</span>                 <span class="comment">// Method java/io/PrintStream.println:(Ljava/lang/String;)V</span></span><br><span class="line">        <span class="number">28</span>: <span class="keyword">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">17</span>: <span class="number">0</span></span><br><span class="line">        line <span class="number">18</span>: <span class="number">3</span></span><br><span class="line">        line <span class="number">19</span>: <span class="number">28</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>      <span class="number">29</span>     <span class="number">0</span>  <span class="built_in">this</span>   Lcom/atguigu/java/MethodInnerStrucTest;</span><br><span class="line">            <span class="number">3</span>      <span class="number">26</span>     <span class="number">1</span> count   I</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="non-final-类型的类变量"><a href="#non-final-类型的类变量" class="headerlink" title="non-final 类型的类变量"></a>non-final 类型的类变量</h2><ol>
-<li><p>静态变量和类关联在一起，随着类的加载而加载，他们成为类数据在逻辑上的一部分</p>
-</li>
-<li><p>类变量被类的所有实例共享，即使没有类实例时，你也可以访问它</p>
-</li>
-</ol>
-<p><strong>举例</strong></p>
-<ol>
-<li>如下代码所示，即使我们把order设置为null，也不会出现空指针异常</li>
-<li>这更加表明了 static 类型的字段和方法随着类的加载而加载，并不属于特定的类实例</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MethodAreaTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Order</span> <span class="variable">order</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        order.hello();</span><br><span class="line">        System.out.println(order.count);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Order</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">number</span> <span class="operator">=</span> <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">hello</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;hello!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>输出结果：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hello!</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
-
-<h3 id="全局常量：static-final"><a href="#全局常量：static-final" class="headerlink" title="全局常量：static final"></a>全局常量：static final</h3><ol>
-<li><p>全局常量就是使用 static final 进行修饰</p>
-</li>
-<li><p>被声明为final的类变量的处理方法则不同，每个全局常量在编译的时候就会被分配了。</p>
-</li>
-</ol>
-<p>查看上面代码，这部分的字节码指令</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Order</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">number</span> <span class="operator">=</span> <span class="number">2</span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> count;</span><br><span class="line">    descriptor: I</span><br><span class="line">    flags: ACC_PUBLIC, ACC_STATIC</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> number;</span><br><span class="line">    descriptor: I</span><br><span class="line">    flags: ACC_PUBLIC, ACC_STATIC, ACC_FINAL</span><br><span class="line">    ConstantValue: <span class="type">int</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<p>可以发现 staitc和final同时修饰的number 的值在编译上的时候已经写死在字节码文件中了。</p>
-<h2 id="运行时常量池-VS-常量池"><a href="#运行时常量池-VS-常量池" class="headerlink" title="运行时常量池 VS 常量池"></a>运行时常量池 VS 常量池</h2><blockquote>
-<p><strong>官方文档</strong>：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html</a></p>
-</blockquote>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719135454903.png" alt="image-20220719135454903"></p>
-<ol>
-<li>方法区，内部包含了运行时常量池</li>
-<li>字节码文件，内部包含了常量池。（之前的字节码文件中已经看到了很多Constant pool的东西，这个就是常量池）</li>
-<li>要弄清楚方法区，需要理解清楚ClassFile，因为加载类的信息都在方法区。</li>
-<li>要弄清楚方法区的运行时常量池，需要理解清楚ClassFile中的常量池。</li>
-</ol>
-<h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><ol>
-<li>一个有效的字节码文件中除了包含<strong>类的版本信息、字段、方法以及接口</strong>等描述符信息外。还包含一项信息就是<strong>常量池表</strong>（<strong>Constant Pool Table</strong>），包括各种字面量和对类型、域和方法的符号引用。</li>
-<li>字面量： 10 ， “我是某某”这种数字和字符串都是字面量</li>
-</ol>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719135817127.png" alt="image-20220719135817127"></p>
-<p><strong>为什么需要常量池？</strong></p>
-<ul>
-<li>一个java源文件中的类、接口，编译后产生一个字节码文件。而Java中的字节码需要数据支持，通常这种数据会很大以至于不能直接存到字节码里，换另一种方式，可以存到常量池。这个字节码包含了指向常量池的引用。在动态链接的时候会用到运行时常量池。</li>
-</ul>
-<p>比如：如下的代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SimpleClass</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sayHello</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<ol>
-<li>虽然上述代码只有194字节，但是里面却使用了String、System、PrintStream及Object等结构。</li>
-<li>比如说我们这个文件中有6个地方用到了”hello”这个字符串，如果不用常量池，就需要在6个地方全写一遍，造成臃肿。我们可以将”hello”等所需用到的结构信息记录在常量池中，并通过<strong>引用的方式</strong>，来加载、调用所需的结构</li>
-<li>这里的代码量其实很少了，如果代码多的话，引用的结构将会更多，这里就需要用到常量池了。</li>
-</ol>
-<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_006/0011.png">
-
-<p><strong>常量池中有啥？</strong></p>
-<ol>
-<li>数量值</li>
-<li>字符串值</li>
-<li>类引用</li>
-<li>字段引用</li>
-<li>方法引用</li>
-</ol>
-<p>MethodInnerStrucTest 的 test1方法的字节码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">0</span> bipush <span class="number">20</span></span><br><span class="line"> <span class="number">2</span> istore_1</span><br><span class="line"> <span class="number">3</span> getstatic #<span class="number">3</span> &lt;java/lang/System.out&gt;</span><br><span class="line"> <span class="number">6</span> <span class="keyword">new</span> #<span class="number">4</span> &lt;java/lang/StringBuilder&gt;</span><br><span class="line"> <span class="number">9</span> dup</span><br><span class="line"><span class="number">10</span> invokespecial #<span class="number">5</span> &lt;java/lang/StringBuilder.&lt;init&gt;&gt;</span><br><span class="line"><span class="number">13</span> ldc #<span class="number">6</span> &lt;count = &gt;</span><br><span class="line"><span class="number">15</span> invokevirtual #<span class="number">7</span> &lt;java/lang/StringBuilder.append&gt;</span><br><span class="line"><span class="number">18</span> iload_1</span><br><span class="line"><span class="number">19</span> invokevirtual #<span class="number">8</span> &lt;java/lang/StringBuilder.append&gt;</span><br><span class="line"><span class="number">22</span> invokevirtual #<span class="number">9</span> &lt;java/lang/StringBuilder.toString&gt;</span><br><span class="line"><span class="number">25</span> invokevirtual #<span class="number">10</span> &lt;java/io/PrintStream.println&gt;</span><br><span class="line"><span class="number">28</span> <span class="keyword">return</span></span><br></pre></td></tr></table></figure>
-
-<p>1、#3，#5等等这些带# 的，都是引用了常量池。</p>
-<p><strong>常量池总结</strong></p>
-<p>常量池、可以看做是一张表，虚拟机指令根据这张常量表找到要执行的类名、方法名、参数类型、字面量等类型。</p>
-<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><ol>
-<li><p>运行时常量池（Runtime Constant Pool）是方法区的一部分。</p>
-</li>
-<li><p>常量池表（Constant Pool Table）是Class字节码文件的一部分，用于存放编译期生成的各种字面量与符号引用，<strong>这部分内容将在类加载后存放到方法区的运行时常量池中</strong>。（运行时常量池就是常量池在程序运行时的称呼）</p>
-</li>
-<li><p>运行时常量池，在加载类和接口到虚拟机后，就会创建对应的运行时常量池。</p>
-</li>
-<li><p>JVM为每个已加载的类型（类或接口）都维护一个常量池。池中的数据项像数组项一样，是<strong>通过索引访问</strong>的。</p>
-</li>
-<li><p>运行时常量池中包含多种不同的常量，包括编译期就已经明确的数值字面量，也包括到运行期解析后才能够获得的方法或者字段引用。<strong>此时不再是常量池中的符号地址了，这里换为真实地址</strong>。</p>
-<ul>
-<li>运行时常量池，相对于Class文件常量池的另一重要特征是：<strong>具备动态性</strong>。</li>
-</ul>
-</li>
-<li><p>运行时常量池类似于传统编程语言中的符号表（symbol table），但是它所包含的数据却比符号表要更加丰富一些。</p>
-</li>
-<li><p>当创建类或接口的运行时常量池时，如果构造运行时常量池所需的内存空间超过了方法区所能提供的最大值，则JVM会抛OutofMemoryError异常。</p>
-</li>
-</ol>
-<h1 id="方法区的使用举例"><a href="#方法区的使用举例" class="headerlink" title="方法区的使用举例"></a>方法区的使用举例</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MethodAreaDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">500</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">y</span> <span class="operator">=</span> <span class="number">100</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> x / y;</span><br><span class="line">        <span class="type">int</span> <span class="variable">b</span> <span class="operator">=</span> <span class="number">50</span>;</span><br><span class="line">        System.out.println(a + b);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>字节码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line">Classfile /D:/JavaProjects/jvm/out/production/jvm02/com/ysy/methodarea/MethodAreaDemo.<span class="keyword">class</span></span><br><span class="line">  <span class="title class_">Last</span> modified <span class="number">2022</span>-<span class="number">7</span>-<span class="number">19</span>; size <span class="number">642</span> bytes</span><br><span class="line">  MD5 checksum db32eed8d47a557ade3b6d5d481463be</span><br><span class="line">  Compiled from <span class="string">&quot;MethodAreaDemo.java&quot;</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">com</span>.ysy.methodarea.MethodAreaDemo</span><br><span class="line">  minor version: <span class="number">0</span></span><br><span class="line">  major version: <span class="number">52</span></span><br><span class="line">  flags: ACC_PUBLIC, ACC_SUPER</span><br><span class="line">Constant pool:</span><br><span class="line">   #<span class="number">1</span> = Methodref          #<span class="number">5.</span>#<span class="number">24</span>         <span class="comment">// java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">   #<span class="number">2</span> = Fieldref           #<span class="number">25.</span>#<span class="number">26</span>        <span class="comment">// java/lang/System.out:Ljava/io/PrintStream;</span></span><br><span class="line">   #<span class="number">3</span> = Methodref          #<span class="number">27.</span>#<span class="number">28</span>        <span class="comment">// java/io/PrintStream.println:(I)V</span></span><br><span class="line">   #<span class="number">4</span> = Class              #<span class="number">29</span>            <span class="comment">// com/ysy/methodarea/MethodAreaDemo</span></span><br><span class="line">   #<span class="number">5</span> = Class              #<span class="number">30</span>            <span class="comment">// java/lang/Object</span></span><br><span class="line">   #<span class="number">6</span> = Utf8               &lt;init&gt;</span><br><span class="line">   #<span class="number">7</span> = Utf8               ()V</span><br><span class="line">   #<span class="number">8</span> = Utf8               Code</span><br><span class="line">   #<span class="number">9</span> = Utf8               LineNumberTable</span><br><span class="line">  #<span class="number">10</span> = Utf8               LocalVariableTable</span><br><span class="line">  #<span class="number">11</span> = Utf8               <span class="built_in">this</span></span><br><span class="line">  #<span class="number">12</span> = Utf8               Lcom/ysy/methodarea/MethodAreaDemo;</span><br><span class="line">  #<span class="number">13</span> = Utf8               main</span><br><span class="line">  #<span class="number">14</span> = Utf8               ([Ljava/lang/String;)V</span><br><span class="line">  #<span class="number">15</span> = Utf8               args</span><br><span class="line">  #<span class="number">16</span> = Utf8               [Ljava/lang/String;</span><br><span class="line">  #<span class="number">17</span> = Utf8               x</span><br><span class="line">  #<span class="number">18</span> = Utf8               I</span><br><span class="line">  #<span class="number">19</span> = Utf8               y</span><br><span class="line">  #<span class="number">20</span> = Utf8               a</span><br><span class="line">  #<span class="number">21</span> = Utf8               b</span><br><span class="line">  #<span class="number">22</span> = Utf8               SourceFile</span><br><span class="line">  #<span class="number">23</span> = Utf8               MethodAreaDemo.java</span><br><span class="line">  #<span class="number">24</span> = NameAndType        #<span class="number">6</span>:#<span class="number">7</span>          <span class="comment">// &quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">  #<span class="number">25</span> = Class              #<span class="number">31</span>            <span class="comment">// java/lang/System</span></span><br><span class="line">  #<span class="number">26</span> = NameAndType        #<span class="number">32</span>:#<span class="number">33</span>        <span class="comment">// out:Ljava/io/PrintStream;</span></span><br><span class="line">  #<span class="number">27</span> = Class              #<span class="number">34</span>            <span class="comment">// java/io/PrintStream</span></span><br><span class="line">  #<span class="number">28</span> = NameAndType        #<span class="number">35</span>:#<span class="number">36</span>        <span class="comment">// println:(I)V</span></span><br><span class="line">  #<span class="number">29</span> = Utf8               com/ysy/methodarea/MethodAreaDemo</span><br><span class="line">  #<span class="number">30</span> = Utf8               java/lang/Object</span><br><span class="line">  #<span class="number">31</span> = Utf8               java/lang/System</span><br><span class="line">  #<span class="number">32</span> = Utf8               out</span><br><span class="line">  #<span class="number">33</span> = Utf8               Ljava/io/PrintStream;</span><br><span class="line">  #<span class="number">34</span> = Utf8               java/io/PrintStream</span><br><span class="line">  #<span class="number">35</span> = Utf8               println</span><br><span class="line">  #<span class="number">36</span> = Utf8               (I)V</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">public</span> com.ysy.methodarea.MethodAreaDemo();</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">1</span>, locals=<span class="number">1</span>, args_size=<span class="number">1</span></span><br><span class="line">         <span class="number">0</span>: aload_0</span><br><span class="line">         <span class="number">1</span>: invokespecial #<span class="number">1</span>                  <span class="comment">// Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">         <span class="number">4</span>: <span class="keyword">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">3</span>: <span class="number">0</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>       <span class="number">5</span>     <span class="number">0</span>  <span class="built_in">this</span>   Lcom/ysy/methodarea/MethodAreaDemo;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(java.lang.String[])</span>;</span><br><span class="line">    descriptor: ([Ljava/lang/String;)V</span><br><span class="line">    flags: ACC_PUBLIC, ACC_STATIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=<span class="number">3</span>, locals=<span class="number">5</span>, args_size=<span class="number">1</span></span><br><span class="line">         <span class="number">0</span>: sipush        <span class="number">500</span></span><br><span class="line">         <span class="number">3</span>: istore_1</span><br><span class="line">         <span class="number">4</span>: bipush        <span class="number">100</span></span><br><span class="line">         <span class="number">6</span>: istore_2</span><br><span class="line">         <span class="number">7</span>: iload_1</span><br><span class="line">         <span class="number">8</span>: iload_2</span><br><span class="line">         <span class="number">9</span>: idiv</span><br><span class="line">        <span class="number">10</span>: istore_3</span><br><span class="line">        <span class="number">11</span>: bipush        <span class="number">50</span></span><br><span class="line">        <span class="number">13</span>: istore        <span class="number">4</span></span><br><span class="line">        <span class="number">15</span>: getstatic     #<span class="number">2</span>                  <span class="comment">// Field java/lang/System.out:Ljava/io/PrintStream;</span></span><br><span class="line">        <span class="number">18</span>: iload_3</span><br><span class="line">        <span class="number">19</span>: iload         <span class="number">4</span></span><br><span class="line">        <span class="number">21</span>: iadd</span><br><span class="line">        <span class="number">22</span>: invokevirtual #<span class="number">3</span>                  <span class="comment">// Method java/io/PrintStream.println:(I)V</span></span><br><span class="line">        <span class="number">25</span>: <span class="keyword">return</span></span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line <span class="number">5</span>: <span class="number">0</span></span><br><span class="line">        line <span class="number">6</span>: <span class="number">4</span></span><br><span class="line">        line <span class="number">7</span>: <span class="number">7</span></span><br><span class="line">        line <span class="number">8</span>: <span class="number">11</span></span><br><span class="line">        line <span class="number">9</span>: <span class="number">15</span></span><br><span class="line">        line <span class="number">10</span>: <span class="number">25</span></span><br><span class="line">      LocalVariableTable:</span><br><span class="line">        Start  Length  Slot  Name   Signature</span><br><span class="line">            <span class="number">0</span>      <span class="number">26</span>     <span class="number">0</span>  args   [Ljava/lang/String;</span><br><span class="line">            <span class="number">4</span>      <span class="number">22</span>     <span class="number">1</span>     x   I</span><br><span class="line">            <span class="number">7</span>      <span class="number">19</span>     <span class="number">2</span>     y   I</span><br><span class="line">           <span class="number">11</span>      <span class="number">15</span>     <span class="number">3</span>     a   I</span><br><span class="line">           <span class="number">15</span>      <span class="number">11</span>     <span class="number">4</span>     b   I</span><br><span class="line">&#125;</span><br><span class="line">SourceFile: <span class="string">&quot;MethodAreaDemo.java&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="图解字节码指令执行流程"><a href="#图解字节码指令执行流程" class="headerlink" title="图解字节码指令执行流程"></a>图解字节码指令执行流程</h3><p>1、初始状态</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719141526151.png" alt="image-20220719141526151"></p>
-<p>2、首先将操作数500压入操作数栈中</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719141655132.png"></p>
-<p>3、然后操作数 500 从操作数栈中取出，存储到局部变量表中索引为 1 的位置</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719141740626.png"></p>
-<p>4、</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719141900727.png" alt="image-20220719141900727"></p>
-<p>5、</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719141922429.png" alt="image-20220719141922429"></p>
-<p>6、</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719142000240.png" alt="image-20220719142000240"></p>
-<p>7、</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719142024493.png" alt="image-20220719142024493"></p>
-<p>8、</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719142158460.png" alt="image-20220719142158460"></p>
-<p>9、</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719142216996.png" alt="image-20220719142216996"></p>
-<p>10、</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719142237318.png" alt="image-20220719142237318"></p>
-<p>11、图片写错了是#25和#26（获得System类）</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719142324555.png" alt="image-20220719142324555"></p>
-<p>12、</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719142527219.png" alt="image-20220719142527219"></p>
-<p>13、</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719142558500.png" alt="image-20220719142558500"></p>
-<p>15、执行加法运算后，将计算结果放在操作数栈顶</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719142635557.png" alt="image-20220719142635557"></p>
-<p>16、就是真正的打印</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719142613281.png" alt="image-20220719142613281"></p>
-<p>17、</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719142813644.png" alt="image-20220719142813644"></p>
-<p><strong>符号引用 –&gt; 直接引用</strong></p>
-<ol>
-<li>上面代码调用 System.out.println() 方法时，首先需要看看 System 类有没有加载，再看看 PrintStream 类有没有加载</li>
-<li>如果没有加载，则执行加载，执行时，将常量池中的符号引用（字面量）转换为运行时常量池的直接引用（真正的地址值）</li>
-</ol>
-<h1 id="方法区演进细节"><a href="#方法区演进细节" class="headerlink" title="方法区演进细节"></a>方法区演进细节</h1><h2 id="永久代演进过程"><a href="#永久代演进过程" class="headerlink" title="永久代演进过程"></a>永久代演进过程</h2><ol>
-<li><p>首先明确：<strong>只有Hotspot才有永久代</strong>。BEA JRockit、IBMJ9等来说，是不存在永久代的概念的。原则上如何实现方法区属于虚拟机实现细节，不受《Java虚拟机规范》管束，并不要求统一</p>
-</li>
-<li><p>Hotspot中方法区的变化：</p>
-</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>JDK1.6及以前</th>
-<th align="left">有永久代（permanent generation），静态变量存储在永久代上</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>JDK1.7</td>
-<td align="left">有永久代，但已经逐步 “去永久代”，<strong>字符串常量池，静态变量移除，保存在堆中</strong></td>
-</tr>
-<tr>
-<td>JDK1.8</td>
-<td align="left">无永久代，类型信息，字段，方法，常量保存在本地内存的元空间，但字符串常量池、静态变量仍然在堆中。</td>
-</tr>
-</tbody></table>
-<p><strong>JDK6</strong></p>
-<p>方法区由永久代实现，使用 JVM 虚拟机内存（虚拟的内存）</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719151237691.png" alt="image-20220719151237691"></p>
-<p><strong>JDK7</strong></p>
-<p>方法区由永久代实现，使用 JVM 虚拟机内存</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719151316363.png" alt="image-20220719151316363"></p>
-<p><strong>JDK8</strong></p>
-<p>方法区由元空间实现，使用物理机本地内存</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719151340845.png" alt="image-20220719151340845"></p>
-<h3 id="永久代为什么要被元空间替代？"><a href="#永久代为什么要被元空间替代？" class="headerlink" title="永久代为什么要被元空间替代？"></a>永久代为什么要被元空间替代？</h3><blockquote>
-<p><strong>官方文档</strong>：<a target="_blank" rel="noopener" href="http://openjdk.java.net/jeps/122">http://openjdk.java.net/jeps/122</a></p>
-</blockquote>
-<ol>
-<li>随着Java8的到来，HotSpot VM中再也见不到永久代了。但是这并不意味着类的元数据信息也消失了。这些数据被移到了一个与堆不相连的本地内存区域，这个区域叫做元空间（Metaspace）。</li>
-<li>由于类的元数据分配在本地内存中，元空间的最大可分配空间就是系统可用内存空间。</li>
-<li>这项改动是很有必要的，原因有：<ol>
-<li><strong>为永久代设置空间大小是很难确定的。</strong>在某些场景下，如果动态加载类过多，容易产生Perm区的OOM。比如某个实际Web工程中，因为功能点比较多，在运行过程中，要不断动态加载很多类，经常出现致命错误。<code>Exception in thread &#39;dubbo client x.x connector&#39; java.lang.OutOfMemoryError:PermGen space</code>而元空间和永久代之间最大的区别在于：元空间并不在虚拟机中，而是使用本地内存。 因此，默认情况下，元空间的大小仅受本地内存限制。</li>
-<li><strong>对永久代进行调优是很困难的。</strong>方法区的垃圾收集主要回收两部分内容：<strong>常量池中废弃的常量和不再用的类型</strong>，方法区的调优主要是为了降低<strong>Full GC</strong><ol>
-<li>有些人认为方法区（如HotSpot虚拟机中的元空间或者永久代）是没有垃圾收集行为的，其实不然。《Java虚拟机规范》对方法区的约束是非常宽松的，提到过可以不要求虚拟机在方法区中实现垃圾收集。事实上也确实有未实现或未能完整实现方法区类型卸载的收集器存在（如JDK11时期的ZGC收集器就不支持类卸载）。</li>
-<li>一般来说这个区域的回收效果比较难令人满意，尤其是类型的卸载，条件相当苛刻**。但是这部分区域的回收有时又确实是必要的。以前Sun公司的Bug列表中，曾出现过的若干个严重的Bug就是由于低版本的HotSpot虚拟机对此区域未完全回收而导致内存泄漏。</li>
-</ol>
-</li>
-</ol>
-</li>
-</ol>
-<h2 id="字符串常量池"><a href="#字符串常量池" class="headerlink" title="字符串常量池"></a>字符串常量池</h2><p><strong>字符串常量池 StringTable 为什么要调整位置？</strong></p>
-<ul>
-<li><p>JDK7中将StringTable放到了堆空间中。因为永久代的回收效率很低，在Full GC的时候才会执行永久代的垃圾回收，而Full GC是老年代的空间不足、永久代不足时才会触发。</p>
-</li>
-<li><p>这就导致StringTable回收效率不高，而我们开发中会有大量的字符串被创建，回收效率低，导致永久代内存不足。放到堆里，能及时回收内存。</p>
-</li>
-</ul>
-<h2 id="静态变量放在哪里"><a href="#静态变量放在哪里" class="headerlink" title="静态变量放在哪里"></a>静态变量放在哪里</h2><h3 id="对象实体在哪里放着？"><a href="#对象实体在哪里放着？" class="headerlink" title="对象实体在哪里放着？"></a>对象实体在哪里放着？</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 结论：</span></span><br><span class="line"><span class="comment"> * 1、静态引用对应的对象实体(也就是这个new byte[1024 * 1024 * 100])始终都存在堆空间，</span></span><br><span class="line"><span class="comment"> * 2、只是那个变量(相当于下面的arr变量名)在JDK6,JDK7,JDK8存放位置中有所变化</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * jdk7：</span></span><br><span class="line"><span class="comment"> * -Xms200m -Xmx200m -XX:PermSize=300m -XX:MaxPermSize=300m -XX:+PrintGCDetails</span></span><br><span class="line"><span class="comment"> * jdk 8：</span></span><br><span class="line"><span class="comment"> * -Xms200m -Xmx200m -XX:MetaspaceSize=300m -XX:MaxMetaspaceSize=300m -XX:+PrintGCDetails</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StaticFieldTest</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">byte</span>[] arr = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1024</span> * <span class="number">1024</span> * <span class="number">100</span>];<span class="comment">//100MB</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(StaticFieldTest.arr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>JDK6环境下</p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719153501056.png" alt="image-20220719153501056"></p>
-<p>JDK7环境下</p>
-<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_006/0032.png">
-
-<p>JDK8环境</p>
-<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_006/0033.png">
-
-<h3 id="变量-名-存放在哪里？"><a href="#变量-名-存放在哪里？" class="headerlink" title="变量(名)存放在哪里？"></a>变量(名)存放在哪里？</h3><p>这个问题需要用JHSDB工具来进行分析，这个工具是JDK9开始自带的(JDK9以前没有)，在bin目录下可以找到</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.atguigu.java1;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 《深入理解Java虚拟机》中的案例：</span></span><br><span class="line"><span class="comment"> * staticObj、instanceObj、localObj存放在哪里？</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StaticObjTest</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="type">ObjectHolder</span> <span class="variable">staticObj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectHolder</span>();</span><br><span class="line">        <span class="type">ObjectHolder</span> <span class="variable">instanceObj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectHolder</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">void</span> <span class="title function_">foo</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="type">ObjectHolder</span> <span class="variable">localObj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectHolder</span>();</span><br><span class="line">            System.out.println(<span class="string">&quot;done&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ObjectHolder</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Test</span> <span class="variable">test</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StaticObjTest</span>.Test();</span><br><span class="line">        test.foo();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><strong>JDK6环境下</strong></p>
-<p>1、staticObj随着Test的类型信息存放在方法区</p>
-<p>2、instanceObj随着Test的对象实例存放在Java堆</p>
-<p>3、localObject则是存放在foo()方法栈帧的局部变量表中。</p>
-<p>4、测试发现：三个对象的数据在内存中的地址都落在Eden区范围内，所以结论：<strong>只要是对象实例必然会在Java堆中分配</strong>。</p>
-<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_006/0034.png">
-
-<blockquote>
-<p>1、0x00007f32c7800000(Eden区的起始地址)    —-   0x00007f32c7b50000(Eden区的终止地址)  </p>
-<p>2、可以发现三个变量都在这个范围内</p>
-<p>3、所以可以得到上面结论</p>
-</blockquote>
-<p>5、接着，找到了一个引用该staticObj对象的地方，是在一个java.lang.Class的实例里，并且给出了这个实例的地址，通过Inspector查看该对象实例，可以清楚看到这确实是一个java.lang.Class类型的对象实例，里面有一个名为staticobj的实例字段：</p>
-<img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_006/0035.png">
-
-<p>从《Java虚拟机规范》所定义的概念模型来看，所有Class相关的信息都应该存放在方法区之中，但方法区该如何实现，《Java虚拟机规范》并未做出规定，这就成了一件允许不同虚拟机自己灵活把握的事情。JDK7及其以后版本的HotSpot虚拟机选择把静态变量与类型在Java语言一端的映射Class对象存放在一起，<strong>存储于Java堆之中</strong>，从我们的实验中也明确验证了这一点</p>
-<h1 id="方法区的垃圾回收"><a href="#方法区的垃圾回收" class="headerlink" title="方法区的垃圾回收"></a>方法区的垃圾回收</h1><ol>
-<li><p>有些人认为方法区（如Hotspot虚拟机中的元空间或者永久代）是没有垃圾收集行为的，其实不然。《Java虚拟机规范》对方法区的约束是非常宽松的，提到过可以不要求虚拟机在方法区中实现垃圾收集。事实上也确实有未实现或未能完整实现方法区<strong>类型卸载</strong>的收集器存在（如JDK11时期的ZGC收集器就不支持类卸载）。</p>
-</li>
-<li><p>一般来说这个区域的回收效果比较难令人满意，尤其是类型的卸载，条件相当苛刻。但是这部分区域的回收有时又确实是必要的。以前sun公司的Bug列表中，曾出现过的若干个严重的Bug就是由于低版本的HotSpot虚拟机对此区域未完全回收而导致内存泄漏。</p>
-</li>
-<li><p>方法区的垃圾收集主要回收两部分内容：<strong>常量池中废弃的常量和不再使用的类型</strong>。</p>
-</li>
-<li><p>先来说说方法区内常量池之中主要存放的两大类常量：字面量和符号引用。字面量比较接近Java语言层次的常量概念，如文本字符串、被声明为final的常量值等。而符号引用则属于编译原理方面的概念，包括下面三类常量：</p>
-<ul>
-<li>类和接口的全限定名</li>
-<li>字段的名称和描述符</li>
-<li>方法的名称和描述符</li>
-</ul>
-</li>
-<li><p>HotSpot虚拟机对常量池的回收策略是很明确的，只要常量池中的常量没有被任何地方引用，就可以被回收。</p>
-</li>
-<li><p>回收废弃常量与回收Java堆中的对象非常类似。（关于常量的回收比较简单，重点是类的回收）</p>
-</li>
-</ol>
-<p>下面也称作<strong>类卸载</strong></p>
-<p>1、判定一个常量是否“废弃”还是相对简单，而要判定一个类型是否属于“不再被使用的类”的条件就比较苛刻了。需要同时满足下面三个条件：</p>
-<ul>
-<li><p>该类所有的实例都已经被回收，也就是Java堆中不存在该类及其任何派生子类的实例。</p>
-</li>
-<li><p>加载该类的类加载器已经被回收，这个条件除非是经过精心设计的可替换类加载器的场景，如OSGi、JSP的重加载等，否则通常是很难达成的。</p>
-</li>
-<li><p>该类对应的java.lang.Class对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方法。</p>
-</li>
-</ul>
-<p>2、Java虚拟机被允许对满足上述三个条件的无用类进行回收，这里说的仅仅是“被允许”，而并不是和对象一样，没有引用了就必然会回收。关于是否要对类型进行回收，HotSpot虚拟机提供了<code>-Xnoclassgc</code>参数进行控制，还可以使用<code>-verbose:class</code> 以及 <code>-XX：+TraceClass-Loading</code>、<code>-XX：+TraceClassUnLoading</code>查看类加载和卸载信息</p>
-<p>3、在大量使用反射、动态代理、CGLib等字节码框架，动态生成JSP以及OSGi这类频繁自定义类加载器的场景中，通常都需要Java虚拟机具备类型卸载的能力，以保证不会对方法区造成过大的内存压力。</p>
-<h1 id="运行时数据区总结"><a href="#运行时数据区总结" class="headerlink" title="运行时数据区总结"></a>运行时数据区总结</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719155003196.png" alt="image-20220719155003196"></p>
-<h1 id="常见面试题"><a href="#常见面试题" class="headerlink" title="常见面试题"></a>常见面试题</h1><ol>
-<li>百度<ul>
-<li>三面：说一下JVM内存模型吧，有哪些区？分别干什么的？</li>
-</ul>
-</li>
-<li>蚂蚁金服：<ul>
-<li>Java8的内存分代改进</li>
-<li>JVM内存分哪几个区，每个区的作用是什么？</li>
-<li>一面：JVM内存分布&#x2F;内存结构？栈和堆的区别？堆的结构？为什么两个survivor区？</li>
-<li>二面：Eden和survior的比例分配</li>
-</ul>
-</li>
-<li>小米：<ul>
-<li>jvm内存分区，为什么要有新生代和老年代</li>
-</ul>
-</li>
-<li>字节跳动：<ul>
-<li>二面：Java的内存分区</li>
-<li>二面：讲讲vm运行时数据库区</li>
-<li>什么时候对象会进入老年代？</li>
-</ul>
-</li>
-<li>京东：<ul>
-<li>JVM的内存结构，Eden和Survivor比例。</li>
-<li>JVM内存为什么要分成新生代，老年代，持久代。新生代中为什么要分为Eden和survivor。</li>
-</ul>
-</li>
-<li>天猫：<ul>
-<li>一面：Jvm内存模型以及分区，需要详细到每个区放什么。</li>
-<li>一面：JVM的内存模型，Java8做了什么改</li>
-</ul>
-</li>
-<li>拼多多：<ul>
-<li>JVM内存分哪几个区，每个区的作用是什么？</li>
-</ul>
-</li>
-<li>美团：<ul>
-<li>java内存分配</li>
-<li>jvm的永久代中会发生垃圾回收吗？</li>
-<li>一面：jvm内存分区，为什么要有新生代和老年代？</li>
-</ul>
-</li>
-</ol>
  
       <!-- reward -->
       
