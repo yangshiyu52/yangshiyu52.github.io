@@ -8245,4 +8245,1756 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
         <category>JUC</category>
       </categories>
   </entry>
+  <entry>
+    <title>mysql基础</title>
+    <url>/2022/08/02/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9Amysql%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h1 id="1-mysql简介"><a href="#1-mysql简介" class="headerlink" title="1. mysql简介"></a>1. mysql简介</h1><ul>
+<li><p>MySQL是一个<strong>关系型数据库管理系统</strong></p>
+</li>
+<li><p>由瑞典MySQL AB 公司开发，属于 <a href="https://baike.baidu.com/item/Oracle">Oracle</a> 旗下产品</p>
+</li>
+<li><p>Mysql是一个<strong>开源免费的</strong>关系型数据库管理系统</p>
+</li>
+<li><p>mysql分为社区办和企业版</p>
+</li>
+<li><p>我们学习的是社区版</p>
+</li>
+</ul>
+<hr>
+<h1 id="2-关系型数据库"><a href="#2-关系型数据库" class="headerlink" title="2. 关系型数据库"></a>2. 关系型数据库</h1><p>建立在关系模型基础上的数据库,借助数学中的集合代数等一些数学概念和方法,处理关系型数据库中的数据</p>
+<hr>
+<h1 id="3-Mysql的安装"><a href="#3-Mysql的安装" class="headerlink" title="3. Mysql的安装"></a>3. Mysql的安装</h1><ul>
+<li>windows的安装</li>
+<li>Linux的安装</li>
+</ul>
+<hr>
+<h1 id="4-Mysql默认的字符集的配置-了解"><a href="#4-Mysql默认的字符集的配置-了解" class="headerlink" title="4. Mysql默认的字符集的配置(了解)"></a>4. Mysql默认的字符集的配置(了解)</h1><p>以windows中的mysql的配置为例:</p>
+<ul>
+<li><p>找到mysql的存放配置文件的地方 <code>C:\ProgramData\MySQL\MySQL Server 5.6/my.ini</code></p>
+</li>
+<li><p>修改</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">character-set-server=utf8</span><br></pre></td></tr></table></figure></li>
+</ul>
+<blockquote>
+<p>但是: <strong>我们完全不建议这样修改</strong>,因为我们每个项目系统使用的数据库编码完全有可能不一样;</p>
+</blockquote>
+<hr>
+<h1 id="5-启动和停止mysql的服务"><a href="#5-启动和停止mysql的服务" class="headerlink" title="5. 启动和停止mysql的服务"></a>5. 启动和停止mysql的服务</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">net start mysql</span><br><span class="line">net stop mysql</span><br></pre></td></tr></table></figure>
+
+<p>注意: 如果命令显式不可用代表操作系统的版本不支持(家庭版)</p>
+<hr>
+<h1 id="6-mysql的登录命令"><a href="#6-mysql的登录命令" class="headerlink" title="6. mysql的登录命令"></a>6. mysql的登录命令</h1><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql <span class="operator">-</span>u用户名  <span class="operator">-</span>p密码 </span><br><span class="line">	<span class="operator">-</span>h: 默认为localhost</span><br><span class="line">	<span class="operator">-</span>P: 默认<span class="number">3306</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="7-mysql常用的系统命令"><a href="#7-mysql常用的系统命令" class="headerlink" title="7. mysql常用的系统命令"></a>7. mysql常用的系统命令</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看mysql的版本</span></span><br><span class="line">SELECT VERSION();</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看mysql当前登录的用户</span></span><br><span class="line">select user();</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看mysql的当前日期</span></span><br><span class="line">select now();</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看当前所在的数据库</span></span><br><span class="line">select database();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="8-mysql的语句规范"><a href="#8-mysql的语句规范" class="headerlink" title="8. mysql的语句规范"></a>8. mysql的语句规范</h1><ul>
+<li>关键字和函数名建议大写</li>
+<li>数据库的名称,表的名称,字段的名称建议小写</li>
+<li>数据库 表名 字段名建议加上&#96;&#96;</li>
+<li>sql语句的<strong>定界符</strong>默认以; 结尾</li>
+</ul>
+<hr>
+<h1 id="9-数据库的操作SQL类型-了解"><a href="#9-数据库的操作SQL类型-了解" class="headerlink" title="9. 数据库的操作SQL类型(了解)"></a>9. 数据库的操作SQL类型(了解)</h1><ul>
+<li><p><strong>DDL</strong>(数据定义语言)(Data Defination Language)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CREATE TABLE/VIEW/INDEX;</span><br><span class="line">DROP DATABASE;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>DML</strong>(数据操纵语言)(Data Manipulation Language)</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>) 插入：<span class="keyword">INSERT</span></span><br><span class="line"><span class="number">2</span>) 更新：<span class="keyword">UPDATE</span></span><br><span class="line"><span class="number">3</span>) 删除：<span class="keyword">DELETE</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>DQL</strong>(数据查询语言)(Data Query Language)</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">DQL基本结构是由<span class="keyword">SELECT</span>子句，<span class="keyword">FROM</span>子句，<span class="keyword">WHERE</span></span><br><span class="line">子句组成的查询块：</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">&lt;</span>字段名表<span class="operator">&gt;</span></span><br><span class="line">	<span class="keyword">FROM</span> <span class="operator">&lt;</span>表或视图名<span class="operator">&gt;</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="operator">&lt;</span>查询条件<span class="operator">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+</li>
+<li><p><strong>DCL</strong>(数据控制语言)(Data Control Language) </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">用来定义安全级别和访问权限的</span><br><span class="line">常用的关键字：grant   revoke </span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="10-mysql中的概念"><a href="#10-mysql中的概念" class="headerlink" title="10. mysql中的概念"></a>10. mysql中的概念</h1><ul>
+<li>数据库管理系统: 管理数据库的系统</li>
+<li>数据库: 数组库是用来存放和组织<code>表</code>的</li>
+<li>表:是存储数据的<strong>容器</strong>  </li>
+<li>记录: 一行的数据</li>
+<li>属性: 一列属性值</li>
+</ul>
+<hr>
+<h1 id="11-数据库的操作-必会"><a href="#11-数据库的操作-必会" class="headerlink" title="11. 数据库的操作(必会)"></a>11. 数据库的操作(必会)</h1><ul>
+<li>创建数据库</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DATABASE `db2`; #最简单的方式创建一个数据库</span><br></pre></td></tr></table></figure>
+
+<p>注意: 数据库的名称可以加 &#96;&#96; ,也可以不加,默认mysql会给你自动加上</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DATABASE db2;  #可以省略``</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>带判断的创建数据库</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DATABASE IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> `db1`; #如果不存在db1这个数据库则创建db1数据库,如果存在则不会创建但是也不会报错</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建数据库并且指定字符集</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#mysql默认的字符集是latin1,latin1不支持中文</span><br><span class="line"><span class="keyword">CREATE</span> DATABASE IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> `db3` <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>UTF8MB4;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除数据库</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#删除数据库,如果数据库不存在则会报错</span><br><span class="line"><span class="keyword">DROP</span> DATABASE `db1`;</span><br><span class="line">#带判断的删除数据库</span><br><span class="line"><span class="keyword">DROP</span> DATABASE IF <span class="keyword">EXISTS</span> `db1`</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查询数据库</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#查询数据库的创建信息</span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">CREATE</span> DATABASE `db3`;</span><br><span class="line">#查询当前RDBMS中有哪些数据库</span><br><span class="line"><span class="keyword">SHOW</span> DATABASES;</span><br><span class="line">#查询当前所在的数据库</span><br><span class="line"><span class="keyword">SELECT</span> DATABASE();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>进入数据库</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">USE <span class="string">&#x27;db1&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="12-mysql中的数据类型"><a href="#12-mysql中的数据类型" class="headerlink" title="12. mysql中的数据类型"></a>12. mysql中的数据类型</h1><h2 id="12-1-整型"><a href="#12-1-整型" class="headerlink" title="12.1 整型"></a>12.1 整型</h2><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">范围</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>tinyint</strong></td>
+<td align="center"><strong>1个字节 范围(-128<del>127)||0</del>255(无符号)</strong></td>
+<td align="center"><strong>与java中的byte类型对应</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>smallint</strong></td>
+<td align="center"><strong>2个字节 范围(-32768~32767|| 0 ~ 65535(无符号))</strong></td>
+<td align="center"><strong>与java中的short对应</strong></td>
+</tr>
+<tr>
+<td align="center">mediumint</td>
+<td align="center">3 个字节, -8388608 to 8388607||0 to 16777215(无符号)</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>int:Integer</strong></td>
+<td align="center">4 个字节, -2147483648 to 2147483647||0 to 4294967295(无符号)</td>
+<td align="center">与Java中的int类型对应</td>
+</tr>
+<tr>
+<td align="center"><strong>bigint</strong></td>
+<td align="center">8 个字节, -9223372036854775808 to 922337203685477580||0 to 18446744073709551615(无符号)</td>
+<td align="center"><strong>与java中的long对应</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="12-2-浮点型"><a href="#12-2-浮点型" class="headerlink" title="12.2 浮点型"></a>12.2 浮点型</h2><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">范围</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">float(m,d)</td>
+<td align="center">单精度浮点型  8位精度(4字节)   m总个数，d小数位</td>
+<td align="center">与java的float对应</td>
+</tr>
+<tr>
+<td align="center">double(m,d)</td>
+<td align="center">双精度浮点型  16位精度(8字节)   m总个数，d小数位</td>
+<td align="center">与java的double对应</td>
+</tr>
+</tbody></table>
+<p>注意: 在实际开发过程中设计数据库时&#x3D;&#x3D;一定一定一定&#x3D;&#x3D;,<strong>涉及到小数的不要使用FLOAT和DOUBLE类型</strong></p>
+<hr>
+<h2 id="12-3-定点"><a href="#12-3-定点" class="headerlink" title="12.3 定点"></a>12.3 定点</h2><p>浮点型在数据库中存放的是近似值，而定点类型在数据库中存放的是精确值</p>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">范围</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>decimal(m,d)</strong></td>
+<td align="center">参数m&lt;65 是总个数，d&lt;30且 d&lt;m 是小数位</td>
+<td align="center">表示金额等精确值</td>
+</tr>
+</tbody></table>
+<p>注意: Decimal这个类型如果Insert的数据比我们预设的d的长度大,也会进行四舍五入;  一般存储小数都会使用DECIMAL类型,<strong>不会丢失精度</strong></p>
+<hr>
+<h2 id="12-4-字符串"><a href="#12-4-字符串" class="headerlink" title="12.4 字符串"></a>12.4 字符串</h2><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">范围</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>char(n)</strong></td>
+<td align="center"><strong>固定长度，最多255个</strong></td>
+<td align="center">定长字符串,n 范围(0,255)， 如果不是定长的数据，n&lt;&#x3D;4 时才使用</td>
+</tr>
+<tr>
+<td align="center"><strong>varchar(n)</strong></td>
+<td align="center"><strong>变长字符串，最多65532个字符</strong></td>
+<td align="center">变长字符串，65532&gt;n&gt;4, 注意，n 是字符数，而不是字节数</td>
+</tr>
+<tr>
+<td align="center">tinytext</td>
+<td align="center">存储 L+1 个字节，其中 L &lt; 2^8</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"><strong>text</strong></td>
+<td align="center">存储 L+2 个字节，其中 L &lt; 2^16</td>
+<td align="center">存储文本的</td>
+</tr>
+<tr>
+<td align="center">mediumtext</td>
+<td align="center">存储 L+3 个字节，其中 L &lt; 2^24</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">longtext</td>
+<td align="center">存储 L+4 个字节，其中 L &lt; 2^32</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<h2 id="12-5-Blob二进制类型"><a href="#12-5-Blob二进制类型" class="headerlink" title="12.5 Blob二进制类型"></a>12.5 Blob二进制类型</h2><ul>
+<li><p>BLOB和text存储方式不同，TEXT以文本方式存储，英文存储区分大小写，而Blob是以二进制方式存储，不分大小写。</p>
+</li>
+<li><p>BLOB存储的数据只能整体读出。 </p>
+</li>
+<li><p>TEXT可以指定字符集，BLOB不用指定字符集。</p>
+</li>
+</ul>
+<hr>
+<h2 id="12-6-日期时间类型"><a href="#12-6-日期时间类型" class="headerlink" title="12.6 日期时间类型"></a>12.6 日期时间类型</h2><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">date</td>
+<td align="center">日期 ‘2008-12-2’</td>
+</tr>
+<tr>
+<td align="center">time</td>
+<td align="center">时间 ‘12:25:36’</td>
+</tr>
+<tr>
+<td align="center">datetime</td>
+<td align="center">日期时间 ‘2008-12-2 22:06:44’</td>
+</tr>
+<tr>
+<td align="center">timestamp</td>
+<td align="center">自动存储记录修改时间</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="13-mysql中数据类型属性-约束-CONSTRAINT"><a href="#13-mysql中数据类型属性-约束-CONSTRAINT" class="headerlink" title="13. mysql中数据类型属性(约束-CONSTRAINT)"></a>13. mysql中数据类型属性(约束-CONSTRAINT)</h1><table>
+<thead>
+<tr>
+<th align="center">MySQL关键字</th>
+<th align="center">含义</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>NULL</strong></td>
+<td align="center">数据列可包含NULL值</td>
+<td align="center">mysql默认不指定约束,字段也不添加值,默认为NULL</td>
+</tr>
+<tr>
+<td align="center"><strong>NOT NULL</strong></td>
+<td align="center">数据列不允许包含NULL值</td>
+<td align="center">非空约束</td>
+</tr>
+<tr>
+<td align="center"><strong>DEFAULT</strong></td>
+<td align="center">默认值</td>
+<td align="center">默认值约束</td>
+</tr>
+<tr>
+<td align="center"><strong>PRIMARY KEY</strong></td>
+<td align="center">主键</td>
+<td align="center">主键约束 &#x3D; 非空约束+唯一约束</td>
+</tr>
+<tr>
+<td align="center"><strong>AUTO_INCREMENT</strong></td>
+<td align="center">自动递增，适用于整数类型</td>
+<td align="center">自增(一般和<strong>数值类型的主键</strong>联合使用)</td>
+</tr>
+<tr>
+<td align="center"><strong>UNSIGNED</strong></td>
+<td align="center">无符号</td>
+<td align="center">保留正数部分</td>
+</tr>
+<tr>
+<td align="center"><strong>UNIQUE</strong></td>
+<td align="center">唯一约束</td>
+<td align="center">此字段的值不能重复</td>
+</tr>
+</tbody></table>
+<hr>
+<ul>
+<li><p>作用</p>
+<ul>
+<li>保证用户输入的数据存储到数据库中是正确的，准确的。</li>
+<li>可以防止一些可能的输入错误。</li>
+<li>如何使用<strong>完整性</strong>来保证存储到数据库中的数据是正确的准确的，需要在创建表的时候给表添加约束</li>
+</ul>
+</li>
+<li><p>分类</p>
+<ul>
+<li>实体完整性</li>
+<li>域完整性</li>
+<li>引用完整性</li>
+</ul>
+</li>
+</ul>
+<h1 id="14-表的操作"><a href="#14-表的操作" class="headerlink" title="14. 表的操作"></a>14. 表的操作</h1><p>数据表是数据库的最重要的组成部分之一,是其他对象的基础;</p>
+<h2 id="14-1-查看数据库中的所有的表"><a href="#14-1-查看数据库中的所有的表" class="headerlink" title="14.1 查看数据库中的所有的表"></a>14.1 查看数据库中的所有的表</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SHOW TABLES;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="14-2-创建表"><a href="#14-2-创建表" class="headerlink" title="14.2 创建表"></a>14.2 创建表</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>`(id <span class="type">int</span>,name <span class="type">char</span>(<span class="number">32</span>),age tinyint);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 带条件的创建表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> `<span class="keyword">user</span>`(id <span class="type">int</span>,name <span class="type">char</span>(<span class="number">32</span>),age tinyint);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建表时指定字符集,如果不指定默认使用的是数据库的字符集</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> `<span class="keyword">user</span>`(id <span class="type">int</span>,name <span class="type">char</span>(<span class="number">32</span>),age tinyint) <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>UTF8;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查看表结构</span></span><br><span class="line"><span class="keyword">DESCRIBE</span> `<span class="keyword">user</span>`;</span><br><span class="line"><span class="keyword">DESC</span> `<span class="keyword">user</span>`;  #简写</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="14-3-删除表"><a href="#14-3-删除表" class="headerlink" title="14.3 删除表"></a>14.3 删除表</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 删除表</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> `<span class="keyword">user</span>`;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 带判断的删除</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> `<span class="keyword">user</span>`;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="14-4-修改表结构"><a href="#14-4-修改表结构" class="headerlink" title="14.4 修改表结构"></a>14.4 修改表结构</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 添加列</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> `<span class="keyword">member</span>` <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> sex <span class="type">CHAR</span>(<span class="number">1</span>);</span><br><span class="line"><span class="comment">-- COLUMN关键字可以省略</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> `<span class="keyword">member</span>` <span class="keyword">ADD</span>  sex <span class="type">CHAR</span>(<span class="number">1</span>);  </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 删除列	</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="keyword">member</span> <span class="keyword">DROP</span> <span class="keyword">COLUMN</span>  city;</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="keyword">member</span> <span class="keyword">DROP</span>  city;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询列</span></span><br><span class="line"><span class="keyword">DESC</span> <span class="keyword">member</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- MODIFY只能修改列的属性 不能修改名字</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="keyword">member</span> MODIFY age <span class="type">SMALLINT</span>;</span><br><span class="line"><span class="comment">-- CHANGE 既能修改列的名称也能修改列的属性</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="keyword">member</span> CHANGE sex sex1 <span class="type">VARCHAR</span>(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="15-记录-数据-的操作"><a href="#15-记录-数据-的操作" class="headerlink" title="15. 记录(数据)的操作"></a>15. 记录(数据)的操作</h1><h2 id="15-1-添加数据"><a href="#15-1-添加数据" class="headerlink" title="15.1 添加数据"></a>15.1 添加数据</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 给表插入一条数据</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">member</span>(id,nick_name,age,sex) <span class="keyword">VALUES</span>(<span class="number">1</span>,<span class="string">&#x27;小明&#x27;</span>,<span class="number">12</span>,<span class="string">&#x27;男&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 批量插入数据</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">member</span>(id,nick_name,age,sex) <span class="keyword">VALUES</span>(<span class="number">4</span>,&quot;小短腿&quot;,<span class="number">10</span>,<span class="string">&#x27;男&#x27;</span>),(<span class="number">5</span>,<span class="string">&#x27;大胖&#x27;</span>,<span class="number">30</span>,<span class="string">&#x27;男&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 骚操作(不指定字段全量插入)----&gt;一般不建议使用全量插入数据</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">member</span> <span class="keyword">VALUES</span>(<span class="keyword">NULL</span>,<span class="string">&#x27;小明&#x27;</span>,<span class="number">20</span>);</span><br><span class="line">或者</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">member</span> <span class="keyword">VALUES</span>(<span class="keyword">DEFAULT</span>,<span class="string">&#x27;小明&#x27;</span>,<span class="number">20</span>);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="15-2-查询数据-简单查询"><a href="#15-2-查询数据-简单查询" class="headerlink" title="15.2 查询数据(简单查询)"></a>15.2 查询数据(简单查询)</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 最简单的查询语句</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">member</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询指定的字段</span></span><br><span class="line"><span class="keyword">SELECT</span> nick_name <span class="keyword">FROM</span> <span class="keyword">member</span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="15-3-修改数据"><a href="#15-3-修改数据" class="headerlink" title="15.3 修改数据"></a>15.3 修改数据</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 修改数据</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">member</span> <span class="keyword">SET</span> nick_name<span class="operator">=</span><span class="string">&#x27;小胖子&#x27;</span> <span class="keyword">WHERE</span> id<span class="operator">=</span><span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="15-4-删除数据"><a href="#15-4-删除数据" class="headerlink" title="15.4 删除数据"></a>15.4 删除数据</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 删除数据</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">WHERE</span> id<span class="operator">=</span><span class="number">2</span>;                               </span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="16-表和表之间关系"><a href="#16-表和表之间关系" class="headerlink" title="16. 表和表之间关系"></a>16. 表和表之间关系</h1><h2 id="16-1-一对一的关系"><a href="#16-1-一对一的关系" class="headerlink" title="16.1 一对一的关系"></a>16.1 一对一的关系</h2><p>例如: 一个会员表中的一条记录只对应我们身份证表中的一条记录</p>
+<ul>
+<li><p>我们如果设计数据库时出现了一对一的表应该尽量避免;我们只需要给字段多的一方的表<strong>添加额外的字段即可</strong></p>
+</li>
+<li><p>如果我们设计的时候**无法避免(考虑的优化为题)**一对一的设计,我们需要让两个表的主键进行对应</p>
+</li>
+<li><p>如果一个表中的字段的个数超过16个,<strong>强烈建议</strong>使用一对一的表的设计</p>
+</li>
+</ul>
+<hr>
+<h2 id="16-2-一对多的关系"><a href="#16-2-一对多的关系" class="headerlink" title="16.2 一对多的关系"></a>16.2 一对多的关系</h2><p>例如: 一个会员对应多个订单,而一个订单只对应一个会员(会员表和订单表)</p>
+<ul>
+<li><p><strong>子表</strong>：订单表</p>
+</li>
+<li><p>在多的一方的表(订单表)加一个字段<strong>对应一的一方的表中的主键</strong>,数据类型要保持一致</p>
+</li>
+<li><p>而且我们根据墨菲定律,还可以为其加一个约束条件(<strong>外键(FOREIGN KEY)</strong>)</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 在表创建之后添加外键</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 在多的一方的表中添加了一个字段</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> orders <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> m_id <span class="type">INT</span> ;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 添加外键约束</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> orders <span class="keyword">ADD</span> <span class="keyword">FOREIGN</span> KEY orders(m_id)  <span class="keyword">REFERENCES</span> <span class="keyword">member</span>(id);</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> orders <span class="keyword">ADD</span> <span class="keyword">FOREIGN</span> KEY(m_id)  <span class="keyword">REFERENCES</span> <span class="keyword">member</span>(id);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 可以指定外键的名称</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> orders <span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> ifbk_orders_mid_merber <span class="keyword">FOREIGN</span> KEY(m_id)  <span class="keyword">REFERENCES</span> <span class="keyword">member</span>(id);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建表的时候直接添加外键</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> orders(</span><br><span class="line">	id <span class="type">INT</span>  AUTO_INCREMENT COMMENT <span class="string">&#x27;订单ID&#x27;</span>,</span><br><span class="line">	number <span class="type">VARCHAR</span>(<span class="number">64</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;订单编号&#x27;</span>,</span><br><span class="line">	address <span class="type">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;订单的发货地址&#x27;</span>,</span><br><span class="line">	m_id <span class="type">INT</span>,	</span><br><span class="line">	<span class="keyword">PRIMARY</span> KEY(id),</span><br><span class="line">	<span class="keyword">FOREIGN</span> KEY(m_id) <span class="keyword">REFERENCES</span> <span class="keyword">member</span>(id)</span><br><span class="line">) COMMENT <span class="string">&#x27;订单表&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意:</strong></p>
+<ul>
+<li>创建一对多的表的时候,首先要创建一方对应的那个表</li>
+<li><code>REFERENCES</code>：<strong>指定外键依赖的表及对应的列</strong>，并且该列为该表的主键</li>
+<li>我们为了数据的安全性,我们会把<strong>多方中的参照的字段设置为外键,而且类型要和一方中的主键保持一致</strong></li>
+<li><strong>一般我们在商业项目中,尽量不要使用外键(等会解释)</strong></li>
+</ul>
+<hr>
+<h2 id="16-3-多对多的关系"><a href="#16-3-多对多的关系" class="headerlink" title="16.3 多对多的关系"></a>16.3 多对多的关系</h2><blockquote>
+<p>思想: 借助一个额外的表,实现多对多关系</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建商品表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> shop(</span><br><span class="line">	id <span class="type">INT</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">	shop_name <span class="type">VARCHAR</span>(<span class="number">255</span>) COMMENT <span class="string">&#x27;商品名称&#x27;</span>,</span><br><span class="line">	stock <span class="type">INT</span> UNSIGNED COMMENT <span class="string">&#x27;商品库存&#x27;</span>,</span><br><span class="line">	<span class="keyword">PRIMARY</span> KEY(id)</span><br><span class="line">) COMMENT <span class="string">&#x27;商品表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> member_shop;</span><br><span class="line"><span class="comment">-- 创建第三方的表(member_shop)</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>  member_shop(</span><br><span class="line">	m_id <span class="type">INT</span> COMMENT <span class="string">&#x27;参照member中的id&#x27;</span>,</span><br><span class="line">	s_id <span class="type">INT</span> COMMENT <span class="string">&#x27;参照shop中的id&#x27;</span>,</span><br><span class="line">	<span class="keyword">FOREIGN</span> KEY(m_id) <span class="keyword">REFERENCES</span> <span class="keyword">member</span>(id),</span><br><span class="line">	<span class="keyword">FOREIGN</span> KEY(s_id) <span class="keyword">REFERENCES</span> shop(id)</span><br><span class="line">) ENGINE<span class="operator">=</span>INNODB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8 COMMENT <span class="string">&#x27;第三方的表&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="17-mysql的多字段查询"><a href="#17-mysql的多字段查询" class="headerlink" title="17. mysql的多字段查询"></a>17. mysql的多字段查询</h1><blockquote>
+<p>select * 这种方式不建议使用,我们只查询需要的字段,select * 这种方式对性能有影响</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询多个字段</span></span><br><span class="line"><span class="keyword">SELECT</span> nick_name,age <span class="keyword">FROM</span> <span class="keyword">member</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询字段并且指定字段的别名</span></span><br><span class="line"><span class="keyword">SELECT</span> nick_name <span class="keyword">AS</span> nname,age <span class="keyword">FROM</span> <span class="keyword">member</span>;</span><br><span class="line"><span class="keyword">SELECT</span> nick_name  nname,age <span class="keyword">FROM</span> <span class="keyword">member</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 这才是一条完整的sql语句,我们在实际的开发中不会写这个多的东西,会省略一些东西(库名,字段的别名,表的别名...),sql的执行引擎会帮我们进行词法和语法的补全</span></span><br><span class="line"><span class="keyword">SELECT</span> db3.member.nick_name <span class="keyword">AS</span> nick_name,db3.member.age <span class="keyword">AS</span> age <span class="keyword">FROM</span> db3.member <span class="keyword">AS</span> <span class="keyword">member</span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="18-mysql中的排序"><a href="#18-mysql中的排序" class="headerlink" title="18. mysql中的排序"></a>18. mysql中的排序</h1><blockquote>
+<p>ORDER BY col_name ASC|DESC</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 不指定任何的排序字段的情况下,默认是按主键的升序排列的</span></span><br><span class="line"><span class="keyword">SELECT</span> id,nick_name,age <span class="keyword">FROM</span> <span class="keyword">member</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 指定按age来排序(默认是升序)</span></span><br><span class="line"><span class="keyword">SELECT</span> id,nick_name,age <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> age ;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 指定按age的降序进行排序</span></span><br><span class="line"><span class="keyword">SELECT</span> id,nick_name,age <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> age <span class="keyword">DESC</span> ;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="19-mysql中的分组查询"><a href="#19-mysql中的分组查询" class="headerlink" title="19. mysql中的分组查询"></a>19. mysql中的分组查询</h1><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建学生表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> student(</span><br><span class="line">    id <span class="type">INT</span> AUTO_INCREMENT,</span><br><span class="line">    sname <span class="type">VARCHAR</span>(<span class="number">64</span>),</span><br><span class="line">    age TINYINT UNSIGNED,</span><br><span class="line">    grade <span class="type">VARCHAR</span>(<span class="number">32</span>),</span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY(id)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询grade字段不为NULL的总记录数</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(grade) <span class="keyword">FROM</span> student ;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查询每个班级及其班级的总人数</span></span><br><span class="line"><span class="keyword">SELECT</span> grade, <span class="built_in">COUNT</span>(grade) <span class="keyword">FROM</span> student <span class="keyword">GROUP</span> <span class="keyword">BY</span>(grade);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- HAVING 是对分组后的数据进行条件过滤</span></span><br><span class="line"><span class="keyword">SELECT</span> grade, <span class="built_in">COUNT</span>(grade) <span class="keyword">FROM</span> student <span class="keyword">GROUP</span> <span class="keyword">BY</span>(grade) <span class="keyword">HAVING</span> <span class="built_in">COUNT</span>(grade)<span class="operator">&gt;</span><span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询年龄age&gt;25的,班级及其班级里面的人数  WHERE 是对分组之前的数据进行筛选</span></span><br><span class="line"><span class="keyword">SELECT</span> grade,<span class="built_in">COUNT</span>(grade) <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> age<span class="operator">&gt;</span><span class="number">25</span> <span class="keyword">GROUP</span> <span class="keyword">BY</span>(grade) ;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询年龄age&gt;25的,班级人数&gt;1的,班级及其班级里面的人数</span></span><br><span class="line"><span class="keyword">SELECT</span> grade,<span class="built_in">COUNT</span>(grade) <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> age<span class="operator">&gt;</span><span class="number">25</span> <span class="keyword">GROUP</span> <span class="keyword">BY</span>(grade) <span class="keyword">HAVING</span> <span class="built_in">COUNT</span>(grade)<span class="operator">&gt;</span><span class="number">1</span> ;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="20-mysql中的分页查询"><a href="#20-mysql中的分页查询" class="headerlink" title="20. mysql中的分页查询"></a>20. mysql中的分页查询</h1><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">limit</span><br><span class="line"><span class="comment">-- 用来限定查询结果的起始行和总行数的。</span></span><br><span class="line"><span class="comment">-- 用来实现分页查询</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> emp <span class="keyword">ORDER</span> <span class="keyword">BY</span> id LIMIT <span class="number">0</span>,<span class="number">3</span>;</span><br><span class="line"><span class="comment">-- 0表示从第一条数据开始，3表示查询3条数据</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> emp <span class="keyword">ORDER</span> <span class="keyword">BY</span> id LIMIT <span class="number">3</span>,<span class="number">3</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> emp <span class="keyword">ORDER</span> <span class="keyword">BY</span> id LIMIT <span class="number">6</span>,<span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="21-查询小结"><a href="#21-查询小结" class="headerlink" title="21. 查询小结"></a>21. 查询小结</h1><p><strong>基本查询语句的书写顺序和执行顺序</strong></p>
+<ul>
+<li><p>书写顺序：</p>
+<p><code>select-from-where-group by-having-order by-limit;</code></p>
+</li>
+<li><p>执行顺序：</p>
+<p><code>from-where-group by-having-select-order by-limit;</code></p>
+</li>
+</ul>
+<h1 id="22-AND和OR"><a href="#22-AND和OR" class="headerlink" title="22. AND和OR"></a>22. AND和OR</h1><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- and代表两个添加都成立</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">WHERE</span>  age<span class="operator">&gt;</span><span class="number">25</span> <span class="keyword">AND</span> sex<span class="operator">=</span><span class="string">&#x27;女&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- or其中只要有一个成立则查出来</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">WHERE</span>  age<span class="operator">&gt;</span><span class="number">25</span> <span class="keyword">OR</span> sex<span class="operator">=</span><span class="string">&#x27;女&#x27;</span> </span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="23-IN和NOT-IN"><a href="#23-IN和NOT-IN" class="headerlink" title="23. IN和NOT IN"></a>23. IN和NOT IN</h1><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 多个OR连接并不是很方便</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">WHERE</span> age <span class="operator">=</span> <span class="number">30</span> <span class="keyword">OR</span> age<span class="operator">=</span><span class="number">40</span> <span class="keyword">OR</span> age<span class="operator">=</span><span class="number">50</span> <span class="keyword">OR</span> age<span class="operator">=</span><span class="number">45</span> ;</span><br><span class="line"><span class="comment">-- 使用IN进行匹配,达到上面OR的效果</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">WHERE</span> age <span class="keyword">IN</span>(<span class="number">30</span>,<span class="number">40</span>,<span class="number">50</span>,<span class="number">45</span>) ;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 多个AND连接不方便</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">WHERE</span> age <span class="operator">!=</span> <span class="number">30</span> <span class="keyword">AND</span> age<span class="operator">!=</span><span class="number">40</span> <span class="keyword">AND</span> age<span class="operator">!=</span><span class="number">50</span> <span class="keyword">AND</span> age<span class="operator">!=</span><span class="number">45</span> ;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">WHERE</span> age <span class="keyword">NOT</span> <span class="keyword">IN</span>(<span class="number">30</span>,<span class="number">40</span>,<span class="number">50</span>,<span class="number">45</span>) ;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="24-BETWEEN…AND"><a href="#24-BETWEEN…AND" class="headerlink" title="24. BETWEEN…AND"></a>24. BETWEEN…AND</h1><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询指定区域内的数据</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">WHERE</span> age<span class="operator">&gt;=</span><span class="number">30</span> <span class="keyword">AND</span> age<span class="operator">&lt;=</span><span class="number">40</span></span><br><span class="line"><span class="comment">-- 也可以使用BETWEEN...and来代替</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">WHERE</span> age <span class="keyword">BETWEEN</span> <span class="number">30</span> <span class="keyword">AND</span> <span class="number">40</span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="23-NOT-BETWEEN…AND"><a href="#23-NOT-BETWEEN…AND" class="headerlink" title="23. NOT BETWEEN…AND"></a>23. NOT BETWEEN…AND</h1><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">WHERE</span> age<span class="operator">&lt;</span><span class="number">30</span> <span class="keyword">OR</span> age<span class="operator">&gt;</span><span class="number">40</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">WHERE</span> age <span class="keyword">NOT</span> <span class="keyword">BETWEEN</span> <span class="number">30</span> <span class="keyword">AND</span> <span class="number">40</span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="26-mysql的子查询"><a href="#26-mysql的子查询" class="headerlink" title="26. mysql的子查询"></a>26. mysql的子查询</h1><p>把一个查询的结果当成另一个查询的条件进行使用</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询小花购买过的全部的商品</span></span><br><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">  <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">  member_shop </span><br><span class="line"><span class="keyword">WHERE</span> m_id <span class="operator">=</span> </span><br><span class="line">  (<span class="keyword">SELECT</span> </span><br><span class="line">    id</span><br><span class="line">  <span class="keyword">FROM</span></span><br><span class="line">    <span class="keyword">member</span> </span><br><span class="line">  <span class="keyword">WHERE</span> nick_name <span class="operator">=</span> <span class="string">&#x27;小花&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="27-多表查询"><a href="#27-多表查询" class="headerlink" title="27. 多表查询"></a>27. 多表查询</h1><h2 id="合并结果集"><a href="#合并结果集" class="headerlink" title="合并结果集"></a>合并结果集</h2><ul>
+<li><p><strong>去重：union</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> aa(</span><br><span class="line">	id <span class="type">INT</span>,</span><br><span class="line">	NAME <span class="type">VARCHAR</span>(<span class="number">10</span>)</span><br><span class="line">);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> aa <span class="keyword">VALUES</span>(<span class="number">1</span>,<span class="string">&#x27;aaa&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> aa <span class="keyword">VALUES</span>(<span class="number">2</span>,<span class="string">&#x27;bbb&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> aa <span class="keyword">VALUES</span>(<span class="number">3</span>,<span class="string">&#x27;ccc&#x27;</span>);</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> bb(</span><br><span class="line">	id <span class="type">INT</span>,</span><br><span class="line">	NAME <span class="type">VARCHAR</span>(<span class="number">10</span>)</span><br><span class="line">);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> bb <span class="keyword">VALUES</span>(<span class="number">1</span>,<span class="string">&#x27;aaa&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> bb <span class="keyword">VALUES</span>(<span class="number">2</span>,<span class="string">&#x27;bbb&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> bb <span class="keyword">VALUES</span>(<span class="number">4</span>,<span class="string">&#x27;ddd&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> aa <span class="keyword">UNION</span> <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> bb;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>不去重：union all</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> aa <span class="keyword">UNION</span> <span class="keyword">ALL</span> <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> bb;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="多表连接查询"><a href="#多表连接查询" class="headerlink" title="多表连接查询"></a>多表连接查询</h2><p><strong>使用关联关系可以去除无用笛卡尔积</strong></p>
+<ul>
+<li><p><strong>内连接(显式内连接)</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询小花下过的订单(使用多表连接进行查询)  笛卡尔积</span></span><br><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">  member.id m_id,</span><br><span class="line">  member.nick_name,</span><br><span class="line">  orders.`address`,</span><br><span class="line">  orders.`create_time` </span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">  <span class="keyword">member</span> <span class="keyword">INNER</span> <span class="keyword">JOIN</span> orders </span><br><span class="line"><span class="keyword">ON</span> member.id <span class="operator">=</span> orders.m_id </span><br><span class="line"><span class="keyword">WHERE</span> member.nick_name <span class="operator">=</span> <span class="string">&#x27;小花&#x27;</span> ;</span><br></pre></td></tr></table></figure>
+
+<p>注意:我们使用内连接的时候可以省略<code>INNER JOIN</code>,使<code>逗号</code>在多个表之间进行连接(隐式连接),连接条件也要使用<code>WHERE</code>关键系代替<code>ON</code>关键字</p>
+<p>隐式连接的<strong>语法不太友好</strong>,简单的多个表之间的查询可以使用,但是复杂的sql就不建议使用<code>隐式连接</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询小花下过的订单(使用多表连接进行查询)  笛卡尔积</span></span><br><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">  m.id  m_id,</span><br><span class="line">  m.nick_name,</span><br><span class="line">  o.`address`,</span><br><span class="line">  o.`create_time`</span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line">  <span class="keyword">member</span> m,</span><br><span class="line">  orders o</span><br><span class="line"><span class="keyword">WHERE</span> m.id <span class="operator">=</span> o.m_id </span><br><span class="line">  <span class="keyword">AND</span> m.nick_name <span class="operator">=</span> <span class="string">&#x27;小花&#x27;</span> ;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>外链接 outer join on</strong></p>
+<ul>
+<li><p><strong>左外连接 left outer join</strong></p>
+<p>特点：<strong>查询的结果存在不满足条件等式的可能性</strong>。</p>
+<p>以<strong>左边的表为主表</strong>，先查询左表中的所有内容，然后在查询右表，<strong>右表满足条件的显示，不满足条件的显示为null</strong>。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">  member.id m_id,</span><br><span class="line">  member.nick_name,</span><br><span class="line">  orders.`address`,</span><br><span class="line">  orders.`create_time` </span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line"><span class="keyword">member</span> <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> orders </span><br><span class="line"><span class="keyword">ON</span> member.id <span class="operator">=</span> orders.m_id </span><br><span class="line"><span class="keyword">AND</span> member.nick_name <span class="operator">=</span> <span class="string">&#x27;小花&#x27;</span> ;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>右外连接 right outer join</strong>(不建议使用,因为可以直接转换为左外链接)</p>
+</li>
+</ul>
+</li>
+<li><p><strong>自然链接   natural join</strong></p>
+<ul>
+<li><p>链接查询会产生笛卡尔积，可以使用主外键关系等式去除笛卡尔积。自然链接，我们不需要自己给出主外键关系等式，它会自己找到。自动拿2个表中名字和类型一样的列作为条件。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> emp <span class="keyword">NATURAL</span> <span class="keyword">JOIN</span> dept;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> emp <span class="keyword">NATURAL</span> <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> dept;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> emp <span class="keyword">NATURAL</span> <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> dept;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="28-多表的连接的商业项目使用建议"><a href="#28-多表的连接的商业项目使用建议" class="headerlink" title="28. 多表的连接的商业项目使用建议"></a>28. 多表的连接的商业项目使用建议</h1><ul>
+<li>多表连接时尽量使用<strong>显式连接</strong>,因为显式连接的sql的语义明确</li>
+<li>生产环境建议表的联查个数不要超过3张表(可以是3张)</li>
+<li>如果3张表的联查还不能解决你的问题,那么你就需要在<strong>业务层面解决</strong>或者是<strong>数据库设计缺陷</strong></li>
+<li><strong>在项目中不建议使用外键</strong>,我们完全可以在业务层保证数据的安全性;<ul>
+<li>数据库本质的作用是用来存储数据,而不是进行数据约束的;因为外键会造成我们数据源库迁移的灾难;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="29-级联删除与级联更新"><a href="#29-级联删除与级联更新" class="headerlink" title="29. 级联删除与级联更新"></a>29. 级联删除与级联更新</h1><p>外键的级联删除：如果父表中的记录被删除，则子表中对应的记录自动被删除</p>
+<p>父表——被外键引用的表</p>
+<p>子表——引用父表中的主键作为外键的表</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- ON DELETE CASCADE  级联删除</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> orders <span class="keyword">ADD</span> <span class="keyword">FOREIGN</span> KEY(`m_id`) <span class="keyword">REFERENCES</span> <span class="keyword">member</span>(`id`) <span class="keyword">ON</span> <span class="keyword">DELETE</span> CASCADE ;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- ON UPDATE CASCADE  级联更新</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> orders <span class="keyword">ADD</span> <span class="keyword">FOREIGN</span> KEY(`m_id`) <span class="keyword">REFERENCES</span> <span class="keyword">member</span>(`id`)  <span class="keyword">ON</span> <span class="keyword">UPDATE</span> CASCADE;</span><br></pre></td></tr></table></figure>
+
+<p>当然级联更新和级联删除时可以同时设置的</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> orders <span class="keyword">ADD</span> <span class="keyword">FOREIGN</span> KEY (`m_id`) <span class="keyword">REFERENCES</span> <span class="keyword">member</span> (`id`) </span><br><span class="line"><span class="keyword">ON</span> <span class="keyword">DELETE</span> CASCADE  <span class="keyword">ON</span> <span class="keyword">UPDATE</span> CASCADE;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>也可以借助可视化工具进行修改级联删除和级联更新</p>
+</blockquote>
+<hr>
+<h1 id="30-mysql中的分隔符-定界符"><a href="#30-mysql中的分隔符-定界符" class="headerlink" title="30. mysql中的分隔符(定界符)"></a>30. mysql中的分隔符(定界符)</h1><p>mysql中默认的分割符是 <code>;</code>  也就是说遇到 <code>;</code> 就会立即执行sql</p>
+<p>在<strong>函数存储过程</strong>这些特性中需要写多个sql组成一个整体,当成整体来执行,而这些特性中,一条一条的语句之间语法规定必须用<code>;</code>来分开</p>
+<p>所以我们要创建函数 存储过程 必须先要把默认的分隔符 <code>;</code>替换成其他的符号;</p>
+<p><strong>在会话中替换默认的分隔符,使用下面语句</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">DELIMITER $$  </span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="31-mysql中的函数"><a href="#31-mysql中的函数" class="headerlink" title="31. mysql中的函数"></a>31. mysql中的函数</h1><p>函数:在编程中函数其实就是一段业务的封装</p>
+<p>mysql中的函数: 对多个sql业务的封装,<strong>避免反复的进行词法和语法分析</strong></p>
+<h2 id="31-1-系统函数"><a href="#31-1-系统函数" class="headerlink" title="31.1 系统函数"></a>31.1 系统函数</h2><p>mysql系统帮我们定义的函数</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询mysql系统当前时间</span></span><br><span class="line"><span class="keyword">SELECT</span> NOW();</span><br><span class="line"><span class="comment">-- 查询当前mysql的版本</span></span><br><span class="line"><span class="keyword">SELECT</span> VERSION();</span><br><span class="line"><span class="comment">-- 查询当前所在的数据库</span></span><br><span class="line"><span class="keyword">SELECT</span> DATABASE();</span><br><span class="line"><span class="comment">-- 查询当前登录mysql的用户和主机</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">USER</span>();</span><br><span class="line"><span class="comment">-- 获取一个字符串对应的md5值</span></span><br><span class="line"><span class="keyword">SELECT</span> MD5(&quot;HELLO&quot;);</span><br><span class="line"><span class="comment">-- 查询去重</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">distinct</span> university <span class="keyword">from</span> user_profile;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="31-2-聚合函数"><a href="#31-2-聚合函数" class="headerlink" title="31.2 聚合函数"></a>31.2 聚合函数</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 统计某个字段的记录数</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(`age`) <span class="keyword">FROM</span> student;</span><br><span class="line"><span class="comment">-- 查询某个字段的最大值</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">MAX</span>(age) <span class="keyword">FROM</span> student;</span><br><span class="line"><span class="comment">-- 查询某个字段的最小值</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">MIN</span>(age) <span class="keyword">FROM</span> student;</span><br><span class="line"><span class="comment">-- 查询某个字段的平均值</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">AVG</span>(age) <span class="keyword">FROM</span> student;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="31-3-数学函数"><a href="#31-3-数学函数" class="headerlink" title="31.3 数学函数"></a>31.3 数学函数</h2><p>数学函数主要用于处理数字，包括整型、浮点数等。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/873abdbc9f3e48afb773d6f1a43cc9b2.png" alt="img"></p>
+<h2 id="31-4-字符串函数"><a href="#31-4-字符串函数" class="headerlink" title="31.4 字符串函数"></a>31.4 字符串函数</h2><p>字符串函数是MySQL中最常用的一类函数，字符串函数主要用于处理表中的字符串。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/b9ae4e4455ab4bdfb6376f9340079471.png" alt="img"></p>
+<h2 id="31-5-日期时间函数"><a href="#31-5-日期时间函数" class="headerlink" title="31.5 日期时间函数"></a>31.5 日期时间函数</h2><p>MySQL的日期和时间函数主要用于处理日期时间。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/1cd4478fee414b94adeb284222be5dc7.png" alt="img"></p>
+<h2 id="31-6-条件判断函数"><a href="#31-6-条件判断函数" class="headerlink" title="31.6 条件判断函数"></a>31.6 条件判断函数</h2><p>条件判断函数用来在SQL语句中进行条件判断。根据是否满足判断条件，SQL语句执行不同的分支。例如,从员工表中查询员工的业绩。如果业绩高于指定值n,则输出good;否则，输出bad。下面是各种条件判断函数的表达式、作用和使用方法。</p>
+<ul>
+<li><p><strong>IF(expr,v1,v2)函数</strong></p>
+<p>IF(expr,vl,v2)函数中，如果表达式expr成立，返回结果v1;否则，返回结果v2。</p>
+</li>
+<li><p><strong>IFNULL(v1,v2)函数</strong></p>
+<p>IFNULL(v1,v2)函数中，如果v1的值不为空，就显示v1的值;否则就显示v2的值。</p>
+</li>
+<li><p><strong>CASE函数</strong></p>
+<ul>
+<li><p><strong>CASE WHEN expr1 THEN v1 [WHEN expr2 THEN v2…] [ELSE vn] END</strong></p>
+<p>CASE WHEN exprl THEN v1 [WHEN expr2 THEN v2…] [ELSE vn] END函数中，CASE表示函数开始，END表示函数结束。如果表达式expr1成立时，返回v1的值。如果表达式expr2成立时，返回v2的值。依次类推，最后遇到ELSE时，返回vn 的值。</p>
+</li>
+<li><p><strong>CASE expr WHEN e1 THEN v1 [WHEN e2 THEN v2…] [ELSE vn] END</strong></p>
+<p>CASE expr WHEN e1 THEN v1 [WHEN e2 THEN v2…] [ELSE vn] END 函数中，如果表达式expr取值等于e1时,返回v1的值。如果表达式expr取值等于e2时，返回v2的值。依次类推，最后遇到ELSE时，返回vn的值。CASE表示函数开始，END表示函数结束。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="31-7-自定义函数-了解"><a href="#31-7-自定义函数-了解" class="headerlink" title="31.7 自定义函数(了解)"></a>31.7 自定义函数(了解)</h2><p>我们自己编写的函数</p>
+<ul>
+<li>函数的参数</li>
+<li>返回值</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">- 函数的可以返回任意类型的值,也可以接受任意类型的值为参数</span><br><span class="line">- 函数的返回值和参数没有必然联系的</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> 函数名称(参数名称 参数类型) <span class="keyword">RETURNS</span> 返回值类型</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	函数语句 #函数语句只有一条时,可以省略<span class="keyword">BEGIN</span>和<span class="keyword">END</span></span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 首先创建函数之前一定要先修改其定界符,要不然遇到函数中的第一个;就会执行报错</span></span><br><span class="line">DELIMITER $$</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> MYADD (a <span class="type">INT</span>,b <span class="type">INT</span>) <span class="keyword">RETURNS</span> <span class="type">INT</span> </span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">DECLARE</span> i <span class="type">INT</span> ; <span class="comment">-- 变量的定义</span></span><br><span class="line">  <span class="keyword">SET</span> i <span class="operator">=</span> a<span class="operator">+</span>b ; <span class="comment">-- 给变量设置值</span></span><br><span class="line">  <span class="keyword">RETURN</span> i ;  <span class="comment">-- 返回数据</span></span><br><span class="line"><span class="keyword">END</span> $$</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> MYADD(<span class="number">12</span>,<span class="number">22</span>); <span class="comment">-- 函数的调用</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建自定义函数</span></span><br><span class="line">DELIMITER $$</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> STUAGEGTCOUNT (a <span class="type">INT</span>) <span class="keyword">RETURNS</span> <span class="type">BIGINT</span> </span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">   <span class="keyword">DECLARE</span> c <span class="type">BIGINT</span>;</span><br><span class="line">   <span class="keyword">SET</span> c<span class="operator">=</span>(<span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> age<span class="operator">&gt;</span>a);</span><br><span class="line">   <span class="keyword">RETURN</span> c;</span><br><span class="line"><span class="keyword">END</span> $$</span><br><span class="line"><span class="comment">-- 调用自定义函数</span></span><br><span class="line"><span class="keyword">SELECT</span> STUAGEGTCOUNT(<span class="number">30</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>函数的调用</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 函数名称(实参列表);</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除函数</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">FUNCTION</span> [IF <span class="keyword">EXISTS</span>]  `MYADD`</span><br></pre></td></tr></table></figure>
+
+<p><strong>自定义函数可能出现错误:</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">错误代码： <span class="number">1418</span></span><br><span class="line">This <span class="keyword">function</span> has <span class="keyword">none</span> <span class="keyword">of</span> <span class="keyword">DETERMINISTIC</span>, <span class="keyword">NO</span> <span class="keyword">SQL</span>, <span class="keyword">or</span> <span class="keyword">READS</span> <span class="keyword">SQL</span> DATA <span class="keyword">in</span> its declaration <span class="keyword">and</span> <span class="type">binary</span> logging <span class="keyword">is</span> enabled (you <span class="operator">*</span>might<span class="operator">*</span> want <span class="keyword">to</span> use the less safe log_bin_trust_function_creators variable)</span><br></pre></td></tr></table></figure>
+
+<p><strong>原因</strong>：mysql在新版本中添加<strong>函数保护器</strong>,默认如果不进行配置,则无法创建自定义函数,我们需要在当前会话中把函数保护器关掉,尽量不要在全局(系统的配置文件)关闭函数保护器;</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查看函数保护器的状态</span></span><br><span class="line"><span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> &quot;%log_bin_trust_function_creators%&quot;</span><br><span class="line">	<span class="comment">-- OFF:不能创建自定义函数(保护器处于开启状态)</span></span><br><span class="line">	<span class="comment">-- ON:能创建自定义函数(保护器关闭)</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 允许创建自定义函数</span></span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> log_bin_trust_function_creators<span class="operator">=</span><span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>经过上面的设置我们就可以正常的创建自定义函数了;</p>
+<hr>
+<h1 id="32-mysql存储过程-了解"><a href="#32-mysql存储过程-了解" class="headerlink" title="32. mysql存储过程(了解)"></a>32. mysql存储过程(了解)</h1><h2 id="32-1-sql语句的执行流程"><a href="#32-1-sql语句的执行流程" class="headerlink" title="32.1 sql语句的执行流程"></a>32.1 sql语句的执行流程</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">sql</span>语句<span class="comment">---&gt;sql执行优化器(编译)---&gt;词法分析,语法分析---&gt;sql优化---&gt;运行sql(读取数据)--&gt;结果</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="32-2-什么是存储过程"><a href="#32-2-什么是存储过程" class="headerlink" title="32.2 什么是存储过程?"></a>32.2 什么是存储过程?</h2><p>sql语句的编译的集合,以名称来存储,合并为一个单元处理;</p>
+<p>如果在实现用户的某些需求时，需要编写一组复杂的SQL语句才能实现的时候，那么我们就可以将这组复杂的SQL语句集提前编写在数据库中，由JDBC调用来执行这组SQL语句。</p>
+<p>把编写在数据库中的SQL语句集称为存储过程。</p>
+<p>存储过程就类似于Java中的方法，需要先定义，使用时需要调用。存储过程可以定义参数，参数分为<code>IN、OUT、INOUT</code>类型三种类型。</p>
+<ol>
+<li>IN类型的参数表示接受调用者传入的数据；</li>
+<li>OUT类型的参数表示向调用者返回数据；</li>
+<li>INOUT类型的参数即可以接受调用者传入的参数，也可以向调用者返回数据。</li>
+</ol>
+<hr>
+<h2 id="32-3-存储过程的特点"><a href="#32-3-存储过程的特点" class="headerlink" title="32.3 存储过程的特点"></a>32.3 存储过程的特点</h2><p><strong>优点</strong></p>
+<ul>
+<li>实现较快的执行速度(避免重复的编译,词法分析,语法分析等操作)</li>
+<li>减少网络流量，<strong>减少应用程序和数据库服务器之间的流量</strong>。</li>
+<li>存储的程序是<strong>安全的</strong>。数据库管理员是可以向访问数据库中存储过程的应用程序授予适当的权限，而不是向基础数据库表提供任何权限。</li>
+<li><strong>简化对变动的管理</strong>。如果表名、列名、或业务逻辑有了变化。只需要更改存储过程的代码。使用它的人不用更改自己的代码。</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li>如果使用大量的存储过程，那么使用这些存储过程的每个连接的内存使用量将大大增加。此外，如果在存储过程中过度使用大量的逻辑操作，那么CPU的使用率也在增加，因为MySQL数据库最初的设计就侧重于高效的查询，而不是逻辑运算。</li>
+<li>存储过程的构造使得开发具有了复杂的业务逻辑的存储过程变得困难。</li>
+<li>很难调试存储过程。只有少数数据库管理系统允许调试存储过程。不幸的是，MySQL不提供调试存储过程的功能。</li>
+<li>开发和维护存储过程都不容易。开发和维护存储过程通常需要一个不是所有应用程序开发人员拥有的专业技能。这可能导致应用程序开发和维护阶段的问题。</li>
+<li><strong>对数据库依赖程度较高，移值性差</strong>。</li>
+</ul>
+<hr>
+<h2 id="32-4-存储过程的语法"><a href="#32-4-存储过程的语法" class="headerlink" title="32.4 存储过程的语法"></a>32.4 存储过程的语法</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建存储过程</span></span><br><span class="line">DELIMITER $$</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> proc2 (a <span class="type">INT</span>) </span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> age<span class="operator">&gt;</span>a;</span><br><span class="line">  <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">member</span>;</span><br><span class="line"><span class="keyword">END</span> $$</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 调用存储过程</span></span><br><span class="line"><span class="keyword">CALL</span> proc2(<span class="number">20</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="32-5-删除存储过程"><a href="#32-5-删除存储过程" class="headerlink" title="32.5 删除存储过程"></a>32.5 删除存储过程</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">PROCEDURE</span> proc1;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="33-mysql函数和存储过程对比"><a href="#33-mysql函数和存储过程对比" class="headerlink" title="33. mysql函数和存储过程对比"></a>33. mysql函数和存储过程对比</h1><ul>
+<li><p>存储过程和函数都是为了提高<strong>程序的运行效率</strong>和<strong>减少网络带宽</strong>而存在的</p>
+</li>
+<li><p>存储过程可以实现相对复杂的功能,而函数针对性比较强</p>
+</li>
+<li><p>存储过程可以返回多个值(无需<code>return</code>关键字),函数只能有一个返回值</p>
+</li>
+<li><p><strong>在实际商业项目中尽量不要使用存储过程和自定义函数</strong></p>
+</li>
+</ul>
+<hr>
+<h1 id="34-mysql中的视图-了解"><a href="#34-mysql中的视图-了解" class="headerlink" title="34. mysql中的视图(了解)"></a>34. mysql中的视图(了解)</h1><p>视图其实就是一个虚拟表,这虚拟表可以存储我们查询的结果,方便我们进行二次查询,提升查询效率;查询的时候就可以像使用表一样用视图;</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建视图(View)</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> myStudentView <span class="keyword">AS</span> (<span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> student <span class="keyword">WHERE</span> age<span class="operator">&gt;</span><span class="number">20</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询视图的数据(可以把视图当成表来使用)</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> myStudentView;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 删除视图</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">VIEW</span> myStudentView;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意: 视图是依赖表而存在的,如果表被删除了,视图就无效了;</strong></p>
+<hr>
+<h1 id="35-mysql中的触发器-了解"><a href="#35-mysql中的触发器-了解" class="headerlink" title="35. mysql中的触发器(了解)"></a>35. mysql中的触发器(了解)</h1><p>触发器(trigger)：监听事件,并触发某操作</p>
+<p>触发器的四要素:</p>
+<ul>
+<li>监视地点(table)</li>
+<li>监视事件(insert&#x2F;update&#x2F;delete)</li>
+<li>触发时机(after&#x2F;before)</li>
+<li>触发事件(insert&#x2F;update&#x2F;delete)</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建班级表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> grade (</span><br><span class="line">  id <span class="type">INT</span> AUTO_INCREMENT,</span><br><span class="line">  gname <span class="type">VARCHAR</span> (<span class="number">64</span>),</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY(id)</span><br><span class="line">);</span><br><span class="line"><span class="comment">-- 创建学生表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> student (</span><br><span class="line">  id <span class="type">INT</span> AUTO_INCREMENT,</span><br><span class="line">  nickname <span class="type">VARCHAR</span> (<span class="number">64</span>),</span><br><span class="line">  age TINYINT UNSIGNED,</span><br><span class="line">  g_id TINYINT UNSIGNED,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY(id)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>需求: 我们删除班级,实现自动删除班级对应的学生 </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建触发器</span></span><br><span class="line">DELIMITER $$</span><br><span class="line"><span class="comment">-- 触发地点:grade  监听事件: delete  触发时机: before  触发事件:delete</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> `tigger1` BEFORE <span class="keyword">DELETE</span> <span class="keyword">ON</span> `grade` </span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="type">ROW</span> </span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"> <span class="keyword">DELETE</span> <span class="keyword">FROM</span> student; </span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line">$$</span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="36-mysql中的存储引擎"><a href="#36-mysql中的存储引擎" class="headerlink" title="36. mysql中的存储引擎"></a>36. mysql中的存储引擎</h1><p>mysql可以将数据以不同的技术存储在文件或者(内存)中,这种技术叫存储引擎;</p>
+<p>每种存储引擎都有不同的<strong>存储机制,索引技术,表锁定技术</strong>,最终应用的场景各不相同,但是现在最主流的mysql的存储引擎用的对多的还是<code>INNODB</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-- 查询数据库支持哪些存储引擎</span><br><span class="line">show enginess \G;</span><br><span class="line">-- 查询数据库默认的存储引擎</span><br><span class="line">show variables like &#x27;%storage_engine%&#x27;;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">存储引擎</th>
+<th align="center">MYISAM</th>
+<th align="center">INNODB</th>
+<th align="center">MEMORY</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">存储限制</td>
+<td align="center">256TB</td>
+<td align="center">64TB</td>
+<td align="center">有限制</td>
+</tr>
+<tr>
+<td align="center"><strong>事务安全性</strong></td>
+<td align="center">NO</td>
+<td align="center"><strong>YES</strong></td>
+<td align="center">NO</td>
+</tr>
+<tr>
+<td align="center"><strong>支持索引</strong></td>
+<td align="center">YES</td>
+<td align="center"><strong>YES</strong></td>
+<td align="center">YES</td>
+</tr>
+<tr>
+<td align="center">数据压缩</td>
+<td align="center">YES</td>
+<td align="center">NO</td>
+<td align="center">NO</td>
+</tr>
+<tr>
+<td align="center"><strong>是否支持外键</strong></td>
+<td align="center">NO</td>
+<td align="center"><strong>YES</strong></td>
+<td align="center">NO</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>如果没有特殊要求,在互联网项目中,INNODB存储引擎是我们首选;</p>
+</blockquote>
+<hr>
+<h1 id="37-执行mysql的脚本"><a href="#37-执行mysql的脚本" class="headerlink" title="37.  执行mysql的脚本"></a>37.  执行mysql的脚本</h1><ul>
+<li><p>登录mysql之后执行sql脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">source sqlpath</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>登录mysql时候直接执行sql脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql -uroot -p &lt;sqlpath</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使用可视化工具备份和还原(推荐做法)</strong></p>
+</li>
+</ul>
+<hr>
+<h1 id="38-Mysql管理工具"><a href="#38-Mysql管理工具" class="headerlink" title="38. Mysql管理工具"></a>38. Mysql管理工具</h1><ul>
+<li>Workbench(mysql官方推荐使用的)  免费的 跨平台的 </li>
+<li>Sequel Pro 只在mac端有</li>
+<li>HeidiSQL(免费  开源)</li>
+<li>phpMyAdmin(web应用)</li>
+<li>mysqlfont(免费  轻量级) 只有windows端有,对高分辨率屏支持不好</li>
+<li><strong>Navicat(商业 收费) 跨平台  功能最强大  UI最漂亮</strong>  </li>
+<li><strong>SQLyog(收费  不跨平台)</strong> 对高分辨率屏支持不好</li>
+</ul>
+<hr>
+<h1 id="39-mysql的版本升级"><a href="#39-mysql的版本升级" class="headerlink" title="39. mysql的版本升级"></a>39. mysql的版本升级</h1><p>升级数据库版本之前一定要先备份数据,再执行升级;</p>
+<ul>
+<li>备份数据</li>
+<li>卸载老版本的mysql<ul>
+<li>停止系统的mysql服务</li>
+<li>检查系统服务是否存在如果存在先删除 <code>sc delete mysql</code>,这个命令必须使用管理员用户权限</li>
+<li>删除数据目录</li>
+</ul>
+</li>
+<li>安装新版本的<code>mysql-8.0.22.0</code></li>
+<li>恢复数据(执行前面备份的sql脚本)</li>
+</ul>
+<hr>
+<h1 id="40-mysql中的模糊查询"><a href="#40-mysql中的模糊查询" class="headerlink" title="40. mysql中的模糊查询"></a>40. mysql中的模糊查询</h1><p><code>%</code>: 匹配0个或者多个任意字符</p>
+<p><code>_</code>: 匹配任意一个字符</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询昵称中以 &#x27;小&#x27; 开头的数据</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">WHERE</span> nickname <span class="keyword">LIKE</span> <span class="string">&#x27;小%&#x27;</span>;</span><br><span class="line"><span class="comment">-- 查询昵称中包含 &#x27;小&#x27; 的数据</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">member</span> <span class="keyword">WHERE</span> nickname <span class="keyword">LIKE</span> <span class="string">&#x27;%小%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>模糊查询的前缀查询效率<code>极低</code>(要进行全表扫描),要慎重使用;</li>
+<li>一般生产环境会直接禁用<strong>like</strong>模糊查询功能;</li>
+<li><strong>左模糊查询(“%abc”)不会使用索引</strong></li>
+<li><strong>右模糊查询(“abc%”)会使用索引abc</strong></li>
+</ul>
+<hr>
+<h1 id="41-mysql中的事务"><a href="#41-mysql中的事务" class="headerlink" title="41. mysql中的事务"></a>41. mysql中的事务</h1><h2 id="41-1-mysql事务介绍"><a href="#41-1-mysql事务介绍" class="headerlink" title="41.1 mysql事务介绍"></a>41.1 mysql事务介绍</h2><p>事务是一个最小的不可在分的工作单元，把做完一个业务分成好多单元,整个过程每个单元<strong>全部</strong>处理成功,才算整个的业务处理成功,只要有任何一个单元处理失败,则认为业务处理失败;</p>
+<p><strong>作用: 保证了数据的完整性</strong></p>
+<p>属性：传播行为、隔离级别、只读和事务超时</p>
+<hr>
+<h2 id="41-2-事务控制"><a href="#41-2-事务控制" class="headerlink" title="41.2 事务控制"></a>41.2 事务控制</h2><p>整个过程的每一个单元全部处理成功那么事务才会<strong>提交(commit)<strong>，只要其中任何一个单元出现异常,我们则让事务</strong>回滚(rollback)</strong></p>
+<hr>
+<h2 id="41-3-事务的特性"><a href="#41-3-事务的特性" class="headerlink" title="41.3 事务的特性"></a>41.3 事务的特性</h2><p><strong>ACID</strong></p>
+<p><strong>atomicity(原子性)</strong>: 事务中所有的操作要么全部成功,要么全部失败;</p>
+<p><strong>consistency(一致性)</strong>: 事务执行前后的状态(数据)保持一致</p>
+<p><strong>isolation(隔离性)</strong>: 多个事务在执行过程中互相不受影响</p>
+<p><strong>durability(持久性)</strong>: 事务一旦被提交,那么对数据库中的数据的改变时永久性的,即使在数据库系统遇到故障的时候,排除故障之后这些数据也不会丢失;</p>
+<p>注意: 只有当前三条性质都满足了，才能保证事务的一致性；事务这个特性其实我们一直在使用,只是我们没有特别的在意这个事,因为mysql默认的事务的提交方式是自动提交的</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> &quot;%autocommit%&quot;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="41-4-手动控制事务的提交与回滚"><a href="#41-4-手动控制事务的提交与回滚" class="headerlink" title="41.4 手动控制事务的提交与回滚"></a>41.4 手动控制事务的提交与回滚</h2><p>mysql默认事务的提交方式是自动提交的,但是我们一般使用到事务的时候都会进行手动的控制,也就是要关闭mysql的事务自动提交;</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 开启事务(临时关闭mysql的&quot;事务自动提交&quot;)</span></span><br><span class="line"><span class="keyword">START</span> TRANSACTION;<span class="comment">-- 或者使用 BEGIN;</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">member</span>(nickname,sex,age)<span class="keyword">VALUES</span>(&quot;小胖1&quot;,<span class="string">&#x27;男&#x27;</span>,<span class="number">30</span>);</span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">member</span> <span class="keyword">SET</span> age<span class="operator">=</span><span class="number">10</span> <span class="keyword">WHERE</span> id<span class="operator">=</span><span class="number">3</span>;</span><br><span class="line"><span class="comment">-- 提交事务</span></span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 开启事务(临时关闭mysql的&quot;事务自动提交&quot;)</span></span><br><span class="line"><span class="keyword">START</span> TRANSACTION;  <span class="comment">-- 或者使用BEGIN;</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">member</span>(nickname,sex,age)<span class="keyword">VALUES</span>(&quot;小胖1&quot;,<span class="string">&#x27;男&#x27;</span>,<span class="number">30</span>);</span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">member</span> <span class="keyword">SET</span> age<span class="operator">=</span><span class="number">10</span> <span class="keyword">WHERE</span> id<span class="operator">=</span><span class="number">3</span>;</span><br><span class="line"><span class="comment">-- 回滚事务</span></span><br><span class="line"><span class="keyword">ROLLBACK</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="41-5-事务的隔离性"><a href="#41-5-事务的隔离性" class="headerlink" title="41.5 事务的隔离性"></a>41.5 事务的隔离性</h2><p>隔离性保证了,多个事务在执行过程中互相不受影响;</p>
+<p>mysql中的事务隔离级别有以下几种:</p>
+<ul>
+<li><strong>Read UNCOMMITTED(读未提交)</strong></li>
+<li><strong>READ COMMITTED(读已提交)</strong> —-&gt;oracle中事务默认的隔离级别</li>
+<li><strong>REPEATABLE READ(重复读)</strong> —&gt;<strong>mysql中的事务的隔离级别</strong></li>
+<li><strong>SERIALIZABLE(串行化)</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 查询默认的事务隔离级别</span></span><br><span class="line"><span class="keyword">SELECT</span> @<span class="variable">@tx</span>_isolation;  <span class="comment">--老版本中的查询方式</span></span><br><span class="line"><span class="keyword">SELECT</span> @<span class="variable">@transaction</span>_isolation; <span class="comment">-- 新版本中查询方式</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 更改当前会话的隔离级别</span></span><br><span class="line"><span class="keyword">set</span> session transaction isolation level read uncommitted; <span class="comment">-- 设置当前会话隔离级别为读未提交</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="41-6-事务隔离级别引发的问题"><a href="#41-6-事务隔离级别引发的问题" class="headerlink" title="41.6 事务隔离级别引发的问题"></a>41.6 事务隔离级别引发的问题</h2><blockquote>
+<p>脏读问题</p>
+</blockquote>
+<ul>
+<li><p>脏读:  设置事务的隔离级别为 <code>READ UNCOMMITTED</code>,会读到其他事务没有提交的数据;</p>
+</li>
+<li><p>例如：事务A读取到了事务已经修改但未提交的数据，这种数据就叫脏数据，是不正确的</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/0e5ac64c906c4d13b6dbdecda01b5910.png" alt="img"></p>
+</li>
+<li><p>解决脏读: 设置事务的隔离级别为 <code>READ COMMITTED</code>,既可以解决数据脏读问题</p>
+</li>
+</ul>
+<blockquote>
+<p>不可重复读问题</p>
+</blockquote>
+<ul>
+<li><p>不可重复读: 在一个事务中,前后两次读到的数据不一致</p>
+</li>
+<li><p>例如：对于事务A多次读取同一个数据时，由于其他是事务也在访问这个数据，进行修改且提交，对于事务A，读取同一个数据时，有可能导致数据不一致，叫不可重复读。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/2b755a18343a4122a434c5d955804492.png" alt="img"></p>
+</li>
+<li><p>解决不可重复读: 使用的<code>REPEATABLE READ</code>隔离级别可以解决;</p>
+</li>
+</ul>
+<blockquote>
+<p>虚读|幻读问题</p>
+</blockquote>
+<ul>
+<li><p>虚读: 设置为<code>READ UNCOMMITTED ,READ COMMITTED,REPEATABLE READ</code>的事务,有时候可以读取到其他事务新插入的行,这种情况就称为虚读;</p>
+</li>
+<li><p>解决虚读: 把事务的隔离级别设置成 <code>SERIALIZABLE</code>之后就可以解决虚读问题;</p>
+</li>
+</ul>
+<blockquote>
+<p>解决方案: 我们在实际开发过程中一般不会使用两个极端的隔离级别(读未提交,  串行化),我们会使用中间的两个;</p>
+</blockquote>
+<hr>
+<h2 id="41-7-事务的传播特性"><a href="#41-7-事务的传播特性" class="headerlink" title="41.7 事务的传播特性"></a>41.7 事务的传播特性</h2><p><strong>PROPAGATION_REQUIRED</strong>–支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。 </p>
+<p><strong>PROPAGATION_SUPPORTS</strong>–支持当前事务，如果当前没有事务，就以非事务方式执行。 </p>
+<p><strong>PROPAGATION_MANDATORY</strong>–支持当前事务，如果当前没有事务，就抛出异常。 </p>
+<p><strong>PROPAGATION_REQUIRES_NEW</strong>–新建事务，如果当前存在事务，把当前事务挂起。 </p>
+<p><strong>PROPAGATION_NOT_SUPPORTED</strong>–以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。 </p>
+<p><strong>PROPAGATION_NEVER</strong>–以非事务方式执行，如果当前存在事务，则抛出异常。</p>
+<h1 id="42-innodb锁机制"><a href="#42-innodb锁机制" class="headerlink" title="42. innodb锁机制"></a>42. innodb锁机制</h1><h2 id="42-1-innodb锁机制介绍"><a href="#42-1-innodb锁机制介绍" class="headerlink" title="42.1 innodb锁机制介绍"></a>42.1 innodb锁机制介绍</h2><p>从锁的颗粒来说锁分为行锁和表锁;</p>
+<p>在innodb中提供了两种锁机制:</p>
+<ul>
+<li><p>乐观锁:  并不是硬编码的实现,而是通过version版本号来进行实现&#x3D;&#x3D;(innodb中并没有实现乐观锁)&#x3D;&#x3D;</p>
+</li>
+<li><p>悲观锁: 这是innodb存储引擎默认实现的锁机制,这种锁是<strong>表锁</strong>,而悲观锁的实现又分为两种实现:</p>
+<ul>
+<li><p>共享锁(S锁),读锁</p>
+<ul>
+<li><p>在读取的行设置一个共享模式的锁,这个共享锁允许其他的会话读取数据,但是不允许修改,如果其他的会话也需要修改数据,则</p>
+<p>要等待持有共享锁的会话结束锁的释放,才能修改数据;</p>
+</li>
+<li><p>可以在多个会话中加多个共享锁</p>
+</li>
+</ul>
+</li>
+<li><p><strong>添加多个共享锁容易出现互相等待释放的情况,造成死锁问题,所以使用多个共享锁一定要慎重;</strong></p>
+</li>
+<li><p>排它锁(X锁),写锁</p>
+<ul>
+<li>排它锁是不允许重复添加的</li>
+<li>排它锁没有死锁问题</li>
+</ul>
+</li>
+</ul>
+<hr>
+</li>
+</ul>
+<h2 id="42-2-显式加锁"><a href="#42-2-显式加锁" class="headerlink" title="42.2 显式加锁"></a>42.2 显式加锁</h2><ul>
+<li>共享锁的添加: <code>lock in share mode</code></li>
+<li>排它锁的添加: <code>for update</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">select * from account lock in share mode;</span><br><span class="line">select * from account for update;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="42-3-mvcc并发系统快照读与当前读"><a href="#42-3-mvcc并发系统快照读与当前读" class="headerlink" title="42.3 mvcc并发系统快照读与当前读"></a>42.3 mvcc并发系统快照读与当前读</h2><p><strong>快照读:</strong> 不加锁的select操作就属于快照读</p>
+<p>当前读: 加锁的操作属于当前读</p>
+<p>当前读读到的是最新的数据,而且在读取的过程中是&#x3D;&#x3D;不允许&#x3D;&#x3D;其他的事务修改数据;</p>
+<hr>
+<h1 id="43-mysql中的执行计划"><a href="#43-mysql中的执行计划" class="headerlink" title="43. mysql中的执行计划"></a>43. mysql中的执行计划</h1><p>mysql执行流程:</p>
+<p>客户端(sql语句)—&gt;mysql-rdbms–&gt;innodb存储引擎–&gt;sql查询优化器(sql语句的优化)—&gt;….</p>
+<p>sql查询优化器会把优化的东西形成一个产物,这个产物就是执行计划; 简单来说就是SQL在数据库中执行时的表现情况。</p>
+<p>我们在实际的开发过程中,一般涉及到mysql的优化都会先查看其执行计划;</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">EXPLAIN <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> shop;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行计划看的时候先看执行计划的id,<strong>id越大的先执行</strong>;</li>
+<li>如果id相同从上往下看</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/mysql%E6%9E%B6%E6%9E%84.jpg" alt="mysql架构"></p>
+<hr>
+<h1 id="44-mysql中的索引技术-非常重要"><a href="#44-mysql中的索引技术-非常重要" class="headerlink" title="44. mysql中的索引技术(非常重要)"></a>44. mysql中的索引技术(非常重要)</h1><h2 id="44-1-索引技术的介绍"><a href="#44-1-索引技术的介绍" class="headerlink" title="44.1 索引技术的介绍"></a>44.1 索引技术的介绍</h2><ul>
+<li>mysql中的索引技术可以帮助我们快速检索数据</li>
+<li>innodb底层索引技术就是通过B+tree实现的</li>
+<li>索引其实就是我们平常用到的 ‘<code>目录</code>‘</li>
+<li>索引在mysql启动时就会加到内存中,形成B+Tree,在mysql停止的时候会持久化到硬盘;</li>
+</ul>
+<hr>
+<h2 id="44-2-索引的分类"><a href="#44-2-索引的分类" class="headerlink" title="44.2 索引的分类"></a>44.2 索引的分类</h2><ul>
+<li>普通索引</li>
+<li>主键索引</li>
+<li>唯一索引</li>
+<li>全文索引</li>
+</ul>
+<hr>
+<h2 id="44-3-普通索引"><a href="#44-3-普通索引" class="headerlink" title="44.3 普通索引"></a>44.3 普通索引</h2><p>普通索引如果不指定名称,则索引的名称和字段的名称相同;</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建索引的第一种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_nickname <span class="keyword">ON</span> account(nickname); </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建索引的第二种方式(不常用)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> account <span class="keyword">ADD</span> INDEX idx_nickname1(nickname);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建索引的第三种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1(nickname <span class="type">VARCHAR</span>(<span class="number">64</span>),age TINYINT UNSIGNED,KEY idx_nickname(nickname));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>建立普通索引的列的数据是可以重复的</li>
+</ul>
+<hr>
+<h2 id="44-4-主键索引"><a href="#44-4-主键索引" class="headerlink" title="44.4 主键索引"></a>44.4 主键索引</h2><p>主键索引如果不指定索引的名称,则主键索引的名称为 <code>PRIMARY</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 声明为主键的列就是自动添加主键索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1(id <span class="type">INT</span> ,nickname <span class="type">VARCHAR</span>(<span class="number">64</span>),age TINYINT UNSIGNED,<span class="keyword">PRIMARY</span> KEY(id));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>主键索引的列的数据非空,唯一的</p>
+</li>
+<li><p>一个表中建议只有一个主键列</p>
+</li>
+</ul>
+<hr>
+<h2 id="44-5-唯一索引"><a href="#44-5-唯一索引" class="headerlink" title="44.5 唯一索引"></a>44.5 唯一索引</h2><p>唯一索引如果不指定名称,则索引的名称和字段的名称相同;</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建索引的第一种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> INDEX uk_nickname <span class="keyword">ON</span> u1(nickname); </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建表时创建唯一索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1 (</span><br><span class="line">  id <span class="type">INT</span>,</span><br><span class="line">  nickname <span class="type">VARCHAR</span> (<span class="number">64</span>) ,</span><br><span class="line">  age TINYINT UNSIGNED,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (id),</span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY uk_nickname(nickname) </span><br><span class="line">) ;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果一列被约束为<code>UNIQUE</code>,则在这一列默认添加唯一索引</li>
+<li>添加唯一索引的列可以为<code>NULL</code>值,这也是和主键索引,不同的地方</li>
+</ul>
+<hr>
+<h2 id="44-6-全文索引"><a href="#44-6-全文索引" class="headerlink" title="44.6 全文索引"></a>44.6 全文索引</h2><blockquote>
+<p>全文索引,通过建立<code>倒排索引</code>,可以提高数据的检索效率,解决判断字段中 <code>是否包含</code> 的问题;</p>
+</blockquote>
+<p>我们如果使用like关键字会出现很多问题:</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 我们已经给nickname字段添加了普通索引</span></span><br><span class="line"><span class="comment">-- 会使用索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> nickname<span class="operator">=</span><span class="string">&#x27;小明&#x27;</span>;</span><br><span class="line"><span class="comment">-- 会使用索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> nickname <span class="keyword">LIKE</span> <span class="string">&#x27;小明%&#x27;</span>;</span><br><span class="line"><span class="comment">-- 不会使用索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> nickname <span class="keyword">LIKE</span> <span class="string">&#x27;%小明%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>不使用到索引我们如果进行大规模数据检索时,效率会大大的降低,所以前面我们说过 <code>我们只在简单业务或者数据量小的时候才考虑使用like关键字</code>;</p>
+<blockquote>
+<p>全文索引注意的地方:</p>
+</blockquote>
+<ul>
+<li><p>mysql5.6以前,只有<code>MYISAM</code>存储引擎支持全文索引</p>
+</li>
+<li><p>在5.6中<code>INNODB</code>存储引擎加入了对全文索引的支持,<strong>但是只支持英文的全文索引,不支持中文的全文索引</strong></p>
+</li>
+<li><p>&#x3D;&#x3D;<strong>在5.7.6中,mysql内置了<code>ngram</code>分词器,用来支持中文;</strong>&#x3D;&#x3D;</p>
+</li>
+</ul>
+<blockquote>
+<p>配置ngram分词的最小长度:      </p>
+</blockquote>
+<p>默认长度为2,当然我们也可以设置成1,但是设置成1的话就会浪费大量的空间,不是很好,<code>mysql建议我们配置为2</code>;</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">ngram分词器对分词最小长度(也就是说分词器,分词的时候最小也是两个词一分)</span></span><br><span class="line">[mysqld]</span><br><span class="line">ft_min_word_len=2</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>创建全文索引</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建索引的第一种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> FULLTEXT INDEX ft_nickname <span class="keyword">ON</span> account(nickname) <span class="keyword">WITH</span> PARSER ngram ; </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建索引的第二种方式(不常用)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> account <span class="keyword">ADD</span> FULLTEXT INDEX ft_nickname(nickname) <span class="keyword">WITH</span> PARSER ngram;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建索引的第三种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1(nickname <span class="type">VARCHAR</span>(<span class="number">64</span>),age TINYINT UNSIGNED,FULLTEXT KEY ft_nickname(nickname) <span class="keyword">WITH</span> PARSER ngram );</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>使用全文索引</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> <span class="keyword">MATCH</span>(nickname) AGAINST(&quot;你觉得华为笔记本合小米手机哪个好&quot;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>match</code>中的字段和创建全文建索引时的字段<strong>必须一致</strong>;</li>
+</ul>
+<blockquote>
+<p>全文索引的检索流程</p>
+</blockquote>
+<p>用户输入词—&gt;sql执行引擎—&gt;<code>ngram</code>分词器对用户输入的词进行分词(配置了最小的分词个数)—&gt;把分词器分的词依次的去倒排索引中去查找,找出相应的记录返回;</p>
+<hr>
+<h2 id="44-7-组合索引"><a href="#44-7-组合索引" class="headerlink" title="44.7 组合索引"></a>44.7 组合索引</h2><p><strong>包含多个字段的索引</strong>称为组合索引;</p>
+<blockquote>
+<p>组合索引包含</p>
+</blockquote>
+<ul>
+<li>组合普通索引</li>
+<li>组合主键索引</li>
+<li>组合唯一索引</li>
+<li>组合全文索引</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建复合索引时必须指定索引的名称,不能省略</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX mu_title_content <span class="keyword">ON</span> article(title,content,publish_time);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> article <span class="keyword">WHERE</span> title <span class="keyword">LIKE</span> <span class="string">&#x27;小米%&#x27;</span>; <span class="comment">-- 使用到索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> article <span class="keyword">WHERE</span> title <span class="keyword">LIKE</span> <span class="string">&#x27;小米%&#x27;</span> <span class="keyword">AND</span> content <span class="keyword">LIKE</span> <span class="string">&#x27;小米%&#x27;</span>; <span class="comment">-- 使用了索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> article <span class="keyword">WHERE</span>  content <span class="keyword">LIKE</span> <span class="string">&#x27;小米%&#x27;</span>; <span class="comment">-- 没有索引</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>建议多列索引的列不要超过2个列</strong></p>
+<ul>
+<li><p>以上这个复合索引相当于建立了这3个索引</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">(title),(title,content),(title,content,publish_time)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>多列索引遵循<strong>最左前缀</strong>的原则</p>
+</li>
+<li><p>多列索引在创建的时候,如果其中有字段时<code>TEXT</code>或<code>BLOB</code>类型,就必须指定索引的长度;</p>
+</li>
+</ul>
+<hr>
+<h2 id="44-8-使用索引的优点"><a href="#44-8-使用索引的优点" class="headerlink" title="44.8 使用索引的优点"></a>44.8 使用索引的优点</h2><ul>
+<li>使用主键索引或者唯一索引,可以保证数据库中的表的数据是唯一</li>
+<li><strong>通过建立索引可以大大的提高数据检索的效率,减少表扫描的行数(避免进行全表扫描)</strong></li>
+<li>我们在进行多表连接的时候,可以使用索引加速表之间的连接</li>
+</ul>
+<hr>
+<h2 id="44-9-使用索引的缺点"><a href="#44-9-使用索引的缺点" class="headerlink" title="44.9 使用索引的缺点"></a>44.9 使用索引的缺点</h2><ul>
+<li>在创建索引和维护索引时都需要耗费时间;</li>
+<li>索引文件会占用物理存储空间,除了表的数据占用一部分空间,索引文件也会占用一部分空间;</li>
+<li><strong>设置为<code>text</code>和<code>blob</code>类型的字段强烈不建议添加索引;</strong></li>
+</ul>
+<hr>
+<h1 id="45-mysql中的记录截取"><a href="#45-mysql中的记录截取" class="headerlink" title="45. mysql中的记录截取"></a>45. mysql中的记录截取</h1><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account LIMIT <span class="keyword">start</span>,count;</span><br><span class="line"><span class="keyword">start</span>:开始位置,从<span class="number">0</span>开始</span><br><span class="line">count:截取的记录数量</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="46-mysql数据库设计-了解"><a href="#46-mysql数据库设计-了解" class="headerlink" title="46. mysql数据库设计(了解)"></a>46. mysql数据库设计(了解)</h1><ul>
+<li><p><strong>第一设计范式 ：表中的每一列都不能再分(不要出现二维表)</strong></p>
+</li>
+<li><p>第二设计范式：满足第一设计范式，除主键外每一列都必须依靠主键</p>
+</li>
+<li><p>第三设计范式：满足第二设计范式，除主键列外，每一列都不能相互依靠</p>
+</li>
+</ul>
+<p>数据库范式的提出是很早以前的事了,在很早以前硬盘是非常昂贵的,一般都会遵循1,2,3范式,但是随着互联网的发展,硬盘非常便宜,所以我们在现在的商业项目中一般不会遵循2,3范式(用时间换空间),<strong>第一范式会遵循</strong>;</p>
+<hr>
+<h1 id="47-国内大厂的数据库开发规范-参照阿里的开发规范"><a href="#47-国内大厂的数据库开发规范-参照阿里的开发规范" class="headerlink" title="47. 国内大厂的数据库开发规范(参照阿里的开发规范)"></a>47. 国内大厂的数据库开发规范(参照阿里的开发规范)</h1><ol>
+<li><p>库名与应用名称尽量一致</p>
+</li>
+<li><p>表名、字段名必须使用小写字母或数字，禁止出现数字开头,如果一个单词不能表达那就使用下划线分隔;</p>
+</li>
+<li><p>表名不使用复数名词;</p>
+</li>
+<li><p>表的命名最好是加上“业务名称_表的作用”。如，edu_teacher </p>
+</li>
+<li><p>表必备三字段：id, gmt_create, gmt_modified<br>说明：其中 id 必为主键，类型为 bigint unsigned、单表时自增、步长为 1。（如果使用分库分表集群部署，则id类型为varchar，非自增，业务中使用分布式id生成器）<br>gmt_create, gmt_modified 的类型均为 datetime 类型，前者现在时表示主动创建，后者过去分词表示被动更新。</p>
+</li>
+<li><p>单表行数超过 500 万行或者单表容量超过 2GB，才推荐进行分库分表。 说明：如果预计三年后的数据量根本达不到这个级别，请不要在创建表时就分库分表。</p>
+</li>
+<li><p>表达是与否概念的字段，必须使用 is_xxx 的方式命名，数据类型是 unsigned tinyint （1 表示是，0 表示否）。<br>说明：任何字段如果为非负数，必须是 unsigned。<br>注意：POJO 类中的任何布尔类型的变量，都不要加 is 前缀。数据库表示是与否的值，使用 tinyint 类型，坚持 is_xxx 的 命名方式是为了明确其取值含义与取值范围。<br>正例：表达逻辑删除的字段名 is_deleted，1 表示删除，0 表示未删除。</p>
+</li>
+<li><p>小数类型为 decimal，禁止使用 float 和 double。 说明：float 和 double 在存储的时候，存在精度损失的问题，很可能在值的比较时，得到不 正确的结果。如果存储的数据范围超过 decimal 的范围，建议将数据拆成整数和小数分开存储。</p>
+</li>
+<li><p>如果存储的字符串长度几乎相等，使用 char 定长字符串类型。</p>
+</li>
+<li><p>varchar 是可变长字符串，不预先分配存储空间，长度不要超过 5000，如果存储长度大于此值，定义字段类型为 text，独立出来一张表，用主键来对应，避免影响其它字段索 引效率。</p>
+</li>
+<li><p>唯一索引名为 uk_字段名；普通索引名则为 idx_字段名。<br>说明：uk_ 即 unique key；idx_ 即 index 的简称</p>
+</li>
+<li><p><strong>不得使用外键与级联，一切外键概念必须在应用层解决</strong>。外键与级联更新适用于单机低并发，不适合分布式、高并发集群；级联更新是强阻塞，存在数据库更新风暴的风险；外键影响数据库的插入速度</p>
+</li>
+<li><p>慎重使用<code>like</code>进行模糊查询, 通配符如果在前面则不会使用到索引,影响检索效率;</p>
+</li>
+<li><p>如果是简单的搜索业务建议使用mysql5.7中新增的全文索引,不建议直接上solor,elasticsearch这样的检索系统,因为会使得维护成本增加;</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>mysql</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>mysql索引</title>
+    <url>/2022/08/05/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9Amysql%E7%B4%A2%E5%BC%95/</url>
+    <content><![CDATA[<h1 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h1><h2 id="局部性原理"><a href="#局部性原理" class="headerlink" title="局部性原理"></a>局部性原理</h2><p>程序和数据的访问都有聚集成群的倾向，在一个时间段内，仅使用其中一小部分，称为<strong>空间局部性</strong></p>
+<p>最经访问过的程序代码和数据，很快又被访问的可能性很大，称为<strong>时间局部性</strong></p>
+<h2 id="磁盘预读"><a href="#磁盘预读" class="headerlink" title="磁盘预读"></a>磁盘预读</h2><ul>
+<li>预读的长度一般为页（page）的整数倍</li>
+<li>页是存储器的逻辑块，操作系统往往将主存和磁盘存储区分割为连续的大小相等的块，每个存储块称为一页（在许多操作系统中，页大小通常为4K），主存和磁盘以页为单位交换数据</li>
+<li>考虑到磁盘IO是非常高昂的操作，计算机操作系统做了一些优化，<strong>当一次IO时，不光把当前磁盘地址的数据，而是把相邻的数据也都读取到内存缓冲区内</strong>，因为局部预读性原理告诉我们，当计算机访问一个地址的数据的时候，与其相邻的数据也会很快被访问到。每一次IO读取的数据我们称之为一页(page)。具体一页有多大数据跟操作系统有关，一般为4k或8k，也就是我们读取一页内的数据时候，实际上才发生了一次IO，这个理论对于索引的数据结构设计非常有帮助。</li>
+</ul>
+<h1 id="索引概述"><a href="#索引概述" class="headerlink" title="索引概述"></a>索引概述</h1><ul>
+<li><p>MySql官方对索引的定义为：<strong>索引是帮助MySql高效获取数据的数据结构</strong>。在数据之外，数据库系统还维护着满足特定查找算法的数据结构，这些数据结构以某种方式引用数据，这样就可以在这些数据结构上实现高级查找算法，这种数据结构就是索引。</p>
+</li>
+<li><p>索引存储在文件系统中</p>
+</li>
+<li><p>索引的文件存储形式与存储引擎有关</p>
+</li>
+<li><p>索引文件的结构：B+树</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/mysql%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E9%80%89%E6%8B%A9.jpg" alt="mysql数据结构选择"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/mysql%E7%B4%A2%E5%BC%95%E7%B3%BB%E7%BB%9F.jpg" alt="mysql索引系统"></p>
+</li>
+</ul>
+<h1 id="索引的分类"><a href="#索引的分类" class="headerlink" title="索引的分类"></a>索引的分类</h1><p>通过给字段添加索引可以提高数据的读取速度，提高项目的并发能力和抗压能力</p>
+<ul>
+<li><p>普通索引</p>
+<ul>
+<li><p>基本的索引类型，值可以为空，没有唯一性的限制</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-- 创建索引的第一种方式</span><br><span class="line">CREATE INDEX idx_nickname ON account(nickname); </span><br><span class="line"></span><br><span class="line">-- 创建索引的第二种方式(不常用)</span><br><span class="line">ALTER TABLE account ADD INDEX idx_nickname1(nickname);</span><br><span class="line"></span><br><span class="line">-- 创建索引的第三种方式</span><br><span class="line">CREATE TABLE u1(nickname VARCHAR(64),age TINYINT UNSIGNED,KEY idx_nickname(nickname));</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>主键索引</p>
+<ul>
+<li><p>一种唯一性索引，但它必须指定为PRIMARY KEY，每个表只能有一个主键</p>
+</li>
+<li><p>主键索引的列的数据非空,唯一的</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 声明为主键的列就是自动添加主键索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1(id <span class="type">INT</span> ,nickname <span class="type">VARCHAR</span>(<span class="number">64</span>),age TINYINT UNSIGNED,<span class="keyword">PRIMARY</span> KEY(id));</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>唯一索引</p>
+<ul>
+<li><p>索引列的值都只能出现一次，即值必须唯一，值可以为空</p>
+</li>
+<li><p>如果一列被约束为<code>UNIQUE</code>,则在这一列默认添加唯一索引</p>
+</li>
+<li><p>添加唯一索引的列可以为<code>NULL</code>值,这也是和主键索引,不同的地方</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建索引的第一种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> INDEX uk_nickname <span class="keyword">ON</span> u1(nickname); </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建表时创建唯一索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1 (</span><br><span class="line">  id <span class="type">INT</span>,</span><br><span class="line">  nickname <span class="type">VARCHAR</span> (<span class="number">64</span>) ,</span><br><span class="line">  age TINYINT UNSIGNED,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (id),</span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY uk_nickname(nickname) </span><br><span class="line">) ;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>全文索引</p>
+<blockquote>
+<p>全文索引,通过建立<code>倒排索引</code>,可以提高数据的检索效率,解决判断字段中 <code>是否包含</code> 的问题;</p>
+</blockquote>
+<ul>
+<li><p>索引类型为FULLTEXT。全文索引在varchar、char、text类型的列上创建</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 我们已经给nickname字段添加了普通索引</span></span><br><span class="line"><span class="comment">-- 会使用索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> nickname<span class="operator">=</span><span class="string">&#x27;小明&#x27;</span>;</span><br><span class="line"><span class="comment">-- 会使用索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> nickname <span class="keyword">LIKE</span> <span class="string">&#x27;小明%&#x27;</span>;</span><br><span class="line"><span class="comment">-- 不会使用索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> nickname <span class="keyword">LIKE</span> <span class="string">&#x27;%小明%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>不使用到索引我们如果进行大规模数据检索时,效率会大大的降低,所以前面我们说过 <code>我们只在简单业务或者数据量小的时候才考虑使用like关键字</code>;</p>
+<blockquote>
+<p>全文索引注意的地方:</p>
+</blockquote>
+<ul>
+<li><p>mysql5.6以前,只有<code>MYISAM</code>存储引擎支持全文索引</p>
+</li>
+<li><p>在5.6中<code>INNODB</code>存储引擎加入了对全文索引的支持,<strong>但是只支持英文的全文索引,不支持中文的全文索引</strong></p>
+</li>
+<li><p><strong>在5.7.6中,mysql内置了<code>ngram</code>分词器,用来支持中文;</strong></p>
+</li>
+</ul>
+<blockquote>
+<p>配置ngram分词的最小长度:      </p>
+</blockquote>
+<p>默认长度为2,当然我们也可以设置成1,但是设置成1的话就会浪费大量的空间,不是很好,<code>mysql建议我们配置为2</code>;</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">ngram分词器对分词最小长度(也就是说分词器,分词的时候最小也是两个词一分)</span></span><br><span class="line">[mysqld]</span><br><span class="line">ft_min_word_len=2</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>创建全文索引</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建索引的第一种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> FULLTEXT INDEX ft_nickname <span class="keyword">ON</span> account(nickname) <span class="keyword">WITH</span> PARSER ngram ; </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建索引的第二种方式(不常用)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> account <span class="keyword">ADD</span> FULLTEXT INDEX ft_nickname(nickname) <span class="keyword">WITH</span> PARSER ngram;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建索引的第三种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1(nickname <span class="type">VARCHAR</span>(<span class="number">64</span>),age TINYINT UNSIGNED,FULLTEXT KEY ft_nickname(nickname) <span class="keyword">WITH</span> PARSER ngram );</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>使用全文索引</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> <span class="keyword">MATCH</span>(nickname) AGAINST(&quot;你觉得华为笔记本合小米手机哪个好&quot;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>match</code>中的字段和创建全文建索引时的字段<strong>必须一致</strong>;</li>
+</ul>
+<blockquote>
+<p>全文索引的检索流程</p>
+</blockquote>
+<p>用户输入词—&gt;sql执行引擎—&gt;<code>ngram</code>分词器对用户输入的词进行分词(配置了最小的分词个数)—&gt;把分词器分的词依次的去倒排索引中去查找,找出相应的记录返回;</p>
+</li>
+</ul>
+</li>
+<li><p>组合索引</p>
+<ul>
+<li><p>多列值组成一个索引，专门用于组合搜索</p>
+</li>
+<li><p><strong>包含多个字段的索引</strong>称为组合索引;</p>
+<blockquote>
+<p>组合索引包含</p>
+</blockquote>
+<ul>
+<li>组合普通索引</li>
+<li>组合主键索引</li>
+<li>组合唯一索引</li>
+<li>组合全文索引</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建复合索引时必须指定索引的名称,不能省略</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX mu_title_content <span class="keyword">ON</span> article(title,content,publish_time);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> article <span class="keyword">WHERE</span> title <span class="keyword">LIKE</span> <span class="string">&#x27;小米%&#x27;</span>; <span class="comment">-- 使用到索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> article <span class="keyword">WHERE</span> title <span class="keyword">LIKE</span> <span class="string">&#x27;小米%&#x27;</span> <span class="keyword">AND</span> content <span class="keyword">LIKE</span> <span class="string">&#x27;小米%&#x27;</span>; <span class="comment">-- 使用了索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> article <span class="keyword">WHERE</span>  content <span class="keyword">LIKE</span> <span class="string">&#x27;小米%&#x27;</span>; <span class="comment">-- 没有索引</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>建议多列索引的列不要超过2个列</strong></p>
+<ul>
+<li><p>以上这个复合索引相当于建立了这3个索引</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">(title),(title,content),(title,content,publish_time)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>多列索引遵循<strong>最左前缀</strong>的原则</p>
+</li>
+<li><p>多列索引在创建的时候,如果其中有字段时<code>TEXT</code>或<code>BLOB</code>类型,就必须指定索引的长度;</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="MySQL存储引擎"><a href="#MySQL存储引擎" class="headerlink" title="MySQL存储引擎"></a>MySQL存储引擎</h1><table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">MyISAM</th>
+<th align="center">InnoDB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">索引类型</td>
+<td align="center">非聚簇索引</td>
+<td align="center">聚簇索引</td>
+</tr>
+<tr>
+<td align="center">支持事务</td>
+<td align="center">否</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">支持表锁</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">支持行锁</td>
+<td align="center">否</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">支持外键</td>
+<td align="center">否</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">支持全文索引</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">适合操作类型</td>
+<td align="center">大量select</td>
+<td align="center">大量insert、delete、updata</td>
+</tr>
+</tbody></table>
+<h1 id="索引优化-基本知识"><a href="#索引优化-基本知识" class="headerlink" title="索引优化-基本知识"></a>索引优化-基本知识</h1><p><strong>原因</strong>：</p>
+<ul>
+<li>索引在MySQL中也叫做“键”，是存储引擎用于快速找到记录的一种数据结构。索引对于良好的性能非常关键，尤其是当表中的数据量越来越大时，索引对于性能的影响愈发重要。索引优化应该是对查询性能优化最有效的手段了。索引能够轻易将查询性能提高好几个数量级。索引相当于字典的音序表，如果要查某个字，如果不使用音序表，则需要从几百页中逐页去查。</li>
+</ul>
+<p><strong>优点</strong>：</p>
+<ul>
+<li>使用主键索引或者唯一索引,可以保证数据库中的表的数据是唯一</li>
+<li><strong>通过建立索引可以大大的提高数据检索的效率,减少表扫描的行数(避免进行全表扫描)</strong></li>
+<li>我们在进行多表连接的时候,可以使用索引加速表之间的连接</li>
+</ul>
+<hr>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li>在创建索引和维护索引时都需要耗费时间;</li>
+<li>索引文件会占用物理存储空间,除了表的数据占用一部分空间,索引文件也会占用一部分空间;</li>
+<li><strong>设置为<code>text</code>和<code>blob</code>类型的字段强烈不建议添加索引</strong></li>
+</ul>
+<h1 id="索引优化-联合索引"><a href="#索引优化-联合索引" class="headerlink" title="索引优化-联合索引"></a>索引优化-联合索引</h1><p><strong>回表</strong>：</p>
+<ul>
+<li>在InnoDB存储引擎下，二级索引查询到的索引列，如果需要查找所有列的数据，则需要到主键索引里面去取出数据。这个过程就称为回表。因为行的数据都是存在主键B+tree的叶子节点里面，二级索引的B+树叶子节点都是存放的(索引列,主键)。</li>
+</ul>
+<p><strong>覆盖索引</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select * from s1 where id=123;</span><br><span class="line">该sql命中了索引，但未覆盖索引。</span><br><span class="line">利用id=123到索引的数据结构中定位到该id在硬盘中的位置，或者说再数据表中的位置。</span><br><span class="line">但是我们select的字段为*，除了id以外还需要其他字段，这就意味着，我们通过索引结构取到id还不够，</span><br><span class="line">还需要利用该id再去找到该id所在行的其他字段值，这是需要时间的，很明显，如果我们只select id，</span><br><span class="line">就减去了这份苦恼，如下</span><br><span class="line">select id from s1 where id=123;</span><br><span class="line">这条就是覆盖索引了，命中索引，且从索引的数据结构直接就取到了id在硬盘的地址，速度很快</span><br></pre></td></tr></table></figure>
+
+<p><strong>最左匹配</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create index ix_name_email on s1(name,email,)</span><br><span class="line">- 最左前缀匹配：必须按照从左到右的顺序匹配</span><br><span class="line">select * from s1 where name=&#x27;egon&#x27;; #可以</span><br><span class="line">select * from s1 where name=&#x27;egon&#x27; and email=&#x27;asdf&#x27;; #可以</span><br><span class="line">select * from s1 where email=&#x27;alex@oldboy.com&#x27;; #不可以</span><br><span class="line">select * from s1 where email=&#x27;asdf&#x27; and  name=&#x27;egon&#x27;; #可以</span><br><span class="line">mysql会一直向右匹配直到遇到范围查询(&gt;、&lt;、between、like)就停止匹配，</span><br><span class="line">比如a = 1 and b = 2 and c &gt; 3 and d = 4 如果建立(a,b,c,d)顺序的索引，</span><br><span class="line">d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整。</span><br></pre></td></tr></table></figure>
+
+<p><strong>索引下推</strong>：</p>
+<ul>
+<li><p>索引条件下推(Index Condition Pushdown),简称ICP。MySQL5.6新添加，用于优化数据的查询。</p>
+</li>
+<li><p>当你不使用ICP,通过使用非主键索引（普通索引or二级索引）进行查询，存储引擎通过索引检索数据，然后返回给MySQL服务器，服务器再判断是否符合条件。</p>
+</li>
+<li><p>使用ICP，当存在索引的列做为判断条件时，MySQL服务器将这一部分判断条件传递给存储引擎，然后存储引擎通过判断索引是否符合MySQL服务器传递的条件，只有当索引符合条件时才会将数据检索出来返回给MySQL服务器。</p>
+</li>
+<li><p>示例</p>
+<ul>
+<li><p>当我们创建一个用户表(userinfo),其中有字段：id,name,age,addr。我们将name,age建立联合索引。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">当我们执行：select * from userinfo where name like &quot;ming%&quot; and age=20;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>对于MySQL5.6之前：我们在索引内部首先通过name进行查找，在联合索引name,，age树形查询结果可能存在多个，然后再拿着id值去回表查询，整个过程需要回表多次。</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAxOS8xMi8xMC8xNmVlZDY2N2YzOGZkM2Vl?x-oss-process=image/format,png" alt="img"></p>
+</li>
+<li><p>对于MySQL5.6之后：我们是在索引内部就判断age是否等于20，对于不等于20跳过。因此在联合索引name,age索引树只匹配一个记录，此时拿着这个id去主键索引树种回表查询全部数据，整个过程就回一次表。</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAxOS8xMi8xMC8xNmVlZDY2YWUwZDI2OThh?x-oss-process=image/format,png" alt="img"></p>
+</li>
+<li><p>如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/53e290c6646dca211a8f214e11bfe7b5.png" alt="img"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">当Extra值为：Using index condition.表示使用索引下推。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过索引下推对于非主键索引进行优化，<strong>可有效减少回表次数</strong>，从而提高效率。</p>
+</li>
+<li><p>关闭索引下推命令</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">set</span> optimizer_switch=<span class="string">&#x27;index_condition_pushdown=off&#x27;</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h1 id="索引优化-聚簇索引与非聚簇索引"><a href="#索引优化-聚簇索引与非聚簇索引" class="headerlink" title="索引优化-聚簇索引与非聚簇索引"></a>索引优化-聚簇索引与非聚簇索引</h1><ul>
+<li><p>聚簇(集)索引的叶子节点就是数据节点。</p>
+</li>
+<li><p>非聚簇(集)索引的叶子节点仍然是索引节点，只不过有指向对应数据块的指针。非聚簇(集)索引在innodb引擎中，又叫做二级索引，辅助索引等。</p>
+</li>
+<li><p>聚簇索引并不是一种单独的索引类型，而是一种数据存储方式。术语‘聚簇’表示数据行和相邻的键值聚簇的存储在一起。如下图，左侧的索引就是聚簇索引，因为数据行在磁盘的排列和索引排序保持一致。、</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20210509163323414.png" alt="img"></p>
+</li>
+</ul>
+<p><strong>聚集索引（聚簇索引）</strong></p>
+<p>以 InnoDB 作为存储引擎的表，表中的数据都会有一个主键，即使你不创建主键，系统也会帮你创建一个隐式的主键。</p>
+<p>这是因为 InnoDB 是把数据存放在 B+ 树中的，而 B+ 树的键值就是主键，在 B+ 树的叶子节点中，存储了表中所有的数据。</p>
+<p>这种以主键作为 B+ 树索引的键值而构建的 B+ 树索引，我们称之为聚集索引。</p>
+<p><strong>非聚集索引（非聚簇索引）</strong></p>
+<p>以主键以外的列值作为键值构建的 B+树索引，我们称之为非聚集索引。</p>
+<p><strong>非聚集索引与聚集索引的区别在于</strong></p>
+<p>非聚集索引的叶子节点不存储表中的数据，而是存储该列对应的主键，想要查找数据我们还需要根据主键再去聚集索引中进行查找，这个再根据聚集索引查找数据的过程，我们称为回表。</p>
+<p>明白了聚集索引和非聚集索引的定义，我们应该明白这样一句话：<strong>数据即索引，索引即数据</strong>。</p>
+<p><strong>聚簇索引的好处</strong>：</p>
+<p>按照聚簇索引排列顺序，查询显示一定范围数据的时候，由于数据都是紧密相连，数据库不用从多个数据块中提取数据，所以节省了大量的io操作。</p>
+<p><strong>聚簇索引的限制</strong>：</p>
+<p>对于mysql 数据库目前只有innodb 数据引擎支持聚簇索引，而Myisam 并不支持聚簇索引。由于数据物理存储排序方式只能有一种，所以每个Mysql 的表只能有一个聚簇索引。一般情况下就是该表的主键。</p>
+<p>为了充分利用聚簇索引的聚簇的特性，所以innodb 表的主键列尽量选用有序的顺序id，而不建议用无序的id，比如uuid 这种。</p>
+<h1 id="优化细节"><a href="#优化细节" class="headerlink" title="优化细节"></a>优化细节</h1><ol>
+<li><p>对查询进行优化，应尽量避免全表扫描，首先应考虑在 where 及 order by 涉及的列上建立索引。</p>
+</li>
+<li><p>应尽量避免在 where 子句中使用!&#x3D;或&lt;&gt;操作符，否则将引擎放弃使用索引而进行全表扫描。</p>
+</li>
+<li><p>应尽量避免在 where 子句中对字段进行 null 值判断，否则将导致引擎放弃使用索引而进行全表扫描，如：</p>
+</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id from t where num is null </span><br></pre></td></tr></table></figure>
+
+<p>  可以在num上设置默认值0，确保表中num列没有null值，然后这样查询：</p>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id from t where num=0 </span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>应尽量避免在 where 子句中使用 or 来连接条件，否则将导致引擎放弃使用索引而进行全表扫描，如：</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id from t where num=10 or num=20 </span><br></pre></td></tr></table></figure>
+
+<p>  可以这样查询：</p>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id from t where num=10 </span><br><span class="line">union all </span><br><span class="line">select id from t where num=20 </span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>下面的查询也将导致全表扫描：</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id from t where name like &#x27;%abc%&#x27; </span><br></pre></td></tr></table></figure>
+
+<p>  若要提高效率，可以考虑全文检索。</p>
+<ol start="6">
+<li>in 和 not in 也要慎用，否则会导致全表扫描，如：</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id from t where num in(1,2,3) </span><br></pre></td></tr></table></figure>
+
+<p>  对于连续的数值，能用 between 就不要用 in 了：</p>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id from t where num between 1 and 3 </span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>如果在 where 子句中使用参数，也会导致全表扫描。因为SQL只有在运行时才会解析局部变量，但优化程序不能将访问计划的选择推迟到运行时；它必须在编译时进行选择。然而，如果在编译时建立访问计划，变量的值还是未知的，因而无法作为索引选择的输入项。如下面语句将进行全表扫描：</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id from t where num=@num </span><br></pre></td></tr></table></figure>
+
+<p>  可以改为强制查询使用索引：</p>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id from t with(index(索引名)) where num=@num </span><br></pre></td></tr></table></figure>
+
+<ol start="8">
+<li>应尽量避免在 where 子句中对字段进行表达式操作，这将导致引擎放弃使用索引而进行全表扫描。如：</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id from t where num/2=100 </span><br></pre></td></tr></table></figure>
+
+<p>  应改为:</p>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id from t where num=100*2 </span><br></pre></td></tr></table></figure>
+
+<ol start="9">
+<li>应尽量避免在where子句中对字段进行函数操作，这将导致引擎放弃使用索引而进行全表扫描。如：</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id from t where substring(name,1,3)=&#x27;abc&#x27;--name以abc开头的id </span><br><span class="line">select id from t where datediff(day,createdate,&#x27;2005-11-30&#x27;)=0--&#x27;2005-11-30&#x27;生成的id </span><br></pre></td></tr></table></figure>
+
+<p>  应改为:</p>
+  <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select id from t where name like &#x27;abc%&#x27; </span><br><span class="line">select id from t where createdate&gt;=&#x27;2005-11-30&#x27; and createdate&lt;&#x27;2005-12-1&#x27; </span><br></pre></td></tr></table></figure>
+
+<ol start="10">
+<li><p>不要在 where 子句中的“&#x3D;”左边进行函数、算术运算或其他表达式运算，否则系统将可能无法正确使用索引。</p>
+</li>
+<li><p>在使用索引字段作为条件时，如果该索引是复合索引，那么必须使用到该索引中的第一个字段作为条件时才能保证系统使用该索引，否则该索引将不会被使用，并且应尽可能的让字段顺序与索引顺序相一致。</p>
+</li>
+<li><p>不要写一些没有意义的查询，如需要生成一个空表结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select col1,col2 into #t from t where 1=0 </span><br></pre></td></tr></table></figure>
+
+<p>这类代码不会返回任何结果集，但是会消耗系统资源的，应改成这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create table #t(...) </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>很多时候用 exists 代替 in 是一个好的选择：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select num from a where num in(select num from b) </span><br></pre></td></tr></table></figure>
+
+<p>用下面的语句替换：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select num from a where exists(select 1 from b where num=a.num) </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>并不是所有索引对查询都有效，SQL是根据表中数据来进行查询优化的，当索引列有大量数据重复时，SQL查询可能不会去利用索引，如一表中有字段sex，male、female几乎各一半，那么即使在sex上建了索引也对查询效率起不了作用。</p>
+</li>
+<li><p>索引并不是越多越好，索引固然可以提高相应的 select 的效率，但同时也降低了 insert 及 update 的效率，因为 insert 或 update 时有可能会重建索引，所以怎样建索引需要慎重考虑，视具体情况而定。一个表的索引数最好不要超过6个，若太多则应考虑一些不常使用到的列上建的索引是否有必要。</p>
+</li>
+<li><p>应尽可能的避免更新 clustered 索引数据列，因为 clustered 索引数据列的顺序就是表记录的物理存储顺序，一旦该列值改变将导致整个表记录的顺序的调整，会耗费相当大的资源。若应用系统需要频繁更新 clustered 索引数据列，那么需要考虑是否应将该索引建为 clustered 索引。</p>
+</li>
+<li><p>尽量使用数字型字段，若只含数值信息的字段尽量不要设计为字符型，这会降低查询和连接的性能，并会增加存储开销。这是因为引擎在处理查询和连接时会逐个比较字符串中每一个字符，而对于数字型而言只需要比较一次就够了。</p>
+</li>
+<li><p>尽可能的使用 varchar&#x2F;nvarchar 代替 char&#x2F;nchar ，因为首先变长字段存储空间小，可以节省存储空间，其次对于查询来说，在一个相对较小的字段内搜索效率显然要高些。</p>
+</li>
+<li><p>任何地方都不要使用 select * from t ，用具体的字段列表代替“*”，不要返回用不到的任何字段。</p>
+</li>
+<li><p>尽量使用表变量来代替临时表。如果表变量包含大量数据，请注意索引非常有限（只有主键索引）。</p>
+</li>
+<li><p>避免频繁创建和删除临时表，以减少系统表资源的消耗。</p>
+</li>
+<li><p>临时表并不是不可使用，适当地使用它们可以使某些例程更有效，例如，当需要重复引用大型表或常用表中的某个数据集时。但是，对于一次性事件，最好使用导出表。</p>
+</li>
+<li><p>在新建临时表时，如果一次性插入数据量很大，那么可以使用 select into 代替 create table，避免造成大量 log ，以提高速度；如果数据量不大，为了缓和系统表的资源，应先create table，然后insert。</p>
+</li>
+<li><p>如果使用到了临时表，在存储过程的最后务必将所有的临时表显式删除，先 truncate table ，然后 drop table ，这样可以避免系统表的较长时间锁定。</p>
+</li>
+<li><p>尽量避免使用游标，因为游标的效率较差，如果游标操作的数据超过1万行，那么就应该考虑改写。</p>
+</li>
+<li><p>使用基于游标的方法或临时表方法之前，应先寻找基于集的解决方案来解决问题，基于集的方法通常更有效。</p>
+</li>
+<li><p>与临时表一样，游标并不是不可使用。对小型数据集使用 FAST_FORWARD 游标通常要优于其他逐行处理方法，尤其是在必须引用几个表才能获得所需的数据时。在结果集中包括“合计”的例程通常要比使用游标执行的速度快。如果开发时间允许，基于游标的方法和基于集的方法都可以尝试一下，看哪一种方法的效果更好。</p>
+</li>
+<li><p>在所有的存储过程和触发器的开始处设置 SET NOCOUNT ON ，在结束时设置 SET NOCOUNT OFF 。无需在执行存储过程和触发器的每个语句后向客户端发送 DONE_IN_PROC 消息。</p>
+</li>
+<li><p>尽量避免向客户端返回大数据量，若数据量过大，应该考虑相应需求是否合理。</p>
+</li>
+<li><p>尽量避免大事务操作，提高系统并发能力。</p>
+</li>
+</ol>
+<h1 id="B-树添加和删除数据"><a href="#B-树添加和删除数据" class="headerlink" title="B+树添加和删除数据"></a>B+树添加和删除数据</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/%E6%A0%91%E6%B7%BB%E5%8A%A0%E5%92%8C%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE%E5%9B%BE%E8%A7%A3.png" alt="B+树添加和删除数据图解"></p>
+<h1 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/%E7%BA%A2%E9%BB%91%E6%A0%91%20(1).jpg" alt="红黑树"></p>
+]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>mysql</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>mysql锁</title>
+    <url>/2022/08/05/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9Amysql%E9%94%81/</url>
+    <content><![CDATA[<h1 id="锁机制"><a href="#锁机制" class="headerlink" title="锁机制"></a>锁机制</h1><ul>
+<li>事务与锁是不同的。事务具有ACID( 原子性、一致性、隔离性和持久性)，锁是用于<strong>解决隔离级别</strong>的一种机制。事务的隔离级别通过锁的机制来实现。</li>
+<li>为了保证数据并发访问时的<strong>一致性和有效性</strong>，任何一个数据库都存在锁机制。锁机制的优劣直接影响到数据库的并发处理能力和系统性能，所以锁机制也就成为了各种数据库的核心技术之一。</li>
+<li>锁机制是为了解决数据库的并发控制问题而产生的。如在同一时刻，客户端对同一个表做更新或查询操作，为了保证数据的一致性，必须对并发操作进行控制。同时，锁机制也为实现 MySQL 的各个隔离级别提供了保证。</li>
+<li>可以将锁机制理解为使各种资源在被并发访问时变得有序所设计的一种规则。</li>
+<li>如何保证数据并发访问的一致性、有效性是所有数据库必须解决的一个问题，锁冲突也是影响数据库并发访问性能的一个重要因素。从这个角度来说，锁对数据库显得尤其重要，也更加复杂。</li>
+</ul>
+<h1 id="锁分类"><a href="#锁分类" class="headerlink" title="锁分类"></a>锁分类</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/7d4abdeb78b66d9ba4110d54beec4855.png" alt="img"></p>
+<ol>
+<li>按照锁的粒度划分：<strong>行锁、表锁、页锁</strong></li>
+<li>按照锁的使用方式划分：<strong>共享锁、排它锁</strong>（悲观锁的一种实现）</li>
+<li>还有两种思想上的锁：<strong>悲观锁、乐观锁</strong>。</li>
+<li>InnoDB中有几种行级锁类型：Record Lock、Gap Lock、Next-key Lock</li>
+<li>按<strong>锁级别分类，可分为共享锁、排他锁和意向锁。</strong></li>
+</ol>
+<p>MySQL的锁机制最显著的特点是不同的存储引擎支持不同的锁机制。比如，MyISAM和MEMORY存储引擎采用的是表级锁，<strong>不支持行锁</strong>；BDB存储引擎采用的是页面锁，但也支持表级锁；InnoDB存储引擎既支持行级锁，也支持表级锁，但默认情况下是采用<strong>行级锁</strong>。不支持行锁意味着并发控制只能使用表锁，对于这种引擎的表，同 一张表上任何时刻只能有一个更新在执行，这就会影响到业务并发度。<strong>InnoDB是支持行锁的， 这也是MyISAM被InnoDB替代的重要原因之一。</strong></p>
+<h1 id="行锁（row-level-locking）"><a href="#行锁（row-level-locking）" class="headerlink" title="行锁（row-level locking）"></a>行锁（row-level locking）</h1><ul>
+<li>行级锁的锁定颗粒度在 MySQL 中是最小的，<strong>只针对操作的当前行进行加锁</strong>，所以<strong>行级锁发生锁定资源争用的概率也最小</strong>。</li>
+<li>行级锁能够给予应用程序尽可能大的并发处理能力，从而提高需要高并发应用系统的整体性能。虽然行级锁在并发处理能力上面有较大的优势，但也因此带来了不少弊端。</li>
+<li><strong>由于锁定资源的颗粒度很小，所以每次获取锁和释放锁需要做的事情也就更多，带来的消耗自然也就更大。</strong>此外，<strong>行级锁也最容易发生死锁</strong>。所以说<strong>行级锁最大程度地支持并发处理的同时，也带来了最大的锁开销</strong>。</li>
+<li>行级锁主要应用于 <strong>InnoDB 存储引擎</strong>。</li>
+<li><strong>随着锁定资源颗粒度的减小，锁定相同数据量的数据所需要消耗的内存数量也越来越多，实现算法也会越来越复杂。不过，随着锁定资源颗粒度的减小，应用程序的访问请求遇到锁等待的可能性也会随之降低，系统整体并发度也会随之提升。</strong></li>
+<li><strong>行级锁按照使用方式分为共享锁和排他锁。</strong></li>
+</ul>
+<h1 id="表锁（table-level-locking）"><a href="#表锁（table-level-locking）" class="headerlink" title="表锁（table-level locking）"></a>表锁（table-level locking）</h1><ul>
+<li>表级锁为表级别的锁定，会锁定整张表，<strong>可以很好的避免死锁</strong>，是 MySQL 中最大颗粒度的锁定机制。</li>
+<li>一个用户在对表进行写操作(插入、删除、更新等)时，需要先获得写锁(也叫排斥锁)，这会阻塞其它用户对该表的所有读写操作。没有写锁时，其它读取的用户才能获得读锁，读锁之间是不相互阻塞的。</li>
+<li>表级锁最大的特点就是<strong>实现逻辑非常简单，带来的系统负面影响最小</strong>。所以获取锁和释放锁的速度很快。当然，锁定颗粒度大带来最大的负面影响就是<strong>出现锁定资源争用的概率会很高</strong>，致使并发度大打折扣。</li>
+<li>不过在某些特定的场景中，表级锁也可以有良好的性能。例如，READ LOCAL 表级锁支持某些类型的并发写操作。另外，写锁也比读锁有更高的优先级，因此一个写锁请求可能会被插入到读锁队列的前面(写锁可以插入到锁队列中读锁的前面，反之读锁则不能插入到写锁的前面)。</li>
+<li>使用表级锁的主要是 MyISAM，MEMORY，CSV 等一些非事务性存储引擎。</li>
+<li>尽管存储引擎可以管理自己的锁，MySQL 本身还是会使用各种有效的表级锁来实现不同的目的。例如，服务器会为诸如 ALTER TABLE 之类的语句使用表级锁，而忽略存储引擎的锁机制。</li>
+</ul>
+<h1 id="页锁（page-level-locking）"><a href="#页锁（page-level-locking）" class="headerlink" title="页锁（page-level locking）"></a>页锁（page-level locking）</h1><ul>
+<li>页级锁是 MySQL 中比较独特的一种锁定级别，在其他数据库管理软件中并不常见。</li>
+<li>页级锁的颗粒度<strong>介于行级锁与表级锁之间</strong>，所以获取锁定所需要的资源开销，以及所能提供的并发处理能力同样也是介于上面二者之间。另外，页级锁和行级锁一样，会发生死锁。</li>
+<li>页级锁主要应用于 BDB 存储引擎。</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/78c7b27c7fd257f074da21aef869b491.png" alt="img"></p>
+<h1 id="共享锁（Shared-Lock）"><a href="#共享锁（Shared-Lock）" class="headerlink" title="共享锁（Shared Lock）"></a>共享锁（Shared Lock）</h1><ul>
+<li><p>共享锁的代号是 <code>S</code>，是 <code>Share</code> 的缩写，也可称为<strong>读锁</strong>。是一种<strong>可以查看但无法修改和删除的数据锁</strong>。</p>
+</li>
+<li><p><strong>共享锁的锁粒度是行或者元组(多个行)<strong>。</strong>一个事务获取了共享锁之后，可以对锁定范围内的数据执行读操作。会阻止其它事务获得相同数据集的排他锁。</strong></p>
+</li>
+<li><p><strong>加锁方式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-- 行级读锁</span><br><span class="line">select * from T where id=1 lock in share mode;</span><br><span class="line">-- 表级读锁</span><br><span class="line">lock table user_info read;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>释放方式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">commit、rollback;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="排他锁（EXclusive-Lock）"><a href="#排他锁（EXclusive-Lock）" class="headerlink" title="排他锁（EXclusive Lock）"></a>排他锁（EXclusive Lock）</h1><ul>
+<li><p>排他锁的代号是<code>X</code>，是 <code>eXclusive</code> 的缩写，也可称为<strong>写锁</strong>，是基本的锁类型。</p>
+</li>
+<li><p>排他锁的粒度与共享锁相同，也是行或者元组。<strong>一个事务获取了排他锁之后，可以对锁定范围内的数据执行写操作。允许获得排他锁的事务更新数据，阻止其它事务取得相同数据集的共享锁和排他锁。</strong></p>
+</li>
+<li><p>当有事务对数据加写锁后，其他事务不能再对锁定的数据加任何锁，又因为InnoDB对select语句默认不加锁，所以其他事务<strong>除了不能写操作外，照样是允许读的（尽管不允许加读锁）</strong>。</p>
+</li>
+<li><p><strong>主要为了在事务进行写操作时，不允许其他事务修改。</strong></p>
+</li>
+<li><p><strong>加锁方式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-- 行级写锁</span><br><span class="line">自动：DML语句默认加写锁</span><br><span class="line">手动：select * from T where id=1 for update;</span><br><span class="line">-- 表级写锁</span><br><span class="line">lock table user_info write;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>释放方式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">commit、rollback;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="意向锁（Intention-Lock）"><a href="#意向锁（Intention-Lock）" class="headerlink" title="意向锁（Intention Lock）"></a>意向锁（Intention Lock）</h1><ul>
+<li><p>又称<strong>I锁</strong>。针对<strong>表锁</strong>。</p>
+</li>
+<li><p>为了允许行锁和表锁共存，实现多粒度锁机制，InnoDB 还有两种内部使用的意向锁。</p>
+</li>
+<li><p>意向锁是一种表锁，锁定的粒度是整张表，分为意向**共享锁(IS)和意向排他锁(IX)**两类。</p>
+</li>
+<li><p>意向共享锁表示一个事务有意对数据上共享锁或者排他锁。“有意”表示事务想执行操作但还没有真正执行。</p>
+</li>
+<li><p>当有事务给表的数据行加了共享锁或排他锁，同时会给表设置一个标识，代表已经有行锁了，其他事务要想对表加表锁时，就不必逐行判断有没有行锁可能跟表锁冲突了，直接读这个标识就可以确定自己该不该加表锁。特别是表中的记录很多时，逐行判断加表锁的方式效率很低。而<strong>这个标识就是意向锁</strong>。</p>
+<ul>
+<li>意向共享锁，IS锁，对整个表加共享锁之前，需要先获取到意向共享锁。</li>
+<li>意向排他锁，IX锁，对整个表加排他锁之前，需要先获取到意向排他锁。</li>
+<li>主要是为了提高加表锁的效率。</li>
+</ul>
+</li>
+<li><p>加锁方式：</p>
+<p>无法手动创建。</p>
+</li>
+</ul>
+<p>锁和锁之间的关系，要么是相容的，要么是互斥的。</p>
+<ul>
+<li>锁 a 和锁 b 相容是指：操作同样一组数据时，如果事务 t1 获取了锁 a，另一个事务 t2 还可以获取锁 b；</li>
+<li>锁 a 和锁 b 互斥是指：操作同样一组数据时，如果事务 t1 获取了锁 a，另一个事务 t2 在 t1 释放锁 a 之前无法释放锁 b</li>
+</ul>
+<p>其中<strong>共享锁</strong>、<strong>排他锁</strong>、<strong>意向共享锁、意向排他锁</strong>相互之间的兼容&#x2F;互斥关系如下表所示，其中 Y 表示相容，N 表示互斥。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/24c690732b2a23eaaf35d230f986d830.png" alt="image-20220303132033771"></p>
+<p><strong>如果一个事务请求的锁模式与当前的锁兼容，InnoDB 就将请求的锁授予该事务；反之，如果两者不兼容，该事务就要等待锁释放。</strong></p>
+<p><strong>为了尽可能提高数据库的并发量，需每次锁定的数据范围越小越好，越小的锁其耗费的系统资源越多，系统性能下降。为在高并发响应和系统性能两方面进行平衡，这样就产生了“锁粒度”的概念。</strong></p>
+<h1 id="并发控制"><a href="#并发控制" class="headerlink" title="并发控制"></a>并发控制</h1><ul>
+<li><p>当程序中可能出现并发的情况时，就需要保证在并发情况下数据的准确性，以此确保当前用户和其他用户一起操作时，所得到的结果和他单独操作时的结果是一样的。这就叫做并发控制。并发控制的目的是保证一个用户的工作不会对另一个用户的工作产生不合理的影响。</p>
+</li>
+<li><p><strong>没有做好并发控制，就可能导致脏读、幻读和不可重复读等问题。</strong></p>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/16b34e4c9b6784337b498623ea0dd849.png" alt="img"></p>
+<p>常说的并发控制，一般都和数据库管理系统(DBMS)有关。在 DBMS 中并发控制的任务，是确保多个事务同时增删改查同一数据时，不破坏事务的隔离性、一致性和数据库的统一性。</p>
+<p><code>实现并发控制的主要手段分为乐观并发控制和悲观并发控制两种。</code></p>
+<p>无论是悲观锁还是乐观锁，都是人们定义出来的概念，<strong>可以认为是一种思想</strong>。其实不仅仅是关系型数据库系统中有乐观锁和悲观锁的概念，像 hibernate、tair、memcache 等都有类似的概念。所以，不应该拿乐观锁、悲观锁和其他的数据库锁等进行对比。<strong>乐观锁比较适用于读多写少的情况(多读场景)，悲观锁比较适用于写多读少的情况(多写场景)。</strong></p>
+<h1 id="悲观锁（Pessimistic-Lock）"><a href="#悲观锁（Pessimistic-Lock）" class="headerlink" title="悲观锁（Pessimistic Lock）"></a>悲观锁（Pessimistic Lock）</h1><ul>
+<li><p>在关系数据库管理系统里，悲观并发控制（又名“悲观锁”，Pessimistic Concurrency Control，缩写“PCC”）是一种并发控制的方法。它可以阻止一个事务以影响其他用户的方式来修改数据。<strong>如果一个事务执行的操作对某行数据应用了锁，那只有当这个事务把锁释放，其他事务才能够执行与该锁冲突的操作</strong>。悲观并发控制主要用于数据争用激烈的环境，以及发生并发冲突时使用锁保护数据的成本要低于回滚事务的成本的环境中。</p>
+</li>
+<li><p>悲观锁，具有强烈的独占和排他特性，正如其名，它指的是对数据被外界（包括本系统当前的其他事务，以及来自外部系统的事务处理）修改持保守态度(悲观)，因此，<strong>在整个数据处理过程中，将数据处于锁定状态</strong>。 <code>悲观锁的实现，往往依靠数据库提供的锁机制 （也只有数据库层提供的锁机制才能真正保证数据访问的排他性，否则，即使在本系统中实现了加锁机制，也无法保证外部系统不会修改数据）</code></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/e0a7bb67259e9c0de800ae7913bf0fd2.png" alt="img"></p>
+</li>
+<li><p>之所以叫做悲观锁，是因为这是一种对数据的修改持有悲观态度的并发控制方式。总是假设最坏的情况，每次读取数据的时候都默认其他线程会更改数据，因此需要进行加锁操作，当其他线程想要访问数据时，都需要阻塞挂起。</p>
+</li>
+<li><p>悲观锁的实现：</p>
+<ol>
+<li>传统的关系型数据库使用这种锁机制，比如行锁、表锁、读锁、写锁等，都是在操作之前先上锁。</li>
+<li>Java 里面的同步<code>synchronized</code>关键字的实现。</li>
+</ol>
+</li>
+<li><p>悲观锁主要分为<strong>共享锁和排他锁</strong></p>
+</li>
+<li><p>mysql中实现悲观锁的具体流程：</p>
+<ol>
+<li>在对任意记录进行修改前，先尝试为该记录加上排他锁（exclusive locking）</li>
+<li>如果加锁失败，说明该记录正在被修改，那么当前查询可能要等待或者抛出异常。 具体响应方式由开发者根据实际需要决定。</li>
+<li>如果成功加锁，那么就可以对记录做修改，事务完成后就会解锁了。</li>
+<li>期间如果有其他对该记录做修改或加排他锁的操作，都会等待我们解锁或直接抛出异常。</li>
+<li><strong>总而言之就是一句话：mysql中悲观锁的实现是通过排他锁来实现的</strong></li>
+</ol>
+</li>
+</ul>
+<p><strong>在mysql（InnoDB）中使用悲观锁：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.开始事务</span><br><span class="line">begin;/begin work;/start transaction; (三者选一就可以)</span><br><span class="line">2.查询出商品信息</span><br><span class="line">select ... for update;(这里是使用的行锁的排他锁)</span><br><span class="line">4.提交事务</span><br><span class="line">commit;/commit work;</span><br></pre></td></tr></table></figure>
+
+<p>通过下面的例子来说明：</p>
+<p><strong>1. 当你手动加上排它锁，但是并没有关闭mysql中的autocommit。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1.这里先给user表所有的行加上行锁的排他锁</span><br><span class="line">mysql&gt; select * from user for update;</span><br><span class="line">+----+------+--------+</span><br><span class="line">| id | name | psword |</span><br><span class="line">+----+------+--------+</span><br><span class="line">|  1 | a    | 1      |</span><br><span class="line">|  2 | b    | 2      |</span><br><span class="line">|  3 | c    | 3      |</span><br><span class="line">+----+------+--------+</span><br><span class="line">3 rows in set</span><br><span class="line"></span><br><span class="line">2.再对加了排他锁的行更改数据时，这里他会一直提示Unknown</span><br><span class="line">mysql&gt; update user set name=aa where id=1;</span><br><span class="line">1054 - Unknown column &#x27;aa&#x27; in &#x27;field list&#x27;</span><br><span class="line">mysql&gt; insert into user values(4,d,4);</span><br><span class="line">1054 - Unknown column &#x27;d&#x27; in &#x27;field list&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 关闭mysql中的autocommit后的正常流程</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">窗口1：</span><br><span class="line">mysql&gt; set autocommit=0;（先关闭mysql中的autocommit）</span><br><span class="line">Query OK, 0 rows affected</span><br><span class="line">我这里锁的是表中的所有行</span><br><span class="line">mysql&gt; select * from user for update;</span><br><span class="line">+----+-------+</span><br><span class="line">| id | price |</span><br><span class="line">+----+-------+</span><br><span class="line">|  1 |   500 |</span><br><span class="line">|  2 |   800 |</span><br><span class="line">+----+-------+</span><br><span class="line">2 rows in set</span><br><span class="line"></span><br><span class="line">窗口2：</span><br><span class="line">mysql&gt; update user set price=price-100 where id=1;</span><br><span class="line">执行上面操作的时候，会显示等待状态，一直到窗口1执行commit提交事务才会出现下面的显示结果</span><br><span class="line">Database changed</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 0</span><br><span class="line"></span><br><span class="line">窗口1：执行commit手动提交事务</span><br><span class="line">mysql&gt; commit;</span><br><span class="line">Query OK, 0 rows affected</span><br><span class="line">再查询一下user表，发现已经执行了窗口2的更新操作</span><br><span class="line">mysql&gt; select * from user;</span><br><span class="line">+----+-------+</span><br><span class="line">| id | price |</span><br><span class="line">+----+-------+</span><br><span class="line">|  1 |   400 |</span><br><span class="line">|  2 |   800 |</span><br><span class="line">+----+-------+</span><br><span class="line">2 rows in set</span><br></pre></td></tr></table></figure>
+
+<p>上面的例子展示了排它锁的原理：一个锁在某一时刻只能被一个线程占有，其它线程必须等待锁被释放之后才可能获取到锁或者进行数据的操作。</p>
+<ul>
+<li><p><strong>悲观锁的优点和不足</strong></p>
+<p>悲观锁实际上是采取了“先取锁在访问”的策略，为数据的处理安全提供了保证，但是在效率方面，由于额外的加锁机制产生了额外的开销，并且<strong>增加了死锁的机会</strong>。并且降低了并发性；当一个事务加锁一行数据的时候，其他事务必须等待该事务提交之后，才能操作这行数据。</p>
+</li>
+</ul>
+<h1 id="乐观锁（Optimistic-Locking）"><a href="#乐观锁（Optimistic-Locking）" class="headerlink" title="乐观锁（Optimistic Locking）"></a>乐观锁（Optimistic Locking）</h1><ul>
+<li><p>在关系数据库管理系统里，乐观并发控制（又名“乐观锁”，Optimistic Concurrency Control，缩写“OCC”）是一种并发控制的方法。它假设多用户并发的事务在处理时不会彼此互相影响，各事务能够在不产生锁的情况下处理各自影响的那部分数据。在提交数据更新之前，每个事务会先检查在该事务读取数据后，有没有其他事务又修改了该数据。如果其他事务有更新的话，正在提交的事务会进行回滚。</p>
+</li>
+<li><p>乐观锁（ Optimistic Locking ） 相对悲观锁而言，乐观锁假设认为数据一般情况下不会造成冲突，所以在数据进行提交更新的时候，才会正式对数据的冲突与否进行检测，如果发现冲突了，则让返回用户错误的信息，让用户决定如何去做。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/569ff4e1a29633f4039ff83c0438346d.png" alt="img"></p>
+</li>
+<li><p>相对于悲观锁，在对数据库进行处理的时候，乐观锁并不会使用数据库提供的锁机制。</p>
+</li>
+<li><p>mysql实现乐观锁一般来说有3种方式：</p>
+<ol>
+<li>使用<strong>数据版本（Version）记录机制</strong>实现，这是乐观锁最常用的一种实现方式。一般是通过为数据库表增加一个数字类型的 “version” 字段，表示数据被修改的次数。当读取数据时，将version字段的值一同读出，数据每更新一次，对此version值加一。<br>当提交更新的时候，判断数据库表对应记录的当前版本信息与第一次取出来的version值进行比对，如果数据库表当前版本号与第一次取出来的version值相等，就进行更新操作，否则认为是过期数据，正在提交的事务会进行回滚。</li>
+<li>第二种实现方式和第一种差不多，同样是在需要乐观锁控制的table中增加一个字段，名称无所谓，字段类型使用<strong>时间戳</strong>（timestamp）, 和上面的version类似，也是在更新提交的时候检查当前数据库中数据的时间戳和自己更新前取到的时间戳进行对比，如果一致就更新，否则就是版本冲突。</li>
+<li>CAS 实现：Java 中java.util.concurrent.atomic包下面的原子变量使用了乐观锁的一种 CAS 实现方式</li>
+</ol>
+</li>
+<li><p>乐观锁的优点和不足</p>
+<p>乐观并发控制相信事务之间的数据竞争(data race)的概率是比较小的，因此尽可能直接做下去，直到提交的时候才去锁定，所以<strong>不会产生任何锁和死锁</strong>。但如果直接简单这么做，还是有可能会遇到不可预期的结果，例如两个事务都读取了数据库的某一行，经过修改以后写回数据库，这时就遇到了问题。</p>
+</li>
+<li><p>具体流程</p>
+<ul>
+<li>主要就是两个步骤：<strong>冲突检测和数据更新</strong>。比较典型的就是 CAS (Compare and Swap)。</li>
+<li><strong>CAS 即比较并交换</strong>。是解决多线程并行情况下使用锁造成性能损耗的一种机制，CAS 操作包含三个操作数——<strong>内存位置(V)、预期原值(A)和新值(B)<strong>。如果内存位置的值(V)与预期原值(A)相匹配，那么处理器会自动将该位置值更新为新值(B)。否则，处理器不做任何操作。无论哪种情况，它都会在 CAS 指令之前返回该位置的值。CAS 有效地说明了“我认为位置(V)应该包含值(A)。如果包含该值，则将新值(B)放到这个位置；否则，不要更改该位置，只告诉我这个位置现在的值即可”。Java 中，</strong>sun.misc.Unsafe</strong> 类提供了硬件级别的原子操作来实现这个 CAS。<strong>java.util.concurrent</strong>包下大量的类都使用了这个 Unsafe.java 类的 CAS 操作。</li>
+<li>当多个线程尝试使用 CAS 同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败，失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。比如前面的扣减库存问题，</li>
+</ul>
+</li>
+<li><p>通过乐观锁可以实现如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">查出商品库存信息，quantity=3</span><br><span class="line">select quantity from items where id=1;</span><br><span class="line">修改商品库存为2</span><br><span class="line">update items set quantity=2 where id=1 and quantity = 3;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>在更新之前，先查询一下库存表中当前库存数(quantity)，然后在做 update 的时候，以库存数作为一个修改条件。当提交更新的时候，判断数据库表对应记录的当前库存数与第一次取出来的库存数进行比对，如果数据库表当前库存数与第一次取出来的库存数相等，则予以更新，否则认为是过期数据。</p>
+</li>
+<li><p>以上更新语句存在一个比较严重的问题，即<strong>ABA问题</strong>：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/b67b363facf7760af75bfbad53b4e593.png" alt="img"></p>
+<ol>
+<li>比如说线程一从数据库中取出库存数 3，这时候线程二也从数据库中取出库存数 3，并且线程二进行了一些操作变成了 2。</li>
+<li>然后线程二又将库存数变成 3，这时候线程一进行 CAS 操作发现数据库中仍然是 3，然后线程一操作成功。</li>
+<li>尽管线程一的 CAS 操作成功，但是不代表这个过程就是没有问题的。</li>
+</ol>
+</li>
+<li><p>一个比较好的解决办法，就是通过一个单独的可以顺序递增的 version 字段。优化如下：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/d5de6b18dd097c35937d73caa0b6db1b.png" alt="img"></p>
+<ul>
+<li><p>乐观锁每次在执行数据修改操作时，都会带上一个版本号，一旦版本号和数据的版本号一致就可以执行修改操作并对版本号执行 +1 操作，否则就执行失败。因为每次操作的版本号都会随之增加，所以不会出现 ABA 问题。除了 version 以外，还可以使用时间戳，因为时间戳天然具有顺序递增性。</p>
+</li>
+<li><p>以上 SQL 其实还是有一定的问题的，就是一旦遇上高并发的时候，就只有一个线程可以修改成功，那么就会存在大量的失败。对于像淘宝这样的电商网站，高并发是常有的事，总让用户感知到失败显然是不合理的。所以，还是要想办法<strong>减少乐观锁的粒度</strong>。一个比较好的建议，就是<strong>减小乐观锁力度，最大程度的提升吞吐率，提高并发能力</strong>！如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">修改商品库存</span><br><span class="line">update item set quantity=quantity-1 where id=1 and quantity-1 &gt; 0;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>以上 SQL 语句中，如果用户下单数为 1，则通过<code>quantity - 1 &gt; 0</code>的方式进行乐观锁控制。在执行过程中，会在一次原子操作中查询一遍 quantity 的值，并将其扣减掉 1。</li>
+<li>高并发环境下锁粒度把控是一门重要的学问。选择一个好的锁，在保证数据安全的情况下，可以大大提升吞吐率，进而提升性能。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="理解-CAS-底层"><a href="#理解-CAS-底层" class="headerlink" title="理解 CAS 底层"></a>理解 CAS 底层</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/885eeb9d953fac34d4fdc53b31215b78.png" alt="img"></p>
+<p>假如说有 3 个线程并发的要修改一个AtomicInteger的值，底层机制如下：</p>
+<ol>
+<li>首先，每个线程都会先获取当前的值，接着走一个原子的 CAS 操作。原子的意思就是这个 CAS 操作一定是自己完整执行完的，不会被别人打断。</li>
+<li>然后 CAS 操作里，会比较一下，现在的值是不是刚才获取到的那个值。如果是，说明没人改过这个值，然后设置成累加 1 之后的一个值。</li>
+<li>同理，如果有人在执行 CAS 的时候，发现之前获取的值跟当前的值不一样，会导致 CAS 失败。失败之后，进入一个无限循环，再次获取值，接着执行 CAS 操作。</li>
+</ol>
+<h1 id="CAS-典型应用"><a href="#CAS-典型应用" class="headerlink" title="CAS 典型应用"></a>CAS 典型应用</h1><p>java.util.concurrent.atomic包下的类大多是使用 CAS 操作来实现的，比如 AtomicInteger、AtomicBoolean、AtomicLong。一般在竞争不是特别激烈的时候，使用该包下的原子操作性能比使用 synchronized关键字的方式高效的多(查看 getAndSet()，可知如果资源竞争十分激烈的话，这个 for 循环可能会持续很久都不能成功跳出。不过这种情况可能需要考虑降低资源竞争才是)。</p>
+<p>在较多的场景都可能会使用到这些原子类操作。一个典型应用就是计数了，在多线程的情况下需要考虑线程安全问题。</p>
+<ol>
+<li>支持计数功能 Demo 实现</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Increment</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">()</span> &#123;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在并发环境下对 count 进行自增运算是不安全的，为什么不安全以及如何解决这个问题呢？</p>
+<ol start="2">
+<li>为什么并发环境下的 count 自增操作不安全？因为 count++ 不是原子操作，而是三个原子操作的组合：<ol>
+<li>读取内存中的 count 值赋值给局部变量 temp；</li>
+<li>执行 temp+1 操作；</li>
+<li>将 temp 赋值给 count。</li>
+</ol>
+</li>
+</ol>
+<p>所以如果两个线程同时执行 count++ 的话，不能保证线程一按顺序执行完上述三步后线程二才开始执行。</p>
+<ol start="3">
+<li>并发环境下 count++ 不安全问题的解决方案</li>
+</ol>
+<p>方案①：<strong>synchronized加锁</strong>。同一时间只有一个线程能加锁，其他线程需要等待锁，这样就不会出现 count 计数不准确的问题了：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Increment</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">()</span> &#123;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是引入 synchronized 会造成多个线程排队的问题，相当于让各个线程串行化了，一个接一个的排队、加锁、处理数据、释放锁，下一个再进来。同一时间只有一个线程执行，这样的锁有点“重量级”了。这类似于悲观锁的实现，需要获取这个资源，就给它加锁，别的线程都无法访问该资源，直到操作完后释放对该资源的锁。虽然随着 Java 版本更新，也对 synchronized 做了很多优化，但是处理这种简单的累加操作，仍然显得“太重了”。</p>
+<p>方案②：<strong>Atomic 原子类</strong>。对于 count++ 的操作，完全可以换一种做法，Java 并发包下面提供了一系列的 Atomic 原子类，比如说 AtomicInteger：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//import java.util.concurrent.atomic.AtomicInteger;</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">AtomicInteger</span> <span class="variable">count</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">increase</span><span class="params">()</span> &#123;</span><br><span class="line">        count.incrementAndGet();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>多个线程可以并发的执行 AtomicInteger 的 incrementAndGet()，意思就是把 count 的值累加 1，接着返回累加后最新的值。实际上，Atomic 原子类底层用的不是传统意义的锁机制，而是无锁化的 CAS 机制，通过 CAS 机制保证多线程修改一个数值的安全性。</p>
+<h1 id="CAS-性能优化"><a href="#CAS-性能优化" class="headerlink" title="CAS 性能优化"></a>CAS 性能优化</h1><p>从流程图可以看出来，大量的线程同时并发修改一个 AtomicInteger，可能有很多线程会不停的自旋，进入一个无限重复的循环中。这些线程不停地获取值，然后发起 CAS 操作，但是发现这个值被别人改过了，于是再次进入下一个循环，获取值，发起 CAS 操作又失败了，再次进入下一个循环。在大量线程高并发更新 AtomicInteger 的时候，这种问题可能会比较明显，导致大量线程空循环，自旋转，性能和效率都不是特别好。那么如何优化呢？</p>
+<p>Java8 有一个新的类，LongAdder，它就是尝试使用分段 CAS 以及自动分段迁移的方式来大幅度提升多线程高并发执行 CAS 操作的性能，这个类具体是如何优化性能的呢？如图：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/7abe51c80744d2eab1495895ec3fe11e.png" alt="img"></p>
+<p><strong>LongAdder</strong></p>
+<p>LongAdder 核心思想就是热点分离，这一点和 ConcurrentHashMap 的设计思想相似。就是将 value 值分离成一个数组，当多线程访问时，通过 hash 算法映射到其中的一个数字进行计数。而最终的结果，就是这些数组的求和累加。这样一来，就减小了锁的粒度。</p>
+<p>LongAddr 的兄弟类如下：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/60ca62457379f485d4482cc848269fb5.png" alt="img"></p>
+<p>LongAdder兄弟类</p>
+<h1 id="如何选择"><a href="#如何选择" class="headerlink" title="如何选择"></a>如何选择</h1><p>在乐观锁与悲观锁的选择上面，主要看下两者的区别以及适用场景就可以了。</p>
+<ol>
+<li><strong>响应效率</strong>：如果需要非常高的响应速度，建议采用乐观锁方案，成功就执行，不成功就失败，不需要等待其他并发去释放锁。乐观锁并未真正加锁，效率高。一旦锁的粒度掌握不好，更新失败的概率就会比较高，容易发生业务失败。</li>
+<li><strong>冲突频率</strong>：如果冲突频率非常高，建议采用悲观锁，保证成功率。冲突频率大，选择乐观锁会需要多次重试才能成功，代价比较大。</li>
+<li><strong>重试代价</strong>：如果重试代价大，建议采用悲观锁。悲观锁依赖数据库锁，效率低。更新失败的概率比较低。</li>
+<li>乐观锁如果有人在你之前更新了，你的更新应当是被拒绝的，可以让用户从新操作。悲观锁则会等待前一个更新完成。这也是区别。</li>
+</ol>
+<p>随着互联网**三高架构(高并发、高性能、高可用)**的提出，悲观锁已经越来越少的被应用到生产环境中了，尤其是并发量比较大的业务场景。</p>
+<h1 id="乐观锁和MVCC的区别？"><a href="#乐观锁和MVCC的区别？" class="headerlink" title="乐观锁和MVCC的区别？"></a>乐观锁和MVCC的区别？</h1><p>在数据库中，并发控制是指在多个用户&#x2F;进程&#x2F;线程同时对数据库进行操作时，如何保证事务的一致性和隔离性的，同时最大程度地并发。</p>
+<p>当多个用户&#x2F;进程&#x2F;线程同时对数据库进行操作时，会出现3种冲突情形：</p>
+<ol>
+<li>读-读，不存在任何问题</li>
+<li>读-写，有隔离性问题，可能遇到脏读（会读到未提交的数据） ，幻影读等。</li>
+<li>写-写，可能丢失更新</li>
+</ol>
+<p><strong>要解决冲突，一种办法是是锁，即基于锁的并发控制，比如2PL两阶段锁协议，这种方式开销比较高，而且无法避免死锁。而基于无锁的并发控制有两种方式：就是MVCC多版本并发控制和OCC乐观并发控制，这两种方式分别解决上面的第2,3种情况。</strong></p>
+<p><strong>多版本并发控制（MVCC）是一种用来解决读-写冲突的无锁并发控制</strong>，也就是为事务分配单向增长的时间戳，为每个修改保存一个版本，版本与事务时间戳关联，读操作只读该事务开始前的数据库的快照。 这样在读操作不用阻塞写操作，写操作不用阻塞读操作的同时，避免了脏读和不可重复读</p>
+<p><strong>乐观并发控制（OCC）是一种用来解决写-写冲突的无锁并发控制</strong>，认为事务间争用没有那么多，所以先进行修改，在提交事务前，检查一下事务开始后，有没有新提交改变，如果没有就提交，如果有就放弃并重试。乐观并发控制类似自旋锁。乐观并发控制适用于低数据争用，写冲突比较少的环境。</p>
+<p><strong>多版本并发控制可以结合基于锁的并发控制来解决写-写冲突</strong>，即MVCC+2PL，也可以结合乐观并发控制来解决写-写冲突。</p>
+<h1 id="InnoDB锁的特性"><a href="#InnoDB锁的特性" class="headerlink" title="InnoDB锁的特性"></a>InnoDB锁的特性</h1><ol>
+<li><p>在不通过索引条件查询的时候，InnoDB使用的确实是表锁（锁的是整张表）！</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">price属性并没有加索引，因此这时候虽然是用的行锁，锁的却是整张表</span><br><span class="line">窗口1：</span><br><span class="line">mysql&gt; select * from product where price=88 for update;</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line">| id | name | price | num |</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line">|  2 | 蒙牛 |    88 |   1 |</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line"></span><br><span class="line">窗口2：</span><br><span class="line">mysql&gt; update product set price=price-100 where id=6;</span><br><span class="line">这里会等待，直到窗口1 commit后显示下面结果！</span><br><span class="line">Query OK, 1 row affected</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>由于 MySQL 的行锁是<strong>针对索引加的锁</strong>,不是针对记录加的锁,所以虽然是访问不同行的记录,但是如果是使用相同的索引键,是会出现锁冲突的。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">这里的num属性 加上了普通索引，price属性并没有索引</span><br><span class="line">窗口1：</span><br><span class="line">mysql&gt; set autocommit=0;</span><br><span class="line">Query OK, 0 rows affected</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from product where num=1 and price=68 for update;</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line">| id | name | price | num |</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line">|  1 | 伊利 |    68 |   1 |</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line"></span><br><span class="line">窗口2：</span><br><span class="line">mysql&gt; update product set price=price+100 where num=1 and price=88;</span><br><span class="line">这里会发生等待，直到窗口1 commit 显示下面结果</span><br><span class="line">Query OK, 1 row affected</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 0</span><br><span class="line">mysql&gt; select * from product;</span><br><span class="line">+----+----------+-------+-----+</span><br><span class="line">| id | name     | price | num |</span><br><span class="line">+----+----------+-------+-----+</span><br><span class="line">|  1 | 伊利     |    68 |   1 |</span><br><span class="line">|  2 | 蒙牛     |   188 |   1 |</span><br><span class="line">+----+----------+-------+-----+</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>当表有多个索引的时候,不同的事务可以使用不同的索引锁定不同的行,另外,不论是使用主键索引、唯一索引或普通索引,InnoDB都会使用行锁来对数据加锁。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">锁一行数据，DML操作其他行并没有影响</span><br><span class="line">窗口1：</span><br><span class="line">mysql&gt; select * from user where id=1 for update;</span><br><span class="line">+----+-------+</span><br><span class="line">| id | price |</span><br><span class="line">+----+-------+</span><br><span class="line">|  1 |   400 |</span><br><span class="line">+----+-------+</span><br><span class="line"></span><br><span class="line">窗口2：</span><br><span class="line">mysql&gt; update user set price=price+100 where id=2;</span><br><span class="line">无需等待窗口1 commit</span><br><span class="line">Database changed</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>即便在条件中使用了索引字段,但是否使用索引来检索数据是由 MySQL 通过判断不同 执行计划的代价来决定的,如果 MySQL 认为全表扫效率更高,比如对一些很小的表,它 就不会使用索引,这种情况下 InnoDB 将使用表锁,而不是行锁。因此,在分析锁冲突时, 别忘了检查SQL 的执行计划（explain查看）,以确认是否真正使用了索引。</p>
+</li>
+</ol>
+<h1 id="死锁的原理及分析"><a href="#死锁的原理及分析" class="headerlink" title="死锁的原理及分析"></a>死锁的原理及分析</h1><h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><p>MySQL InnoDB存储引擎，实现的是基于多版本并发控制协议—MVCC(Multi-Version Concurrency Control) MVCC最大的好处，相信也是耳熟能详：<strong>读不加锁，读写不冲突</strong>。在读多写少的OLTP应用中，读写不冲突是非常重要的，极大的增加了系统的并发性能，这也是为什么现阶段，几乎所有的RDBMS，都支持了MVCC。</p>
+<h2 id="PL：Two-Phase-Locking"><a href="#PL：Two-Phase-Locking" class="headerlink" title="PL：Two-Phase Locking"></a>PL：Two-Phase Locking</h2><p>传统RDBMS（关系数据库管理系统）加锁的一个原则，就是2PL (二阶段锁)：Two-Phase Locking。相对而言，2PL比较容易理解，说的是锁操作分为两个阶段：<strong>加锁阶段与解锁阶段</strong>，并且保证加锁阶段与解锁阶段不相交。下面，仍旧以MySQL为例，来简单看看2PL在MySQL中的实现。</p>
+<table>
+<thead>
+<tr>
+<th align="center">transaction</th>
+<th align="center">mysql</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">begin;</td>
+<td align="center">加锁阶段</td>
+</tr>
+<tr>
+<td align="center">insert into</td>
+<td align="center">加insert对应的锁</td>
+</tr>
+<tr>
+<td align="center">update table</td>
+<td align="center">加update对应的锁</td>
+</tr>
+<tr>
+<td align="center">delete from</td>
+<td align="center">加delete对应的锁</td>
+</tr>
+<tr>
+<td align="center">commit</td>
+<td align="center">解锁阶段</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">将insert、update、delete的锁全部解开</td>
+</tr>
+</tbody></table>
+<p>上面的例子可以看出2PL就是将加锁、解锁分为两个阶段，并且互相不干扰。加锁阶段只加锁，解锁阶段只解锁。</p>
+<h2 id="为什么会发生死锁"><a href="#为什么会发生死锁" class="headerlink" title="为什么会发生死锁"></a>为什么会发生死锁</h2><p>MyISAM中是不会产生死锁的，因为MyISAM总是一次性获得所需的全部锁，要么全部满足，要么全部等待。而在InnoDB中，锁是逐步获得的，就造成了死锁的可能。（不过现在一般都是InnoDB引擎，关于MyISAM不做考虑）</p>
+<p>在InnoDB中，行级锁并不是直接锁记录，而是锁索引。索引分为主键索引和非主键索引两种，如果一条sql语句操作了主键索引，MySQL就会锁定这条主键索引；如果一条语句操作了非主键索引，MySQL会先锁定该非主键索引，再锁定相关的主键索引。</p>
+<p>当两个事务同时执行，一个锁住了主键索引，在等待其他相关索引。另一个锁定了非主键索引，在等待主键索引。这样就会发生死锁。</p>
+<p>通过两个SQL死锁的例子来说明</p>
+<ol>
+<li><strong>两个session的两条语句</strong></li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20190406184514611.jpg" alt="img"></p>
+<p>这种情况很好理解，首先session1获得 id&#x3D;1的锁 session2获得id&#x3D;5的锁，然后session想要获取id&#x3D;5的锁 等待，session2想要获取id&#x3D;1的锁 ，也等待！</p>
+<ol start="2">
+<li><strong>两个session的一条语句</strong></li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20190406184524757.jpg" alt="img"></p>
+<p>这种情况需要我们了解<strong>数据的索引的检索顺序</strong>原理简单说下：<strong>普通索引上面保存了主键索引，当我们使用普通索引检索数据时，如果所需的信息不够，那么会继续遍历主键索引。</strong></p>
+<p>假设默认情况是RR隔离级别，针对session 1 从name索引出发，检索到的是（hdc,1）（hdc,6）不仅会加name索引上的记录X锁，而且会加聚簇索引上的记录X锁，加锁顺序为先[1,hdc,100]，后[6,hdc,10] 这个顺序是因为B+树结构的有序性。而Session 2，从pubtime索引出发，[10,6],[100,1]均满足过滤条件，同样也会加聚簇索引上的记录X锁，加锁顺序为[6,hdc,10]，后[1,hdc,100]。发现没有，跟Session 1的加锁顺序正好相反，如果两个Session恰好都持有了第一把锁，请求加第二把锁，死锁就发生了。</p>
+<p><strong>避免死锁，这里只介绍常见的三种</strong></p>
+<ol>
+<li>如果不同程序会并发存取多个表，尽量约定以相同的顺序访问表，可以大大降低死锁机会。</li>
+<li>在同一个事务中，尽可能做到一次锁定所需要的所有资源，减少死锁产生概率；</li>
+<li>对于非常容易产生死锁的业务部分，可以尝试使用升级锁定颗粒度，通过表级锁定来减少死锁产生的概率；</li>
+</ol>
+]]></content>
+      <categories>
+        <category>数据库</category>
+        <category>mysql</category>
+      </categories>
+  </entry>
 </search>
