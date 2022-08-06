@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>概念 |  Healer</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Healer" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-操作系统：概念"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+	
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  概念
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/08/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E6%A6%82%E5%BF%B5/" class="article-date">
+  <time datetime="2022-08-06T08:11:57.000Z" itemprop="datePublished">2022-08-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">计算机基础知识</a> / <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">9 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="操作系统的概念、功能"><a href="#操作系统的概念、功能" class="headerlink" title="操作系统的概念、功能"></a>操作系统的概念、功能</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806161631109.png" alt="image-20220806161631109"></p>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><ul>
+<li><p>系统资源的管理者：控制和<strong>管理</strong>整个计算机系统的<strong>硬件和软件</strong>资源，并合理地组织调度计算机的工作和资源的分配</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806161651753.png" alt="image-20220806161651753"></p>
+</li>
+<li><p>向上层提供简便易用的服务：<strong>提供给用户和其他软件方便的接口和环境</strong></p>
+</li>
+<li><p>最接近硬件的一层软件：是计算机系统中最基本的<strong>系统软件</strong></p>
+</li>
+</ul>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ul>
+<li><p>系统资源的管理者</p>
+<p>执行一个程序之前<strong>需要将该程序放到内存中</strong>才能被CPU处理</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806161816691.png" alt="image-20220806161816691"></p>
+</li>
+<li><p>向上层提供简便易用的服务</p>
+<ul>
+<li><p><strong>封装思想</strong>：操作系统把硬件封装成简便易用的服务，使得用户无需关心底层硬件的原理， 只需要对操作系统发出指令即可使用计算机</p>
+</li>
+<li><p><strong>GUI</strong>：图形化用户接口（Graphical	User	Interface） ，用户可以使用形象的图形界面进行操作，而不再需要记忆复杂的命令、参数。</p>
+</li>
+<li><p><strong>联机命令接口</strong>：交互式命令接口，用户说一句， 系统跟着做一句</p>
+</li>
+<li><p><strong>脱机命令接口</strong>：批处理命令接口，用户说一堆， 系统跟着做一堆</p>
+</li>
+<li><p><strong>程序接口</strong>：可以在程序中进行系统调用使用程序接口，普通用户不能直接使用程序接口，只能通过程序代码间接使用，比如：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806162535866.png" alt="程序接口"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806162656997.png" alt="向上层提供方便易用的服务"></p>
+</li>
+</ul>
+</li>
+<li><p>最接近硬件的一层软件：</p>
+<p>操作系统对硬件机器的扩展：将CPU、内存、硬盘等硬件合理的组织起来，让各种硬件能 够相互配合，实现更多复杂的功能</p>
+</li>
+</ul>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806162912117.png" alt="操作系统概念、功能"></p>
+<h1 id="操作系统的特征"><a href="#操作系统的特征" class="headerlink" title="操作系统的特征"></a>操作系统的特征</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806163048558.png" alt="操作系统的特征"></p>
+<h2 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h2><p>指多个事件在<strong>同一时间间隔内发生</strong>，这些事件在宏观上是同时发生的，在微观上是交替发生的</p>
+<p>操作系统的并发性指计算机系统中“同时”运行着多个程序，这些程序宏观上看是同时运行着的，而微观上看是交替运行的。 操作系统就是伴随着“多道程序技术”而出现的。因此，操作系统和程序并发是一起诞生的</p>
+<p><strong>注意</strong>：</p>
+<ol>
+<li>与并行区分，<strong>并行</strong>指的是多个事件在<strong>同一时刻同时发生</strong></li>
+<li><strong>单核CPU</strong>同一时刻只能执行<strong>一个程序</strong>，各个程序只能<strong>并发</strong>执行</li>
+<li><strong>多核CPU</strong>同一时刻可以同时执行<strong>多个程序</strong>，多个程序可以<strong>并行</strong>执行</li>
+</ol>
+<h2 id="共享"><a href="#共享" class="headerlink" title="共享"></a>共享</h2><p>共享即资源共享，是指系统中的资源可供内存中多个并发执行的进程共同使用。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806163519018.png" alt="资源共享方式"></p>
+<p>所谓的“同时”往往是宏观上的，而在微观上，这些进程可能是交替地对该资源进行访问的（即分时共享） </p>
+<p><strong>生活实例</strong> </p>
+<p>互斥共享方式：使用QQ和微信视频。同一时间段内摄像头只能分配给其中一个进程。 </p>
+<p>同时共享方式：使用QQ发送文件A，同时使用微信发送文件B。宏观上看，两边都在同时读取并发送文件， </p>
+<p>说明两个进程都在访问硬盘资源，从中读取数据。微观上看，两个进程是交替着访问硬盘的。</p>
+<h3 id="并发与共享的关系"><a href="#并发与共享的关系" class="headerlink" title="并发与共享的关系"></a>并发与共享的关系</h3><p><strong>并发性</strong>指计算机系统中同时存在着多个运行着的程序。 </p>
+<p><strong>共享性</strong>是指系统中的资源可供内存中多个并发执行的进程共同使用。</p>
+<p><strong>实例</strong></p>
+<p>使用QQ发送文件A，同时使用微信发送文件B。</p>
+<ol>
+<li>两个进程正在并发执行（并发性），如果失去并发性，则系统中只有一个程序正在运行，则共享性失去存在的意义</li>
+<li>需要共享地访问硬盘资源（共享性），如果失去共享性，则QQ和微信不能同时访问硬盘资源，就无法实现同时发送文件，也就无法并发</li>
+</ol>
+<h2 id="虚拟"><a href="#虚拟" class="headerlink" title="虚拟"></a>虚拟</h2><p>虚拟是指把一个物理上的实体变为若干个逻辑上的对应物。物理实体（前者）是实际存在的，而逻辑上对应物（后者）是用户感受到的。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806164003431.png" alt="虚拟技术"></p>
+<p>虚拟存储器技术：用户只有4G运行内存，但可以运行总内存大于4G的多个软件</p>
+<p>虚拟处理器技术：单核CPU可以同时运行多个程序 (微观上交替)</p>
+<p>显然，如果失去了并发性，则一个时间段内系统中只需运行一道程序，那么就失去了实现虚拟性的意义了。因此，<strong>没有并发性，就谈不上虚拟性</strong></p>
+<h2 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h2><ul>
+<li>异步是指，在多道程序环境下，允许多个程序并发执行，但由于资源有限，进程的执行不是一贯到底的， 而是走走停停，以不可预知的速度向前推进，这就是进程的异步性。</li>
+<li>如果失去了并发性，即系统只能串行地运行各个程序，那么每个程序的执行会 一贯到底。<strong>只有系统拥有并发性，才有可能导致异步性。</strong></li>
+</ul>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806164258243.png" alt="操作系统的特征"></p>
+<h1 id="操作系统的发展与分类"><a href="#操作系统的发展与分类" class="headerlink" title="操作系统的发展与分类"></a>操作系统的发展与分类</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806164402757.png" alt="操作系统的发展与分类"></p>
+<h2 id="手工操作阶段"><a href="#手工操作阶段" class="headerlink" title="手工操作阶段"></a>手工操作阶段</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806164557530.png" alt="image-20220806164557530"></p>
+<p>主要缺点：用户独占全机、人机速度矛盾导致资源利用率极低</p>
+<h2 id="单道批处理系统"><a href="#单道批处理系统" class="headerlink" title="单道批处理系统"></a>单道批处理系统</h2><p>引入脱机输入&#x2F;输出技术（用外围机+磁带完成），并由监督程序负责控制作业的输入、输出</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806164632429.png" alt="image-20220806164632429"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806164706687.png" alt="image-20220806164706687"></p>
+<p>主要优点：缓解了一定程度的人机速度矛盾，资源利用率有所提升。 </p>
+<p>主要缺点：<strong>内存中仅能有一道程序运行</strong>，只有 该程序运行结束之后才能调入下一道程序。<strong>CPU有大量的时间是在空闲等待I&#x2F;O完成</strong>。资源 利用率依然很低。</p>
+<h2 id="多道批处理系统"><a href="#多道批处理系统" class="headerlink" title="多道批处理系统"></a>多道批处理系统</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806164919195.png" alt="image-20220806164919195"></p>
+<p>主要优点：多道程序<strong>并发</strong>执行，<strong>共享</strong>计算机资源。<strong>资源利用率大幅提升</strong>，CPU和其他资源更能保持“忙碌”状态，系统吞吐量增大。 </p>
+<p>主要缺点：用户响应时间长，<strong>没有人机交互功能</strong>（用户提交自己的作业之后就只能等待计算机处理完成，中间不能控制自己的作业 </p>
+<p>执行。eg：无法调试程序&#x2F;无法在程序运行过 程中输入一些参数）</p>
+<h2 id="分时操作系统"><a href="#分时操作系统" class="headerlink" title="分时操作系统"></a>分时操作系统</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806165023577.png" alt="image-20220806165023577"></p>
+<p>分时操作系统：计算机以<strong>时间片</strong>为单位<strong>轮流为各个用户&#x2F;作业服务</strong>，各个用户可通过终端与计算机进行交互。 </p>
+<p>主要优点：用户请求可以被即时响应，<strong>解决了人机交互问题</strong>。允许多个用户同时使用一台计算机，并且用户对计算机的操作相互独立，感受不到别人的存在。 </p>
+<p>主要缺点：<strong>不能优先处理一些紧急任务</strong>。操作系统对各个用户&#x2F;作业都是完全公平的，循环地为每个用户&#x2F; 作业服务一个时间片，不区分任务的紧急性。</p>
+<h2 id="实时操作系统"><a href="#实时操作系统" class="headerlink" title="实时操作系统"></a>实时操作系统</h2><p>主要优点：能够优先响应一些紧急任务，某些紧急任务不需时间片排队。 </p>
+<p>在实时操作系统的控制下，计算机系统接收到外部信号后及时进行处理，并且<strong>要在严格的时限内处理完事件</strong>。实时操作系统的主要特点是<strong>及时性和可靠性</strong></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806165216654.png" alt="image-20220806165216654"></p>
+<h2 id="其他几种操作系统"><a href="#其他几种操作系统" class="headerlink" title="其他几种操作系统"></a>其他几种操作系统</h2><ul>
+<li><strong>网络操作系统</strong>：是伴随着计算机网络的发展而诞生的，能把网络中各个计算机有机地结合起来，实现数据传送等功能，<strong>实现网络中各种资源的共享（如文件共享）和各台计算机之间的通信。</strong>（如：Windows NT 就是一种典型的网络操作系统，网站服务器就可以使用） </li>
+<li><strong>分布式操作系统</strong>：主要特点是<strong>分布性和并行性</strong>。系统中的各台计算机地位相同，<strong>任何工作都可以分布在这些计算机上，由它们并行、协同完成这个任务。</strong> </li>
+<li><strong>个人计算机操作系统</strong>：如 Windows XP、MacOS，方便个人使用。</li>
+</ul>
+<h2 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806165424426.png" alt="image-20220806165424426"></p>
+<h1 id="操作系统的运行机制、体系结构"><a href="#操作系统的运行机制、体系结构" class="headerlink" title="操作系统的运行机制、体系结构"></a>操作系统的运行机制、体系结构</h1><ul>
+<li><p>指令：指的是处理器(CPU)能识别、执行的最基本命令</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20200913123618988.png" alt="img"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/2020091312362421.png" alt="两种指令"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/2020091312364170.png" alt="两种处理器状态"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/2020091312364927.png" alt="两种程序"></p>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806171845507.png" alt="image-20220806171845507"></p>
+<ul>
+<li><p>内核：内核是计算机上的底层软件，是操作系统最基本、最核心的部分。实现内核功能的程序是<strong>内核程序</strong></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806171143805.png" alt="image-20220806171143805"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806171218224.png" alt="image-20220806171218224"></p>
+<p><strong>注意：</strong> </p>
+<p><strong>操作系统内核需要运行在内核态</strong> </p>
+<p><strong>操作系统的非内核功能运行在用户态</strong></p>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806171637306.png" alt="image-20220806171637306"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806172249338.png" alt="image-20220806172249338"></p>
+<h1 id="中断和异常"><a href="#中断和异常" class="headerlink" title="中断和异常"></a>中断和异常</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806172332250.png" alt="image-20220806172332250"></p>
+<ul>
+<li>CPU 上会运行两种程序，一种是<strong>操作系统内核程序</strong>，一种是<strong>应用程序</strong>。在合适的情况下，操作系统内核会把CPU的使用权主动让给应用程序，“中断”是<strong>让操作系统内核夺回CPU使用权的唯一途径</strong></li>
+<li>“中断”会使CPU由用户态变为内核态，使操作系统重新夺回对CPU的控制权</li>
+<li><strong>内核态—&gt;用户态</strong>：执行一条<strong>特权指令</strong>——<strong>修改PSW</strong>的标志位为“用户态”，这个动作意味着操作系统将主动让出CPU使用权 </li>
+<li><strong>用户态—&gt;内核态</strong>：由<strong>“中断”</strong>引发，<strong>硬件自动完成变态过程</strong>，触发中断信号意味着操作系统将强行夺回CPU的使用权</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806172705391.png" alt="image-20220806172705391"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806172755699.png" alt="image-20220806172755699"></p>
+<ul>
+<li><p><strong>不同的中断信号，需要用不同的中断处理程序来处理。</strong>当CPU检测到中断信号后，会根据中断信号的类型去查询“<strong>中断向量表</strong>”，以此来找到相应的中断处理程序在内存中的存放位置。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806173055778.png" alt="image-20220806173055778"></p>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/Snipaste_2022-08-06_16-10-28.png" alt="Snipaste_2022-08-06_16-10-28"></p>
+<h1 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806174228278.png" alt="image-20220806174228278"></p>
+<ul>
+<li><p>操作系统作为用户和计算机硬件之间的接口，需要向上提供一些简单易用的服务。主要包括命令接口和程序接口。其中，程序接口由一组<strong>系统调用</strong>组成。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806174344900.png" alt="image-20220806174344900"></p>
+</li>
+<li><p>“系统调用”是操作系统提供给应用程序（程序员&#x2F;编程人员）使用的接口，可以理解为一种可供应用程序调用的特殊函数，<strong>应用程序可以通过系统调用来请求获得操作系统内核的服务</strong></p>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806174446993.png" alt="image-20220806174446993"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806174507152.png" alt="image-20220806174507152"></p>
+<ul>
+<li>应用程序通过<strong>系统调用</strong>请求操作系统的服务。而系统中的各种共享资源都由操作系统内核统一掌管，因此<strong>凡是与共享资源有关的操作（如存储分配、I&#x2F;O操作、文件管理等），都必须通过系统调用的方式向操作系统内核提出服务请求</strong>，由操作系统内核代为完成。这样<strong>可以保证系统的稳定性和安全性</strong>，防止用户进行非法操作。</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806174609798.png" alt="image-20220806174609798"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806173929506.png" alt="image-20220806173929506"></p>
+<ul>
+<li>传递系统调用参数—&gt;执行陷入指令（<strong>用户态</strong>）—&gt;执行相应的内请求核程序处理系统调用（<strong>核心态</strong>）—&gt;返回应用程序 </li>
+<li>注意<ol>
+<li><strong>陷入指令</strong>是在<strong>用户态</strong>执行的，执行陷入指令之后立即引发一个<strong>内中断</strong>，使CPU<strong>进入核心态</strong></li>
+<li><strong>发出系统调用请求</strong>是在<strong>用户态</strong>，而<strong>对系统调用的相应处理在核心态</strong>下进行</li>
+</ol>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806174206287.png" alt="image-20220806174206287"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/08/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E6%A6%82%E5%BF%B5/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2022/08/05/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9Amysql%E7%B4%A2%E5%BC%95/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">mysql索引</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2022
+        <i class="ri-heart-fill heart_icon"></i> Shiyu Yang
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Healer"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>
