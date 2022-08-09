@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>处理机调度 |  Healer</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Healer" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-操作系统：处理机调度"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+	
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  处理机调度
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/08/08/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E5%A4%84%E7%90%86%E6%9C%BA%E8%B0%83%E5%BA%A6/" class="article-date">
+  <time datetime="2022-08-08T07:10:15.000Z" itemprop="datePublished">2022-08-08</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">计算机基础知识</a> / <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">9 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="处理机调度的概念、层次"><a href="#处理机调度的概念、层次" class="headerlink" title="处理机调度的概念、层次"></a>处理机调度的概念、层次</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808151236283.png" alt="image-20220808151236283"></p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
+<li>当有一堆任务要处理，但由于资源有限，这些事情没法同时处理。这就需要确定<strong>某种规则</strong>来<strong>决定</strong>处理这些任务的<strong>顺序</strong>，这就是“调度”研究的问题。 </li>
+<li>在多道程序系统中，进程的数量往往是多于处理机的个数的，这样不可能同时并行地处理各个进程。<strong>处理机调度</strong>，就是从就绪队列中按照一定的算法选择一个进程并将处理机分配给它运行，以实现进程的并发执行。</li>
+</ul>
+<h2 id="处理机调度的三个层次"><a href="#处理机调度的三个层次" class="headerlink" title="处理机调度的三个层次"></a>处理机调度的三个层次</h2><h3 id="高级调度（作业调度）"><a href="#高级调度（作业调度）" class="headerlink" title="高级调度（作业调度）"></a>高级调度（作业调度）</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808192157610.png" alt="image-20220808192157610"></p>
+<ul>
+<li>由于内存空间有限，有时无法将用户提交的作业全部放入内存，因此就需要确定某种规则来决定将作业调入内存的顺序。 </li>
+<li><strong>高级调度（作业调度）</strong>。按一定的原则从外存上处于后备队列的作业中挑选一个（或多个）作业，给他们分配内存等必要资源，<strong>并建立相应的进程（建立PCB）</strong>，以使它（们）<strong>获得竞争处理机的权利</strong>。</li>
+<li>高级调度是辅存（外存）与内存之间的调度。每个作业只调入一次，调出一次。<strong>作业调入时会建立相应的PCB，作业调出时才撤销PCB</strong>。高级调度主要是指调入的问题，因为只有调入的时机需要操作系统来确定，但调出的时机必然是作业运行结束才调出。</li>
+</ul>
+<h3 id="中级调度（内存调度）"><a href="#中级调度（内存调度）" class="headerlink" title="中级调度（内存调度）"></a>中级调度（内存调度）</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808192322620.png" alt="image-20220808192322620"></p>
+<ul>
+<li>引入了虚拟存储技术之后，可将暂时不能运行的进程调至外存等待。等它重新具备了运行条件且内存又稍有空闲时，再重新调入内存。 </li>
+<li>这么做的目的是为了<strong>提高内存利用率和系统吞吐量</strong>。 </li>
+<li>暂时调到外存等待的进程状态为<strong>挂起状态</strong>。值得注意的是，<strong>PCB并不会一起调到外存，而是会常驻内存</strong>。PCB中会记录进程数据在外存中的存放位置，进程状态等信息，操作系统通过内存中的PCB来保持对各个进程的监控、管理。<strong>被挂起的进程PCB会被放到的挂起队列中</strong>。 </li>
+<li><strong>中级调度（内存调度），就是要决定将哪个处于挂起状态的进程重新调入内存。</strong></li>
+<li>一个进程可能会被多次调出、调入内存，因此<strong>中级调度发生的频率要比高级调度更高</strong>。</li>
+</ul>
+<h4 id="进程的挂起态与七状态模型"><a href="#进程的挂起态与七状态模型" class="headerlink" title="进程的挂起态与七状态模型"></a>进程的挂起态与七状态模型</h4><ul>
+<li><p>暂时调到外存等待的进程状态为<strong>挂起状态</strong>（挂起态，suspend） </p>
+</li>
+<li><p>挂起态又可以进一步细分为<strong>就绪挂起、阻塞挂起</strong>两种状态</p>
+</li>
+<li><p>五状态模型—&gt;七状态模型</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808192621967.png" alt="image-20220808192621967"></p>
+<p><strong>注意</strong>：“挂起”和“阻塞”的区别，两种状态都是暂时不能获得CPU的服务，但挂起态是将进程映像调到外存去了，而阻塞态下进程映像还在内存中。 有的操作系统会把就绪挂起、阻塞挂起分为两个挂起队列，甚至会根据阻塞原因不同再把阻塞挂起进程进一步细分为多个队列。</p>
+</li>
+</ul>
+<h3 id="低级调度（进程调度）"><a href="#低级调度（进程调度）" class="headerlink" title="低级调度（进程调度）"></a>低级调度（进程调度）</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808192731046.png" alt="image-20220808192731046"></p>
+<ul>
+<li><strong>低级调度（进程调度）</strong>，其主要任务是按照某种方法和策略<strong>从就绪队列中选取一个进程</strong>，将处理机分配给它。 </li>
+<li>进程调度是操作系统中<strong>最基本的一种调度</strong>，在一般的操作系统中都必须配置进程调度。 </li>
+<li>进程调度的<strong>频率很高</strong>，一般几十毫秒一次。</li>
+</ul>
+<h3 id="三种调度的对比"><a href="#三种调度的对比" class="headerlink" title="三种调度的对比"></a>三种调度的对比</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808192919564.png" alt="image-20220808192919564"></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808164047195.png" alt="image-20220808164047195"></p>
+<h1 id="进程调度的时机与调度方式"><a href="#进程调度的时机与调度方式" class="headerlink" title="进程调度的时机与调度方式"></a>进程调度的时机与调度方式</h1><h2 id="进程调度的时机"><a href="#进程调度的时机" class="headerlink" title="进程调度的时机"></a>进程调度的时机</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808193037768.png" alt="image-20220808193037768"></p>
+<blockquote>
+<p><strong>临界资源</strong>：一个时间段内只允许一个进程使用的资源。各进程需要互斥地访问临界资源。 </p>
+<p><strong>临界区</strong>：访问临界资源的那段代码。</p>
+<p><strong>内核程序临界区</strong>一般是用来访问某种内核数据结构的，比如进程的就绪队列（由各就绪进程的PCB组成）</p>
+<p>进程在操作系统内核程序临界区中不能进行调度与切换（√）</p>
+<p>解析：内核程序临界区访问的临界资源如果不尽快释放的话，极有可能影响到操作系统内核的其他管理工作。因此在访问内核程序临界区期间不能进行调度与切换</p>
+<p>进程处于临界区时不能进行处理机调度（×）</p>
+<p>解析：普通临界区访问的临界资源不会直接影响操作系统内核的管理工作。因此在访问普通临界区时可以进行调度与切换。</p>
+</blockquote>
+<h2 id="进程调度的方式"><a href="#进程调度的方式" class="headerlink" title="进程调度的方式"></a>进程调度的方式</h2><h3 id="非剥夺调度方式"><a href="#非剥夺调度方式" class="headerlink" title="非剥夺调度方式"></a>非剥夺调度方式</h3><ul>
+<li>又称<strong>非抢占方式</strong>。即，只<strong>允许进程主动放弃处理机</strong>。在运行过程中即便有更紧迫的任务到达，当前进程依然会继续使用处理机，直到该进程终止或主动要求进入阻塞态。</li>
+<li>实现简单，系统开销小但是无法及时处理紧急任务，适合于早期的批处理系统</li>
+</ul>
+<h3 id="剥夺调度方式"><a href="#剥夺调度方式" class="headerlink" title="剥夺调度方式"></a>剥夺调度方式</h3><ul>
+<li>又称<strong>抢占方式</strong>。当一个进程正在处理机上执行时，如果有一个<strong>更重要或更紧迫的进程需要使用处理机，则立即暂停正在执行的进程</strong>，将处理机分配给更重要紧迫的那个进程。</li>
+<li>可以优先处理更紧急的进程，也可实现让各进程按时间片轮流执行的功能（通过时钟中断）。适合于分时操作系统、实时操作系统</li>
+</ul>
+<h2 id="进程的切换与过程"><a href="#进程的切换与过程" class="headerlink" title="进程的切换与过程"></a>进程的切换与过程</h2><p>“狭义的进程调度”与“进程切换”的区别： </p>
+<ul>
+<li><p><strong>狭义的进程调度</strong>指的是<strong>从就绪队列中选中一个要运行的进程</strong>。（这个进程可以是<strong>刚刚被暂停执行的进程</strong>，也可能是<strong>另一个进程</strong>，后一种情况就需要进程切换） </p>
+</li>
+<li><p><strong>进程切换</strong>是指一个进程让出处理机，由另一个进程占用处理机的过程。 </p>
+</li>
+<li><p><strong>广义的进程调度</strong>包含了选择一个进程和进程切换两个步骤。</p>
+</li>
+</ul>
+<p>进程切换的过程主要完成了：</p>
+<ol>
+<li><p>对原来运行进程各种数据的保存</p>
+</li>
+<li><p>对新的进程各种数据的恢复（如：程序计数器、程序状态字、各种数据寄存器等处理机现场信息，这些信息一般保存在进程控制块）</p>
+</li>
+</ol>
+<p>注意：<strong>进程切换是有代价的</strong>，因此如果<strong>过于频繁</strong>的进行进程<strong>调度、切换</strong>，必然会使<strong>整个系统的效率降低</strong>，使系统大部分时间都花在了进程切换上，而真正用于执行进程的时间减少。</p>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808182459003.png" alt="image-20220808182459003"></p>
+<h1 id="调度算法的评价指标"><a href="#调度算法的评价指标" class="headerlink" title="调度算法的评价指标"></a>调度算法的评价指标</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808183003135.png" alt="image-20220808183003135"></p>
+<h1 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h1><h2 id="先来先服务（FCFS-First-Come-First-Serve）"><a href="#先来先服务（FCFS-First-Come-First-Serve）" class="headerlink" title="先来先服务（FCFS, First Come First Serve）"></a>先来先服务（FCFS, First Come First Serve）</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808194810823.png" alt="image-20220808194810823"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808194840929.png" alt="image-20220808194840929"></p>
+<h2 id="短作业优先（SJF-Shortest-Job-First）"><a href="#短作业优先（SJF-Shortest-Job-First）" class="headerlink" title="短作业优先（SJF, Shortest Job First）"></a>短作业优先（SJF, Shortest Job First）</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808194954027.png" alt="image-20220808194954027"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808195217511.png" alt="image-20220808195217511"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808195323448.png" alt="image-20220808195323448"></p>
+<p><strong>注意</strong>：</p>
+<ul>
+<li><strong>默认是非抢占式的</strong></li>
+</ul>
+<h2 id="高响应比优先（HRRN-Highest-Response-Ratio-Next）"><a href="#高响应比优先（HRRN-Highest-Response-Ratio-Next）" class="headerlink" title="高响应比优先（HRRN, Highest Response Ratio Next）"></a>高响应比优先（HRRN, Highest Response Ratio Next）</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808195623462.png" alt="image-20220808195623462"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808195639635.png" alt="image-20220808195639635"></p>
+<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808195730956.png" alt="image-20220808195730956"></p>
+<p><strong>注</strong>：这几种算法主要关心对用户的公平性、平均周转时间、平均等待时间等评价系统整体性能的指标，但是<strong>不关心“响应时间”</strong>，也并<strong>不区分任务的紧急程度</strong>，因此对于用户来说，交互性很糟糕。因此这三种算法一般适合用于<strong>早期的批处理系统</strong>，当然，FCFS算法也常结合其他的算法使用，在现在也扮演着很重要的角色。</p>
+<h2 id="时间片轮转（RR）"><a href="#时间片轮转（RR）" class="headerlink" title="时间片轮转（RR）"></a>时间片轮转（RR）</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808185854769.png" alt="image-20220808185854769"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808185438210.png" alt="image-20220808185438210"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808185506621.png" alt="image-20220808185506621"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808185525659.png" alt="image-20220808185525659"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808185942892.png" alt="image-20220808185942892"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808185616448.png" alt="image-20220808185616448"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808185701771.png" alt="image-20220808185701771"></p>
+<p><strong>注意</strong></p>
+<ul>
+<li><p>每次选择上的处理机的进程都是排在就绪队列队头的进程</p>
+</li>
+<li><p>一个进程执行完会移动到就绪队列的尾部</p>
+</li>
+<li><p>一个进程时间片到，刚下处理机要移至就绪队列的尾部的同时有一个新进程到达就绪队列，则新进程先到达就绪队列的尾部</p>
+</li>
+<li><p>如果时间片太大，使得每个进程都可以在一个时间片内就完成，则时间斤轮转调度昇宏退化八尤木先服务调度算法，并且会增大进程响应时间。因此时间片不能太大。</p>
+</li>
+<li><p>另一方面，进程调度、切换是有时间代价的（保存、恢复运行坯境)，因此如果时间片太小，过于致进程切换过于频繁，系统会花大量的时间来处理进程切换，从导致头际用于进在执行的时间比例减少。可见时间片也不能太小。</p>
+</li>
+</ul>
+<h2 id="优先级调度"><a href="#优先级调度" class="headerlink" title="优先级调度"></a>优先级调度</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808190928540.png" alt="image-20220808190928540"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808190253225.png" alt="image-20220808190253225"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808190410056.png" alt="image-20220808190410056"></p>
+<p><strong>补充</strong>:</p>
+<ul>
+<li>就绪队列未必只有一个，可以按照不同优先级来组织。另外，也可以把优先级高的进程排在更靠近队头的位置</li>
+<li>根据优先级是否可以动态改变，可将优先级分为<strong>静态优先级和动态优先级</strong>两种</li>
+<li><strong>静态优先级</strong>：创建进程时确定，之后一直不变。</li>
+<li><strong>动态优先级</strong>：创建进程时有一个初始值，之后会根据情况动态地调整优先级。</li>
+</ul>
+<p><strong>如何合理地设置各类进程的优先级?</strong></p>
+<p>通常:</p>
+<ul>
+<li>系统进程优先级<strong>高于</strong>用户进程</li>
+<li>前台进程优先级<strong>高于</strong>后台进程</li>
+<li>操作系统更<strong>偏好l&#x2F;O型进程（或称l&#x2F;O繁忙型进程)</strong><ul>
+<li>I&#x2F;O设备和CPU可以并行工作。如果优先计I&#x2F;O繁忙型进程优先运行的话，则越有可能让l&#x2F;O设备尽早地投入工作，则资源利用率、系统吞吐量都会得到提升</li>
+</ul>
+</li>
+</ul>
+<p>注：与I&#x2F;O型进程相对的是计算型进程（或称CPU繁忙型进程)</p>
+<p><strong>如果采用的是动态优先级，什么时候应该调整?</strong></p>
+<ul>
+<li>可以从追求公平、提升资源利用率等角度考虑</li>
+<li>如果某进程在就绪队列中等待了很长时间，则可以适当提开其优先级</li>
+<li>如果某进程占用处理机运行了很长时间，则可适当降低其优先级</li>
+<li>如果发现一个进程频繁地进行l&#x2F;O操作，则可适当提升其优先级</li>
+</ul>
+<h2 id="多级反馈队列调度"><a href="#多级反馈队列调度" class="headerlink" title="多级反馈队列调度"></a>多级反馈队列调度</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808191644049.png" alt="image-20220808191644049"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808191458029.png" alt="image-20220808191458029"></p>
+<h2 id="对比-1"><a href="#对比-1" class="headerlink" title="对比"></a>对比</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808191742245.png" alt="image-20220808191742245"></p>
+<p><strong>注</strong>：比起早期的批处理操作系统来说，由于计算机造价大幅降低，因此之后出现的交互式操作系统（包括分时操作系统、实时操作系统等）更注重系统的响应时间、公平性、平衡性等指标。而这几种算法恰好也能较好地满足<strong>交互式系统</strong>的需求。因此这三种算法适合用于交互式系统。(比如UNIX使用的就是多级反馈队列调度算法)</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/08/08/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E5%A4%84%E7%90%86%E6%9C%BA%E8%B0%83%E5%BA%A6/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/08/08/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5%E3%80%81%E4%BA%92%E6%96%A5/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            进程同步、互斥
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/08/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">进程与线程</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2022
+        <i class="ri-heart-fill heart_icon"></i> Shiyu Yang
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Healer"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

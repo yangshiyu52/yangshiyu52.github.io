@@ -10146,4 +10146,492 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
         <category>操作系统</category>
       </categories>
   </entry>
+  <entry>
+    <title>处理机调度</title>
+    <url>/2022/08/08/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E5%A4%84%E7%90%86%E6%9C%BA%E8%B0%83%E5%BA%A6/</url>
+    <content><![CDATA[<h1 id="处理机调度的概念、层次"><a href="#处理机调度的概念、层次" class="headerlink" title="处理机调度的概念、层次"></a>处理机调度的概念、层次</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808151236283.png" alt="image-20220808151236283"></p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
+<li>当有一堆任务要处理，但由于资源有限，这些事情没法同时处理。这就需要确定<strong>某种规则</strong>来<strong>决定</strong>处理这些任务的<strong>顺序</strong>，这就是“调度”研究的问题。 </li>
+<li>在多道程序系统中，进程的数量往往是多于处理机的个数的，这样不可能同时并行地处理各个进程。<strong>处理机调度</strong>，就是从就绪队列中按照一定的算法选择一个进程并将处理机分配给它运行，以实现进程的并发执行。</li>
+</ul>
+<h2 id="处理机调度的三个层次"><a href="#处理机调度的三个层次" class="headerlink" title="处理机调度的三个层次"></a>处理机调度的三个层次</h2><h3 id="高级调度（作业调度）"><a href="#高级调度（作业调度）" class="headerlink" title="高级调度（作业调度）"></a>高级调度（作业调度）</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808192157610.png" alt="image-20220808192157610"></p>
+<ul>
+<li>由于内存空间有限，有时无法将用户提交的作业全部放入内存，因此就需要确定某种规则来决定将作业调入内存的顺序。 </li>
+<li><strong>高级调度（作业调度）</strong>。按一定的原则从外存上处于后备队列的作业中挑选一个（或多个）作业，给他们分配内存等必要资源，<strong>并建立相应的进程（建立PCB）</strong>，以使它（们）<strong>获得竞争处理机的权利</strong>。</li>
+<li>高级调度是辅存（外存）与内存之间的调度。每个作业只调入一次，调出一次。<strong>作业调入时会建立相应的PCB，作业调出时才撤销PCB</strong>。高级调度主要是指调入的问题，因为只有调入的时机需要操作系统来确定，但调出的时机必然是作业运行结束才调出。</li>
+</ul>
+<h3 id="中级调度（内存调度）"><a href="#中级调度（内存调度）" class="headerlink" title="中级调度（内存调度）"></a>中级调度（内存调度）</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808192322620.png" alt="image-20220808192322620"></p>
+<ul>
+<li>引入了虚拟存储技术之后，可将暂时不能运行的进程调至外存等待。等它重新具备了运行条件且内存又稍有空闲时，再重新调入内存。 </li>
+<li>这么做的目的是为了<strong>提高内存利用率和系统吞吐量</strong>。 </li>
+<li>暂时调到外存等待的进程状态为<strong>挂起状态</strong>。值得注意的是，<strong>PCB并不会一起调到外存，而是会常驻内存</strong>。PCB中会记录进程数据在外存中的存放位置，进程状态等信息，操作系统通过内存中的PCB来保持对各个进程的监控、管理。<strong>被挂起的进程PCB会被放到的挂起队列中</strong>。 </li>
+<li><strong>中级调度（内存调度），就是要决定将哪个处于挂起状态的进程重新调入内存。</strong></li>
+<li>一个进程可能会被多次调出、调入内存，因此<strong>中级调度发生的频率要比高级调度更高</strong>。</li>
+</ul>
+<h4 id="进程的挂起态与七状态模型"><a href="#进程的挂起态与七状态模型" class="headerlink" title="进程的挂起态与七状态模型"></a>进程的挂起态与七状态模型</h4><ul>
+<li><p>暂时调到外存等待的进程状态为<strong>挂起状态</strong>（挂起态，suspend） </p>
+</li>
+<li><p>挂起态又可以进一步细分为<strong>就绪挂起、阻塞挂起</strong>两种状态</p>
+</li>
+<li><p>五状态模型—&gt;七状态模型</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808192621967.png" alt="image-20220808192621967"></p>
+<p><strong>注意</strong>：“挂起”和“阻塞”的区别，两种状态都是暂时不能获得CPU的服务，但挂起态是将进程映像调到外存去了，而阻塞态下进程映像还在内存中。 有的操作系统会把就绪挂起、阻塞挂起分为两个挂起队列，甚至会根据阻塞原因不同再把阻塞挂起进程进一步细分为多个队列。</p>
+</li>
+</ul>
+<h3 id="低级调度（进程调度）"><a href="#低级调度（进程调度）" class="headerlink" title="低级调度（进程调度）"></a>低级调度（进程调度）</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808192731046.png" alt="image-20220808192731046"></p>
+<ul>
+<li><strong>低级调度（进程调度）</strong>，其主要任务是按照某种方法和策略<strong>从就绪队列中选取一个进程</strong>，将处理机分配给它。 </li>
+<li>进程调度是操作系统中<strong>最基本的一种调度</strong>，在一般的操作系统中都必须配置进程调度。 </li>
+<li>进程调度的<strong>频率很高</strong>，一般几十毫秒一次。</li>
+</ul>
+<h3 id="三种调度的对比"><a href="#三种调度的对比" class="headerlink" title="三种调度的对比"></a>三种调度的对比</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808192919564.png" alt="image-20220808192919564"></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808164047195.png" alt="image-20220808164047195"></p>
+<h1 id="进程调度的时机与调度方式"><a href="#进程调度的时机与调度方式" class="headerlink" title="进程调度的时机与调度方式"></a>进程调度的时机与调度方式</h1><h2 id="进程调度的时机"><a href="#进程调度的时机" class="headerlink" title="进程调度的时机"></a>进程调度的时机</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808193037768.png" alt="image-20220808193037768"></p>
+<blockquote>
+<p><strong>临界资源</strong>：一个时间段内只允许一个进程使用的资源。各进程需要互斥地访问临界资源。 </p>
+<p><strong>临界区</strong>：访问临界资源的那段代码。</p>
+<p><strong>内核程序临界区</strong>一般是用来访问某种内核数据结构的，比如进程的就绪队列（由各就绪进程的PCB组成）</p>
+<p>进程在操作系统内核程序临界区中不能进行调度与切换（√）</p>
+<p>解析：内核程序临界区访问的临界资源如果不尽快释放的话，极有可能影响到操作系统内核的其他管理工作。因此在访问内核程序临界区期间不能进行调度与切换</p>
+<p>进程处于临界区时不能进行处理机调度（×）</p>
+<p>解析：普通临界区访问的临界资源不会直接影响操作系统内核的管理工作。因此在访问普通临界区时可以进行调度与切换。</p>
+</blockquote>
+<h2 id="进程调度的方式"><a href="#进程调度的方式" class="headerlink" title="进程调度的方式"></a>进程调度的方式</h2><h3 id="非剥夺调度方式"><a href="#非剥夺调度方式" class="headerlink" title="非剥夺调度方式"></a>非剥夺调度方式</h3><ul>
+<li>又称<strong>非抢占方式</strong>。即，只<strong>允许进程主动放弃处理机</strong>。在运行过程中即便有更紧迫的任务到达，当前进程依然会继续使用处理机，直到该进程终止或主动要求进入阻塞态。</li>
+<li>实现简单，系统开销小但是无法及时处理紧急任务，适合于早期的批处理系统</li>
+</ul>
+<h3 id="剥夺调度方式"><a href="#剥夺调度方式" class="headerlink" title="剥夺调度方式"></a>剥夺调度方式</h3><ul>
+<li>又称<strong>抢占方式</strong>。当一个进程正在处理机上执行时，如果有一个<strong>更重要或更紧迫的进程需要使用处理机，则立即暂停正在执行的进程</strong>，将处理机分配给更重要紧迫的那个进程。</li>
+<li>可以优先处理更紧急的进程，也可实现让各进程按时间片轮流执行的功能（通过时钟中断）。适合于分时操作系统、实时操作系统</li>
+</ul>
+<h2 id="进程的切换与过程"><a href="#进程的切换与过程" class="headerlink" title="进程的切换与过程"></a>进程的切换与过程</h2><p>“狭义的进程调度”与“进程切换”的区别： </p>
+<ul>
+<li><p><strong>狭义的进程调度</strong>指的是<strong>从就绪队列中选中一个要运行的进程</strong>。（这个进程可以是<strong>刚刚被暂停执行的进程</strong>，也可能是<strong>另一个进程</strong>，后一种情况就需要进程切换） </p>
+</li>
+<li><p><strong>进程切换</strong>是指一个进程让出处理机，由另一个进程占用处理机的过程。 </p>
+</li>
+<li><p><strong>广义的进程调度</strong>包含了选择一个进程和进程切换两个步骤。</p>
+</li>
+</ul>
+<p>进程切换的过程主要完成了：</p>
+<ol>
+<li><p>对原来运行进程各种数据的保存</p>
+</li>
+<li><p>对新的进程各种数据的恢复（如：程序计数器、程序状态字、各种数据寄存器等处理机现场信息，这些信息一般保存在进程控制块）</p>
+</li>
+</ol>
+<p>注意：<strong>进程切换是有代价的</strong>，因此如果<strong>过于频繁</strong>的进行进程<strong>调度、切换</strong>，必然会使<strong>整个系统的效率降低</strong>，使系统大部分时间都花在了进程切换上，而真正用于执行进程的时间减少。</p>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808182459003.png" alt="image-20220808182459003"></p>
+<h1 id="调度算法的评价指标"><a href="#调度算法的评价指标" class="headerlink" title="调度算法的评价指标"></a>调度算法的评价指标</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808183003135.png" alt="image-20220808183003135"></p>
+<h1 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h1><h2 id="先来先服务（FCFS-First-Come-First-Serve）"><a href="#先来先服务（FCFS-First-Come-First-Serve）" class="headerlink" title="先来先服务（FCFS, First Come First Serve）"></a>先来先服务（FCFS, First Come First Serve）</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808194810823.png" alt="image-20220808194810823"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808194840929.png" alt="image-20220808194840929"></p>
+<h2 id="短作业优先（SJF-Shortest-Job-First）"><a href="#短作业优先（SJF-Shortest-Job-First）" class="headerlink" title="短作业优先（SJF, Shortest Job First）"></a>短作业优先（SJF, Shortest Job First）</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808194954027.png" alt="image-20220808194954027"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808195217511.png" alt="image-20220808195217511"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808195323448.png" alt="image-20220808195323448"></p>
+<p><strong>注意</strong>：</p>
+<ul>
+<li><strong>默认是非抢占式的</strong></li>
+</ul>
+<h2 id="高响应比优先（HRRN-Highest-Response-Ratio-Next）"><a href="#高响应比优先（HRRN-Highest-Response-Ratio-Next）" class="headerlink" title="高响应比优先（HRRN, Highest Response Ratio Next）"></a>高响应比优先（HRRN, Highest Response Ratio Next）</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808195623462.png" alt="image-20220808195623462"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808195639635.png" alt="image-20220808195639635"></p>
+<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808195730956.png" alt="image-20220808195730956"></p>
+<p><strong>注</strong>：这几种算法主要关心对用户的公平性、平均周转时间、平均等待时间等评价系统整体性能的指标，但是<strong>不关心“响应时间”</strong>，也并<strong>不区分任务的紧急程度</strong>，因此对于用户来说，交互性很糟糕。因此这三种算法一般适合用于<strong>早期的批处理系统</strong>，当然，FCFS算法也常结合其他的算法使用，在现在也扮演着很重要的角色。</p>
+<h2 id="时间片轮转（RR）"><a href="#时间片轮转（RR）" class="headerlink" title="时间片轮转（RR）"></a>时间片轮转（RR）</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808185854769.png" alt="image-20220808185854769"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808185438210.png" alt="image-20220808185438210"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808185506621.png" alt="image-20220808185506621"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808185525659.png" alt="image-20220808185525659"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808185942892.png" alt="image-20220808185942892"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808185616448.png" alt="image-20220808185616448"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808185701771.png" alt="image-20220808185701771"></p>
+<p><strong>注意</strong></p>
+<ul>
+<li><p>每次选择上的处理机的进程都是排在就绪队列队头的进程</p>
+</li>
+<li><p>一个进程执行完会移动到就绪队列的尾部</p>
+</li>
+<li><p>一个进程时间片到，刚下处理机要移至就绪队列的尾部的同时有一个新进程到达就绪队列，则新进程先到达就绪队列的尾部</p>
+</li>
+<li><p>如果时间片太大，使得每个进程都可以在一个时间片内就完成，则时间斤轮转调度昇宏退化八尤木先服务调度算法，并且会增大进程响应时间。因此时间片不能太大。</p>
+</li>
+<li><p>另一方面，进程调度、切换是有时间代价的（保存、恢复运行坯境)，因此如果时间片太小，过于致进程切换过于频繁，系统会花大量的时间来处理进程切换，从导致头际用于进在执行的时间比例减少。可见时间片也不能太小。</p>
+</li>
+</ul>
+<h2 id="优先级调度"><a href="#优先级调度" class="headerlink" title="优先级调度"></a>优先级调度</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808190928540.png" alt="image-20220808190928540"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808190253225.png" alt="image-20220808190253225"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808190410056.png" alt="image-20220808190410056"></p>
+<p><strong>补充</strong>:</p>
+<ul>
+<li>就绪队列未必只有一个，可以按照不同优先级来组织。另外，也可以把优先级高的进程排在更靠近队头的位置</li>
+<li>根据优先级是否可以动态改变，可将优先级分为<strong>静态优先级和动态优先级</strong>两种</li>
+<li><strong>静态优先级</strong>：创建进程时确定，之后一直不变。</li>
+<li><strong>动态优先级</strong>：创建进程时有一个初始值，之后会根据情况动态地调整优先级。</li>
+</ul>
+<p><strong>如何合理地设置各类进程的优先级?</strong></p>
+<p>通常:</p>
+<ul>
+<li>系统进程优先级<strong>高于</strong>用户进程</li>
+<li>前台进程优先级<strong>高于</strong>后台进程</li>
+<li>操作系统更<strong>偏好l&#x2F;O型进程（或称l&#x2F;O繁忙型进程)</strong><ul>
+<li>I&#x2F;O设备和CPU可以并行工作。如果优先计I&#x2F;O繁忙型进程优先运行的话，则越有可能让l&#x2F;O设备尽早地投入工作，则资源利用率、系统吞吐量都会得到提升</li>
+</ul>
+</li>
+</ul>
+<p>注：与I&#x2F;O型进程相对的是计算型进程（或称CPU繁忙型进程)</p>
+<p><strong>如果采用的是动态优先级，什么时候应该调整?</strong></p>
+<ul>
+<li>可以从追求公平、提升资源利用率等角度考虑</li>
+<li>如果某进程在就绪队列中等待了很长时间，则可以适当提开其优先级</li>
+<li>如果某进程占用处理机运行了很长时间，则可适当降低其优先级</li>
+<li>如果发现一个进程频繁地进行l&#x2F;O操作，则可适当提升其优先级</li>
+</ul>
+<h2 id="多级反馈队列调度"><a href="#多级反馈队列调度" class="headerlink" title="多级反馈队列调度"></a>多级反馈队列调度</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808191644049.png" alt="image-20220808191644049"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808191458029.png" alt="image-20220808191458029"></p>
+<h2 id="对比-1"><a href="#对比-1" class="headerlink" title="对比"></a>对比</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808191742245.png" alt="image-20220808191742245"></p>
+<p><strong>注</strong>：比起早期的批处理操作系统来说，由于计算机造价大幅降低，因此之后出现的交互式操作系统（包括分时操作系统、实时操作系统等）更注重系统的响应时间、公平性、平衡性等指标。而这几种算法恰好也能较好地满足<strong>交互式系统</strong>的需求。因此这三种算法适合用于交互式系统。(比如UNIX使用的就是多级反馈队列调度算法)</p>
+]]></content>
+      <categories>
+        <category>计算机基础知识</category>
+        <category>操作系统</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>进程与线程</title>
+    <url>/2022/08/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</url>
+    <content><![CDATA[<h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806192727406.png" alt="image-20220806192727406"></p>
+<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ul>
+<li><p>程序：是<strong>静态</strong>的，就是个存放在磁盘里的可执行文件，就是一系列的指令集合。 </p>
+</li>
+<li><p>进程（Process）：是<strong>动态</strong>的，是程序的一次执行过程</p>
+</li>
+<li><p>进程是进程实体的运行过程，是系统进行资源分配的一个基本单位</p>
+</li>
+</ul>
+<h2 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806192949432.png" alt="image-20220806192949432"></p>
+<ul>
+<li>PCB 是给操作系统用的。 </li>
+<li>程序段、数据段是给进程自己用的。</li>
+</ul>
+<h3 id="PCB"><a href="#PCB" class="headerlink" title="PCB"></a>PCB</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806193448092.png" alt="image-20220806193448092"></p>
+<ul>
+<li><p>程序段、数据段、PCB三部分组成了进程实体</p>
+</li>
+<li><p>当进程被创建时，操作系统会为该进程分配一个唯一的、不重复的“身份证号”—— PID（Process ID，进程ID）</p>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806193256006.png" alt="image-20220806193256006"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806193336218.png" alt="image-20220806193336218"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806193612001.png" alt="image-20220806193612001"></p>
+<h2 id="组织"><a href="#组织" class="headerlink" title="组织"></a>组织</h2><ul>
+<li>在一个系统中，通常有数十、数百乃至数千个PCB。为了能对他们加以有效的管理，应该用适当的方式把这些PCB组织起来。</li>
+<li>进程的组成讨论的是一个进程内部由哪些部分构成的问题，而进程的组织讨论的是多个进程之间的组织方式问题</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806194816605.png" alt="image-20220806194816605"></p>
+<h3 id="链接方式"><a href="#链接方式" class="headerlink" title="链接方式"></a>链接方式</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806194716057.png" alt="image-20220806194716057"></p>
+<h3 id="索引方式"><a href="#索引方式" class="headerlink" title="索引方式"></a>索引方式</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806194747158.png" alt="image-20220806194747158"></p>
+<h2 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806194448453.png" alt="image-20220806194448453"></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/Snipaste_2022-08-06_19-17-58.png" alt="Snipaste_2022-08-06_19-17-58"></p>
+<h1 id="进程状态及转换"><a href="#进程状态及转换" class="headerlink" title="进程状态及转换"></a>进程状态及转换</h1><h2 id="三种基本状态"><a href="#三种基本状态" class="headerlink" title="三种基本状态"></a>三种基本状态</h2><ul>
+<li>进程是程序的一次执行。在这个执行过程中，有时进程正在被CPU处理，有时又需要等待CPU服务，可见，进程的状态是会有各种变化。为了方便对各个进程的管理，操作系统需要将进程合理地划分为几种状态。</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/2021050614465518.png" alt="img"></p>
+<p><strong>注意</strong>:单核处理机环境下，每时刻最多只有一个进程处于运行态。(双核环境下可以同时有两个进程处于运行态)</p>
+<p>进程已经拥有了除处理机之外所有需要的资源，一旦获得处理机，即可立即进入运行态开始运行。即:万事俱备，只欠CPU</p>
+<p>如:等待操作系统分配打印机、等待读磁盘操作的结果。CPU是计算机中最昂贵的部件，为了提高CPU的利用率，需要先将其他进程需要的资源分配到位，才能得到CPU的服务</p>
+<h2 id="另外两种状态"><a href="#另外两种状态" class="headerlink" title="另外两种状态"></a>另外两种状态</h2><ul>
+<li><p>操作系统需要完成创建进程。操作系统为该进程分配所需的内存空间等系统资源，并为其创建、初始化PCB (如:为进程分配PID)</p>
+</li>
+<li><p>进程运行结束(或者由于bug导致进程无法继续执行下去，比如数组越界错误)，需要撤销进程。</p>
+<blockquote>
+<p>操作系统需要完成撤销进程相关的工作。完成将分配给进程的资源回收，撤销进程PCB等工作</p>
+</blockquote>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20210506144707756.png" alt="img"></p>
+<h2 id="进程状态的转换"><a href="#进程状态的转换" class="headerlink" title="进程状态的转换"></a>进程状态的转换</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806192443300.png" alt="image-20220806192443300"></p>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220806192617241.png" alt="image-20220806192617241"></p>
+<h1 id="进程控制"><a href="#进程控制" class="headerlink" title="进程控制"></a>进程控制</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808140542016.png" alt="image-20220808140542016"></p>
+<h2 id="什么是进程控制"><a href="#什么是进程控制" class="headerlink" title="什么是进程控制"></a>什么是进程控制</h2><ul>
+<li>进程控制就是要<strong>实现进程状态的转换</strong></li>
+</ul>
+<h2 id="如何实现进程控制"><a href="#如何实现进程控制" class="headerlink" title="如何实现进程控制"></a>如何实现进程控制</h2><ul>
+<li>原语是一种特殊的程序，它的执行具有<strong>原子性</strong>。也就是说，这段程序的运行必须<strong>一气呵成</strong>，不可中断。</li>
+<li>为何进程控制（状态转换）的过程要“一气呵成”？<ul>
+<li>如果不能“一气呵成”，就有可能导致操作系统中的某些关键数据结构信息不统一的情况， 这会影响操作系统进行别的管理工作。比如：将一个进程从阻塞 队列添加到就绪队列时，修改阻塞队列中此进程的状态为就绪态之后，应当将其从阻塞队列移 至就绪队列，如果不是一气呵成，可能出现状态为就绪态，但仍处于阻塞队列的情况。</li>
+</ul>
+</li>
+</ul>
+<h2 id="如何实现原语的“原子性”"><a href="#如何实现原语的“原子性”" class="headerlink" title="如何实现原语的“原子性”"></a>如何实现原语的“原子性”</h2><ul>
+<li>用“<strong>关中断指令”和“开中断指令</strong>”这两个<strong>特权指令</strong>实现原子性</li>
+</ul>
+<p>  <img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808141341956.png" alt="image-20220808141341956"></p>
+<ul>
+<li>正常情况：CPU每执行完一条指令都会例行检查是否有中断信号需要处理，如果有， 则暂停运行当前这段程序，转而执行相应的中断处理程序。</li>
+<li>CPU执行了<strong>关中断指令</strong>之后，就<strong>不再例行检查中断信号</strong>，直到执行<strong>开中断指令</strong>之后才会恢复检查。 这样，关中断、开中断 之间的这些指令序 列就是不可被中断的，这就实现了“原子性“</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808143256314.png" alt="image-20220808143256314"></p>
+<h2 id="进程控制相关的原语"><a href="#进程控制相关的原语" class="headerlink" title="进程控制相关的原语"></a>进程控制相关的原语</h2><p>无论哪种原语实现进程控制，所要做的事情有三类：</p>
+<ol>
+<li><p>更新PCB中的信息</p>
+<ul>
+<li>所有的进程控制原语一定都会<strong>修改进程状态标志</strong></li>
+<li>剥夺当前运行进程的CPU使用权必然需要<strong>保存其运行环境</strong></li>
+<li>某进程开始运行前必然要<strong>恢复其之前的运行环境</strong></li>
+</ul>
+</li>
+<li><p>将PCB插入到合适的队列</p>
+</li>
+<li><p>分配&#x2F;回收资源</p>
+</li>
+</ol>
+<h3 id="进程的创建"><a href="#进程的创建" class="headerlink" title="进程的创建"></a>进程的创建</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808142005380.png" alt="image-20220808142005380"></p>
+<h3 id="进程的终止"><a href="#进程的终止" class="headerlink" title="进程的终止"></a>进程的终止</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808142117057.png" alt="image-20220808142117057"></p>
+<h3 id="进程的阻塞和唤醒"><a href="#进程的阻塞和唤醒" class="headerlink" title="进程的阻塞和唤醒"></a>进程的阻塞和唤醒</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808142200816.png" alt="image-20220808142200816"></p>
+<h3 id="进程的切换"><a href="#进程的切换" class="headerlink" title="进程的切换"></a>进程的切换</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808142308820.png" alt="image-20220808142308820"></p>
+<h3 id="程序是如何运行的"><a href="#程序是如何运行的" class="headerlink" title="程序是如何运行的"></a>程序是如何运行的</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808142423382.png" alt="image-20220808142423382"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808142509573.png" alt="image-20220808142509573"></p>
+<blockquote>
+<p>问题：执行完指令2后，另一个进程开始上CPU运行。 之后还怎么切换回之前的进程？？？？</p>
+<p>注意：另一个进程在运行过程中也会使用各个寄存器</p>
+</blockquote>
+<p>解决办法：在进程切换时先<strong>在PCB中保存这个进程的运行环境</strong>（保存一些必要的寄存器信息），如：PSW：xxxxx，PC：指令4的地址，通用寄存器：2。当原来的进程再次投入运行时，可以通过PCB恢复它的运行环境</p>
+<h2 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808143148091.png" alt="image-20220808143148091"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808133646367.png" alt="image-20220808133646367"></p>
+<h1 id="进程通信"><a href="#进程通信" class="headerlink" title="进程通信"></a>进程通信</h1><h2 id="什么是进程通信"><a href="#什么是进程通信" class="headerlink" title="什么是进程通信"></a>什么是进程通信</h2><ul>
+<li>进程通信就是指<strong>进程之间的信息交换</strong>。 </li>
+<li>进程是分配系统资源的单位（包括内存地址空间），因此各进程拥有的<strong>内存地址空间相互独立</strong>。 </li>
+<li>为了保证安全，<strong>一个进程不能直接访问另一个进程的地址空间</strong>。 但是进程之间的信息交换又是必须实现的。为了保证进程间的安全通信，操作系统提供了一些方法。</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808143558825.png" alt="image-20220808143558825"></p>
+<h2 id="进程通信的方法"><a href="#进程通信的方法" class="headerlink" title="进程通信的方法"></a>进程通信的方法</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808143421017.png" alt="image-20220808143421017"></p>
+<h3 id="共享存储"><a href="#共享存储" class="headerlink" title="共享存储"></a>共享存储</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808143756732.png" alt="image-20220808143756732"></p>
+<ul>
+<li>两个进程对共享空间的<strong>访问</strong>必须是<strong>互斥</strong>的（互斥访问通过操 作系统提供的工具实现）。 </li>
+<li>操作系统只负责提供共享空间和同步互斥工具（如P、V操作）</li>
+<li><strong>基于数据结构的共享</strong>：比如共享空间里只能放一个长度为10的数组。这种共享方式速度慢、限制多，是一种低级通信方式 </li>
+<li><strong>基于存储区的共享</strong>：在内存中画出一块共享存储区，数据的形式、存放位置都由进程控制， 而不是操作系统。相比之下，这种共享方式速度更快，是一种高级通信方式。</li>
+</ul>
+<h3 id="管道通信"><a href="#管道通信" class="headerlink" title="管道通信"></a>管道通信</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808143927646.png" alt="image-20220808143927646"></p>
+<ol>
+<li><p>管道只能采用<strong>半双工通信</strong>，某一时间段内只能实现单向的传输。如果要实现双向同时通信，则需要设置两个管道。</p>
+</li>
+<li><p>各进程要<strong>互斥</strong>地访问管道。</p>
+</li>
+<li><p>数据以字符流的形式写入管道，当<strong>管道写满</strong>时，<strong>写进程</strong>的write()系统调用将被<strong>阻塞</strong>，等待读进程将数据取走。当读进程将数据全部取走后，<strong>管道变空</strong>，此时<strong>读进程</strong>的read()系统调用将被<strong>阻塞</strong>。</p>
+</li>
+<li><p><strong>如果没写满，就不允许读。如果没读空，就不允许写</strong>。</p>
+</li>
+<li><p>数据一旦被读出，就从管道中被抛弃，这就意味着<strong>读进程最多只能有一个</strong>，否则可能会有读错数据的情况。</p>
+</li>
+</ol>
+<h3 id="消息传递"><a href="#消息传递" class="headerlink" title="消息传递"></a>消息传递</h3><ul>
+<li>进程间的数据交换以<strong>格式化的消息（Message）</strong>为单位。进程通过操作系统提供的“发送消息&#x2F;接收消息”两个<strong>原语</strong>进行数据交换。</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808144256924.png" alt="image-20220808144256924"></p>
+<h2 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808144420304.png" alt="image-20220808144420304"></p>
+<h1 id="线程、多线程"><a href="#线程、多线程" class="headerlink" title="线程、多线程"></a>线程、多线程</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808134955750.png" alt="image-20220808134955750"></p>
+<h2 id="什么是线程"><a href="#什么是线程" class="headerlink" title="什么是线程"></a>什么是线程</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808144751311.png" alt="image-20220808144751311"></p>
+<h2 id="线程的特性和优点"><a href="#线程的特性和优点" class="headerlink" title="线程的特性和优点"></a>线程的特性和优点</h2><ul>
+<li>进程间并发，开销很大；线程间并发，开销更小 </li>
+<li><strong>引入线程机制后，并发带来的系统开销降低，系统并发性提升</strong> </li>
+<li>当切换进程时，需要保存&#x2F;恢复进程运行 环境，还需要切换内 存地址空间（更新快表、更新缓存）</li>
+<li>同一进程内的各个线程间并发，不需要切换进程运行环 境和内存地址空间，省时省力</li>
+<li>注意：从属于不同进程的线程间切换，也会导致进程的切换！开销也大！</li>
+<li>从属同一进程的各个线程共享进程拥有的资源。</li>
+<li><strong>引入线程前</strong>，<strong>进程</strong>既是<strong>资源分配</strong>的基本单位，也是<strong>调度</strong>的基本单位。</li>
+<li><strong>引入线程后</strong>，<strong>进程</strong>是<strong>资源分配</strong>的基本单位，<strong>线程</strong>是<strong>调度</strong>的基本单位。</li>
+<li>线程也有运行态、就绪态、阻塞态 </li>
+<li>在<strong>多CPU环境</strong>下，<strong>各个线程</strong>也可以分派到不同的CPU上<strong>并行</strong>地执行。 </li>
+<li>引入线程后，进程是资源分配的基本单位。而<strong>线程几乎不拥有资源</strong>，只拥有极少量的资源（线程控制块TCB、寄存器信息、堆栈等）</li>
+<li>传统的进程是程序 执行流的最小单位；引入线程后，线程成为了程序执行流的最小单位</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808135349863.png" alt="image-20220808135349863"></p>
+<h2 id="为什么要引入线程"><a href="#为什么要引入线程" class="headerlink" title="为什么要引入线程"></a>为什么要引入线程</h2><ul>
+<li>可以把线程理解为“轻量级进程”。 </li>
+<li>线程是一个基本的CPU执行单元，也是程序执行流的最小单位。 </li>
+<li>引入线程之后，不仅是进程之间可以并发，进程内的各线程之间也可以并发，从而进一步提升了系统的并发度，使得一个进程内也可以并发处理各种任务（如QQ视频、文字聊天、传文件） </li>
+<li>引入线程后，进程只作为除CPU之外的系统资源的分配单元（如打印机、内存地址空间等都是分配给进程的）。 </li>
+<li>线程则作为处理机的分配单元。</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808135303093.png" alt="image-20220808135303093"></p>
+<h2 id="线程的实现方式"><a href="#线程的实现方式" class="headerlink" title="线程的实现方式"></a>线程的实现方式</h2><h3 id="用户级线程（User-Level-Thread-ULT）"><a href="#用户级线程（User-Level-Thread-ULT）" class="headerlink" title="用户级线程（User-Level Thread, ULT）"></a>用户级线程（User-Level Thread, ULT）</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808145931303.png" alt="image-20220808145931303"></p>
+<ul>
+<li>用户级线程由应用程序通过线程库实现。</li>
+<li>所有的<strong>线程管理工作</strong>都由<strong>应用程序</strong>负责（包括线程切换） </li>
+<li>用户级线程中，<strong>线程切换</strong>可以在<strong>用户态</strong>下即可完成，无需操作系统干预。 </li>
+<li>在用户看来，是有多个线程。但是在操作系统内核看来，并意识不到线程的存在。（用户级线程对用户不透明，对操作系统透明） </li>
+<li>可以这样理解，<strong>“用户级线程”</strong>就是<strong>“从用户视角看能看到的线程”</strong></li>
+</ul>
+<h3 id="内核级线程（Kernel-Level-Thread-KLT）"><a href="#内核级线程（Kernel-Level-Thread-KLT）" class="headerlink" title="内核级线程（Kernel-Level Thread, KLT）"></a>内核级线程（Kernel-Level Thread, KLT）</h3><ul>
+<li>又称“内核支持的线程”</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808150138453.png" alt="image-20220808150138453"></p>
+<ul>
+<li>内核级<strong>线程的管理工作</strong>由<strong>操作系统内核</strong>完成。线程调度、切换等工作都由内核负责，因此，<strong>内核级线程的切换</strong>必然需要在<strong>核心态</strong>下才能完成。 </li>
+<li>可以这样理解，<strong>“内核级线程”</strong>就是<strong>“从操作系统内核视角看能看到的线程”</strong></li>
+</ul>
+<h3 id="组合方式"><a href="#组合方式" class="headerlink" title="组合方式"></a>组合方式</h3><ul>
+<li>在同时支持用户级线程和内核级线程的系统中，可采用二者组合的方式：将n个用户级线程映射到m个内核级线程上（ <strong>n &gt;&#x3D; m</strong>）</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808150332003.png" alt="image-20220808150332003"></p>
+<ul>
+<li><code>重点重点重点</code>： 操作系统只“看得见”内核级线程，因此<strong>只有内核级线程才是处理机分配的单位</strong>。</li>
+<li>例如：上边这个模型中，该进程由两个内核级线程，三个用户级 线程，在用户看来，这个进程中有三个线程。但即使该进程在一 个4核处理机的计算机上运行，也最多只能被分配到两个核，最多只能有两个用户线程并行执行。</li>
+</ul>
+<h2 id="多线程模型"><a href="#多线程模型" class="headerlink" title="多线程模型"></a>多线程模型</h2><p>在同时支持用户级线程和内核级线程的系统中，由几个用户级线程映射到几个内核级线程的问题引出了“多线程模型”问题。</p>
+<h3 id="多对一"><a href="#多对一" class="headerlink" title="多对一"></a>多对一</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808150542770.png" alt="image-20220808150542770"></p>
+<ul>
+<li><strong>多对一模型</strong>：多个用户及线程映射到一个内核级线程。每个用户进程只对应一个内核级线程。 </li>
+<li><strong>优点</strong>：用户级线程的切换在用户空间即可完成，不需要切换到核心态，<strong>线程管理的系统开销小，效率高</strong> </li>
+<li><strong>缺点</strong>：当一个用户级线程被阻塞后，整个进程都会被阻塞，<strong>并发度不高</strong>。多个线程不可在多核处理机上并行运行</li>
+</ul>
+<h3 id="一对一"><a href="#一对一" class="headerlink" title="一对一"></a>一对一</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808150704659.png" alt="image-20220808150704659"></p>
+<ul>
+<li><strong>一对一模型</strong>：一个用户及线程映射到一个内核级线程。每个用户进程有与用户级线程同数量的内核级线程。 </li>
+<li><strong>优点</strong>：当一个线程被阻塞后，别的线程还可以继续执行，<strong>并发能力强</strong>。多线程可在多核处理机上并行执行。 </li>
+<li><strong>缺点</strong>：一个用户进程会占用多个内核级线程， 线程切换由操作系统内核完成，需要切换到核心态，因此<strong>线程管理的成本高，开销大</strong>。</li>
+</ul>
+<h3 id="多对多"><a href="#多对多" class="headerlink" title="多对多"></a>多对多</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808150827052.png" alt="image-20220808150827052"></p>
+<ul>
+<li><strong>多对多模型</strong>：n 用户及线程映射到 m 个内核级线程（n &gt;&#x3D; m）。每个用户进程对应 m 个内核级线程。 </li>
+<li>克服了多对一模型并发度不高的缺点，又克服了一对一模型中一个用户进程占用太多内核级线程，开销太大的缺点。</li>
+</ul>
+<h2 id="小结-4"><a href="#小结-4" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808140355244.png" alt="image-20220808140355244"></p>
+]]></content>
+      <categories>
+        <category>计算机基础知识</category>
+        <category>操作系统</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>进程同步、互斥</title>
+    <url>/2022/08/08/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5%E3%80%81%E4%BA%92%E6%96%A5/</url>
+    <content><![CDATA[<h1 id="进程同步、互斥"><a href="#进程同步、互斥" class="headerlink" title="进程同步、互斥"></a>进程同步、互斥</h1><h2 id="进程异步"><a href="#进程异步" class="headerlink" title="进程异步"></a>进程异步</h2><p>各并发执行的进程以各自独立的、不可预知的速度向前推进</p>
+<h2 id="进程同步"><a href="#进程同步" class="headerlink" title="进程同步"></a>进程同步</h2><ul>
+<li><p>协调多个并发执行进程的工作先后次序</p>
+</li>
+<li><p>例如：进程通信中的管道通信</p>
+<ul>
+<li>读进程和写进程并发地运行，由于并发必然导致异步性，因此“写数据”和“读数据”两个操作执行的先后顺序是不确定的。而实际应用中，又必须按照“<strong>写数据→读数据</strong>”的顺序来执行的。</li>
+<li>如何解决这种<strong>异步</strong>问题，就是“<strong>进程同步</strong>”所讨论的内容。</li>
+</ul>
+</li>
+<li><p>同步亦称<strong>直接制约关系</strong>，它是指为完成某种任务而建立的两个或多个进程，这些进程因为需要在某些位置上<strong>协调</strong>它们的<strong>工作次序</strong>而产生的制约关系。进程间的直接制约关系就是源于它们之间的相互合作。</p>
+</li>
+</ul>
+<h2 id="进程互斥"><a href="#进程互斥" class="headerlink" title="进程互斥"></a>进程互斥</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808202305888.png" alt="image-20220808202305888"></p>
+<ul>
+<li>我们把<strong>一个时间段内只允许一个进程使用的资源称为临界资源</strong>。许多物理设备（比如摄像头、打印机）都属于临界资源。此外还有许多变量、数据、内存缓冲区等都属于临界资源。</li>
+<li>对临界资源的访问，必须<strong>互斥</strong>地进行。互斥，亦称<strong>间接制约关系</strong></li>
+<li><strong>进程互斥</strong>指当一个进程访问某临界资源时，另一个想要访问该临界资源的进程必须等待。当前访问临界资源的进程访问结束，释放该资源之后，另一个进程才能去访问临界资源。</li>
+</ul>
+<h2 id="访问临界资源"><a href="#访问临界资源" class="headerlink" title="访问临界资源"></a>访问临界资源</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808202529431.png" alt="image-20220808202529431"></p>
+<ul>
+<li><strong>临界区</strong>是进程中<strong>访问临界资源</strong>的代码</li>
+<li><strong>进入区</strong>和<strong>退出区</strong>是<strong>负责实现互斥</strong>的代码段</li>
+<li>临界区也可称为”临界段“</li>
+</ul>
+<p> <strong>访问临界资源（进程互斥）需要遵循的原则</strong></p>
+<ol>
+<li><p><strong>空闲让进</strong></p>
+<p>临界区空闲时，可以允许一个请求进入临界区的进程立即进入临界区</p>
+</li>
+<li><p><strong>忙则等待</strong></p>
+<p>当已有进程进入临界区时，其他试图进入临界区的进程必须等待</p>
+</li>
+<li><p><strong>有限等待</strong></p>
+<p>对请求访问的进程，应保证能在有限时间内进入临界区 (保证不会饥饿)</p>
+</li>
+<li><p><strong>让权等待</strong></p>
+<p>当进程不能进入临界区，应当立即释放处理机，防止进程忙等待 (不应该让他占用处理机 一直执行循环无法前进，应当得知无法进入临界区时不执行循环，直接切换进程)</p>
+</li>
+</ol>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808203126849.png" alt="image-20220808203126849"></p>
+<h1 id="进程互斥的软件实现方法"><a href="#进程互斥的软件实现方法" class="headerlink" title="进程互斥的软件实现方法"></a>进程互斥的软件实现方法</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808203349709.png" alt="image-20220808203349709"></p>
+<h2 id="单标志法"><a href="#单标志法" class="headerlink" title="单标志法"></a>单标志法</h2><h3 id="思想"><a href="#思想" class="headerlink" title="思想"></a>思想</h3><p>一个进程<strong>访问完临界区后</strong>会把使用临界区的权限交给另一个进程，即<strong>每个进程进入临界区的权限只能被另一个进程赋予</strong></p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808204043347.png" alt="image-20220808204043347"></p>
+<ol>
+<li>turn的初值为0，即刚开始只允许0号进程进入临界区。</li>
+<li>若P1先上处理机运行，则会一直卡在⑤。直到P1的时间片用完，发生调度，切换P0上处理机运行。代码①不会卡住P0，P0可以正常访问临界区，在P0访问临界区期间即使切换回p1，P1依然会卡在⑤，只有P0在退出区将turn改为1后，P1才能进入临界区。</li>
+<li>因此，该算法<code>可以实现”同一时刻最多只允许一个进程访问临界区“</code></li>
+<li>如果此时允许进入临界区的进程是P0，而P0一直不访问临界区，那么此时虽然临界区空闲，但一直不允许P1访问，因此，单标志法存在的问题是：<strong>违背空闲让进原则</strong></li>
+</ol>
+<h2 id="双标志先检查"><a href="#双标志先检查" class="headerlink" title="双标志先检查"></a>双标志先检查</h2><h3 id="思想-1"><a href="#思想-1" class="headerlink" title="思想"></a>思想</h3><p>设置一个布尔数组flag[]，数组中各元素<strong>标记各进程是否想进入临界区</strong>，true表示想进入， false表示不想进入；每个进程在进入临界区之前先检查当前有没有别的进程想进入临界 区，如果没有，把自身对应的标志flag[i]改为true，之后开始访问临界区</p>
+<h3 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808204701062.png" alt="image-20220808204701062"></p>
+<p>存在的问题：P0进程进入之后，在修改P0为true之前，切换到P1，P1检查无别的进程想进入临界区，故会将P1改为true，导致两个进程都为true，会同时访问临界区，<strong>违反了”忙则等待“原则</strong></p>
+<p>原因：<strong>进入区</strong>的检查和上锁两个处理<strong>不是一气呵成的</strong>。检查后，上锁前可能发生进程切换</p>
+<h2 id="双标志后检查"><a href="#双标志后检查" class="headerlink" title="双标志后检查"></a>双标志后检查</h2><h3 id="思想-2"><a href="#思想-2" class="headerlink" title="思想"></a>思想</h3><p>双标志先检查法的改版，<strong>先上锁后检查</strong>，谁想进谁直接将自身改为true，不关心其他进 程，改为true之后，再检查有没有其他进程想访问</p>
+<h3 id="实现-2"><a href="#实现-2" class="headerlink" title="实现"></a>实现</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808205216016.png" alt="image-20220808205216016"></p>
+<p>存在的问题：P0想进入，P0改为true，在检查之前切换到P1，P1想进入，改为true，导致两个进程都为true，违背了<strong>“空闲让进”和有限等待”</strong>，谁都无法访问临界区，<strong>产生饥饿现象</strong></p>
+<p>原因：进入区的检查和上锁不是一气呵成的</p>
+<h2 id="Peterson算法"><a href="#Peterson算法" class="headerlink" title="Peterson算法"></a>Peterson算法</h2><h3 id="思想-3"><a href="#思想-3" class="headerlink" title="思想"></a>思想</h3><p>双标志后检查法的改版，若两个进程都想进入临界区，可以<strong>主动让对方优先访问临界区</strong></p>
+<h3 id="实现-3"><a href="#实现-3" class="headerlink" title="实现"></a>实现</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808205512859.png" alt="image-20220808205512859"></p>
+<p>进入区做了三件事：1. 主动争取 2. 主动谦让 3. 检查对方</p>
+<p>Peterson算法解决了空闲让进，忙则等待，有限等待三个原则，但<strong>未遵循让权等待原则</strong></p>
+<h1 id="进程互斥的硬件实现方法"><a href="#进程互斥的硬件实现方法" class="headerlink" title="进程互斥的硬件实现方法"></a>进程互斥的硬件实现方法</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808210328910.png" alt="image-20220808210328910"></p>
+<h2 id="中断屏蔽方法"><a href="#中断屏蔽方法" class="headerlink" title="中断屏蔽方法"></a>中断屏蔽方法</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>利用“开&#x2F;关中断指令”实现（与原语的实现思想相同，即在某进程开始访问临界区到结束访问为止都不允许被中断，也就不能发生进程切换，因此也不可能发生两个同时访问临界区的情况）</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808210615415.png" alt="image-20220808210615415"></p>
+<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><p>优点：简单、高效 </p>
+<p>缺点：<strong>不适用于多处理机</strong>；只适用于操作系统内核进程，<strong>不适用于用户进程</strong>（因为开&#x2F;关中断指令只能运行在内核态，这组指令如果能让用户随意使用会很危险）</p>
+<h2 id="TestAndSet指令-TS指令"><a href="#TestAndSet指令-TS指令" class="headerlink" title="TestAndSet指令(TS指令)"></a>TestAndSet指令(TS指令)</h2><h3 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h3><p>TSL 指令是用硬件实现的，执行的过程不允许被中断，只能一气呵成。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808210815379.png" alt="image-20220808210815379"></p>
+<p>若刚开始 lock 是 false，则 TSL 返回的 old 值为 false，while 循环条件不满足，直接跳过循环，进入临界区。</p>
+<p>若刚开始 lock 是 true，则执行 TLS 后 old 返回的值为 true，while 循环条件满足，会一直循环，直到当前访问临界区的进程在退出区进行“解锁”。 </p>
+<h3 id="优缺点-1"><a href="#优缺点-1" class="headerlink" title="优缺点"></a>优缺点</h3><p>相比软件实现方法，TSL 指令把“上锁”和“检查”操作用硬件的方式变成了一气呵成的原子操作。 </p>
+<p>优点：实现简单，无需像软件实现方法那样严格检查是否会有逻辑漏洞；适用于多处理机环境 </p>
+<p>缺点：<strong>不满足“让权等待”原则</strong>，暂时无法进入临界区的进程会占用CPU并循环执行TSL指令，从而导致“忙等”。</p>
+<h2 id="Swap指令"><a href="#Swap指令" class="headerlink" title="Swap指令"></a>Swap指令</h2><h3 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h3><p>Swap 指令是用硬件实现的，执行的过程不允许被中断，只能一气呵成。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808211326054.png" alt="image-20220808211326054"></p>
+<p>逻辑上来看 Swap 和 TSL 并无太大区别，都是先记录下此时临界区是否已经被上锁（记录在 old 变量上），再将上锁标记 lock 设置为 true，最后检查 old，如果 old 为 false 则说明之前没有别的进程对临界区上锁，则可跳出循环，进入临界区。</p>
+<h3 id="优缺点-2"><a href="#优缺点-2" class="headerlink" title="优缺点"></a>优缺点</h3><p>优点：实现简单，无需像软件实现方法那样严格检查是否会有逻辑漏洞；适用于多处理机环境 </p>
+<p>缺点：<strong>不满足“让权等待”原则</strong>，暂时无法进入临界区的进程会占用CPU并循环执行TSL指令，从而导致“忙等”。</p>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808211841332.png" alt="image-20220808211841332"></p>
+<h1 id="信号量机制"><a href="#信号量机制" class="headerlink" title="信号量机制"></a>信号量机制</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808212101299.png" alt="image-20220808212101299"></p>
+<h2 id="出现原因"><a href="#出现原因" class="headerlink" title="出现原因"></a>出现原因</h2><p>进程互斥的四种软件实现方式（单标志法、双标志先检查、双标志后检查、Peterson算法） </p>
+<p>进程互斥的三种硬件实现方式（中断屏蔽方法、TS&#x2F;TSL指令、Swap&#x2F;XCHG指令）</p>
+<ol>
+<li><p>在双标志先检查法中，<strong>进入区的“检查”、“上锁” 操作无法一气呵成</strong>，从而导致了两个进程有可能<strong>同时进入临界区</strong>的问题；</p>
+</li>
+<li><p>所有的解决方案<strong>都无法实现“让权等待”</strong></p>
+</li>
+</ol>
+<p>1965年，荷兰学者Dijkstra提出了一种卓有成效的实现<strong>进程互斥、同步</strong>的方法——<strong>信号量机制</strong></p>
+<h2 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h2><ul>
+<li>用户进程可以通过使用操作系统提供的<strong>一对原语</strong>来对<strong>信号量</strong>进行操作，从而很方便的实现了进程互斥、进程同步。 </li>
+<li><strong>信号量</strong>其实就是一个变量 ，可以用一个信号量来<strong>表示系统中某种资源的数量</strong>，比如：系统中只有一台打印机，就可以设置一个初值为 1 的信号量。 </li>
+<li><strong>原语</strong>是一种特殊的程序段，其<strong>执行只能一气呵成，不可被中断</strong>。原语是由<strong>关中断&#x2F;开中断</strong>指令实现的。软件解决方案的主要问题是由“进入区的各种操作无法一气呵成”，因此如果能把进入区、退出区的操作都用“原语”实现，使这些操作能“一气呵成”就能避免问题。</li>
+<li><strong>一对原语</strong>：<strong>wait(S)</strong> 原语和 <strong>signal(S)</strong> 原语，可以把原语理解为我们自己写的函数，函数名分别为 wait 和 signal，括号里的<strong>信号量 S</strong> 其实就是函数调用时传入的一个参数。</li>
+<li>wait、signal 原语常<strong>简称为 P、V操作</strong>（来自荷兰语 proberen 和 verhogen）。</li>
+</ul>
+<h2 id="整型信号量"><a href="#整型信号量" class="headerlink" title="整型信号量"></a>整型信号量</h2><ul>
+<li>用一个<strong>整数型的变量</strong>作为信号量，用来<strong>表示系统中某种资源的数量</strong>。</li>
+<li>与普通整数变量的区别： 对信号量的操作只有三种， 即 <strong>初始化、P操作、V操作</strong></li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808213217836.png" alt="image-20220808213217836"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808213254429.png" alt="image-20220808213254429"></p>
+<h2 id="记录型信号量"><a href="#记录型信号量" class="headerlink" title="记录型信号量"></a>记录型信号量</h2><p>整型信号量的缺陷是<strong>存在“忙等”问题</strong>，因此人们又提出了“记录型信号量”，即用记录型数据结构表示的信号量。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808213446149.png" alt="image-20220808213446149"><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808213930158.png" alt="image-20220808213930158"></p>
+<ul>
+<li>中 wait(S)、signal(S) 也可以记为 P(S)、V(S)，这对原语可用于<strong>实现系统资源的“申请”和“释放”。</strong></li>
+<li><strong>S.value 的初值</strong>表示<strong>系统中某种资源的数目</strong>。 </li>
+<li>对信号量 S 的<strong>一次 P 操作</strong>意味着进程<strong>请求一个单位的该类资源</strong>，因此需要执行 S.value–，表示资源数减1，当 S.value &lt; 0 时表示该类资源已分配完毕，因此进程应<strong>调用 block 原语进行自我阻塞<strong>（当前运行的进程从</strong>运行态—&gt;阻塞态</strong>），主动放弃处理机，并插入该类资源的等待队列 S.L 中。可见，该机制<strong>遵循了“让权等待”原则</strong>，不会出现“忙等”现象。 </li>
+<li>对信号量 S 的<strong>一次 V 操作</strong>意味着进程<strong>释放一个单位的该类资源</strong>，因此需要执行 S.value++，表示资源数加1，若加1后仍是 S.value &lt;&#x3D; 0，表示依然有进程在等待该类资源，因此应<strong>调用 wakeup 原语唤醒等待队列中的第一个进程<strong>（被唤醒进程从</strong>阻塞态—&gt;就绪态</strong>）。</li>
+</ul>
+<h2 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808214501300.png" alt="image-20220808214501300"></p>
+<h1 id="用信号量实现进程互斥、同步、前驱关系"><a href="#用信号量实现进程互斥、同步、前驱关系" class="headerlink" title="用信号量实现进程互斥、同步、前驱关系"></a>用信号量实现进程互斥、同步、前驱关系</h1><ul>
+<li><strong>一个信号量对应一种资源</strong> </li>
+<li>信号量的值 &#x3D; 这种资源的剩余数量（信号量的值如果小于0，说明此时有进程在等待这种资源）</li>
+<li>P( S ) —— 申请一个资源S，<strong>如果资源不够就阻塞等待</strong></li>
+<li>V( S ) —— 释放一个资源S，<strong>如果有进程在等待该资源，则唤醒一个进程</strong></li>
+</ul>
+<h2 id="进程互斥实现"><a href="#进程互斥实现" class="headerlink" title="进程互斥实现"></a>进程互斥实现</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808214838619.png" alt="image-20220808214838619"></p>
+<h2 id="进程同步实现"><a href="#进程同步实现" class="headerlink" title="进程同步实现"></a>进程同步实现</h2><p>进程同步：要让各并发进程按要求有序地推进。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808215133294.png" alt="image-20220808215133294"></p>
+<h2 id="前驱关系实现"><a href="#前驱关系实现" class="headerlink" title="前驱关系实现"></a>前驱关系实现</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808215509765.png" alt="image-20220808215509765"></p>
+<h2 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808215643943.png" alt="image-20220808215643943"></p>
+]]></content>
+      <categories>
+        <category>计算机基础知识</category>
+        <category>操作系统</category>
+      </categories>
+  </entry>
 </search>

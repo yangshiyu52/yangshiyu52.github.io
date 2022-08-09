@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2022-08-06T09:48:38.284Z</updated>
+  <updated>2022-08-08T13:57:34.015Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,81 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>进程同步、互斥</title>
+    <link href="http://example.com/2022/08/08/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5%E3%80%81%E4%BA%92%E6%96%A5/"/>
+    <id>http://example.com/2022/08/08/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5%E3%80%81%E4%BA%92%E6%96%A5/</id>
+    <published>2022-08-08T12:11:49.000Z</published>
+    <updated>2022-08-08T13:57:34.015Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;进程同步、互斥&quot;&gt;&lt;a href=&quot;#进程同步、互斥&quot; class=&quot;headerlink&quot; title=&quot;进程同步、互斥&quot;&gt;&lt;/a&gt;进程同步、互斥&lt;/h1&gt;&lt;h2 id=&quot;进程异步&quot;&gt;&lt;a href=&quot;#进程异步&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="计算机基础知识" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+    <category term="操作系统" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>处理机调度</title>
+    <link href="http://example.com/2022/08/08/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E5%A4%84%E7%90%86%E6%9C%BA%E8%B0%83%E5%BA%A6/"/>
+    <id>http://example.com/2022/08/08/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E5%A4%84%E7%90%86%E6%9C%BA%E8%B0%83%E5%BA%A6/</id>
+    <published>2022-08-08T07:10:15.000Z</published>
+    <updated>2022-08-08T12:08:38.619Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;处理机调度的概念、层次&quot;&gt;&lt;a href=&quot;#处理机调度的概念、层次&quot; class=&quot;headerlink&quot; title=&quot;处理机调度的概念、层次&quot;&gt;&lt;/a&gt;处理机调度的概念、层次&lt;/h1&gt;&lt;p&gt;&lt;img</summary>
+        
+      
+    
+    
+    
+    <category term="计算机基础知识" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+    <category term="操作系统" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>进程与线程</title>
+    <link href="http://example.com/2022/08/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/"/>
+    <id>http://example.com/2022/08/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</id>
+    <published>2022-08-06T11:18:25.000Z</published>
+    <updated>2022-08-08T07:09:26.729Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;进程&quot;&gt;&lt;a href=&quot;#进程&quot; class=&quot;headerlink&quot; title=&quot;进程&quot;&gt;&lt;/a&gt;进程&lt;/h1&gt;&lt;p&gt;&lt;img</summary>
+        
+      
+    
+    
+    
+    <category term="计算机基础知识" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+    <category term="操作系统" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>概念</title>
@@ -431,83 +506,6 @@
         
         
     <summary type="html">&lt;h1 id=&quot;栈、堆、方法区的交互关系&quot;&gt;&lt;a href=&quot;#栈、堆、方法区的交互关系&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="JVM" scheme="http://example.com/categories/JVM/"/>
-    
-    <category term="1.内存与垃圾回收篇" scheme="http://example.com/categories/JVM/1-%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AF%87/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>栈</title>
-    <link href="http://example.com/2022/07/18/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%9A%E6%A0%88/"/>
-    <id>http://example.com/2022/07/18/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%9A%E6%A0%88/</id>
-    <published>2022-07-18T11:21:06.000Z</published>
-    <updated>2022-07-21T12:05:54.680Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;基本介绍&quot;&gt;&lt;a href=&quot;#基本介绍&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="数据结构与算法" scheme="http://example.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
-    
-    <category term="栈" scheme="http://example.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%A0%88/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>(单向环形链表)约瑟夫环</title>
-    <link href="http://example.com/2022/07/16/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%9A%E7%BA%A6%E7%91%9F%E5%A4%AB%E7%8E%AF/"/>
-    <id>http://example.com/2022/07/16/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%9A%E7%BA%A6%E7%91%9F%E5%A4%AB%E7%8E%AF/</id>
-    <published>2022-07-16T13:31:05.000Z</published>
-    <updated>2022-07-17T14:14:37.712Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;应用实例&quot;&gt;&lt;a href=&quot;#应用实例&quot; class=&quot;headerlink&quot; title=&quot;应用实例&quot;&gt;&lt;/a&gt;应用实例&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;Joseph(约瑟夫、约瑟夫环)问题&lt;ul&gt;
-&lt;li&gt;设编号为1，2，… n的n个人围坐一圈，约定编号为k</summary>
-        
-      
-    
-    
-    
-    <category term="数据结构与算法" scheme="http://example.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
-    
-    <category term="链表" scheme="http://example.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E9%93%BE%E8%A1%A8/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>堆</title>
-    <link href="http://example.com/2022/07/16/JVM%EF%BC%9A%E5%A0%86/"/>
-    <id>http://example.com/2022/07/16/JVM%EF%BC%9A%E5%A0%86/</id>
-    <published>2022-07-16T09:53:17.000Z</published>
-    <updated>2022-07-16T09:54:25.072Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;堆的核心概述&quot;&gt;&lt;a href=&quot;#堆的核心概述&quot; class=&quot;headerlink&quot; title=&quot;堆的核心概述&quot;&gt;&lt;/a&gt;堆的核心概述&lt;/h1&gt;&lt;h2 id=&quot;堆与进程&quot;&gt;&lt;a href=&quot;#堆与进程&quot; class=&quot;headerlink&quot;</summary>
         
       
     
