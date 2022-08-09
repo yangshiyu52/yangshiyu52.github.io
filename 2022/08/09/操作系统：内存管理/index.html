@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>内存管理 |  Healer</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Healer" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-操作系统：内存管理"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+	
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  内存管理
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/08/09/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="article-date">
+  <time datetime="2022-08-09T08:15:40.000Z" itemprop="datePublished">2022-08-09</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">计算机基础知识</a> / <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">6.7k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">22 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="内存的基础知识"><a href="#内存的基础知识" class="headerlink" title="内存的基础知识"></a>内存的基础知识</h1><h2 id="什么是内存？有何作用？"><a href="#什么是内存？有何作用？" class="headerlink" title="什么是内存？有何作用？"></a>什么是内存？有何作用？</h2><p>内存可存放数据。程序执行前<strong>需要先放到内存中才能被CPU处理</strong>——缓和CPU与硬盘之间的速度矛盾</p>
+<p><strong>思考</strong>：在多道程序环境下，系统中会有多个程序并发执行，也就是说会有多个程序的数据需要同时放到内存中。那么，如何区分各个程序的数据是放在什么地方的呢？</p>
+<p><strong>方案</strong>：给内存的存储单元编地址</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809162437667.png" alt="image-20220809162437667"></p>
+<h2 id="指令的工作原理"><a href="#指令的工作原理" class="headerlink" title="指令的工作原理"></a>指令的工作原理</h2><ul>
+<li><strong>指令的工作基于“地址”</strong>。 每个地址对应一个数据的存储单元</li>
+<li>我们写的代码要翻译成CPU能识别的指令。这些指令会告诉CPU应该去内存的哪个地址读&#x2F;写数据，这个数据应该做什么样的处理。默认让<strong>进程的相关内容从地址#0开始连续存放</strong>，指令中的地址参数直接给出了变量 x 的实际存放地址（<strong>物理地址</strong>）。</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809162945616.png" alt="image-20220809162945616"></p>
+<h3 id="装入的三种方式"><a href="#装入的三种方式" class="headerlink" title="装入的三种方式"></a>装入的三种方式</h3><h4 id="绝对装入"><a href="#绝对装入" class="headerlink" title="绝对装入"></a>绝对装入</h4><ul>
+<li>在编译时，如果知道程序将放到内存中的哪个位置，编译程序将<strong>产生绝对地址的目标代码</strong>。装入程序按照装入模块中的地址，将程序和数据装入内存。</li>
+<li>绝对装入<strong>只适用于单道程序环境</strong>。 </li>
+<li>程序中使用的绝对地址，可在编译或汇编时给出，也可由程序员直接赋予。通常情况下都是编译或汇编时再转换为绝对地址。</li>
+</ul>
+<h4 id="静态重定位"><a href="#静态重定位" class="headerlink" title="静态重定位"></a>静态重定位</h4><ul>
+<li>又称<strong>可重定位装入</strong>。编译、链接后的装入模块的地址都是从0开始的，指令中使用的地址、数据存放的地址都是相对于起始地址而言的逻辑地址。可根据内存的当前情况，将装入模块装入到内存的适当位置。装入时对地址进行<strong>“重定位”</strong>，将逻辑地址变换为物理地址（地址变换是在装入时一次完成的）。</li>
+<li>静态重定位的<strong>特点</strong>是在一个作业装入内存时，<strong>必须分配其要求的全部内存空间</strong>，如果没有足够的内存，就不能装入该作业。作业一旦进入内存后，<strong>在运行期间就不能再移动</strong>，也不能再申请内存空间。</li>
+</ul>
+<h4 id="动态重定位"><a href="#动态重定位" class="headerlink" title="动态重定位"></a>动态重定位</h4><ul>
+<li>又称<strong>动态运行时装入</strong>。编译、链接后的装入模块的地址都是从0开始的。装入程序把装入模块装入内存后，并不会立即把逻辑地址转换为物理地址，而是<strong>把地址转换推迟到程序真正要执行时才进行</strong>。因此装入内存后所有的地址依然是逻辑地址。这种方式需要一个<strong>重定位寄存器</strong>的支持。</li>
+<li><strong>重定位寄存器</strong>： 存放装入模块存放的<strong>起始位置</strong></li>
+<li>可将程序分配到不连续的存储区中；在程序运行前只需装入它的部分代码即可投入运行，然后在<strong>程序运行期间，根据需要动态申请分配内存</strong>；便于程序段的共享，可以向用户提供一个比存储空间大得多的地址空间。</li>
+<li>采用动态重定位时<strong>允许程序在内存中发生移动</strong>。</li>
+</ul>
+<h2 id="从写程序到程序运行"><a href="#从写程序到程序运行" class="headerlink" title="从写程序到程序运行"></a>从写程序到程序运行</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809163445626.png" alt="image-20220809163445626"></p>
+<p><strong>编译</strong>：由编译程序将用户源代码编译成若干个目标模块（编译就是<strong>把高级语言翻译为机器语言</strong>） </p>
+<p><strong>链接</strong>：由链接程序将编译后形成的一组目标模块，以及所需库函数链接在一起，形成一个完整的装入模块装入（装载）：由装入程序将装入模块装入内存运行</p>
+<h3 id="链接的三种方式"><a href="#链接的三种方式" class="headerlink" title="链接的三种方式"></a>链接的三种方式</h3><h4 id="静态链接"><a href="#静态链接" class="headerlink" title="静态链接"></a>静态链接</h4><p>在程序运行之前，先将各目标模块及它们所需的库函数连接成一个完整的可执行文件（装入模块），之后不再拆开。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809163733271.png" alt="image-20220809163733271"></p>
+<h4 id="装入时动态链接"><a href="#装入时动态链接" class="headerlink" title="装入时动态链接"></a>装入时动态链接</h4><p>将各目标模块装入内存时，<strong>边装入边链接</strong>的链接方式。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809163752585.png" alt="image-20220809163752585"></p>
+<h4 id="运行时动态链接"><a href="#运行时动态链接" class="headerlink" title="运行时动态链接"></a>运行时动态链接</h4><p>在程序执行中<strong>需要该目标模块时，才对它进行链接</strong>。其优点是便于修改和更新，便于实现对目标模块的共享。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809163816108.png" alt="image-20220809163816108"></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809163844934.png" alt="image-20220809163844934"></p>
+<h1 id="内存管理的概念"><a href="#内存管理的概念" class="headerlink" title="内存管理的概念"></a>内存管理的概念</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809180115814.png" alt="image-20220809180115814"></p>
+<p>操作系统作为系统资源的管理者，当然也需要对内存进行管理，要管些什么呢？</p>
+<ol>
+<li><p>操作系统负责<strong>内存空间的分配与回收</strong></p>
+</li>
+<li><p>操作系统需要提供某种技术从逻辑上<strong>对内存空间进行扩充</strong></p>
+</li>
+<li><p>操作系统需要提供地址转换功能，负责程序的<strong>逻辑地址与物理地址</strong>的转换。为了使编程更方便，程序员写程序时应该只需要关注指令、数据的逻辑地址。而<strong>逻辑地址到物理地址的转换</strong>（这个过程称为<strong>地址重定位</strong>）应该由操作系统负责，这样就保证了程序员写程序时不需要关注物理内存的实际情况。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809180228042.png" alt="image-20220809180228042"></p>
+</li>
+<li><p>操作系统需要提供<strong>内存保护</strong>功能。保证各进程在各自存储空间内运行，互不干扰</p>
+<p>内存保护可采取两种方法： </p>
+<ul>
+<li>方法一：在CPU中<strong>设置一对上、下限寄存器</strong>，存放进程的上、下限地址。进程的指令要访问某个地址时，CPU检查是否越界。</li>
+<li>方法二：采用<strong>重定位寄存器</strong>（又称<strong>基址寄存器</strong>）和<strong>界地址寄存器</strong>（又称<strong>限长寄存器</strong>）进行越界检查。重定位寄存器中存放的是进程的<strong>起始物理地址</strong>。界地址寄存器中存放的是进程的<strong>最大逻辑地址</strong>。</li>
+</ul>
+</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809180357930.png" alt="image-20220809180357930"></p>
+<h1 id="覆盖与交换"><a href="#覆盖与交换" class="headerlink" title="覆盖与交换"></a>覆盖与交换</h1><h2 id="覆盖技术"><a href="#覆盖技术" class="headerlink" title="覆盖技术"></a>覆盖技术</h2><ul>
+<li>早期的计算机内存很小，比如 IBM 推出的第一台PC机最大只支持 1MB 大小的内存。因此经常会出现内存大小不够的情况。后来人们引入了<strong>覆盖技术</strong>，用来<strong>解决“程序大小超过物理内存总和”的问题</strong></li>
+<li><strong>覆盖技术的思想</strong>：将<strong>程序分为多个段</strong>（多个模块）。常用的段常驻内存，不常用的段在需要时调入内存。内存中分为<strong>一个“固定区”</strong>和<strong>若干个“覆盖区”</strong>。 需要常驻内存的段放在<strong>“固定区”</strong>中，<strong>调入后就不再调出（除非运行结束）</strong> 不常用的段放在<strong>“覆盖区”</strong>，<strong>需要用到时调入内存，用不到时调出内存</strong></li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809180820391.png" alt="image-20220809180820391"></p>
+<ul>
+<li><strong>必须由程序员声明覆盖结构，</strong>操作系统完成自动覆盖。<strong>缺点：对用户不透明，</strong>增加了用户编程负担。覆盖技术只用于早期的操作系统中，现在已成为历史。</li>
+</ul>
+<h2 id="交换技术"><a href="#交换技术" class="headerlink" title="交换技术"></a>交换技术</h2><ul>
+<li>交换（对换）技术的设计思想：内存空间紧张时，系统将内存中某些进程暂时<strong>换出</strong>外存，把外存中某些已具备运行条件的进程<strong>换入</strong>内存（进程在内存与磁盘间动态调度）</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809180901488.png" alt="image-20220809180901488"></p>
+<ul>
+<li><p><strong>中级调度（内存调度）</strong>，就是要决定将哪个处于挂起状态的进程重新调入内存。</p>
+</li>
+<li><p>暂时换出外存等待的进程状态为<strong>挂起状态（挂起态，suspend）</strong>，挂起态又可以进一步细分为<strong>就绪挂起、阻塞挂起</strong>两种状态</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809181009332.png" alt="image-20220809181009332"></p>
+</li>
+</ul>
+<blockquote>
+<p>问题：应该在外存（磁盘）的什么位置保存被换出的进程？</p>
+<p>回答：具有对换功能的操作系统中，通常把<strong>磁盘空间</strong>分为<strong>文件区和对换区</strong>两部分。<strong>文件区</strong>主要用于存放文件，<strong>主要追求存储空间的利用率</strong>，因此对文件区空间的管理采用<strong>离散分配方式</strong>；<strong>对换区</strong>空间只占磁盘空间的小部分，<strong>被换出的进程数据就存放在对换区</strong>。由于对换的速度直接影响到系统的整体速度，因此对换区空间的管理<strong>主要追求换入换出速度</strong>，因此通常对换区采用<strong>连续分配方式</strong>。总之，<strong>对换区的I&#x2F;O速度比文件区的更快</strong>。</p>
+<p>问题：什么时候应该交换？</p>
+<p>回答：交换通常在许多进程运行且内存吃紧时进行，而系统负荷降低就暂停。例如：在发现许多进程运行时经常发生缺页，就说明内存紧张，此时可以换出一些进程； 如果缺页率明显下降，就可以暂停换出。</p>
+<p>问题：应该换出哪些进程？</p>
+<p>回答：可优先换出<strong>阻塞进程</strong>；可换出<strong>优先级低的进程</strong>；为了防止优先级低的进程在被调入内存后很快又被换出，有的系统还会考虑进程在内存的驻留时间…</p>
+<p><strong>注意</strong>：<strong>PCB 会常驻内存</strong>，不会被换出外存</p>
+</blockquote>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809181330272.png" alt="image-20220809181330272"></p>
+<h1 id="连续分配管理方式"><a href="#连续分配管理方式" class="headerlink" title="连续分配管理方式"></a>连续分配管理方式</h1><p><strong>连续分配</strong>：指为用户进程分配的必须是<strong>一个连续的内存空间</strong>。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809181426494.png" alt="image-20220809181426494"></p>
+<h2 id="单一连续分配"><a href="#单一连续分配" class="headerlink" title="单一连续分配"></a>单一连续分配</h2><ul>
+<li>在单一连续分配方式中，内存被分为<strong>系统区和用户区</strong>。系统区通常位于内存的低地址部分，用于存放操作系统相关数据；用户区用于存放用户进程相关数据。 </li>
+<li>内存中<strong>只能有一道用户程序</strong>，用户程序独占整个用户区空间。 </li>
+<li><strong>优点</strong>：实现简单；<strong>无外部碎片</strong>；可以采用覆盖技术扩充内存；不一定需要采取内存保护（eg：早期的 PC 操作系统 MS-DOS）。 </li>
+<li><strong>缺点</strong>：只能用于单用户、单任务的操作系统中；<strong>有内部碎片</strong>(分配给某进程的内存区域中，如果有些部分没有用上，就是“内部碎片”)；存储器利用率极低。</li>
+</ul>
+<h2 id="固定分区分配"><a href="#固定分区分配" class="headerlink" title="固定分区分配"></a>固定分区分配</h2><ul>
+<li>20世纪60年代出现了支持多道程序的系统，为了能在内存中装入多道程序，且这些程序之间又不会相互干扰， 于是将<strong>整个用户空间</strong>划分为<strong>若干个固定大小的分区</strong>，在<strong>每个分区中只装入一道作业</strong>，这样就形成了最早的、最简单的一种可运行多道程序的内存管理方式。</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809181738782.png" alt="image-20220809181738782"></p>
+<ul>
+<li>分区大小相等：缺乏灵活性，但是很<strong>适合用于用一台计算机控制多个相同对象的场合</strong>（比如：钢铁厂有n个相同的炼钢炉，就可把内存分为n个大小相等的区域存放 n个炼钢炉控制程序） </li>
+<li>分区大小不等：增加了灵活性，可以满足不同大小的进程需求。根据常在系统中运行的作业大小情况进行划分（比如：划分多个小分区、适量中等分区、少量大分区）</li>
+<li>操作系统需要建立一个数据结构——<strong>分区说明表</strong>（用数据结构的数组（或 链表）即可表示这个表 ），来实现各个分区的分配与回收。每个表项对应一个分区，通常按分区大小排列。每个表项包括对应分区的<strong>大小、起始地址、状态</strong>（是否已分配）。 </li>
+<li>当某用户程序要装入内存时，由操作系统内核程序根据用户程序大小检索该表，从中找到一个能满足大小的、未分配的分区，将之分配给该程序，然后修改状 态为“已分配”。 </li>
+<li><strong>优点</strong>：实现简单，<strong>无外部碎片</strong>。 </li>
+<li><strong>缺点</strong>：a. 当用户程序太大时，<strong>可能所有的分区都不能满足需求</strong>，此时不得不采用覆盖技术来解决，但这又会降低性能；b. <strong>会产生内部碎片</strong>，内存利用率低。</li>
+</ul>
+<h2 id="动态分区分配"><a href="#动态分区分配" class="headerlink" title="动态分区分配"></a>动态分区分配</h2><ul>
+<li><p>动态分区分配又称为<strong>可变分区分配</strong>。这种分配方式<strong>不会预先划分内存分区</strong>，而是在进程装入内存时，<strong>根据进程的大小动态地建立分区</strong>，并使分区的大小正好适合进程的需要。因此系统分区的大小和数目是可变的。</p>
+</li>
+<li><p><strong>系统要用什么样的数据结构记录内存的使用情况？</strong></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809182136031.png" alt="image-20220809182136031"></p>
+<ul>
+<li><strong>空闲分区表</strong>：每个空闲分区对应一个表项。表项中包含<strong>分区号、分区大小、分区起始地址</strong>等信息</li>
+<li><strong>空闲分区链</strong>：每个分区的起始部分和末尾部分分别设置<strong>前向指针和后向指针</strong>。起始部分处还可记录分区大小等信息</li>
+</ul>
+</li>
+<li><p><strong>当很多个空闲分区都能满足需求时，应该选择哪个分区进行分配？</strong></p>
+<ul>
+<li>把一个新作业装入内存时，须按照一定的<strong>动态分区分配算法</strong>，从空闲分区表（或空闲分区链）中选出一个分区分配给该作业。由于分配算法算法对系统性能有很大的影响，因此人们对它进行了广泛的研究。 下个小节会介绍<strong>四种动态分区分配算法</strong>…</li>
+</ul>
+</li>
+<li><p><strong>如何进行分区的分配与回收操作？</strong>假设系统采用的数据结构是“空闲分区表”…<strong>如何分配？</strong> </p>
+<ul>
+<li><p>情况一：回收区的后面有一个相邻的空闲分区</p>
+<ul>
+<li>两个相邻的空闲分区合并为一个</li>
+</ul>
+</li>
+<li><p>情况二：回收区的前面有一个相邻的空闲分区</p>
+<ul>
+<li>两个相邻的空闲分区合并为一个</li>
+</ul>
+</li>
+<li><p>情况三：回收区的前、后各有一个相邻的空闲分区</p>
+<ul>
+<li>三个相邻的空闲分区合并为一个</li>
+</ul>
+</li>
+<li><p>情况四：回收区的前、后都没有相邻的空闲分区</p>
+<ul>
+<li>新增一个表项。注：各表项的顺序不一定按照地址递增顺序排列，具体的排列方式需要依据动态分区分配算法来确定。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>动态分区分配<strong>没有内部碎片</strong>，但是<strong>有外部碎片</strong>。<strong>内部碎片，分配给某进程的内存区域中，如果有些部分没有用上。外部碎片，是指内存中的某些空闲分区由于太小而难以利用。</strong> </p>
+</li>
+<li><p>如果内存中空闲空间的总和本来可以满足某进程的要求，但由于进程需要的是一整块连续的内存空间，因此这些“碎片”不能满足进程的需求。可以通过<strong>紧凑（拼凑，Compaction）</strong>技术来解决外部碎片。<strong>动态重定位装入方式</strong></p>
+</li>
+</ul>
+<h2 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809182840552.png" alt="image-20220809182840552"></p>
+<h1 id="动态分区分配算法"><a href="#动态分区分配算法" class="headerlink" title="动态分区分配算法"></a>动态分区分配算法</h1><p>动态分区分配算法：在动态分区分配方式中， 当很多个空闲分区都能满足需求时，应该选择哪个分区进行分配？</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809182928123.png" alt="image-20220809182928123"> </p>
+<h2 id="首次适应算法"><a href="#首次适应算法" class="headerlink" title="首次适应算法"></a>首次适应算法</h2><p><strong>算法思想</strong>：每次都从低地址开始查找，找到第一个能满足大小的空闲分区。 </p>
+<p><strong>实现</strong>：<strong>空闲分区以地址递增的次序排列</strong>。每次分配内存时顺序查找<strong>空闲分区链（或空闲分区表）</strong>，找到大小能满足要求的第一个空闲分区。</p>
+<h2 id="最佳适应算法"><a href="#最佳适应算法" class="headerlink" title="最佳适应算法"></a>最佳适应算法</h2><p><strong>算法思想</strong>：由于动态分区分配是一种连续分配方式，为各进程分配的空间必须是连续的一整片区域。因此为了保证当“大进程”到来时能有连续的大片空间，可以尽可能多地留下大片的空闲区，即，<strong>优先使用更小的空闲区</strong>。  </p>
+<p><strong>实现</strong>：空闲分区<strong>按容量递增次序链接</strong>。每次分配内存时顺序查找<strong>空闲分区链（或空闲分区表）</strong>，找到大小能满足要求的第一个空闲分区。 </p>
+<p><strong>缺点：每次都选最小的分区进行分配，会留下越来越多的、很小的、难以利用的内存块。因此这种方法会产生很多的外部碎片。</strong></p>
+<h2 id="最坏适应算法"><a href="#最坏适应算法" class="headerlink" title="最坏适应算法"></a>最坏适应算法</h2><p>又称<strong>最大适应算法（Largest Fit）</strong> </p>
+<p><strong>算法思想</strong>：为了解决最佳适应算法的问题——即留下太多难以利用的小碎片，可以在每次分配时优先使用最大的连续空闲区，这样分配后剩余的空闲区就不会太小，更方便使用。 </p>
+<p><strong>实现</strong>：空闲分区<strong>按容量递减次序链接</strong>。每次分配内存时顺序查找<strong>空闲分区链（或空闲分区表）</strong>，找到大小能满足要求的第一个空闲分区。 </p>
+<p><strong>缺点：每次都选最大的分区进行分配，虽然可以让分配后留下的空闲区更大，更可用，但是这种方式会导致较大的连续空闲区被迅速用完。如果之后有“大进程”到达，就没有内存分区可用了。</strong></p>
+<h2 id="邻近适应算法"><a href="#邻近适应算法" class="headerlink" title="邻近适应算法"></a>邻近适应算法</h2><p><strong>算法思想</strong>：首次适应算法每次都从链头开始查找的。这可能会导致低地址部分出现很多小的空闲分区，而每次分配查找时，都要经过这些分区，因此也增加了查找的开销。如果每次都从上次查 找结束的位置开始检索，就能解决上述问题。 </p>
+<p><strong>实现</strong>：空闲分区<strong>以地址递增的顺序排列</strong>（可排成一个循环链表）。每次分配内存时<strong>从上次查找结束的位置开始</strong>查找<strong>空闲分区链（或空闲分区表）</strong>，找到大小能满足要求的第一个空闲分区。 </p>
+<p>首次适应算法每次都要从头查找，每次都需要检索低地址的小分区。 但是这种规则也决定了当低地址部分有更小的分区可以满足需求时，会更有可能用到低地址部分的小分区，也会更有可能把高地址部分的大分区保留下来(<strong>最佳适应算法的优点</strong>)</p>
+<p>邻近适应算法的规则可能会导致无论低地址、高地址部分的空闲分区都有相同的概率被使用，也就导致了高地址部分的大分区更可能被使用，划分为小分区，最后导致无大分区可用(<strong>最大适应法的缺点</strong>)</p>
+<p>综合来看，<strong>四种算法中，首次适应算法的效果反而更好</strong></p>
+<h2 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809183507690.png" alt="image-20220809183507690"></p>
+<h1 id="非连续分配管理方式"><a href="#非连续分配管理方式" class="headerlink" title="非连续分配管理方式"></a>非连续分配管理方式</h1><ul>
+<li>非连续分配：为用户进程分配的可以是一些<strong>分散的内存空间</strong>。</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809205655209.png" alt="image-20220809205655209"></p>
+<h2 id="基本分页存储管理"><a href="#基本分页存储管理" class="headerlink" title="基本分页存储管理"></a>基本分页存储管理</h2><ul>
+<li>将<strong>内存空间</strong>分为一个个<strong>大小相等的分区</strong>（比如：每个分区4KB），每个分区就是一个<strong>“页框”（页框&#x3D;页帧&#x3D;内存块&#x3D;物理块&#x3D;物理页面）</strong>。每个页框有一个编号，即<strong>“页框号”</strong>（<strong>页框号&#x3D;页帧号&#x3D;内存块号&#x3D;物理块号&#x3D;物理页号</strong>），页框号<strong>从0开始</strong>。 </li>
+<li>将<strong>进程的逻辑地址空间</strong>也分为<strong>与页框大小相等</strong>的一个个部分，每个部分称为一个<strong>“页”或“页面”</strong> 。每个页面也有一个编号，即<strong>“页号”</strong>，页号也是<strong>从0开始</strong>。</li>
+<li>操作系统<strong>以页框为单位为各个进程分配内存空间</strong>。进程的每个页面分别放入一个页框中。也就是说，进程的<strong>页面</strong>与内存的<strong>页框</strong>有<strong>一一对应</strong>的关系。 各个页面不必连续存放，可以放到不相邻的各个页框中。 </li>
+<li>注：进程的最后一个页面可能没有一个页框那么大。也就是说，分页存储有可能产生内部碎片，因此<strong>页框不能太大，否则可能产生过大的内部碎片造成浪费</strong></li>
+</ul>
+<h3 id="如何实现地址的转换"><a href="#如何实现地址的转换" class="headerlink" title="如何实现地址的转换"></a>如何实现地址的转换</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809212933118.png" alt="image-20220809212933118"></p>
+<ul>
+<li><strong>页号</strong> &#x3D; 逻辑地址 &#x2F; 页面长度 （取除法的<strong>整数</strong>部分） </li>
+<li><strong>页内偏移量</strong> &#x3D; 逻辑地址 % 页面长度（取除法的<strong>余数</strong>部分）</li>
+</ul>
+<h3 id="逻辑地址结构"><a href="#逻辑地址结构" class="headerlink" title="逻辑地址结构"></a>逻辑地址结构</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809210643508.png" alt="image-20220809210643508"></p>
+<p>地址结构包含两个部分：前一部分为页号，后一部分为页内偏移量 W。在上图所示的例子中，地址长度为 32 位，其中 0<del>11位 为<strong>“页内偏移量”</strong>，或称<strong>“页内地址”</strong>；12</del>31 位为<strong>“页号”</strong>。 </p>
+<p><strong>如果有 K 位表示“页内偏移量”，则说明该系统中一个页面的大小是 2的 K 次方个内存单元</strong> </p>
+<p><strong>如果有 M 位表示“页号”，则说明在该系统中，一个进程最多允许有 2的 M 次方个页面</strong></p>
+<blockquote>
+<p>Tips：有些奇葩题目中页面大小有可能不是2的整数次幂，这种情况还是得用最原始的方法计算： </p>
+<p><strong>页号</strong> &#x3D; 逻辑地址 &#x2F; 页面长度 （取除法的<strong>整数</strong>部分） </p>
+<p><strong>页内偏移量</strong> &#x3D; 逻辑地址 % 页面长度（取除法的<strong>余数</strong>部分）</p>
+</blockquote>
+<h3 id="页表"><a href="#页表" class="headerlink" title="页表"></a>页表</h3><ul>
+<li><p>为了能知道进程的每个页面在内存中存放的位置，操作系统要为每个进程建立一张<strong>页表</strong>。 </p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809213423340.png" alt="image-20220809213423340"></p>
+<ol>
+<li><p>一个进程对应一张页表</p>
+</li>
+<li><p>进程的每个页面对应一个页表项</p>
+</li>
+<li><p>每个<strong>页表项</strong>由“页号”和“块号”组成</p>
+</li>
+<li><p>页表记录进程<strong>页面</strong>和实际存放的<strong>内存块</strong>之间的<strong>映射关系</strong></p>
+</li>
+<li><p>每个页表项的长度是相同的</p>
+</li>
+</ol>
+</li>
+<li><p>注：页表通常存在PCB（进程控制块）中</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>问题二：如何实现地址的转换</strong></p>
+<p>回答：重定位寄存器：指明了进程在内存中的起始位置</p>
+<p><strong>子问题：为何页面大小要取2的整数幂？</strong></p>
+<p>回答：如果每个页面大小为<strong>2的k次方B</strong>，用二进制数表示逻辑地址，则末尾K位即为<strong>页内偏移量</strong>，其余部分就是<strong>页号</strong>。因此，<strong>如果让每个页面的大小为2的整数幂</strong>，计算机就可以很方便地得出一个逻辑地址对应的页号和页内偏移量。</p>
+</blockquote>
+<h3 id="小结-4"><a href="#小结-4" class="headerlink" title="小结"></a>小结</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809210850194.png" alt="image-20220809210850194"></p>
+<h2 id="基本分段存储管理"><a href="#基本分段存储管理" class="headerlink" title="基本分段存储管理"></a>基本分段存储管理</h2><h3 id="分段"><a href="#分段" class="headerlink" title="分段"></a>分段</h3><ul>
+<li>进程的地址空间：按照程序<strong>自身的逻辑关系划分为若干个段</strong>，每个段都有一个段名（在低级语言中，程序员使用段名来编程），<strong>每段从0开始编址</strong> </li>
+<li>内存分配规则：以段为单位进行分配，<strong>每个段在内存中占据连续空间</strong>，但<strong>各段之间可以不相邻</strong>。</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809214702751.png" alt="image-20220809214702751"></p>
+<ul>
+<li>由于是按逻辑功能模块划分，<strong>用户编程更方便，程序的可读性更高</strong></li>
+</ul>
+<h3 id="逻辑地址结构-1"><a href="#逻辑地址结构-1" class="headerlink" title="逻辑地址结构"></a>逻辑地址结构</h3><ul>
+<li><p>分段系统的逻辑地址结构由<strong>段号（段名）和段内地址（段内偏移量）</strong>所组成。如：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809211051480.png" alt="image-20220809211051480"></p>
+<p><strong>段号的位数决定了每个进程最多可以分几个段</strong> </p>
+<p><strong>段内地址位数决定了每个段的最大长度是多少</strong></p>
+</li>
+</ul>
+<h3 id="段表"><a href="#段表" class="headerlink" title="段表"></a>段表</h3><p>问题：程序分多个段，各段离散地装入内存，为了保证程序能正常运行，就必须能从物理内存中找到各个逻辑段的存放位置。为此，需为每个进程建立一张段映射表，简称<strong>“段表”</strong>。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809211545223.png" alt="image-20220809211545223"></p>
+<ol>
+<li><p>每个段对应一个段表项，其中记录了该段在内存中的起始位置（又称 “基址”）和段的长度。</p>
+</li>
+<li><p>各个段表项的长度是相同的。例如：某系统按字节寻址，采用分段存储管理，逻辑地址结构为（段号16位, 段内地址16位），因此用16位 即可表示最大段长。物理内存大小为4GB（可用32位表示整个物理内存地址空间）。因此，可以让每个段表项占 16+32 &#x3D; 48位，即6B。由于段表项长度相同，因此<strong>段号可以是隐含的，不占存储空间。</strong>若段表存放的起始地址为 M，则 K号段对应的段表项存放的地址为 M + K*6</p>
+</li>
+</ol>
+<h3 id="分段、分页管理的对比"><a href="#分段、分页管理的对比" class="headerlink" title="分段、分页管理的对比"></a>分段、分页管理的对比</h3><ul>
+<li><strong>页是信息的物理单位</strong>。分页的主要目的是为了实现离散分配，提高内存利用率。分页仅仅是系统管理上的需要，完全是系统行为，<strong>对用户是不可见的</strong>。 </li>
+<li><strong>段是信息的逻辑单位</strong>。分段的主要目的是更好地满足用户需求。一个段通常包含着一组属于一个逻辑模块的信息。<strong>分段对用户是可见的</strong>，用户编程时需要显式地给出段名。 </li>
+<li>页的大小固定且由系统决定。段的长度却不固定，决定于用户编写的程序。 </li>
+<li><strong>分页的用户进程地址空间是一维的</strong>，程序员只需给出一个记忆符即可表示一个地址。 </li>
+<li><strong>分段的用户进程地址空间是二维的</strong>，程序员在标识一个地址时，既要给出段名，也要给出段内地址。</li>
+<li><strong>分段比分页更容易实现信息的共享和保护</strong>。</li>
+<li>不能被修改的代码称为<strong>纯代码或可重入代码</strong>（不属于临界资源），这样的代码是可以共享的。可修改的代码是不能共享的</li>
+<li>访问一个逻辑地址需要几次访存？ <ul>
+<li><strong>分页（单级页表）</strong>：第一次访存——查内存中的页表，第二次访存——访问目标内存单元。总共<strong>两次访存</strong></li>
+<li><strong>分段</strong>：第一次访存——查内存中的段表，第二次访存——访问目标内存单元。总共<strong>两次访存</strong></li>
+</ul>
+</li>
+<li>与分页系统类似，分段系统中也可以引入<strong>快表</strong>机构，将近期访问过的段表项放到快表中，这样<strong>可以少一次访问</strong>，加快地址变换速度。</li>
+</ul>
+<h3 id="小结-5"><a href="#小结-5" class="headerlink" title="小结"></a>小结</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809215708744.png" alt="image-20220809215708744"></p>
+<h2 id="段页式管理方式"><a href="#段页式管理方式" class="headerlink" title="段页式管理方式"></a>段页式管理方式</h2><h3 id="分页、分段的优缺点"><a href="#分页、分段的优缺点" class="headerlink" title="分页、分段的优缺点"></a>分页、分段的优缺点<img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809215945638.png" alt="image-20220809215945638"></h3><p>分段管理中产生的外部碎片也可以用“紧凑”来解决，只是需要付出较大的时间代价</p>
+<h3 id="逻辑地址结构-2"><a href="#逻辑地址结构-2" class="headerlink" title="逻辑地址结构"></a>逻辑地址结构</h3><p>段页式系统的逻辑地址结构由段号、页号、页内地址（页内偏移量）组成。如:</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809220208624.png" alt="image-20220809220208624"></p>
+<ul>
+<li><p><strong>段号的位数决定了每个进程最多可以分几个段</strong></p>
+</li>
+<li><p><strong>页号位数决定了每个段最大有多少页</strong></p>
+</li>
+<li><p><strong>页内偏移量决定了页面大小、内存块大小是多少</strong></p>
+</li>
+<li><p><strong>“分段”对用户是可见的</strong>，程序员编程时需要显式地给出段号、段内地址。而将各段“分页”对用户是不可见的。系统会根据段内地址自动划分页号和页内偏移量。因此<strong>段页式管理的地址结构是二维的</strong>。</p>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809220543860.png" alt="image-20220809220543860"></p>
+<h3 id="小结-6"><a href="#小结-6" class="headerlink" title="小结"></a>小结</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809220753418.png" alt="image-20220809220753418"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/08/09/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2022/08/09/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E6%AD%BB%E9%94%81/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">死锁</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2022
+        <i class="ri-heart-fill heart_icon"></i> Yang Shiyu
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Healer"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

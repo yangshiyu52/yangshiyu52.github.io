@@ -86,7 +86,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">3k</span>
+            <span class="post-count">3.9k</span>
         </span>
     </span>
 
@@ -95,7 +95,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">10 min</span>
+            <span class="post-count">13 min</span>
         </span>
     </span>
 </div>
@@ -233,6 +233,70 @@
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808215133294.png" alt="image-20220808215133294"></p>
 <h2 id="前驱关系实现"><a href="#前驱关系实现" class="headerlink" title="前驱关系实现"></a>前驱关系实现</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808215509765.png" alt="image-20220808215509765"></p>
 <h2 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220808215643943.png" alt="image-20220808215643943"></p>
+<h1 id="管程"><a href="#管程" class="headerlink" title="管程"></a>管程</h1><h2 id="为什么要引入管程"><a href="#为什么要引入管程" class="headerlink" title="为什么要引入管程"></a>为什么要引入管程</h2><ul>
+<li>信号量机制存在的问题：编写程序困难、易出错</li>
+<li>能不能设计一种机制，让程序员写程序时不需要再关注复杂的PV操作，让写代码更轻松呢？</li>
+<li>1973年，Brinch Hansen 首次在程序设计语言 (Pascal)中引入了<strong>“管程”</strong>成分——一种高级同步机制</li>
+</ul>
+<h2 id="管程的定义和基本特征"><a href="#管程的定义和基本特征" class="headerlink" title="管程的定义和基本特征"></a>管程的定义和基本特征</h2><p><strong>管程是一种特殊的软件模块，有这些部分组成：</strong></p>
+<ol>
+<li><p>局部于管程的<strong>共享数据结构说明</strong>；</p>
+</li>
+<li><p>对该数据结构进行操作的<strong>一组过程</strong>；“过程”其实就是“函数” </p>
+</li>
+<li><p>对局部于管程的共享数据设置初始值的语句；</p>
+</li>
+<li><p>管程有一个名字。</p>
+</li>
+</ol>
+<p><strong>管程的基本特征：</strong></p>
+<ol>
+<li><p>局部于管程的数据只能被局部于管程的过程所访问；</p>
+</li>
+<li><p>一个进程只有通过调用管程内的过程才能进入管程访问共享数据；</p>
+</li>
+<li><p><strong>每次仅允许一个进程在管程内执行某个内部过程。</strong></p>
+</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809141641757.png" alt="image-20220809141641757"></p>
+<ul>
+<li><p>由编译器负责实现各进程互斥地进入管程中的过程</p>
+</li>
+<li><p>管程中设置条件变量和等待&#x2F;唤醒操作， 以解决同步问题</p>
+</li>
+<li><p>每次仅允许一个进程在管程内执行某个内部过程。 </p>
+<ul>
+<li><p>例1：两个生产者进程并发执行，依次调用了insert 过程… </p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809142034952.png" alt="image-20220809142034952"></p>
+</li>
+<li><p>例2：两个消费者进程先执行，生产者进程后执行…</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809142056699.png" alt="image-20220809142056699"></p>
+</li>
+</ul>
+</li>
+<li><p>引入管程的目的无非就是要更方便地实现进程互斥和同步。</p>
+<ol>
+<li><p>需要在管程中定义共享数据（如生产者消费者问题的缓冲区）</p>
+</li>
+<li><p>需要在管程中定义用于访问这些共享数据的“入口”——其实就是一些函数（如生产者消费者问题中，可以定义一个函数用于将产品放入缓冲区，再定义一个函数用于从缓冲区取出产品）</p>
+</li>
+<li><p>只有<strong>通过这些特定的“入口”才能访问共享数据</strong></p>
+</li>
+<li><p>管程中有很多“入口”，但是<strong>每次只能开放其中一个“入口”</strong>，并且<strong>只能让一个进程或线程进入</strong>（如生产者消费者问题中，各进程需要互斥地访问共享缓冲区。管程的这种特性即可保证一个时间段内最多只会有一个进程在访问缓冲区。注意：这种<strong>互斥特性是由编译器负责实现</strong>的，程序员不用关心）</p>
+</li>
+<li><p>可在管程中设置<strong>条件变量及等待&#x2F;唤醒操作</strong>以解决同步问题。可以让一个进程或线程在条件变量上等待（<strong>此时，该进程应先释放管程的使用权，也就是让出“入口”</strong>）；可以通过唤醒操作将等待在条件变量上的进程或线程唤醒。</p>
+</li>
+</ol>
+</li>
+<li><p>程序员可以用某种特殊的语法定义一个管程（比如: monitor ProducerConsumer …… end monitor;），之后其他程序员就可以使用这个管程提供的特定“入口”很方便地使用实现进程同步&#x2F;互斥了。（封装思想）</p>
+</li>
+</ul>
+<h2 id="Java-中类似于管程的机制"><a href="#Java-中类似于管程的机制" class="headerlink" title="Java 中类似于管程的机制"></a>Java 中类似于管程的机制</h2><p>Java 中，如果用关键字 synchronized 来᧿ 述一个函数，那么这个函数同一时间段内只能被一个线程调用</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809142530862.png" alt="image-20220809142530862"></p>
+<ul>
+<li>每次只能有一个线程进入insert 函数，如果多个线程 同时调用 insert 函数，则后来者需要排队等待</li>
+</ul>
+<h2 id="小结-4"><a href="#小结-4" class="headerlink" title="小结"></a>小结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220809142625250.png" alt="image-20220809142625250"></p>
  
       <!-- reward -->
       
@@ -296,6 +360,15 @@
    
   <nav class="article-nav">
     
+      <a href="/2022/08/09/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E6%AD%BB%E9%94%81/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            死锁
+          
+        </div>
+      </a>
+    
     
       <a href="/2022/08/08/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E5%A4%84%E7%90%86%E6%9C%BA%E8%B0%83%E5%BA%A6/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
@@ -324,7 +397,7 @@
       <li>
         Copyrights &copy;
         2022
-        <i class="ri-heart-fill heart_icon"></i> Shiyu Yang
+        <i class="ri-heart-fill heart_icon"></i> Yang Shiyu
       </li>
     </ul>
     <ul>
