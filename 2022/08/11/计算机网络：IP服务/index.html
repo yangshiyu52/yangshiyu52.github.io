@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>IP服务 |  Healer</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Healer" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-计算机网络：IP服务"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+	
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  IP服务
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9AIP%E6%9C%8D%E5%8A%A1/" class="article-date">
+  <time datetime="2022-08-11T13:33:16.000Z" itemprop="datePublished">2022-08-11</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">计算机基础知识</a> / <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">5.7k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">21 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="IP基础知识"><a href="#IP基础知识" class="headerlink" title="IP基础知识"></a>IP基础知识</h1><h2 id="IP概念"><a href="#IP概念" class="headerlink" title="IP概念"></a>IP概念</h2><p>IP是英文 Internet Protocol的缩写，意思是<strong>“网络之间互连的协议”</strong>，也就是为计算机网络相互连接进行通信而设计的协议。在因特网中，它是能使连接到网上的所有计算机网络实现相互通信的一套规则，规定了计算机在因特网上进行通信时应当遵守的规则。</p>
+<h2 id="IP作用"><a href="#IP作用" class="headerlink" title="IP作用"></a>IP作用</h2><p>IP位于TCP&#x2F;IP参考模型的第三层网络层，实现主机与主机之间的点对点通信，例：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220811213511120.png" alt="image-20220811213511120"></p>
+<h2 id="IP与MAC地址"><a href="#IP与MAC地址" class="headerlink" title="IP与MAC地址"></a>IP与MAC地址</h2><ol>
+<li>IP负责在没有直连的两个网络之间进行数据通信</li>
+<li>MAC负责实现直连的两个设备之间的通信</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220811213733503.png" alt="image-20220811213733503"></p>
+<p><strong>区别</strong>：</p>
+<ol>
+<li>MAC地址的长度为48位（6个字节）；而IP地址为32位。</li>
+<li>MAC地址应用在OSI第二层，即数据链路层；IP地址应用于OSI第三层，即网络层。</li>
+<li>MAC地址的分配是基于制造商；IP地址的分配是基于网络拓朴。</li>
+</ol>
+<h2 id="IP地址的构成"><a href="#IP地址的构成" class="headerlink" title="IP地址的构成"></a>IP地址的构成</h2><ul>
+<li><p>IP地址（IPv4）由<strong>32bit二进制</strong>组成，使用<strong>点分十进制</strong>表示，<strong>8个bit为一组，共4组，使用点分割</strong>，大概支持43亿设备连接，如：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220811213938970.png" alt="image-20220811213938970"></p>
+</li>
+<li><p>实际IP地址是以<strong>网卡</strong>为标准进行配置</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220811214028305.png" alt="image-20220811214028305"></p>
+</li>
+</ul>
+<h2 id="IP地址的分类"><a href="#IP地址的分类" class="headerlink" title="IP地址的分类"></a>IP地址的分类</h2><ul>
+<li>IP地址 &#x3D; <strong>网络号（网段地址）+主机号（主机地址）</strong></li>
+<li>网络号：设备所在区域的唯一标识，网络号相同的设备允许相互通信</li>
+<li>主机号：同一网段中不同设备的唯一标识，不允许重复</li>
+<li>IP地址共分为5类：A类、B类、C类、D类、E类，如：</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220811214353778.png" alt="image-20220811214353778"></p>
+<p><strong>地址的第一个字段的十进制值</strong></p>
+<p><strong>主机数</strong> &#x3D; 2的主机号位数的次方-2（全0和全1）</p>
+<ul>
+<li>A类：1-126 ，16777214台主机，如：10.1.2.3，A类地址的范围为：<strong>1.0.0.1-126.255.255.254</strong></li>
+<li>B类：128-191，65534  台主机，如：144.12.3.77，B类IP地址的范围：<strong>128.0.0.1-191.255.255.254</strong></li>
+<li>C类：192-223，254台主机，如：192.168.1.1，C类IP地址的范围：<strong>192.0.0.1-223.255.255.254</strong></li>
+</ul>
+<h2 id="特殊IP地址"><a href="#特殊IP地址" class="headerlink" title="特殊IP地址"></a>特殊IP地址</h2><h3 id="网络地址"><a href="#网络地址" class="headerlink" title="网络地址"></a>网络地址</h3><p><strong>作用</strong>：标识网络唯一位置及名称</p>
+<p><strong>计算</strong>：网络地址 &#x3D; <strong>网络号+0</strong> 组成</p>
+<p><strong>例1</strong>：ip&#x3D;192.168.1.125  C类  net：host  3:1  网络地址&#x3D;192.168.1.0</p>
+<p><strong>例2</strong>：ip&#x3D;16.1.3.8  A类  net：host  1:3  网络地址&#x3D;16.0.0.0</p>
+<p><strong>注意</strong>：网络地址不同的设备不能相互通信</p>
+<h3 id="广播地址"><a href="#广播地址" class="headerlink" title="广播地址"></a>广播地址</h3><ol>
+<li><strong>本地广播</strong>：用于同一个链路中相互连接的主机之间发送数据包</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220811220224427.png" alt="image-20220811220224427"></p>
+<p>本地广播地址通过 <strong>255.255.255.255</strong> 发送</p>
+<ol start="2">
+<li><strong>直接广播地址</strong>：在不同网路之间进行的广播，<strong>对方的IP网络号+255</strong>，如：</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220811220325855.png" alt="image-20220811220325855"></p>
+<ol start="3">
+<li><strong>多播地址</strong>：将数据包发送给网络中<strong>特定组</strong>的所有主机，如：</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/wps3.jpg" alt="img"> </p>
+<p><strong>多播</strong>使用<strong>D类地址</strong>，从 <strong>224.0.0.0~239.255.255.255</strong> 范围内进行多播，<strong>划分为三类</strong>：</p>
+<ul>
+<li><p>224.0.0.0~224.0.0.255  预留的组播地址，只能用于局域网LAN中，路由器不转发</p>
+</li>
+<li><p>224.0.1.0~238.255.255.255  组播地址，用于 internet</p>
+</li>
+<li><p>239.0.0.0~239.255.255.255  为本地管理组播地址预留，供网络内部使用</p>
+</li>
+</ul>
+<h3 id="回环地址"><a href="#回环地址" class="headerlink" title="回环地址"></a>回环地址</h3><p>同一台计算机内的程序之间进行网络通信时使用的默认地址，使用<strong>127.0.0.1</strong>作为标准默认回环地址，与回环地址具有相同意义的主机名称为 <strong>localhost</strong>，使用该ip及主机名时，数据包不会流向网络</p>
+<h3 id="本地IP地址"><a href="#本地IP地址" class="headerlink" title="本地IP地址"></a>本地IP地址</h3><p><strong>作用</strong>：本地LAN内部使用的IP地址</p>
+<p><strong>区间</strong>：<strong>192.168.x.x</strong>  或  <strong>10.x.x.x</strong></p>
+<h2 id="IP地址的优缺点"><a href="#IP地址的优缺点" class="headerlink" title="IP地址的优缺点"></a>IP地址的优缺点</h2><p><strong>优点</strong>：简单明了，使用方便</p>
+<p><strong>缺点</strong>：</p>
+<ol>
+<li>同一个网络下没有层次划分，缺少灵活性</li>
+<li>不能很好的与现实网络匹配</li>
+</ol>
+<h2 id="子网掩码"><a href="#子网掩码" class="headerlink" title="子网掩码"></a>子网掩码</h2><ul>
+<li><p><strong>组成</strong>：与IP地址相同，<strong>32bit</strong>组成，<strong>点分十进制</strong>表示，如：255.255.255.0</p>
+</li>
+<li><p>子网掩码中<strong>0</strong>映射的IP地址表示<strong>主机</strong>，<strong>1</strong>映射的IP地址表示<strong>网络</strong>：</p>
+<p>ip：192.168.1. 234</p>
+<p>netmask： 255. 255.255.0</p>
+</li>
+<li><p><strong>作用</strong></p>
+<ol>
+<li><p><strong>网络地址与主机地址分离</strong>：<strong>网络地址 &#x3D; IP 地址 AND 子网掩码</strong> ，例：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812161326619.png" alt="image-20220812161326619"></p>
+<p>​      192.168.129.10  1100 0000    0000 1010</p>
+<p>&amp;   255.255.255.0     1111 1111   0000 0000</p>
+<p>net：192.168.129.0</p>
+</li>
+<li><p><strong>子网划分</strong></p>
+</li>
+</ol>
+</li>
+<li><p><strong>子网划分</strong></p>
+<ol>
+<li><p>IP地址 &#x3D; <strong>网络号 + （子网地址 + 子网主机号）</strong></p>
+</li>
+<li><p>默认子网掩码：<strong>A类 255.0.0.0   B类 255.255.0.0  C类 255.255.255.0</strong></p>
+</li>
+<li><p>子网划分原则：<strong>子网掩码二进制状态下将表示主机的0更改为1，原来表示主机的数据现在表示子网，</strong>如：</p>
+<p>255.255.255.0   1111 1111  1111 1111  1111 1111  00 00 0000</p>
+<p>改为：255.255.255.192  1111 1111  1111 1111  1111 1111  11 00 0000</p>
+<p>1111 1111  1111 1111  1111 1111表示网络号，11表示子网号，00 0000表示主机号     </p>
+</li>
+<li><p>例1：有网络地址192.168.1.0 ，子网掩码为255.255.255.192，分析网络构成：</p>
+<ul>
+<li><p>第一点：划分几个子网：<strong>2的n次方</strong>    n：子网掩码的<strong>0变为1的个数</strong>，当前示例：2的2次方 -&gt; 4 个子网</p>
+</li>
+<li><p>第二点：每个子网的合法主机数：<strong>2的n次方-2</strong>  n：子网掩码中<strong>剩余0的个数</strong>，当前示例：2的6次方-2 -&gt; 62 台</p>
+</li>
+<li><p>第三点：每个合法的子网号：</p>
+<p>ip：   1111 1111  1111 1111  1111 1111  xx xx xxxx</p>
+<p>netmask  1111 1111  1111 1111  1111 1111  11 00 0000   </p>
+<p>2个1  则IP地址最后一个字节的可能数据：  </p>
+<ol>
+<li><strong>00</strong> 00 0000 -&gt;  <strong>0</strong></li>
+<li><strong>01</strong> 00 0000 -&gt;  <strong>64</strong></li>
+<li><strong>10</strong> 00 0000 -&gt;  <strong>128</strong></li>
+<li><strong>11</strong> 00 0000 -&gt;  <strong>192</strong></li>
+</ol>
+<p><strong>合法的子网号</strong>：</p>
+<ol>
+<li>192.168.1.0</li>
+<li>192.168.1.64</li>
+<li>192.168.1.128</li>
+<li>192.168.1.192</li>
+</ol>
+</li>
+<li><p>第四点：每个子网的广播地址：<strong>下一子网号-1</strong></p>
+<ol>
+<li>第一个子网广播地址：192.168.1.63</li>
+<li>第二个子网广播地址：192.168.1.127</li>
+<li>第三个子网广播地址：192.168.1.191</li>
+<li>第四个子网广播地址：192.168.1.255</li>
+</ol>
+</li>
+<li><p>第五点：每个子网合法的主机号范围：掐头去尾</p>
+<ol>
+<li>第一个子网主机地址：192.168.1.1~192.168.1.62</li>
+<li>第二个子网主机地址：192.168.1.65~192.168.1.126</li>
+<li>第三个子网主机地址：192.168.1.129~192.168.1.190</li>
+<li>第四个子网主机地址：192.168.1.193~192.168.1.254</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>例2：有网络地址192.168.1.0 ， 子网掩码为255.255.255.240，分析网络构成：</p>
+<p>子网掩码的二进制表示：1111 1111  1111 1111  1111 1111  1111 0000</p>
+<ul>
+<li><p>第一点：划分几个子网：<strong>2的n次方</strong>    n：子网掩码的<strong>0变为1的个数</strong>，当前示例：2的4次方 -&gt; 16 个子网</p>
+</li>
+<li><p>第二点：每个子网的合法主机数：<strong>2的n次方-2</strong>  n：子网掩码中<strong>剩余0的个数</strong>，当前示例：2的4次方-2 -&gt; 14 台</p>
+</li>
+<li><p>第三点：每个合法的子网号：</p>
+<p>ip：   1111 1111  1111 1111  1111 1111  xx xx xxxx</p>
+<p>netmask  1111 1111  1111 1111  1111 1111  1111 0000   </p>
+<p>2个1  则IP地址最后一个字节的可能数据：  </p>
+<ol>
+<li><strong>0000</strong> 0000 -&gt;  <strong>0</strong></li>
+<li>0001 0000 -&gt;  <strong>16</strong></li>
+<li>0010 0000 -&gt;  <strong>32</strong></li>
+<li>0011 0000 -&gt;  <strong>48</strong></li>
+<li>0100 0000 -&gt;  <strong>64</strong></li>
+<li>0101 0000 -&gt;  <strong>80</strong></li>
+<li>0110 0000 -&gt;  <strong>96</strong></li>
+<li>0111 0000 -&gt;  <strong>112</strong></li>
+<li>1000 0000 -&gt;  <strong>128</strong></li>
+<li>1001 0000 -&gt;  <strong>144</strong></li>
+<li>1010 0000 -&gt;  <strong>160</strong></li>
+<li>1011 0000 -&gt;  <strong>176</strong></li>
+<li>1100 0000 -&gt;  <strong>192</strong></li>
+<li>1101 0000 -&gt;  <strong>208</strong></li>
+<li>1110 0000 -&gt;  <strong>224</strong></li>
+<li>1111 0000 -&gt;  <strong>240</strong></li>
+</ol>
+<p><strong>合法的子网号</strong>：</p>
+<ol>
+<li>192.168.1.0</li>
+<li>192.168.1.16</li>
+<li>192.168.1.32</li>
+<li>192.168.1.48</li>
+<li>192.168.1.64</li>
+<li>192.168.1.80</li>
+<li>192.168.1.96</li>
+<li>192.168.1.112</li>
+<li>192.168.1.128</li>
+<li>192.168.1.144</li>
+<li>192.168.1.160</li>
+<li>192.168.1.176</li>
+<li>192.168.1.192</li>
+<li>192.168.1.208</li>
+<li>192.168.1.224</li>
+<li>192.168.1.240</li>
+</ol>
+</li>
+<li><p>第四点：每个子网的广播地址：<strong>下一子网号-1</strong></p>
+<ol>
+<li>第一个子网广播地址：192.168.1.15</li>
+<li>第二个子网广播地址：192.168.1.31</li>
+<li>第三个子网广播地址：192.168.1.47</li>
+<li>第四个子网广播地址：192.168.1.63   </li>
+<li>第五个子网广播地址：192.168.1.79 </li>
+<li>第六个子网广播地址：192.168.1.95  </li>
+<li>第七个子网广播地址：192.168.1.111  </li>
+<li>第八个子网广播地址：192.168.1.127  </li>
+<li>第九个子网广播地址：192.168.1.143 </li>
+<li>第十个子网广播地址：192.168.1.159  </li>
+<li>第十一个子网广播地址：192.168.1.175  </li>
+<li>第十二个子网广播地址：192.168.1.191  </li>
+<li>第十三个子网广播地址：192.168.1.207  </li>
+<li>第十四个子网广播地址：192.168.1.223 </li>
+<li>第十五个子网广播地址：192.168.1.239  </li>
+<li>第十六个子网广播地址：192.168.1.255</li>
+</ol>
+</li>
+<li><p>第五点：每个子网合法的主机号范围：掐头去尾</p>
+<ol>
+<li>第一个子网主机地址：192.168.1.1~192.168.1.14</li>
+<li>第二个子网主机地址：192.168.1.17~192.168.1.30</li>
+<li>第三个子网主机地址：192.168.1.33~192.168.1.46</li>
+<li>第四个子网主机地址：192.168.1.49~192.168.1.62</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>子网掩码精简表示法</p>
+<ul>
+<li>结构：<strong>IP地址&#x2F;子网掩码二进制中1个数</strong></li>
+<li>例：192.168.1.0&#x2F;24   24表示子网掩码有24个1，一共32位，剩余位0，则十进制：255.255.255.0</li>
+</ul>
+</li>
+</ul>
+<h2 id="公有IP与私有IP"><a href="#公有IP与私有IP" class="headerlink" title="公有IP与私有IP"></a>公有IP与私有IP</h2><ol>
+<li>公有IP地址是由固定组织部门统一分配，互联网范围中必须唯一</li>
+<li>私有IP地址是在LAN中自行分配使用，可以重复</li>
+<li>公有IP地址是由ICANN（互联网名称与数字地址分配机构）组织下的IANA负责分配互联网的IP地址，按照洲划分，中国是由CNNIC机构管理，如：</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812171751467.png" alt="image-20220812171751467"></p>
+<h2 id="IPv6"><a href="#IPv6" class="headerlink" title="IPv6"></a>IPv6</h2><ul>
+<li><p>原因：IPv4是32位，提供的地址数量不足</p>
+</li>
+<li><p>IPv6地址是<strong>128bit二进制</strong>组成，以<strong>16位一组</strong>，每组使用<strong>冒号</strong>分割，若出现连续的0，可以省略并用两个冒号隔开（一个IP地址<strong>只允许出现一次2个连续的冒号</strong>），如： fe80::22da:22ff:fe7a:2a87</p>
+</li>
+<li><p>特点</p>
+<ol>
+<li><p>IPV4与IPv6 不能兼容</p>
+</li>
+<li><p>IPv6可以自动分配IP地址，不需要DHCP服务器支持，实现即插即用</p>
+</li>
+<li><p>IPv6数据包的包头采用固定的40字节长度，去掉了包头校验等简化了包头结构，减轻了路由器的符合，提高传输速度</p>
+</li>
+<li><p>IPv6地址：单播地址（一对一）、组播地址（一对多）、任播地址  ，<strong>没有广播地址</strong>，如：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812172124299.png" alt="image-20220812172124299"></p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="IP的分片与重组"><a href="#IP的分片与重组" class="headerlink" title="IP的分片与重组"></a>IP的分片与重组</h2><ul>
+<li><p>原因：由于数据链路层到达的目的不同，且每种链路最大的传输单元不同，则导致IP数据报发送时需要分片接收时需要重组</p>
+</li>
+<li><p>MTU：数据链路层的最大传输单元，如图：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812172222213.png" alt="image-20220812172222213"></p>
+</li>
+<li><p>重组：IP数据报在目的主机完成片段重组，可能出现乱序、丢失的现象，路由器不负责重组，如：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812172232200.png" alt="image-20220812172232200"></p>
+</li>
+</ul>
+<h2 id="IP地址与路由控制"><a href="#IP地址与路由控制" class="headerlink" title="IP地址与路由控制"></a>IP地址与路由控制</h2><ul>
+<li><p>路由转发原理：IP数据报到达路由器时，路由器根据数据报的目的地址来查询<strong>路由表</strong>，根据查询结果将数据报转发给下一投递路径，该过程称为<strong>IP路由</strong></p>
+</li>
+<li><p>分析：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812173524457.png" alt="image-20220812173524457"></p>
+<ol>
+<li>主机A将IP数据报发送给直连路由器1</li>
+<li>路由器1收到后，计算目的地址的网络地址拿到路由表中查询，得到转发结果为：10.1.0.2即路由器2</li>
+<li>路由器2收到后，查询路由表找到匹配项，最终转发给目的主机10.1.2.1，结束通信</li>
+</ol>
+</li>
+<li><p>路由表</p>
+<ul>
+<li><p>路由表记录IP数据报在下一跳应该转发的地址</p>
+</li>
+<li><p>跳：Hop，它是网络的一个区间，IP数据报在网络中跳跃转发，在每一个区间决定IP数据报的下一条路径即为<strong>路由算法</strong>，图：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812174402267.png" alt="image-20220812174402267"></p>
+</li>
+<li><p>路由表生成方式有两种，一种为手动设置即<strong>静态路由</strong>，另一种为路由器之间通过交换信息自行刷新的称为<strong>动态路由（OSPF）</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="ARP（Address-Resolution-Protocol）"><a href="#ARP（Address-Resolution-Protocol）" class="headerlink" title="ARP（Address Resolution Protocol）"></a>ARP（Address Resolution Protocol）</h2><ul>
+<li><p>作用：将IP地址解析为MAC地址</p>
+</li>
+<li><p>工作原理：</p>
+<ol>
+<li><p>ARP请求：主机通过广播发送ARP请求，如：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812175018391.png" alt="image-20220812175018391"></p>
+</li>
+<li><p>ARP响应：当链路中所有设备收到ARP请求后，会拆开ARP请求包，若其中目的IP与自己IP相同则就将本机的MAC地址塞入ARP响应包中返回给发送方主机，图：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812175118344.png" alt="image-20220812175118344"></p>
+</li>
+<li><p>更新ARP缓存表：主机A收到ARP响应包后将主机C的IP地址与MAC地址记录到ARP缓存表中，下次在发送数据时，直接读取缓存信息</p>
+</li>
+</ol>
+</li>
+<li><p>查询命令：arp  -a</p>
+</li>
+<li><p>RARP：将已知MAC地址转为IP地址</p>
+</li>
+</ul>
+<h2 id="MAC地址"><a href="#MAC地址" class="headerlink" title="MAC地址"></a>MAC地址</h2><ul>
+<li><p>作用：用来确认网络设备位置的位址</p>
+</li>
+<li><p>组成：使用<strong>48bit二进制</strong>组成，十六进制表示，使用横杠作为间隔符，两两一组，如：20-da-22 - 7a-2a-87，其中，20-da-22为厂商识别码  7a-2a-87为内部识别码，IP地址的分配基于网络的拓扑结构，而MAC地址的分配基于制造商。</p>
+</li>
+<li><p>MAC地址直接写入（烧录）在网卡的rom芯片中，只读属性，原则上不可修改，用于LAN中<strong>表示目的设备位置</strong></p>
+</li>
+</ul>
+<h2 id="DNS域名解析"><a href="#DNS域名解析" class="headerlink" title="DNS域名解析"></a>DNS域名解析</h2><ul>
+<li><p>作用：</p>
+<ol>
+<li>域名管理</li>
+<li>域名解析：将域名网址转换为IP地址</li>
+</ol>
+</li>
+<li><p><strong>域名管理</strong></p>
+<ol>
+<li><p>使用<strong>层级关系</strong>管理组织域名系统</p>
+</li>
+<li><p>地址名称解释： http:&#x2F;&#x2F; www . baidu . com &#x2F; index.html。其中，http:为协议名，www . baidu . com为域名，index.html为目录及文件名+</p>
+</li>
+<li><p>域名中<strong>越靠右侧的域名级别越高</strong></p>
+</li>
+<li><p><strong>最右侧为根域</strong>即顶层，使用树状组织关系：如：com 商业组织   gov  政府部门  edu  教育机构  cn  中国  </p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812195923996.png" alt="image-20220812195923996"></p>
+</li>
+</ol>
+</li>
+<li><p><strong>域名解析</strong></p>
+</li>
+</ul>
+<ol>
+<li>作用：由于域名对于使用者来说使用方便但计算机设备不识别，IP地址计算机识别但不方便人使用和记忆，则就有一组即独立又协作服务器来<strong>完成域名地址与IP地址的转换</strong></li>
+<li>解析方式：<strong>递归解析、反复解析</strong></li>
+<li>工作流程<ol>
+<li><strong>本地处理</strong>：浏览器<strong>查看缓存</strong>是否有域名与IP映射关系，若没有则向操作系统缓存要，若还没有则检查本机域名hosts文件，若无信息则向DNS服务器提出查询（hosts文件位置：C:\Windows\System32\drivers\etc）</li>
+<li><strong>外网查询</strong>：客户端向本地DNS服务器发出DNS请求-&gt;服务器收到请求查询本机缓存，若有则返回，若无此信息则向上级DNS服务器提出请求-&gt;……-&gt;本地DNS将IP地址返回给客户端，客户端与目的建立连接</li>
+</ol>
+</li>
+</ol>
+<h2 id="DHCP协议"><a href="#DHCP协议" class="headerlink" title="DHCP协议"></a>DHCP协议</h2><ul>
+<li><p>作用：<strong>动态获取IP地址</strong></p>
+</li>
+<li><p>DHCP客户端使用68号端口，DHCP服务器使用67端口监听</p>
+</li>
+<li><p>工作原理：四步</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812200347395.png" alt="image-20220812200347395"></p>
+<ol>
+<li>客户端发起DHCP请求，由于客户端无IP地址也不知道DHCP服务器的IP地址，则通过UDP广播（255.255.255.255）发送请求</li>
+<li>DHCP服务器收到请求后，依然通过广播将相应信息（IP、网关、掩码等）发送给网络</li>
+<li>客户端收到后，向服务器发送确认信息，并回显配置参数</li>
+<li>最后服务端响应后应答后续参数</li>
+</ol>
+</li>
+<li><p>注意</p>
+<ul>
+<li>IP地址有租期概念，快到期时会重新发送请求报文，同意则延长租期</li>
+<li>DHCP响应时间比自行设置要慢</li>
+</ul>
+</li>
+</ul>
+<h2 id="NAT技术"><a href="#NAT技术" class="headerlink" title="NAT技术"></a>NAT技术</h2><ul>
+<li><p>原因：IPV4的地址非常紧缺，使用NAT地址转换方法缓解地址耗尽问题</p>
+</li>
+<li><p>作用：NAT可以将私有地址转换为公有地址，如：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812200511805.png" alt="image-20220812200511805"></p>
+</li>
+<li><p>实际使用中使用IP地址+端口号一起进行转换，NAT变为NAPT（网络地址与端口转换协议），图：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812200530221.png" alt="image-20220812200530221"></p>
+<ol>
+<li>图中两个客户端192.168.1.10 与192.168.1.11同时与服务器183.232.231.172进行通信，两个客户端端口号都是1025</li>
+<li>此时，两个私有ip都需要转换为公有IP（120.229.175.121），通过公有地址的不同端口号来区分</li>
+<li>路由器生成NAPT转换表，使用同一个公有IP和不同端口号与私有IP进行映射，实现通信</li>
+</ol>
+</li>
+</ul>
+<h2 id="ICMP"><a href="#ICMP" class="headerlink" title="ICMP"></a>ICMP</h2><ul>
+<li><p><strong>互联网控制报文协议</strong></p>
+</li>
+<li><p>作用：<strong>确认IP数据报是否成功到达目的地址、提供错误报告、改善网络设置</strong></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812200624288.png" alt="image-20220812200624288"></p>
+</li>
+<li><p>例：</p>
+<ol>
+<li>主机A向主机B发送数据报，由于某些原因路由器2未发现主机B的存在，此时路由器2会向主机A发送一个ICMP目标不可到达数据报，说明发送未成功</li>
+<li>路由器2返回ICMP数据报时会通过路由器1转发，最后到达目的主机A</li>
+<li>主机A收到后分解ICMP的首部信息及数据信息已得知发生的具体问题</li>
+</ol>
+</li>
+<li><p>ICMP报文的类型</p>
+<ol>
+<li><strong>诊断查询类型（查询报文类型）</strong></li>
+<li><strong>通知出错原因类型（差错报文类型）</strong></li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812200710229.png" alt="image-20220812200710229"></p>
+</li>
+<li><p>ping命令</p>
+<ul>
+<li><strong>因特网包探索器命令</strong>，用于测试网络连接，ping命令发送一个ICMP请求，判断目的设备能否应答。</li>
+<li>格式：  <strong>ping   目的IP地址   或   ping  目的域名</strong></li>
+<li>参数：<ol>
+<li><strong>TTL</strong>：生存时间，由发送主机设置，不同操作系统数值不同，以防止数据报在网络中永不终止的循环发送，转发一次会减1</li>
+<li><strong>time</strong>：一次请求时间，数值越小速度越快</li>
+<li><strong>丢包率</strong>：网络负载及健康程度</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="ISO-x2F-OSI网络参考模型"><a href="#ISO-x2F-OSI网络参考模型" class="headerlink" title="ISO&#x2F;OSI网络参考模型"></a>ISO&#x2F;OSI网络参考模型</h1><ul>
+<li>网络协议分层模型意义：为了解决通信，由于一次性实现较难，则分步来解决，每一个步骤使用最恰当的技术来实现，所有步骤都完成则通信即可实现</li>
+</ul>
+<h2 id="OSI协议模型"><a href="#OSI协议模型" class="headerlink" title="OSI协议模型"></a>OSI协议模型</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812210330169.png" alt="image-20220812210330169"></p>
+<ul>
+<li><p>一共分为七层</p>
+</li>
+<li><p>是一种互联、开放、参考模型，是一种框架式的、指南性的协议，具体实现细节并未说明，是指定其它协议的参考</p>
+</li>
+<li><p>物理层</p>
+<ul>
+<li>作用：连接不同的物理设备，<strong>传输比特流（二进制）</strong>，为上层协议提供一个传输数据的可靠<strong>物理媒体</strong></li>
+<li>设备：<ol>
+<li><strong>中继器（repeater）</strong>：放大器，对传输数据信号进行再次放大，延长传输距离，放大次数要受到限制</li>
+<li><strong>集线器</strong>：连接局域网中的不同设备（多端口的中继器）</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>数据链路层：</p>
+<ul>
+<li><p>作用：在物理层基础上提供可靠的数据投递服务，完成<strong>差错控制、流量控制、物理地址寻址</strong>等功能</p>
+</li>
+<li><p>传输数据的单位：<strong>帧</strong>，如：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812212458802.png" alt="image-20220812212458802"></p>
+<p>目的和源地址：MAC地址（6B）</p>
+<p>类型：标识上层协议（2B）</p>
+<p>数据：封装数据内容（1500B）</p>
+<p>CRC：循环冗余校验（4B）</p>
+</li>
+</ul>
+</li>
+<li><p>网络层</p>
+<ul>
+<li><p>实现两个端系统之间的数据传输，实现<strong>路由选择、连接建立、释放、终止</strong>等</p>
+</li>
+<li><p>重要设备：<strong>路由器（router）</strong>，涉及到的协议：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812212608163.png" alt="image-20220812212608163"></p>
+</li>
+</ul>
+</li>
+<li><p>传输层</p>
+</li>
+<li><p>提供端到端的连接，透明的传输报文，将数据可靠的传送到相应端口</p>
+</li>
+<li><p><strong>端口</strong>：使用<strong>2Bi</strong>t对应用程序编号，范围：0-65535，图：HTTP  80  FTP  21  POP3  110</p>
+</li>
+<li><p>协议：<strong>TCP  UPD</strong></p>
+</li>
+<li><p>应用层：为操作系统或网络应用程序提供访问接口</p>
+</li>
+<li><p>各层功能及协议总图</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812212641335.png" alt="image-20220812212641335"></p>
+</li>
+</ul>
+<h2 id="TCP-x2F-IP协议（四层）"><a href="#TCP-x2F-IP协议（四层）" class="headerlink" title="TCP&#x2F;IP协议（四层）"></a>TCP&#x2F;IP协议（四层）</h2><ul>
+<li><p>OSI协议与TCP&#x2F;IP协议的映射关系：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812214211573.png" alt="image-20220812214211573"></p>
+</li>
+<li><p>TCP&#x2F;IP各层包含的子协议：</p>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812213513243.png" alt="image-20220812213513243"></p>
+<ul>
+<li><p>网络层IP数据报的结构</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812214246630.png" alt="image-20220812214246630"></p>
+</li>
+<li><p>IP数据报功能分析</p>
+<ul>
+<li><p>版本：占用4b，表示IP的版本号，一般有IPV4 和 IPV6</p>
+</li>
+<li><p>头部长度：占用4b，表示数据报报头的长度，没有可选项的数据报报头长度为20B</p>
+</li>
+<li><p>总长度：占16b，表示整个数据报的长度，最大65535B</p>
+</li>
+<li><p>标识：占16b，用于分片及重组，同一个分片的标识是相同</p>
+</li>
+<li><p>标志：占3b，表示分片的信息，含义：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812213606392.png" alt="image-20220812213606392"></p>
+</li>
+<li><p>分片偏移：占13b，表示分片在整个数据报的位置，以便于重组</p>
+</li>
+<li><p>生存时间：占8b，表示数据报可以经过的中转路由器数量，每经过一个路由器TTL会减1，变为0时会丢弃数据报，避免数据报无限传播</p>
+</li>
+<li><p>协议：占8b，表示上一层所使用的的协议（TCP&#x2F;UDP）</p>
+</li>
+<li><p>头部校验和：占16b，用来校验数据报的报头是否损坏</p>
+</li>
+<li><p>源地址：占32b，表示发送端的IP地址</p>
+</li>
+<li><p>目的地址：占32b，表示接收端的IP地址</p>
+</li>
+<li><p>可选项：很少使用</p>
+</li>
+<li><p>填充：若没有可选项，报头长度不是32b的整数倍，则需要向填充字段填充数据，保证为32b的整数倍</p>
+</li>
+</ul>
+</li>
+<li><p>TCP报文、IP数据报、数据帧的关系：</p>
+</li>
+</ul>
+<p> <img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812213659740.png" alt="image-20220812213659740"></p>
+<h2 id="TCP协议的三次握手"><a href="#TCP协议的三次握手" class="headerlink" title="TCP协议的三次握手"></a>TCP协议的三次握手</h2><ul>
+<li>作用：建立连接</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812215450345.png" alt="image-20220812215450345"></p>
+<ul>
+<li><p>名词解释</p>
+<ul>
+<li>seq：<strong>序列号</strong>，占4B，标记数据段顺序</li>
+<li>SYN：<strong>请求同步序列号</strong>，当SYN&#x3D;1 ， ACK&#x3D;0 时表示建立连接，握手完毕后会清零</li>
+<li>ack：<strong>序列确认号</strong>，占4B，表示期望接收到的下一个字节的编号</li>
+<li>ACK：<strong>标志确认号</strong>，占1b，仅当ACK&#x3D;1时，ack字段才有效</li>
+</ul>
+</li>
+<li><p>过程</p>
+<ol>
+<li>第一次握手：<strong>建立连接时客户端向服务器端发送SYN&#x3D;1包，等待服务器确认</strong>（客户端说：我请求建立连接）</li>
+<li>第二次握手：<strong>服务器端收到了SYN包，此时再次发送确认信息表明客户端的SYN包已收到</strong>（服务器端说：我收到了你发送建立连接的请求，我可以建立连接）</li>
+<li>第三次握手：<strong>客户端收到服务器的SYN确认包，再次向服务器发送ACK确认包，次包发送完毕，两端都进入连接成功状态，开始发送数据</strong>（客户端说：收到了你可以建立连接的消息，那就开始吧）</li>
+</ol>
+</li>
+</ul>
+<h2 id="TCP协议的四次挥手"><a href="#TCP协议的四次挥手" class="headerlink" title="TCP协议的四次挥手"></a>TCP协议的四次挥手</h2><ul>
+<li>作用：释放连接</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812215450345.png"></p>
+<ul>
+<li>过程<ol>
+<li>第一次挥手：<strong>客户端发送释放连接报文，随后客户端进行半关闭状态，停止客户端向服务端方向的信息发送，但任然可以接收服务端传过来的信息</strong>（客户端说：我请求释放连接）</li>
+<li>第二次挥手：<strong>服务器端确认客户端的请求已收到，服务器端进半关闭</strong>（服务器端说：收到，你需要释放连接请求我知道了）</li>
+<li>第三次挥手：<strong>发送剩余数据，做好服务器端到客户机端方向上的连接释放准备</strong>（服务器端说：剩余数据已发送完毕，可以关闭连接了）</li>
+<li>第四次挥手：<strong>客户机确认服务器已做好释放连接准备，客户端等待2MSL后结束</strong>（客户端说：收到，再见）</li>
+</ol>
+</li>
+</ul>
+<h2 id="UDP协议"><a href="#UDP协议" class="headerlink" title="UDP协议"></a>UDP协议</h2><ul>
+<li><p><strong>用户数据报协议</strong>，是一种<strong>面向无连接、不可靠的数据投递服务</strong>，没有拥塞控制的一种报文传输协议</p>
+</li>
+<li><p>TCP与UDP应用区别：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812215859320.png" alt="image-20220812215859320"></p>
+</li>
+<li><p>TCP报文格式：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812215911344.png" alt="image-20220812215911344"></p>
+</li>
+<li><p>UDP报文格式：</p>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812213839865.png" alt="image-20220812213839865"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9AIP%E6%9C%8D%E5%8A%A1/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">数据链路层</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2022
+        <i class="ri-heart-fill heart_icon"></i> Yang Shiyu
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Healer"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

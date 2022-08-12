@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>计算机网络体系结构 |  Healer</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Healer" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-计算机网络：计算机网络概述"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+	
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  计算机网络体系结构
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/08/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E6%A6%82%E8%BF%B0/" class="article-date">
+  <time datetime="2022-08-10T01:32:59.000Z" itemprop="datePublished">2022-08-10</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">计算机基础知识</a> / <a class="article-category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2.1k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">7 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="计算机网络概述"><a href="#计算机网络概述" class="headerlink" title="计算机网络概述"></a>计算机网络概述</h1><h2 id="计算机网络的概念"><a href="#计算机网络的概念" class="headerlink" title="计算机网络的概念"></a>计算机网络的概念</h2><ul>
+<li>计算机网络是一个将分散的、具有独立功能的<strong>计算机系统</strong>，通过<strong>通信设备与线路</strong>连接起来，由功能完善的软件<strong>实现资源共享和信息传递</strong>的系统。</li>
+<li>简而言之，计算机网络就是一些<strong>互联的（互联互通）、自治的（无主从关系）</strong>计算机系统的集合。</li>
+</ul>
+<h2 id="计算机网络的组成"><a href="#计算机网络的组成" class="headerlink" title="计算机网络的组成"></a>计算机网络的组成</h2><ul>
+<li>从<strong>组成部分</strong>上看，一个完整的计算机网络主要由<strong>硬件、软件、协议</strong>三大部分组成，缺一不可。</li>
+<li>从<strong>工作方式</strong>上看，计算机网络可分为<strong>边缘部分和核心部分</strong>。<ul>
+<li>边缘部分：用户直接使用</li>
+<li>核心部分：为边缘部分服务</li>
+</ul>
+</li>
+<li>从<strong>功能组成</strong>上看，计算机网络由<strong>通信子网和资源子网</strong>组成。<ul>
+<li>通信子网：实现数据通信</li>
+<li>资源子网：实现资源共享&#x2F;数据处理</li>
+</ul>
+</li>
+</ul>
+<h2 id="计算机网络的功能"><a href="#计算机网络的功能" class="headerlink" title="计算机网络的功能"></a>计算机网络的功能</h2><ol>
+<li>数据通信：最基本最重要的功能，能够实现计算机之间的数据传输</li>
+<li>资源共享：软件共享、数据共享、硬件共享</li>
+<li>分布式处理：提高系统利用率</li>
+<li>提高可靠性：一台坏了，可以用同网络下其他计算机代替</li>
+<li>负载均衡：将工作任务均衡分配给网络下的计算机</li>
+</ol>
+<h2 id="计算机网络的分类"><a href="#计算机网络的分类" class="headerlink" title="计算机网络的分类"></a>计算机网络的分类</h2><ul>
+<li>按分布范围分类：广域网WAN、城域网MAN、局域网WAN、个人区域网PAN</li>
+<li>按传输技术分类：广播式网络、点对点网络</li>
+<li>按拓朴结构分类：总线型、星型网络、环型网络、网状型网络</li>
+<li>按使用者分类：公用网、专用网</li>
+<li>按交换技术分类：电路交换、报文交换、分组交换</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220811143256460.png" alt="image-20220811143256460"></p>
+<h2 id="计算机网络的性能指标"><a href="#计算机网络的性能指标" class="headerlink" title="计算机网络的性能指标"></a>计算机网络的性能指标</h2><h3 id="速率"><a href="#速率" class="headerlink" title="速率"></a>速率</h3><ul>
+<li><strong>定义</strong>：连接在计算机网络上的主机在数字信道上传送数据位数的速率</li>
+<li><strong>单位</strong>：b&#x2F;s,Kb&#x2F;s,Mb&#x2F;s,Tb&#x2F;s，如果用字节表示，则是B&#x2F;s,KB&#x2F;s,MB&#x2F;s,TB&#x2F;s</li>
+<li>1Byte&#x3D;8Bit</li>
+</ul>
+<h3 id="带宽"><a href="#带宽" class="headerlink" title="带宽"></a>带宽</h3><p>网络设备所支持的最高速度，单位同速率，是<strong>理想条件下最高速率</strong></p>
+<h3 id="吞吐量"><a href="#吞吐量" class="headerlink" title="吞吐量"></a>吞吐量</h3><p>单位时间内通过某个网络的<strong>数据总量</strong></p>
+<h3 id="时延"><a href="#时延" class="headerlink" title="时延"></a>时延</h3><p>数据从网络的一端到另一端所需的时间，也叫<strong>延迟或迟延</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">描述</th>
+<th align="center">计算公式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">发送时延</td>
+<td align="center">数据从主机到信道上所用的时间</td>
+<td align="center">发送的数据长度&#x2F;发送速率</td>
+</tr>
+<tr>
+<td align="center">传播时延</td>
+<td align="center">数据在信道上传播所花费的时间</td>
+<td align="center">信道长度&#x2F;电磁波在信道上传播的速率</td>
+</tr>
+<tr>
+<td align="center">排队时延</td>
+<td align="center">数据在路由器前等待前面数据处理的时间</td>
+<td align="center">无计算方式</td>
+</tr>
+<tr>
+<td align="center">处理时延</td>
+<td align="center">数据在路由器中处理需求的时间</td>
+<td align="center">无计算方式</td>
+</tr>
+</tbody></table>
+<p>使用高速链路(提高网速)，只能减小<strong>发送时延</strong>，无法减少其他三个时延</p>
+<h3 id="时延带宽积"><a href="#时延带宽积" class="headerlink" title="时延带宽积"></a>时延带宽积</h3><p>公式：时延带宽积&#x3D;传播时延x带宽</p>
+<p>以比特为单位的链路长度，意思是链路上有多少比特的数据</p>
+<h3 id="往返时延RTT"><a href="#往返时延RTT" class="headerlink" title="往返时延RTT"></a>往返时延RTT</h3><p>从发送端发送数据开始，到发送端收到来自接收端的确认（接收端收到数据后便立即发送确认）</p>
+<p>总共经历的时延 RTT&#x3D;传播时延x2+处理时间(有时可能直接忽略)</p>
+<h3 id="利用率"><a href="#利用率" class="headerlink" title="利用率"></a>利用率</h3><h4 id="信道利用率"><a href="#信道利用率" class="headerlink" title="信道利用率"></a>信道利用率</h4><p>信道利用率&#x3D;有数据通过时间&#x2F;有+无数据通过时间</p>
+<h4 id="网络利用率"><a href="#网络利用率" class="headerlink" title="网络利用率"></a>网络利用率</h4><p>网络利用率&#x3D;所有信道利用率加权求平均值</p>
+<h3 id="时延和利用率的关系图"><a href="#时延和利用率的关系图" class="headerlink" title="时延和利用率的关系图"></a>时延和利用率的关系图</h3><p>利用率越高，延迟越大</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20200626203643244.png" alt="img"></p>
+<h1 id="计算机网络体系结构与参考模型"><a href="#计算机网络体系结构与参考模型" class="headerlink" title="计算机网络体系结构与参考模型"></a>计算机网络体系结构与参考模型</h1><h2 id="计算机网络分层结构"><a href="#计算机网络分层结构" class="headerlink" title="计算机网络分层结构"></a>计算机网络分层结构</h2><h3 id="为什么要分层"><a href="#为什么要分层" class="headerlink" title="为什么要分层"></a>为什么要分层</h3><p>为了降低协议设计和调试的复杂性，通常对计算机网络系统结构以分层方式进行建模，每层都实现一种相对独立的功能，降低系统的复杂度。</p>
+<ol>
+<li>发起通信的计算机必须将数据通信的通路进行激活。</li>
+<li>要告诉网络如何识别目的主机。</li>
+<li>发起通信的计算机要查明目的主机是否开机，并且与网络连接正常。</li>
+<li>发起通信的计算机要弄清楚，对方计算机中文件管理程序是否已经做好准备工作。</li>
+<li>确保差错和意外可以解决。</li>
+</ol>
+<h3 id="分层的基本原则"><a href="#分层的基本原则" class="headerlink" title="分层的基本原则"></a>分层的基本原则</h3><ol>
+<li>各层之间相互<strong>独立</strong>，每层只实现一种相对独立的功能</li>
+<li>每层之间<strong>界面自然清晰</strong>，易于理解，相互交流尽可能少</li>
+<li>结构上下可分隔开。每层都采用<strong>最合适的技术</strong>来实现</li>
+<li>保持下层对上层的独立性，<strong>上层单向使用下层提供的服务</strong></li>
+<li>整个分层结构应该能促进标准化工作</li>
+</ol>
+<h2 id="计算机网络协议、接口、服务"><a href="#计算机网络协议、接口、服务" class="headerlink" title="计算机网络协议、接口、服务"></a>计算机网络协议、接口、服务</h2><ul>
+<li><strong>协议</strong>：在网络中一种事先约定好的交换数据的规则，这些规则规定了所交换数据的格式及有关的同步问题。</li>
+<li><strong>接口</strong>：接口是同一结点内相邻两层间交换信息的连接点，是一个系统的内部的规定。每层只能为紧邻的层次之间定义接口，不能跨层定义接口。</li>
+<li><strong>服务</strong>：服务是指下层为紧邻的上层提供的功能调用。上层使用下层的服务时必须与下层交换一些命令：请求、指示、响应、证实。</li>
+</ul>
+<h3 id=""><a href="#" class="headerlink" title=""></a><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220811145806430.png" alt="image-20220811145806430"></h3><h2 id="参考模型"><a href="#参考模型" class="headerlink" title="参考模型"></a>参考模型</h2><h3 id="7层OSI参考模型"><a href="#7层OSI参考模型" class="headerlink" title="7层OSI参考模型"></a>7层OSI参考模型</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/21ab1b9d916d4b8cae802156ec04aedd.png" alt="img"></p>
+<ul>
+<li><strong>物理层</strong>：物理层的传输单位是比特，物理层的功能是在物理媒体上为数据端设备透明地<strong>传输原始比特流</strong>。物理层主要定义数据终端设备（DTE）和数据通信设备（DCE）的物理与逻辑连接方法。</li>
+<li><strong>数据链路层</strong>：数据链路层的传输单位是帧，任务是将网络层传来的IP数据报组装称帧。数据链路层的功能可以概括为：<strong>物理寻址、成帧、差错控制、流量控制、传输管理。</strong></li>
+<li><strong>网络层</strong>：网络层的传输单位是数据报，它的主要任务是把网络层的协议数据单元从源端传到目的端，为分组交换网上的不同主机提供通信服务。</li>
+<li><strong>传输层</strong>：传输层的传输单位是报文段（TCP）或用户数据报（UDP），传输层负责主机中两个进程之间的通信，功能是为端到端连接提供可靠的传输服务，为端到端连接提供流量控制、差错控制、服务质量、数据传输管理等服务。ps：数据链路层提供的是点到点（IP到IP）之间的通信，而传输层可以直接实现端到端（不同主机间进程到进程）的通信，更加细致化。</li>
+<li><strong>会话层</strong>：会话层允许不同主机上各个进程之间进行会话。会话层利用传输层提供的端到端的服务，向表示层提供它的增值服务。会话层负责管理主机间的会话进程，包括建立、管理及终止进程间的会话。</li>
+<li><strong>表示层</strong>：表示层主要处理两个通信系统中交换信息的表示方式。因为不同机器采用的编码和数据结构等不同，所有使用表示层采用抽象的标准方法定义数据结构，并采用标准的编码形式。数据压缩、加密、解密也是表示层可提供的功能。</li>
+<li><strong>应用层</strong>：是用户与网络的界面，为特定类型的网络应用提供访问OSI参考模型环境的手段，最复杂，也是协议最多的一层，常用的如FTP、HTTP、SMTP等。</li>
+</ul>
+<h4 id="通信过程"><a href="#通信过程" class="headerlink" title="通信过程"></a>通信过程</h4><ul>
+<li>网络层及以上，每一层都要对上一层发送的数据进行处理（加个头部）</li>
+<li>数据链路层不仅需要加头部，还需要加尾部</li>
+<li>物理层什么都不加，只管发送数据（比特流）</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220811151248217.png" alt="image-20220811151248217"></p>
+<h3 id="4层TCP-x2F-IP模型"><a href="#4层TCP-x2F-IP模型" class="headerlink" title="4层TCP&#x2F;IP模型"></a>4层TCP&#x2F;IP模型</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/356f1d95e071413180b2e7b6ce4be106.png" alt="img"></p>
+<h3 id="TCP-x2F-IP模型与OSI参考模型的比较"><a href="#TCP-x2F-IP模型与OSI参考模型的比较" class="headerlink" title="TCP&#x2F;IP模型与OSI参考模型的比较"></a>TCP&#x2F;IP模型与OSI参考模型的比较</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220811153536158.png" alt="image-20220811153536158"></p>
+<p><strong>相同点</strong></p>
+<ol>
+<li>都分层</li>
+<li>基于独立的协议栈的个概念</li>
+<li>可以实现异构网络互连</li>
+</ol>
+<p><strong>不同点</strong></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220811152110530.png" alt="image-20220811152110530"></p>
+<h2 id="五层参考模型"><a href="#五层参考模型" class="headerlink" title="五层参考模型"></a>五层参考模型</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20200626210125977.png" alt="img"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/08/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E6%A6%82%E8%BF%B0/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E7%89%A9%E7%90%86%E5%B1%82/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            物理层
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/08/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">计算机网络思维导图</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2022
+        <i class="ri-heart-fill heart_icon"></i> Yang Shiyu
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Healer"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

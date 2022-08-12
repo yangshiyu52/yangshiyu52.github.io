@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2022-08-09T14:09:09.097Z</updated>
+  <updated>2022-08-12T14:02:34.348Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,132 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>IP服务</title>
+    <link href="http://example.com/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9AIP%E6%9C%8D%E5%8A%A1/"/>
+    <id>http://example.com/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9AIP%E6%9C%8D%E5%8A%A1/</id>
+    <published>2022-08-11T13:33:16.000Z</published>
+    <updated>2022-08-12T14:02:34.348Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;IP基础知识&quot;&gt;&lt;a href=&quot;#IP基础知识&quot; class=&quot;headerlink&quot; title=&quot;IP基础知识&quot;&gt;&lt;/a&gt;IP基础知识&lt;/h1&gt;&lt;h2 id=&quot;IP概念&quot;&gt;&lt;a href=&quot;#IP概念&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="计算机基础知识" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+    <category term="计算机网络" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>数据链路层</title>
+    <link href="http://example.com/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/"/>
+    <id>http://example.com/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82/</id>
+    <published>2022-08-11T08:21:31.000Z</published>
+    <updated>2022-08-11T11:51:32.216Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;功能&quot;&gt;&lt;a href=&quot;#功能&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="计算机基础知识" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+    <category term="计算机网络" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>物理层</title>
+    <link href="http://example.com/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E7%89%A9%E7%90%86%E5%B1%82/"/>
+    <id>http://example.com/2022/08/11/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E7%89%A9%E7%90%86%E5%B1%82/</id>
+    <published>2022-08-11T07:37:25.000Z</published>
+    <updated>2022-08-11T08:21:00.189Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;基本概念&quot;&gt;&lt;a href=&quot;#基本概念&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="计算机基础知识" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+    <category term="计算机网络" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>计算机网络体系结构</title>
+    <link href="http://example.com/2022/08/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E6%A6%82%E8%BF%B0/"/>
+    <id>http://example.com/2022/08/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E6%A6%82%E8%BF%B0/</id>
+    <published>2022-08-10T01:32:59.000Z</published>
+    <updated>2022-08-11T07:35:58.701Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;计算机网络概述&quot;&gt;&lt;a href=&quot;#计算机网络概述&quot; class=&quot;headerlink&quot; title=&quot;计算机网络概述&quot;&gt;&lt;/a&gt;计算机网络概述&lt;/h1&gt;&lt;h2 id=&quot;计算机网络的概念&quot;&gt;&lt;a href=&quot;#计算机网络的概念&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="计算机基础知识" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+    <category term="计算机网络" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>计算机网络思维导图</title>
+    <link href="http://example.com/2022/08/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE/"/>
+    <id>http://example.com/2022/08/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE/</id>
+    <published>2022-08-10T01:25:23.000Z</published>
+    <updated>2022-08-11T08:20:56.729Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://ysy-java.oss-cn-hangzhou.aliyuncs.com/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C.png&quot; alt=&quot;计算机网络思维导图&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img</summary>
+        
+      
+    
+    
+    
+    <category term="计算机基础知识" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+    <category term="计算机网络" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>内存管理</title>
@@ -378,134 +504,6 @@
         
         
     <summary type="html">&lt;h1 id=&quot;标记阶段：引用计数算法&quot;&gt;&lt;a href=&quot;#标记阶段：引用计数算法&quot; class=&quot;headerlink&quot; title=&quot;标记阶段：引用计数算法&quot;&gt;&lt;/a&gt;标记阶段：引用计数算法&lt;/h1&gt;&lt;h2 id=&quot;标记阶段的目的&quot;&gt;&lt;a href=&quot;#标记阶段的目的&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="JVM" scheme="http://example.com/categories/JVM/"/>
-    
-    <category term="1.内存与垃圾回收篇" scheme="http://example.com/categories/JVM/1-%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AF%87/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>垃圾回收概述</title>
-    <link href="http://example.com/2022/07/24/JVM%EF%BC%9A%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%A6%82%E8%BF%B0/"/>
-    <id>http://example.com/2022/07/24/JVM%EF%BC%9A%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%A6%82%E8%BF%B0/</id>
-    <published>2022-07-24T02:40:12.000Z</published>
-    <updated>2022-07-25T10:01:16.543Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220724102106880.png&quot; alt=&quot;image-20220724102106880&quot;&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Java</summary>
-        
-      
-    
-    
-    
-    <category term="JVM" scheme="http://example.com/categories/JVM/"/>
-    
-    <category term="1.内存与垃圾回收篇" scheme="http://example.com/categories/JVM/1-%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AF%87/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>StringTable(字符串常量池)</title>
-    <link href="http://example.com/2022/07/23/JVM%EF%BC%9AStringTable(%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E6%B1%A0)/"/>
-    <id>http://example.com/2022/07/23/JVM%EF%BC%9AStringTable(%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E6%B1%A0)/</id>
-    <published>2022-07-23T13:47:33.000Z</published>
-    <updated>2022-07-23T13:50:47.818Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;String的基本特性&quot;&gt;&lt;a href=&quot;#String的基本特性&quot; class=&quot;headerlink&quot; title=&quot;String的基本特性&quot;&gt;&lt;/a&gt;String的基本特性&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;String：字符串，使用一对 “”</summary>
-        
-      
-    
-    
-    
-    <category term="JVM" scheme="http://example.com/categories/JVM/"/>
-    
-    <category term="1.内存与垃圾回收篇" scheme="http://example.com/categories/JVM/1-%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AF%87/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>递归</title>
-    <link href="http://example.com/2022/07/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%9A%E9%80%92%E5%BD%92/"/>
-    <id>http://example.com/2022/07/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%9A%E9%80%92%E5%BD%92/</id>
-    <published>2022-07-21T12:06:22.000Z</published>
-    <updated>2022-07-21T13:48:35.959Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;基本介绍&quot;&gt;&lt;a href=&quot;#基本介绍&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="数据结构与算法" scheme="http://example.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
-    
-    <category term="递归" scheme="http://example.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E9%80%92%E5%BD%92/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>执行引擎</title>
-    <link href="http://example.com/2022/07/21/JVM%EF%BC%9A%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/"/>
-    <id>http://example.com/2022/07/21/JVM%EF%BC%9A%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/</id>
-    <published>2022-07-21T07:39:23.000Z</published>
-    <updated>2022-07-21T07:40:40.200Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h1&gt;&lt;p&gt;&lt;img</summary>
-        
-      
-    
-    
-    
-    <category term="JVM" scheme="http://example.com/categories/JVM/"/>
-    
-    <category term="1.内存与垃圾回收篇" scheme="http://example.com/categories/JVM/1-%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AF%87/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>直接内存（Direct Memory）</title>
-    <link href="http://example.com/2022/07/20/JVM%EF%BC%9A%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98(DirectMemory)/"/>
-    <id>http://example.com/2022/07/20/JVM%EF%BC%9A%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98(DirectMemory)/</id>
-    <published>2022-07-20T06:22:57.000Z</published>
-    <updated>2022-07-20T09:04:30.537Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot;</summary>
         
       
     
