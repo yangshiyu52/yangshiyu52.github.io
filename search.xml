@@ -13990,7 +13990,7 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
   </entry>
   <entry>
     <title>共享模型之不可变</title>
-    <url>/2022/08/18/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%B8%8D%E5%8F%AF%E5%8F%98/</url>
+    <url>/2022/08/19/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%B8%8D%E5%8F%AF%E5%8F%98/</url>
     <content><![CDATA[<h1 id="日期转换的问题"><a href="#日期转换的问题" class="headerlink" title="日期转换的问题"></a>日期转换的问题</h1><h2 id="问题提出-线程不安全类SimpleDateFormat"><a href="#问题提出-线程不安全类SimpleDateFormat" class="headerlink" title="问题提出 (线程不安全类SimpleDateFormat)"></a>问题提出 (线程不安全类SimpleDateFormat)</h2><p>下面的代码在运行时，由于 <strong>SimpleDateFormat 不是线程安全的</strong>,有很大几率出现 java.lang.NumberFormatException 或者出现不正确的日期解析结果</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">SimpleDateFormat</span> <span class="variable">sdf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy-MM-dd&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            log.debug(<span class="string">&quot;&#123;&#125;&quot;</span>, sdf.parse(<span class="string">&quot;1951-04-21&quot;</span>));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;&#123;&#125;&quot;</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;).start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -14124,7 +14124,7 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
   </entry>
   <entry>
     <title>共享模型之线程池</title>
-    <url>/2022/08/18/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8B%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
+    <url>/2022/08/20/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8B%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
     <content><![CDATA[<h1 id="自定义线程池"><a href="#自定义线程池" class="headerlink" title="自定义线程池"></a>自定义线程池</h1><p>这部分代码我用了自己的</p>
 <p>这块结合代码及日志更好掌握些</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/1649578087140-19c3ceb6-c3d0-43aa-801e-af021d511346.png" alt="img"></p>
@@ -14678,7 +14678,7 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
   </entry>
   <entry>
     <title>共享模型之JUC</title>
-    <url>/2022/08/18/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8BJUC/</url>
+    <url>/2022/08/23/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8BJUC/</url>
     <content><![CDATA[<h1 id="AQS-AbstractQueuedSynchronizer-原理"><a href="#AQS-AbstractQueuedSynchronizer-原理" class="headerlink" title="AQS(AbstractQueuedSynchronizer) 原理"></a>AQS(AbstractQueuedSynchronizer) 原理</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>全称是 AbstractQueuedSynchronizer，是阻塞式锁和相关的同步器工具的框架 </p>
 <p>特点： </p>
 <h3 id="state属性-独占-x2F-共享模式"><a href="#state属性-独占-x2F-共享模式" class="headerlink" title="state属性 独占&#x2F;共享模式"></a>state属性 独占&#x2F;共享模式</h3><ul>
