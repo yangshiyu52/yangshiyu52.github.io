@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2022-08-16T13:00:15.061Z</updated>
+  <updated>2022-08-18T08:44:46.689Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,124 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>共享模型之JUC</title>
+    <link href="http://example.com/2022/08/18/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8BJUC/"/>
+    <id>http://example.com/2022/08/18/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8BJUC/</id>
+    <published>2022-08-18T08:16:27.000Z</published>
+    <updated>2022-08-18T08:44:46.689Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;AQS-AbstractQueuedSynchronizer-原理&quot;&gt;&lt;a href=&quot;#AQS-AbstractQueuedSynchronizer-原理&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="JUC" scheme="http://example.com/categories/JUC/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>共享模型之线程池</title>
+    <link href="http://example.com/2022/08/18/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8B%E7%BA%BF%E7%A8%8B%E6%B1%A0/"/>
+    <id>http://example.com/2022/08/18/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8B%E7%BA%BF%E7%A8%8B%E6%B1%A0/</id>
+    <published>2022-08-18T08:10:01.000Z</published>
+    <updated>2022-08-18T08:15:49.362Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;自定义线程池&quot;&gt;&lt;a href=&quot;#自定义线程池&quot; class=&quot;headerlink&quot; title=&quot;自定义线程池&quot;&gt;&lt;/a&gt;自定义线程池&lt;/h1&gt;&lt;p&gt;这部分代码我用了自己的&lt;/p&gt;
+&lt;p&gt;这块结合代码及日志更好掌握些&lt;/p&gt;
+&lt;p&gt;&lt;img</summary>
+        
+      
+    
+    
+    
+    <category term="JUC" scheme="http://example.com/categories/JUC/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>共享模型之不可变</title>
+    <link href="http://example.com/2022/08/18/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%B8%8D%E5%8F%AF%E5%8F%98/"/>
+    <id>http://example.com/2022/08/18/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8B%E4%B8%8D%E5%8F%AF%E5%8F%98/</id>
+    <published>2022-08-18T06:13:35.000Z</published>
+    <updated>2022-08-18T08:08:27.051Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;日期转换的问题&quot;&gt;&lt;a href=&quot;#日期转换的问题&quot; class=&quot;headerlink&quot; title=&quot;日期转换的问题&quot;&gt;&lt;/a&gt;日期转换的问题&lt;/h1&gt;&lt;h2 id=&quot;问题提出-线程不安全类SimpleDateFormat&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="JUC" scheme="http://example.com/categories/JUC/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>共享模型之无锁</title>
+    <link href="http://example.com/2022/08/17/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8B%E6%97%A0%E9%94%81/"/>
+    <id>http://example.com/2022/08/17/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8B%E6%97%A0%E9%94%81/</id>
+    <published>2022-08-17T08:06:17.000Z</published>
+    <updated>2022-08-18T06:13:10.468Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;问题提出-如何保证取款方法的线程安全&quot;&gt;&lt;a href=&quot;#问题提出-如何保证取款方法的线程安全&quot; class=&quot;headerlink&quot; title=&quot;问题提出 (如何保证取款方法的线程安全)&quot;&gt;&lt;/a&gt;问题提出</summary>
+        
+      
+    
+    
+    
+    <category term="JUC" scheme="http://example.com/categories/JUC/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>共享模型之内存</title>
+    <link href="http://example.com/2022/08/16/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8B%E5%86%85%E5%AD%98/"/>
+    <id>http://example.com/2022/08/16/JUC%EF%BC%9A%E5%85%B1%E4%BA%AB%E6%A8%A1%E5%9E%8B%E4%B9%8B%E5%86%85%E5%AD%98/</id>
+    <published>2022-08-16T13:05:06.000Z</published>
+    <updated>2022-08-17T08:00:51.362Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;共享变量在多线程间的【可见性】问题与多条指令执行时的【有序性】问题 &lt;/p&gt;
+&lt;h1 id=&quot;Java-内存模型&quot;&gt;&lt;a href=&quot;#Java-内存模型&quot; class=&quot;headerlink&quot; title=&quot;Java 内存模型&quot;&gt;&lt;/a&gt;Java</summary>
+        
+      
+    
+    
+    
+    <category term="JUC" scheme="http://example.com/categories/JUC/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>共享模型之管程</title>
@@ -169,7 +287,7 @@
     <link href="http://example.com/2022/08/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE/"/>
     <id>http://example.com/2022/08/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE/</id>
     <published>2022-08-10T01:25:23.000Z</published>
-    <updated>2022-08-11T08:20:56.729Z</updated>
+    <updated>2022-08-18T01:05:21.544Z</updated>
     
     
       
@@ -387,129 +505,6 @@
     <category term="数据库" scheme="http://example.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
     <category term="mysql" scheme="http://example.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>mysql基础</title>
-    <link href="http://example.com/2022/08/02/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9Amysql%E5%9F%BA%E7%A1%80/"/>
-    <id>http://example.com/2022/08/02/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9Amysql%E5%9F%BA%E7%A1%80/</id>
-    <published>2022-08-02T08:05:11.000Z</published>
-    <updated>2022-08-14T02:56:23.356Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;1-mysql简介&quot;&gt;&lt;a href=&quot;#1-mysql简介&quot; class=&quot;headerlink&quot; title=&quot;1. mysql简介&quot;&gt;&lt;/a&gt;1.</summary>
-        
-      
-    
-    
-    
-    <category term="数据库" scheme="http://example.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    <category term="mysql" scheme="http://example.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>线程与进程</title>
-    <link href="http://example.com/2022/08/02/JUC%EF%BC%9A%E7%BA%BF%E7%A8%8B%E4%B8%8E%E8%BF%9B%E7%A8%8B/"/>
-    <id>http://example.com/2022/08/02/JUC%EF%BC%9A%E7%BA%BF%E7%A8%8B%E4%B8%8E%E8%BF%9B%E7%A8%8B/</id>
-    <published>2022-08-02T06:55:01.000Z</published>
-    <updated>2022-08-14T07:54:16.299Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;总体路线&quot;&gt;&lt;a href=&quot;#总体路线&quot; class=&quot;headerlink&quot; title=&quot;总体路线&quot;&gt;&lt;/a&gt;总体路线&lt;/h1&gt;&lt;p&gt;&lt;img</summary>
-        
-      
-    
-    
-    
-    <category term="JUC" scheme="http://example.com/categories/JUC/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>再谈类的加载器</title>
-    <link href="http://example.com/2022/08/01/JVM%EF%BC%9A%E5%86%8D%E8%B0%88%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%99%A8/"/>
-    <id>http://example.com/2022/08/01/JVM%EF%BC%9A%E5%86%8D%E8%B0%88%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%99%A8/</id>
-    <published>2022-08-01T08:33:26.000Z</published>
-    <updated>2022-08-01T13:12:01.555Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="JVM" scheme="http://example.com/categories/JVM/"/>
-    
-    <category term="2.字节码与类的加载篇" scheme="http://example.com/categories/JVM/2-%E5%AD%97%E8%8A%82%E7%A0%81%E4%B8%8E%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E7%AF%87/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>类的加载过程（类的生命周期）详解</title>
-    <link href="http://example.com/2022/07/31/JVN%EF%BC%9A%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/"/>
-    <id>http://example.com/2022/07/31/JVN%EF%BC%9A%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/</id>
-    <published>2022-07-31T09:52:06.000Z</published>
-    <updated>2022-08-01T08:31:16.075Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="JVM" scheme="http://example.com/categories/JVM/"/>
-    
-    <category term="2.字节码与类的加载篇" scheme="http://example.com/categories/JVM/2-%E5%AD%97%E8%8A%82%E7%A0%81%E4%B8%8E%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E7%AF%87/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>垃圾回收器</title>
-    <link href="http://example.com/2022/07/31/JVM%EF%BC%9A%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/"/>
-    <id>http://example.com/2022/07/31/JVM%EF%BC%9A%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/</id>
-    <published>2022-07-31T03:17:19.000Z</published>
-    <updated>2022-07-31T03:18:46.107Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;GC-分类与性能指标&quot;&gt;&lt;a href=&quot;#GC-分类与性能指标&quot; class=&quot;headerlink&quot; title=&quot;GC 分类与性能指标&quot;&gt;&lt;/a&gt;GC 分类与性能指标&lt;/h1&gt;&lt;h2 id=&quot;垃圾回收器概述&quot;&gt;&lt;a href=&quot;#垃圾回收器概述&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="JVM" scheme="http://example.com/categories/JVM/"/>
-    
-    <category term="1.内存与垃圾回收篇" scheme="http://example.com/categories/JVM/1-%E5%86%85%E5%AD%98%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AF%87/"/>
     
     
   </entry>
