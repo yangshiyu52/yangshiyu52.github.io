@@ -11682,7 +11682,7 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 </li>
 <li><p>在5.6中<code>INNODB</code>存储引擎加入了对全文索引的支持,<strong>但是只支持英文的全文索引,不支持中文的全文索引</strong></p>
 </li>
-<li><p>&#x3D;&#x3D;<strong>在5.7.6中,mysql内置了<code>ngram</code>分词器,用来支持中文;</strong>&#x3D;&#x3D;</p>
+<li><p><strong>在5.7.6中,mysql内置了<code>ngram</code>分词器,用来支持中文;</strong></p>
 </li>
 </ul>
 <blockquote>
