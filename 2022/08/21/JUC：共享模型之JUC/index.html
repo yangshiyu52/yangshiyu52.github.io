@@ -113,16 +113,19 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="AQS-AbstractQueuedSynchronizer-原理"><a href="#AQS-AbstractQueuedSynchronizer-原理" class="headerlink" title="AQS(AbstractQueuedSynchronizer) 原理"></a>AQS(AbstractQueuedSynchronizer) 原理</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>全称是 AbstractQueuedSynchronizer，是阻塞式锁和相关的同步器工具的框架 </p>
+  <h1 id="AQS-Abstract-Queued-Synchronizer"><a href="#AQS-Abstract-Queued-Synchronizer" class="headerlink" title="AQS(Abstract Queued Synchronizer)"></a>AQS(Abstract Queued Synchronizer)</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>全称是 AbstractQueuedSynchronizer，是阻塞式锁和相关的同步器工具的框架 </p>
 <p>特点： </p>
 <h3 id="state属性-独占-x2F-共享模式"><a href="#state属性-独占-x2F-共享模式" class="headerlink" title="state属性 独占&#x2F;共享模式"></a>state属性 独占&#x2F;共享模式</h3><ul>
 <li><p>用 <strong>state 属性来表示资源的状态（分独占模式和共享模式）</strong>，子类需要定义如何维护这个状态，控制如何获取锁和释放锁 </p>
+<ul>
+<li><p>getState - 获取 state 状态 </p>
 </li>
-<li><ul>
-<li>getState - 获取 state 状态 </li>
-<li>setState - 设置 state 状态 </li>
-<li>compareAndSetState - cas 机制设置 state 状态 </li>
-<li><strong>独占模式是只有一个线程能够访问资源，而共享模式可以允许多个线程访问资源</strong></li>
+<li><p>setState - 设置 state 状态 </p>
+</li>
+<li><p>compareAndSetState - cas 机制设置 state 状态 </p>
+</li>
+<li><p><strong>独占模式是只有一个线程能够访问资源，而共享模式可以允许多个线程访问资源</strong></p>
+</li>
 </ul>
 </li>
 </ul>
