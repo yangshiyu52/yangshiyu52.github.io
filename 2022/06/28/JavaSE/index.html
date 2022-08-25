@@ -89,7 +89,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">17.1k</span>
+            <span class="post-count">19.2k</span>
         </span>
     </span>
 
@@ -98,7 +98,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">62 min</span>
+            <span class="post-count">69 min</span>
         </span>
     </span>
 </div>
@@ -124,100 +124,222 @@
 <li><p>Java 语言是<strong>解释型</strong>的。</p>
 </li>
 </ol>
-<p>​		<strong>解释性语言：javascript,PHP, java</strong> </p>
+<p>​		<strong>解释性语言：javascript，PHP，java</strong> </p>
 <p>​		<strong>编译性语言: c &#x2F; c++</strong> </p>
-<p>​		区别是：解释性语言，编译后的代码，不能直接被机器执行,需要解释器来执行, 编译性语言, 编译后的代码, 可以直接被机器执行, c &#x2F;c+</p>
-<h2 id="JDK，JRE介绍"><a href="#JDK，JRE介绍" class="headerlink" title="JDK，JRE介绍"></a>JDK，JRE介绍</h2><p>1）JDK 的全称(Java Development Kit Java 开发工具包)</p>
-<pre><code>     **JDK = JRE + java 开发工具集 **   [java, javac,javadoc,javap,java编译工具等] 
-</code></pre>
-<p>​		JDK 是提供给 Java 开发人员使用的，其中包含了 java 的开发工具，也包括了 JRE。所以安装了 JDK，就不用在单独安装 JRE了</p>
-<p>2）JRE(Java Runtime Environment Java 运行环境)</p>
-<p>​		 <strong>JRE &#x3D; JVM + Java 的核心类库[类]</strong> </p>
-<p>​		包括 Java 虚拟机(JVM Java Virtual Machine)和 Java 程序所需的核心类库等，如果想要运行一个开发好的 Java 程序， 计算机中只需要安装 JRE 即可。</p>
-<h2 id="Java虚拟机-JVM"><a href="#Java虚拟机-JVM" class="headerlink" title="Java虚拟机-JVM"></a>Java虚拟机-JVM</h2><ol>
-<li><p>JVM 是一个虚拟的计算机，具有指令集并使用不同的存储区域。负责执行指令，管理数据、内存、寄存器，<strong>包含在 JDK 中</strong>. </p>
+<p>​		<strong>区别是</strong>：解释性语言，编译后的代码，不能直接被机器执行，需要解释器来执行，编译性语言，编译后的代码，可以直接被机器执行，c &#x2F;c+</p>
+<h2 id="JDK，JRE介绍"><a href="#JDK，JRE介绍" class="headerlink" title="JDK，JRE介绍"></a>JDK，JRE介绍</h2><ul>
+<li><p>JDK 的全称(Java Development Kit Java 开发工具包)</p>
+<ul>
+<li>**JDK &#x3D; JRE + java 开发工具集 **   [java, javac,javadoc,javap,java编译工具等] </li>
+<li>JDK 是提供给 Java 开发人员使用的，其中包含了 java 的开发工具，也包括了 JRE。所以安装了 JDK，就不用在单独安装 JRE了</li>
+</ul>
 </li>
-<li><p>对于不同的平台，有不同的虚拟机。 </p>
+<li><p>JRE(Java Runtime Environment Java 运行环境)</p>
+<ul>
+<li><strong>JRE &#x3D; JVM + Java 的核心类库[类]</strong> </li>
+<li>包括 Java 虚拟机(JVM Java Virtual Machine)和 Java 程序所需的核心类库等，如果想要运行一个开发好的 Java 程序， 计算机中只需要安装 JRE 即可。</li>
+</ul>
 </li>
-<li><p>Java 虚拟机机制屏蔽了底层运行平台的差别，实现了“<strong>一次编译，到处运行”</strong></p>
-</li>
-</ol>
-<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><p>私有:java虚拟机栈，程序计数器，本地方法栈 共享:java堆，方法区</p>
+</ul>
+<h2 id="Java-虚拟机-JVM"><a href="#Java-虚拟机-JVM" class="headerlink" title="Java 虚拟机 JVM"></a>Java 虚拟机 JVM</h2><ul>
+<li>JVM 是一个虚拟的计算机，具有指令集并使用不同的存储区域。负责执行指令，管理数据、内存、寄存器，<strong>包含在 JDK 中</strong>。</li>
+<li>对于不同的平台，有不同的虚拟机。 </li>
+<li>Java 虚拟机机制屏蔽了底层运行平台的差别，实现了“<strong>一次编译，到处运行”</strong></li>
+</ul>
+<h2 id="❤Java-内存结构"><a href="#❤Java-内存结构" class="headerlink" title="❤Java 内存结构"></a>❤Java 内存结构</h2><ul>
+<li>Java 内存结构其实是 JVM 内存结构，由Java虚拟机规范定义。描述的是 Java 程序执行过程中，由 JVM 管理的不同数据区域。各个区域有其特定的功能。</li>
+<li><strong>私有：java 虚拟机栈，程序计数器，本地方法栈</strong> </li>
+<li><strong>共享：java堆，方法区</strong></li>
+</ul>
 <ol>
-<li><p>栈： 一般存放基本数据类型(局部变量) </p>
-</li>
-<li><p>堆： 存放对象(Cat cat , 数组等) </p>
-</li>
-<li><p>方法区：常量池(常量，比如字符串)， 类加载信息</p>
-</li>
+<li>栈： 一般存放基本数据类型(局部变量) </li>
+<li>堆： 存放对象(Cat cat , 数组等) </li>
+<li>方法区：常量池(常量，比如字符串)， 类加载信息</li>
 </ol>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220511221502453.png" alt="image-20220511221502453"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/d2419ac2b8ca2b92f7c487a4faa08718.png" alt="img"></p>
+<h2 id="❤Java-内存模型-JMM"><a href="#❤Java-内存模型-JMM" class="headerlink" title="❤Java 内存模型 JMM"></a>❤Java 内存模型 JMM</h2><h3 id="为什么会有-Java-内存模型"><a href="#为什么会有-Java-内存模型" class="headerlink" title="为什么会有 Java 内存模型"></a>为什么会有 Java 内存模型</h3><h4 id="CPU和缓存一致性"><a href="#CPU和缓存一致性" class="headerlink" title="CPU和缓存一致性"></a>CPU和缓存一致性</h4><ul>
+<li><p>当程序在运行过程中，会将运算需要的数据从主存复制一份到CPU的高速缓存当中，那么CPU进行计算时就可以直接从它的高速缓存读取数据和向其中写入数据，当运算结束之后，再将高速缓存中的数据刷新到主存当中。</p>
+</li>
+<li><p>随着CPU能力的不断提升，一层缓存就慢慢的无法满足要求了，就逐渐的衍生出多级缓存。按照数据读取顺序和与CPU结合的紧密程度，CPU缓存可以分为一级缓存（L1），二级缓存（L3），部分高端CPU还具有三级缓存（L3），每一级缓存中所储存的全部数据都是下一级缓存的一部分。这三种缓存的技术难度和制造成本是相对递减的，所以其容量也是相对递增的。</p>
+</li>
+<li><p>在有了多级缓存之后，程序的执行就变成了：当CPU要读取一个数据时，首先从一级缓存中查找，如果没有找到再从二级缓存中查找，如果还是没有就从三级缓存或内存中查找。</p>
+</li>
+<li><p>单核CPU只含有一套L1，L2，L3缓存；如果CPU含有多个核心，即多核CPU，则每个核心都含有一套L1（甚至和L2）缓存，而共享L3（或者和L2）缓存。</p>
+</li>
+<li><p>随着计算机能力不断提升，开始支持多线程。那么问题就来了。我们分别来分析下单线程、多线程在单核CPU、多核CPU中的影响。</p>
+<ul>
+<li><strong>单线程。</strong>cpu核心的缓存只被一个线程访问。缓存独占，不会出现访问冲突等问题。</li>
+<li><strong>单核CPU，多线程。</strong>进程中的多个线程会同时访问进程中的共享数据，CPU将某块内存加载到缓存后，不同线程在访问相同的物理地址的时候，都会映射到相同的缓存位置，这样即使发生线程的切换，缓存仍然不会失效。但由于任何时刻只能有一个线程在执行，因此不会出现缓存访问冲突。</li>
+<li><strong>多核CPU，多线程。</strong>每个核都至少有一个L1 缓存。多个线程访问进程中的某个共享内存，且这多个线程分别在不同的核心上执行，则每个核心都会在各自的caehe中保留一份共享内存的缓冲。由于多核是可以并行的，可能会出现多个线程同时写各自的缓存的情况，而各自的cache之间的数据就有可能不同。</li>
+</ul>
+</li>
+<li><p>在CPU和主存之间增加缓存，在多线程场景下就可能存在<strong>缓存一致性问题</strong>，也就是说，在多核CPU中，每个核的自己的缓存中，关于同一个数据的缓存内容可能不一致。</p>
+</li>
+</ul>
+<h4 id="处理器优化和指令重排"><a href="#处理器优化和指令重排" class="headerlink" title="处理器优化和指令重排"></a>处理器优化和指令重排</h4><ul>
+<li>上面提到在CPU和主存之间增加缓存，在多线程场景下会存在<strong>缓存一致性问题</strong>。除了这种情况，还有一种硬件问题也比较重要。那就是为了使处理器内部的运算单元能够尽量的被充分利用，处理器可能会对输入代码进行乱序执行处理。这就是<strong>处理器优化</strong>。</li>
+<li>除了现在很多流行的处理器会对代码进行优化乱序处理，很多编程语言的编译器也会有类似的优化，比如Java虚拟机的即时编译器（JIT）也会做<strong>指令重排</strong>。</li>
+<li>可想而知，如果任由处理器优化和编译器对指令重排的话，就可能导致各种各样的问题。</li>
+</ul>
+<h3 id="并发编程的问题"><a href="#并发编程的问题" class="headerlink" title="并发编程的问题"></a>并发编程的问题</h3><ul>
+<li><p>前面说的和硬件有关的概念你可能听得有点蒙，还不知道他到底和软件有啥关系。但是关于并发编程的问题你应该有所了解，比如原子性问题，可见性问题和有序性问题。</p>
+</li>
+<li><p>其实，原子性问题，可见性问题和有序性问题。是人们抽象定义出来的。而这个抽象的底层问题就是前面提到的缓存一致性问题、处理器优化问题和指令重排问题等。</p>
+</li>
+<li><p>并发编程，为了保证数据的安全，需要满足以下三个特性：</p>
+<ul>
+<li><strong>原子性</strong>是指在一个操作中就是cpu不可以在中途暂停然后再调度，既不被中断操作，要不执行完成，要不就不执行。</li>
+<li><strong>可见性</strong>是指当多个线程访问同一个变量时，一个线程修改了这个变量的值，其他线程能够立即看得到修改的值。</li>
+<li><strong>有序性</strong>即程序执行的顺序按照代码的先后顺序执行。</li>
+</ul>
+</li>
+<li><p><strong>缓存一致性问题</strong>其实就是<strong>可见性问题</strong>。而<strong>处理器优化</strong>是可以导致<strong>原子性问题</strong>的。<strong>指令重排</strong>即会导致<strong>有序性问题</strong>。所以，后文将不再提起硬件层面的那些概念，而是直接使用熟悉的原子性、可见性和有序性。</p>
+</li>
+</ul>
+<h3 id="什么是内存模型"><a href="#什么是内存模型" class="headerlink" title="什么是内存模型"></a>什么是内存模型</h3><ul>
+<li><p>为了保证并发编程中可以满足原子性、可见性及有序性。有一个重要的概念，那就是——<strong>内存模型</strong>。</p>
+</li>
+<li><p><strong>为了保证共享内存的正确性（可见性、有序性、原子性），内存模型定义了共享内存系统中多线程程序读写操作行为的规范。</strong>通过这些规则来规范对内存的读写操作，从而保证指令执行的正确性。它与处理器有关、与缓存有关、与并发有关、与编译器也有关。他解决了 CPU 多级缓存、处理器优化、指令重排等导致的内存访问问题，保证了并发场景下的一致性、原子性和有序性。</p>
+</li>
+<li><p>内存模型解决并发问题主要采用两种方式：<strong>限制处理器优化</strong>和<strong>使用内存屏障</strong>。</p>
+</li>
+</ul>
+<h3 id="什么是Java内存模型"><a href="#什么是Java内存模型" class="headerlink" title="什么是Java内存模型"></a>什么是Java内存模型</h3><ul>
+<li><p>前面介绍过了计算机内存模型，这是解决多线程场景下并发问题的一个重要规范。那么具体的实现是如何的呢，不同的编程语言，在实现上可能有所不同。</p>
+</li>
+<li><p>我们知道，Java 程序是需要运行在 Java 虚拟机上面的，<strong>Java 内存模型（Java Memory Model ,JMM）就是一种符合内存模型规范的，屏蔽了各种硬件和操作系统的访问差异的，保证了 Java 程序在各种平台下对内存的访问都能保证效果一致的机制及规范。</strong></p>
+</li>
+<li><p>Java 内存模型，一般指的是JDK 5 开始使用的新的内存模型，主要由 JSR-133: JavaTM Memory Model and Thread Specification 描述。</p>
+</li>
+<li><p>Java 内存模型规定了所有的变量都存储在主内存中，每条线程还有自己的工作内存，线程的工作内存中保存了该线程中是用到的变量的主内存副本拷贝，线程对变量的所有操作都必须在工作内存中进行，而不能直接读写主内存。不同的线程之间也无法直接访问对方工作内存中的变量，线程间变量的传递均需要自己的工作内存和主存之间进行数据同步进行。</p>
+</li>
+<li><p>JMM 就作用于工作内存和主存之间数据同步过程。他规定了如何做数据同步以及什么时候做数据同步。</p>
+</li>
+<li><p>JMM 定义了Java 虚拟机(JVM)<strong>在计算机内存(RAM)中的工作方式</strong>。JVM 是整个计算机虚拟模型，所以 JMM 是隶属于 JVM 的。</p>
+</li>
+<li><p>Java 内存模型定义了多线程之间共享变量的可见性以及如何在需要的时候对共享变量进行同步。</p>
+</li>
+<li><p>❤<strong>JMM是一种规范，目的是解决由于多线程通过共享内存进行通信时，存在的本地内存数据不一致、编译器会对代码指令重排序、处理器会对代码乱序执行等带来的问题。目的是保证并发编程场景中的原子性、可见性和有序性。</strong></p>
+</li>
+</ul>
 <h2 id="Java-转义字符"><a href="#Java-转义字符" class="headerlink" title="Java 转义字符"></a>Java 转义字符</h2><p>在控制台使用 <strong>tab</strong> 可补全命令</p>
-<p>\t ：一个制表位，实现对齐的功能 </p>
-<p>\n ：换行符 </p>
-<p>\ \：一个\</p>
-<p>\ &quot; :一个”</p>
-<p>\ &#39; ：一个’ </p>
-<p>\r :一个回车</p>
-<p>\0:空字符</p>
+<ul>
+<li><p>\t ：一个制表位，实现对齐的功能 </p>
+</li>
+<li><p>\n ：换行符 </p>
+</li>
+<li><p>\ \：一个\</p>
+</li>
+<li><p>\ &quot; :  一个”</p>
+</li>
+<li><p>\ &#39; ：一个’ </p>
+</li>
+<li><p>\r :  一个回车</p>
+</li>
+<li><p>\0:  空字符</p>
+</li>
+</ul>
 <h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><p>用于注解说明解释程序的文字，提高了代码的阅读性(可读性)</p>
 <p>被注释的文字，不会被 JVM（java 虚拟机）解释执行</p>
 <p> 多行注释里面不允许有多行注释嵌套</p>
 <p>文档注释：javadoc -d 文件名 -author -version xx.java</p>
-<h2 id="常用dos命令"><a href="#常用dos命令" class="headerlink" title="常用dos命令"></a>常用dos命令</h2><ol>
-<li><p>查看当前目录是有什么内容：dir </p>
-</li>
-<li><p>切换到其他盘下：盘符号 + ：</p>
-</li>
-<li><p>切换到上一级：cd .. </p>
-</li>
-<li><p>切换到根目录：cd \ </p>
-</li>
-<li><p>查看指定的目录下所有的子级目录：tree</p>
-</li>
-<li><p>清屏：cls </p>
-</li>
-<li><p>退出：exit</p>
-</li>
-</ol>
-<h2 id="成员方法传参机制"><a href="#成员方法传参机制" class="headerlink" title="成员方法传参机制"></a>成员方法传参机制</h2><p><strong>实参定义</strong></p>
-<p>实参全称为实际参数，是在调用时传递给函数的参数。实参可以是常量、变量、表达式、函数等，无论实参是何种类型的量，在进行函数调用时，它们都必须具有确定的值，以便把这些值 传送给形参因此应预先用赋值，输入等办法使实参获得确定值。</p>
-<p><strong>形参定义</strong></p>
-<p>形参全称为形式参数，由于它不是实际存在变量，所以又称虚拟变量。是在定义函数名和函数体的时候使用的参数,目的是用来接收调用该函数时传入的参数.在调用函数时，实参将赋值给形参。因而，必须注意实参的个数，类型应与形参-一对应， 并且实参必须要有确定的值。</p>
+<h2 id="常用dos命令"><a href="#常用dos命令" class="headerlink" title="常用dos命令"></a>常用dos命令</h2><ul>
+<li>查看当前目录是有什么内容：dir </li>
+<li>切换到其他盘下：盘符号 + ：</li>
+<li>切换到上一级：cd .. </li>
+<li>切换到根目录：cd \ </li>
+<li>查看指定的目录下所有的子级目录：tree</li>
+<li>清屏：cls </li>
+<li>退出：exit</li>
+</ul>
+<h2 id="成员方法传参机制"><a href="#成员方法传参机制" class="headerlink" title="成员方法传参机制"></a>成员方法传参机制</h2><h3 id="实参"><a href="#实参" class="headerlink" title="实参"></a>实参</h3><p>实参全称为实际参数，是<strong>在调用时传递给函数的参数</strong>。实参可以是常量、变量、表达式、函数等，无论实参是何种类型的量，在进行函数调用时，它们都必须具有确定的值，以便把这些值传送给形参因此应预先赋值，输入等办法使实参获得确定值。</p>
+<h3 id="形参"><a href="#形参" class="headerlink" title="形参"></a>形参</h3><p>形参全称为形式参数，由于它不是实际存在变量，所以又称虚拟变量。是<strong>在定义函数名和函数体的时候使用的参数</strong>，目的是用来接收调用该函数时传入的参数。在调用函数时，实参将赋值给形参。因而，必须注意实参的个数，类型应与形参一一对应， 并且实参必须要有确定的值。</p>
 <ol>
-<li><p>基本数据类型，传递的是值（值拷贝），形参的改变不影响实参</p>
-</li>
-<li><p>引用数据类型,，传递的是地址（传递也是值，但是值是地址），可以通过形参影响实参</p>
-</li>
+<li><strong>基本数据类型</strong>，传递的是<strong>值</strong>（值拷贝），<strong>形参的改变不影响实参</strong></li>
+<li><strong>引用数据类型</strong>,，传递的是<strong>地址值</strong>（传递也是值，但是值是地址），可以通过<strong>形参影响实参</strong></li>
 </ol>
 <h1 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517173202743.png" alt="image-20220517173202743"></p>
 <h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517173304401.png" alt="image-20220517173304401"></p>
-<h3 id="整数类型"><a href="#整数类型" class="headerlink" title="整数类型"></a>整数类型</h3><p>默认int</p>
+<h3 id="整数类型"><a href="#整数类型" class="headerlink" title="整数类型"></a>整数类型</h3><p><strong>默认int</strong></p>
 <p>计算机底层存储的都是<strong>补码</strong>，并以补码进行数据运算，显示的是原码</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517173405866.png"></p>
-<h3 id="浮点类型"><a href="#浮点类型" class="headerlink" title="浮点类型"></a>浮点类型</h3><p>默认float</p>
+<h3 id="浮点类型"><a href="#浮点类型" class="headerlink" title="浮点类型"></a>浮点类型</h3><p><strong>默认float</strong></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517175012934.png" alt="image-20220517175012934"></p>
 <ol>
-<li><p>关于浮点数在机器中存放形式的简单说明，浮点数&#x3D;符号位+指数位+尾数位 </p>
-</li>
-<li><p>尾数部分可能丢失，造成精度损失(小数都是近似值)</p>
-</li>
+<li>关于浮点数在机器中存放形式的简单说明，<code>浮点数=符号位+指数位+尾数位</code> </li>
+<li>尾数部分可能丢失，造成精度损失(小数都是近似值)</li>
 </ol>
 <h3 id="字符类型"><a href="#字符类型" class="headerlink" title="字符类型"></a>字符类型</h3><p>字符类型可以表示单个字符,字符类型是 char，char 是两个字节(可以存放汉字)，多个字符用字符串 String</p>
 <p>字符型存储到计算机中，是对应的ASCII码值</p>
-<h3 id="布尔类型"><a href="#布尔类型" class="headerlink" title="布尔类型"></a>布尔类型</h3><p>只允许取值true和false，无null，占一个字节</p>
-<h2 id="基本数据类型转换"><a href="#基本数据类型转换" class="headerlink" title="基本数据类型转换"></a>基本数据类型转换</h2><p>自动类型转换：进行赋值或运算时，精度小的类型自动转换为精度大的数据类型(byte–&gt;short–&gt;int–&gt;long–&gt;float–&gt;double)(char–&gt;int–&gt;long–&gt;float–&gt;double)</p>
-<p>​							byte, short 和 char 之间不会相互自动转换，但可以计算，在计算时首先转换成int类型</p>
-<p>强制类型转换：将容量大的数据类型转换成容量小的数据类型</p>
-<p>​							使用时要加上强制转换符()，但可能造成精度降低或溢出</p>
-<p>基本数据类型和String类型的转换：基本–&gt;String：将基本数据类型的值+””</p>
-<p>​															 String–&gt;基本：通过基本类型的包装类调用parseXXX方法</p>
+<h3 id="布尔类型"><a href="#布尔类型" class="headerlink" title="布尔类型"></a>布尔类型</h3><p>只允许取值 true 和 false，无 null，占一个字节</p>
+<h3 id="数据的默认值"><a href="#数据的默认值" class="headerlink" title="数据的默认值"></a>数据的默认值</h3><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">byte</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">short</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">int</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">long</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">float</td>
+<td align="center">0.0</td>
+</tr>
+<tr>
+<td align="center">double</td>
+<td align="center">0.0</td>
+</tr>
+<tr>
+<td align="center">char</td>
+<td align="center">空格</td>
+</tr>
+<tr>
+<td align="center">boolean</td>
+<td align="center">false</td>
+</tr>
+<tr>
+<td align="center">引用类型(array、string)</td>
+<td align="center">null</td>
+</tr>
+</tbody></table>
+<h2 id="基本数据类型转换"><a href="#基本数据类型转换" class="headerlink" title="基本数据类型转换"></a>基本数据类型转换</h2><h3 id="自动类型转换"><a href="#自动类型转换" class="headerlink" title="自动类型转换"></a>自动类型转换</h3><ul>
+<li>进行赋值或运算时，精度小的类型自动转换为精度大的数据类型(<code>byte--&gt;short--&gt;int--&gt;long--&gt;float--&gt;double)(char--&gt;int--&gt;long--&gt;float--&gt;double</code>)</li>
+<li>byte, short 和 char 之间不会相互自动转换，但可以计算，在计算时首先转换成 int 类型</li>
+</ul>
+<h3 id="强制类型转换"><a href="#强制类型转换" class="headerlink" title="强制类型转换"></a>强制类型转换</h3><ul>
+<li>将容量大的数据类型转换成容量小的数据类型</li>
+<li>使用时要加上强制转换符()，但可能造成精度降低或溢出</li>
+<li>基本数据类型和String类型的转换：<ol>
+<li>基本–&gt; String 将基本数据类型的值+””</li>
+<li>String–&gt;基本：通过基本类型的包装类调用parseXXX方法</li>
+</ol>
+</li>
+</ul>
 <h2 id="字符编码"><a href="#字符编码" class="headerlink" title="字符编码"></a>字符编码</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517191425976.png" alt="image-20220517191425976"></p>
 <p>Unicode：将世界上所有的符号都纳入其中，每个符号都给予一个独一无二的编码，使用Unicode没有乱码问题</p>
-<h1 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h1><h2 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517193700932.png" alt="image-20220517193700932"></p>
-<h2 id="赋值运算符"><a href="#赋值运算符" class="headerlink" title="赋值运算符"></a>赋值运算符</h2><p>1）基本赋值运算符   int a &#x3D; 10;</p>
-<p>2）复合赋值运算符 +&#x3D; ，-&#x3D; ，*&#x3D; ， &#x2F;&#x3D; ，%&#x3D; 等</p>
-<p>复合赋值运算符会进行类型转换。例如：b +&#x3D; 2; &#x2F;&#x2F; 等价 b &#x3D; (byte)(b+2)</p>
+<h1 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h1><p>一般而言，<code>单目运算符优先级较高，赋值运算符优先级较低</code>。<code>算术运算符优先级较高，关系和逻辑运算符优先级较低。多数运算符具有左结合性，单目运算符、三目运算符、赋值运算符具有右结合性。</code></p>
+<h2 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517193700932.png" alt="image-20220517193700932"></p>
+<h2 id="赋值运算符"><a href="#赋值运算符" class="headerlink" title="赋值运算符"></a>赋值运算符</h2><ol>
+<li><p>基本赋值运算符   int a &#x3D; 10;</p>
+</li>
+<li><p>复合赋值运算符 +&#x3D; ，-&#x3D; ，*&#x3D; ， &#x2F;&#x3D; ，%&#x3D; 等</p>
+</li>
+</ol>
+<p>复合赋值运算符会进行类型转换。例如：byte b&#x3D;0; b +&#x3D; 2; &#x2F;&#x2F; 等价 b &#x3D; (byte)(b+2)</p>
 <h2 id="关系运算符-比较运算符"><a href="#关系运算符-比较运算符" class="headerlink" title="关系运算符(比较运算符)"></a>关系运算符(比较运算符)</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517193743927.png" alt="image-20220517193743927"></p>
 <h2 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h2><ol>
 <li><p>短路与 &amp;&amp; ， 短路或 ||，取反 ! </p>
@@ -227,77 +349,76 @@
 </ol>
 <h2 id="位运算符"><a href="#位运算符" class="headerlink" title="位运算符"></a>位运算符</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517195010581.png" alt="image-20220517195010581"></p>
 <ol>
-<li><p>算术右移 &gt;&gt;：低位溢出,符号位不变,并用符号位补溢出的高位 int a&#x3D;1&gt;&gt;2; &#x2F;&#x2F;1 &#x3D;&gt; 00000001 &#x3D;&gt; 00000000 本质 1&#x2F;2&#x2F;2&#x3D;0</p>
+<li><p><strong>算术右移 &gt;&gt;<strong>：</strong>低位溢出，符号位不变，并用符号位补溢出的高位</strong> int a&#x3D;1&gt;&gt;2; &#x2F;&#x2F;1 &#x3D;&gt; 00000001 &#x3D;&gt; 00000000 本质 1&#x2F;2&#x2F;2&#x3D;0</p>
 </li>
-<li><p>算术左移 &lt;&lt;: 符号位不变,低位补 0 int c&#x3D;1&lt;&lt;2; &#x2F;&#x2F;1 &#x3D;&gt; 00000001 &#x3D;&gt; 00000100 本质 1 * 2 * 2 &#x3D; 4</p>
+<li><p>**算术左移 &lt;&lt;**:  **符号位不变，低位补 0** int c&#x3D;1&lt;&lt;2; &#x2F;&#x2F;1 &#x3D;&gt; 00000001 &#x3D;&gt; 00000100 本质 1 * 2 * 2 &#x3D; 4</p>
 </li>
-<li><blockquote>
-<blockquote>
-<blockquote>
-<p> 逻辑右移也叫无符号右移,运算规则是: 低位溢出，高位补 0</p>
-</blockquote>
-</blockquote>
-</blockquote>
+<li><p><strong>逻辑右移 &gt;&gt;&gt;</strong>:  也叫无符号右移,运算规则是: <strong>低位溢出，高位补 0</strong></p>
 </li>
 </ol>
-<h2 id="三元运算符"><a href="#三元运算符" class="headerlink" title="三元运算符"></a>三元运算符</h2><p>条件表达式 ? 表达式 1: 表达式 2; </p>
-<p>运算规则：1）如果条件表达式为 true，运算后的结果是表达式 1； </p>
-<p>​					2）如果条件表达式为 false，运算后的结果是表达式 2；</p>
-<h2 id="标识符"><a href="#标识符" class="headerlink" title="标识符"></a>标识符</h2><p>1）由26个英文字母大小写，0-9，_或$组成</p>
-<p>2）数字不能开头</p>
-<p>3）不可以使用关键字和保留字，但能包含关键字和保留字</p>
-<p>4）不能包含空格</p>
+<h2 id="三元运算符"><a href="#三元运算符" class="headerlink" title="三元运算符"></a>三元运算符</h2><ul>
+<li><p>条件表达式 ? 表达式 1: 表达式 2; </p>
+</li>
+<li><p>运算规则</p>
+<ol>
+<li>如果条件表达式为 true，运算后的结果是表达式 1； </li>
+<li>如果条件表达式为 false，运算后的结果是表达式 2；</li>
+</ol>
+</li>
+</ul>
+<h2 id="标识符"><a href="#标识符" class="headerlink" title="标识符"></a>标识符</h2><ul>
+<li>由26个英文字母大小写，0-9，_或$组成</li>
+<li>数字不能开头</li>
+<li>不可以使用关键字和保留字，但能包含关键字和保留字</li>
+<li>不能包含空格</li>
+</ul>
 <h2 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h2><p><strong>都小写</strong></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517194602552.png" alt="image-20220517194602552"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517194633358.png" alt="image-20220517194633358"></p>
-<p><strong>volatile与synchronized的区别：</strong></p>
-<p>volatile本质是在告诉jvm当前变量在寄存器中的值是不确定的,需要从主存中读取,synchronized则是锁定当前变量,只有当前线程可以访问该变量,其他线程被阻塞住</p>
-<p>volatile仅能使用在变量级别,synchronized则可以使用在变量,方法.</p>
-<p>volatile仅能实现变量的修改可见性,但不具备原子特性,而synchronized则可以保证变量的修改可见性和原子性.</p>
-<p>volatile不会造成线程的阻塞,而synchronized可能会造成线程的阻塞.</p>
-<p>volatile标记的变量不会被编译器优化,而synchronized标记的变量可以被编译器优化.</p>
-<p>synchronized很强大，既可以保证可见性，又可以保证原子性，而volatile不能保证原子性！</p>
 <h2 id="保留字"><a href="#保留字" class="headerlink" title="保留字"></a>保留字</h2><p>Java 保留字：现有 Java 版本尚未使用，但以后版本可能会作为关键字使用。自己命名标识符时要避免使用这些保留字 byValue、cast、future、 generic、inner、 operator、 outer、 rest、 var 、 goto</p>
 <h2 id="原码、反码、补码"><a href="#原码、反码、补码" class="headerlink" title="原码、反码、补码"></a>原码、反码、补码</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517194927173.png" alt="image-20220517194927173"></p>
-<h1 id="程序控制结构"><a href="#程序控制结构" class="headerlink" title="程序控制结构"></a>程序控制结构</h1><p>switch(表达式)中表达式的返回值必须是：byte, short, int, char, enum, String</p>
-<p>break 语句用于终止某个语句块的执行，一般使用在 switch 或者循环[for, while, do-while]中</p>
-<p>continue 语句用于结束本次循环，继续执行下一次循环，出现在多层嵌套的循环语句体中时，可以通过标签指明要跳过的是哪一层循环 </p>
+<h1 id="程序控制结构"><a href="#程序控制结构" class="headerlink" title="程序控制结构"></a>程序控制结构</h1><p>switch(表达式)中表达式的返回值必须是：<strong>byte, short, int, char, enum, String</strong></p>
+<p><strong>break</strong> 语句用于<strong>终止某个语句块的执行</strong>，一般使用在 switch 或者循环[for, while, do-while]中</p>
+<p><strong>continue</strong> 语句用于<strong>结束本次循环，继续执行下一次循环</strong>，出现在多层嵌套的循环语句体中时，可以通过标签指明要跳过的是哪一层循环 </p>
 <h1 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h1><p>存放多个同一类型的数据，是一种<strong>引用类型</strong>数据</p>
-<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p>动态初始化：数据类型 数组名[] &#x3D; new  数据类型[大小] 例：int a[] &#x3D; new int[5]</p>
+<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p><strong>动态初始化</strong>：数据类型 数组名[] &#x3D; new  数据类型[大小] 例：int a[] &#x3D; new int[5]</p>
 <p>​						数据类型 数组名[]；数组名 &#x3D; new  数据类型[大小] </p>
-<p>​						数据类型 数组名[[]][[][] &#x3D; new  数据类型[大小] [大小]</p>
-<p>​						数据类型 数组名[[]][[][] &#x3D; new  数据类型[大小] []</p>
-<p>静态初始化：数据类型 数组名[] &#x3D; {元素值，元素值, … }</p>
-<h2 id="数组细节"><a href="#数组细节" class="headerlink" title="数组细节"></a>数组细节</h2><p>1）数组是多个相同类型数据的组合</p>
-<p>2）数组创建后，如果没有赋值，有默认值</p>
-<p>​		int 0，short 0, byte 0, long 0, float 0.0,double 0.0，char \u0000，boolean false，String null</p>
-<p>3）数组属于引用类型，数组型数据是对象(Object)</p>
-<h2 id="包"><a href="#包" class="headerlink" title="包"></a>包</h2><h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>1）区分相同名字的类</p>
-<p>2）当类很多时，可以更好的管理类</p>
-<p>3）控制访问范围</p>
-<h3 id="常用的包"><a href="#常用的包" class="headerlink" title="常用的包"></a>常用的包</h3><ol>
-<li><p>java.lang.* &#x2F;&#x2F;lang 包是基本包，默认引入，不需要再引入. </p>
+<p>​						数据类型 数组名[] []&#x3D; new  数据类型[大小] [大小]</p>
+<p>​						数据类型 数组名[] [] &#x3D; new  数据类型[大小] []</p>
+<p><strong>静态初始化</strong>：数据类型 数组名[] &#x3D; {元素值，元素值, … }</p>
+<h2 id="数组细节"><a href="#数组细节" class="headerlink" title="数组细节"></a>数组细节</h2><ul>
+<li><p>数组是多个相同类型数据的组合</p>
 </li>
-<li><p>java.util.* &#x2F;&#x2F;util 包，系统提供的工具包, 工具类，使用 Scanner </p>
+<li><p>数组创建后，如果没有赋值，有默认值</p>
 </li>
-<li><p>java.net.* &#x2F;&#x2F;网络包，网络开发 </p>
+</ul>
+<p>​		<code>int 0，short 0, byte 0, long 0, float 0.0,double 0.0，char \u0000，boolean false，String null</code></p>
+<ul>
+<li>数组属于引用类型，数组型数据是对象(Object)</li>
+</ul>
+<h1 id="包"><a href="#包" class="headerlink" title="包"></a>包</h1><h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><ol>
+<li><p>区分相同名字的类</p>
 </li>
-<li><p>java.awt.* &#x2F;&#x2F;是做 java的界面开发，GUI</p>
+<li><p>当类很多时，可以更好的管理类</p>
 </li>
-</ol>
-<h2 id="访问修饰符"><a href="#访问修饰符" class="headerlink" title="访问修饰符"></a>访问修饰符</h2><p>java 提供四种访问控制修饰符号，用于控制方法和属性(成员变量)的访问权限（范围）</p>
-<ol>
-<li><p>公开级别:用 <strong>public</strong> 修饰,对外公开 </p>
-</li>
-<li><p>受保护级别:用 <strong>protected</strong> 修饰,对子类和同一个包中的类公开</p>
-</li>
-<li><p>默认级别:没有修饰符号,向同一个包的类公开</p>
-</li>
-<li><p>私有级别:用 <strong>private</strong> 修饰,只有类本身可以访问,不对外公开</p>
+<li><p>控制访问范围</p>
 </li>
 </ol>
-<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>修饰符可以修饰类中的属性，成员方法以及类</p>
-<p>只有默认的和public才能修饰类</p>
+<h2 id="常用的包"><a href="#常用的包" class="headerlink" title="常用的包"></a>常用的包</h2><ul>
+<li>java.lang.* &#x2F;&#x2F;lang 包是基本包，默认引入，不需要再引入. </li>
+<li>java.util.* &#x2F;&#x2F;util 包，系统提供的工具包, 工具类，使用 Scanner </li>
+<li>java.net.* &#x2F;&#x2F;网络包，网络开发 </li>
+<li>java.awt.* &#x2F;&#x2F;是做 java的界面开发，GUI</li>
+</ul>
+<h1 id="访问修饰符"><a href="#访问修饰符" class="headerlink" title="访问修饰符"></a>访问修饰符</h1><p>java 提供四种访问控制修饰符号，用于控制方法和属性(成员变量)的访问权限（范围）</p>
+<ul>
+<li>公开级别：用 <strong>public</strong> 修饰，对外公开 </li>
+<li>受保护级别：用 <strong>protected</strong> 修饰，对子类和同一个包中的类公开</li>
+<li>默认级别：没有修饰符号，向同一个包的类公开</li>
+<li>私有级别：用 <strong>private</strong> 修饰，只有类本身可以访问,不对外公开</li>
+</ul>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>修饰符可以修饰类中的属性，成员方法以及类</p>
+<p><strong>只有默认的和public才能修饰类</strong></p>
 <h1 id="OOP"><a href="#OOP" class="headerlink" title="OOP"></a>OOP</h1><h2 id="面向对象编程三大特征"><a href="#面向对象编程三大特征" class="headerlink" title="面向对象编程三大特征"></a>面向对象编程三大特征</h2><p>封装、继承和多态</p>
 <h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><p>把抽象出的数据[属性]和对数据的操作[方法]封装在一起，数据被保护在内部，程序的其他部分只能通过被授权的操作[方法]，才能对数据进行操作</p>
 <ol>
