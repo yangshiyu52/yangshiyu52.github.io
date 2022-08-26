@@ -11940,14 +11940,10 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
     <url>/2022/06/28/JavaSE/</url>
     <content><![CDATA[<h1 id="Java-概述"><a href="#Java-概述" class="headerlink" title="Java 概述"></a>Java 概述</h1><h2 id="程序"><a href="#程序" class="headerlink" title="程序"></a>程序</h2><p>计算机执行某些操作或解决某个问题而编写的一系列有序指令的集合</p>
 <h2 id="Java-重要特点"><a href="#Java-重要特点" class="headerlink" title="Java 重要特点"></a>Java 重要特点</h2><ol>
-<li><p>Java 语言是<strong>面向对象</strong>的(oop)</p>
-</li>
-<li><p>Java 语言是<strong>健壮</strong>的。Java 的强类型机制、异常处理、垃圾的自动收集等是 Java 程序健壮性的重要保证 </p>
-</li>
-<li><p>Java 语言是<strong>跨平台性</strong>的。[即: 一个编译好的.class 文件可以在多个系统下运行，这种特性称为跨平台]</p>
-</li>
-<li><p>Java 语言是<strong>解释型</strong>的。</p>
-</li>
+<li>Java 语言是<strong>面向对象</strong>的(oop)</li>
+<li>Java 语言是<strong>健壮</strong>的。Java 的强类型机制、异常处理、垃圾的自动收集等是 Java 程序健壮性的重要保证 </li>
+<li>Java 语言是<strong>跨平台性</strong>的。[即: 一个编译好的.class 文件可以在多个系统下运行，这种特性称为跨平台]</li>
+<li>Java 语言是<strong>解释型</strong>的。</li>
 </ol>
 <p>​		<strong>解释性语言：javascript，PHP，java</strong> </p>
 <p>​		<strong>编译性语言: c &#x2F; c++</strong> </p>
@@ -11955,7 +11951,7 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 <h2 id="JDK，JRE介绍"><a href="#JDK，JRE介绍" class="headerlink" title="JDK，JRE介绍"></a>JDK，JRE介绍</h2><ul>
 <li><p>JDK 的全称(Java Development Kit Java 开发工具包)</p>
 <ul>
-<li>**JDK &#x3D; JRE + java 开发工具集 **   [java, javac,javadoc,javap,java编译工具等] </li>
+<li><strong>JDK &#x3D; JRE + java 开发工具集</strong>[java, javac,javadoc,javap,java编译工具等] </li>
 <li>JDK 是提供给 Java 开发人员使用的，其中包含了 java 的开发工具，也包括了 JRE。所以安装了 JDK，就不用在单独安装 JRE了</li>
 </ul>
 </li>
@@ -11966,6 +11962,7 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 </ul>
 </li>
 </ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220826103448070.png" alt="image-20220826103448070"></p>
 <h2 id="Java-虚拟机-JVM"><a href="#Java-虚拟机-JVM" class="headerlink" title="Java 虚拟机 JVM"></a>Java 虚拟机 JVM</h2><ul>
 <li>JVM 是一个虚拟的计算机，具有指令集并使用不同的存储区域。负责执行指令，管理数据、内存、寄存器，<strong>包含在 JDK 中</strong>。</li>
 <li>对于不同的平台，有不同的虚拟机。 </li>
@@ -11985,7 +11982,7 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 <h2 id="❤Java-内存模型-JMM"><a href="#❤Java-内存模型-JMM" class="headerlink" title="❤Java 内存模型 JMM"></a>❤Java 内存模型 JMM</h2><h3 id="为什么会有-Java-内存模型"><a href="#为什么会有-Java-内存模型" class="headerlink" title="为什么会有 Java 内存模型"></a>为什么会有 Java 内存模型</h3><h4 id="CPU和缓存一致性"><a href="#CPU和缓存一致性" class="headerlink" title="CPU和缓存一致性"></a>CPU和缓存一致性</h4><ul>
 <li><p>当程序在运行过程中，会将运算需要的数据从主存复制一份到CPU的高速缓存当中，那么CPU进行计算时就可以直接从它的高速缓存读取数据和向其中写入数据，当运算结束之后，再将高速缓存中的数据刷新到主存当中。</p>
 </li>
-<li><p>随着CPU能力的不断提升，一层缓存就慢慢的无法满足要求了，就逐渐的衍生出多级缓存。按照数据读取顺序和与CPU结合的紧密程度，CPU缓存可以分为一级缓存（L1），二级缓存（L3），部分高端CPU还具有三级缓存（L3），每一级缓存中所储存的全部数据都是下一级缓存的一部分。这三种缓存的技术难度和制造成本是相对递减的，所以其容量也是相对递增的。</p>
+<li><p>随着CPU能力的不断提升，一层缓存就慢慢的无法满足要求了，就逐渐的衍生出多级缓存。按照数据读取顺序和与CPU结合的紧密程度，CPU缓存可以分为一级缓存（L1），二级缓存（L2），部分高端CPU还具有三级缓存（L3），每一级缓存中所储存的全部数据都是下一级缓存的一部分。这三种缓存的技术难度和制造成本是相对递减的，所以其容量也是相对递增的。</p>
 </li>
 <li><p>在有了多级缓存之后，程序的执行就变成了：当CPU要读取一个数据时，首先从一级缓存中查找，如果没有找到再从二级缓存中查找，如果还是没有就从三级缓存或内存中查找。</p>
 </li>
@@ -12024,7 +12021,7 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 <h3 id="什么是内存模型"><a href="#什么是内存模型" class="headerlink" title="什么是内存模型"></a>什么是内存模型</h3><ul>
 <li><p>为了保证并发编程中可以满足原子性、可见性及有序性。有一个重要的概念，那就是——<strong>内存模型</strong>。</p>
 </li>
-<li><p><strong>为了保证共享内存的正确性（可见性、有序性、原子性），内存模型定义了共享内存系统中多线程程序读写操作行为的规范。</strong>通过这些规则来规范对内存的读写操作，从而保证指令执行的正确性。它与处理器有关、与缓存有关、与并发有关、与编译器也有关。他解决了 CPU 多级缓存、处理器优化、指令重排等导致的内存访问问题，保证了并发场景下的一致性、原子性和有序性。</p>
+<li><p><strong>为了保证共享内存的正确性（可见性、有序性、原子性），内存模型定义了共享内存系统中多线程程序读写操作行为的规范。</strong>通过这些规则来规范对内存的读写操作，从而保证指令执行的正确性。它与处理器有关、与缓存有关、与并发有关、与编译器也有关。它解决了 CPU 多级缓存、处理器优化、指令重排等导致的内存访问问题，<strong>保证了并发场景下的一致性、原子性和有序性</strong>。</p>
 </li>
 <li><p>内存模型解决并发问题主要采用两种方式：<strong>限制处理器优化</strong>和<strong>使用内存屏障</strong>。</p>
 </li>
@@ -12038,7 +12035,7 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 </li>
 <li><p>Java 内存模型规定了所有的变量都存储在主内存中，每条线程还有自己的工作内存，线程的工作内存中保存了该线程中是用到的变量的主内存副本拷贝，线程对变量的所有操作都必须在工作内存中进行，而不能直接读写主内存。不同的线程之间也无法直接访问对方工作内存中的变量，线程间变量的传递均需要自己的工作内存和主存之间进行数据同步进行。</p>
 </li>
-<li><p>JMM 就作用于工作内存和主存之间数据同步过程。他规定了如何做数据同步以及什么时候做数据同步。</p>
+<li><p>JMM 就作用于工作内存和主存之间数据同步过程。他<strong>规定了如何让数据同步以及什么时候做数据同步</strong>。</p>
 </li>
 <li><p>JMM 定义了Java 虚拟机(JVM)<strong>在计算机内存(RAM)中的工作方式</strong>。JVM 是整个计算机虚拟模型，所以 JMM 是隶属于 JVM 的。</p>
 </li>
@@ -12088,11 +12085,12 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 <h3 id="整数类型"><a href="#整数类型" class="headerlink" title="整数类型"></a>整数类型</h3><p><strong>默认int</strong></p>
 <p>计算机底层存储的都是<strong>补码</strong>，并以补码进行数据运算，显示的是原码</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517173405866.png"></p>
-<h3 id="浮点类型"><a href="#浮点类型" class="headerlink" title="浮点类型"></a>浮点类型</h3><p><strong>默认float</strong></p>
+<h3 id="浮点类型"><a href="#浮点类型" class="headerlink" title="浮点类型"></a>浮点类型</h3><p><strong>默认double</strong></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517175012934.png" alt="image-20220517175012934"></p>
 <ol>
 <li>关于浮点数在机器中存放形式的简单说明，<code>浮点数=符号位+指数位+尾数位</code> </li>
 <li>尾数部分可能丢失，造成精度损失(小数都是近似值)</li>
+<li>在对float型进行赋值时，在结尾必须添加“F”或者“f”，例：float i &#x3D; 5正确；float i &#x3D; 5.0错误;。</li>
 </ol>
 <h3 id="字符类型"><a href="#字符类型" class="headerlink" title="字符类型"></a>字符类型</h3><p>字符类型可以表示单个字符,字符类型是 char，char 是两个字节(可以存放汉字)，多个字符用字符串 String</p>
 <p>字符型存储到计算机中，是对应的ASCII码值</p>
@@ -12161,7 +12159,7 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 <h2 id="赋值运算符"><a href="#赋值运算符" class="headerlink" title="赋值运算符"></a>赋值运算符</h2><ol>
 <li><p>基本赋值运算符   int a &#x3D; 10;</p>
 </li>
-<li><p>复合赋值运算符 +&#x3D; ，-&#x3D; ，*&#x3D; ， &#x2F;&#x3D; ，%&#x3D; 等</p>
+<li><p>复合赋值运算符 +&#x3D; ，-&#x3D; ，*&#x3D; ， &#x2F;&#x3D; ，%&#x3D; 等，<strong>内含强转操作</strong></p>
 </li>
 </ol>
 <p>复合赋值运算符会进行类型转换。例如：byte b&#x3D;0; b +&#x3D; 2; &#x2F;&#x2F; 等价 b &#x3D; (byte)(b+2)</p>
@@ -12174,12 +12172,9 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 </ol>
 <h2 id="位运算符"><a href="#位运算符" class="headerlink" title="位运算符"></a>位运算符</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517195010581.png" alt="image-20220517195010581"></p>
 <ol>
-<li><p><strong>算术右移 &gt;&gt;<strong>：</strong>低位溢出，符号位不变，并用符号位补溢出的高位</strong> int a&#x3D;1&gt;&gt;2; &#x2F;&#x2F;1 &#x3D;&gt; 00000001 &#x3D;&gt; 00000000 本质 1&#x2F;2&#x2F;2&#x3D;0</p>
-</li>
-<li><p>**算术左移 &lt;&lt;**:  **符号位不变，低位补 0** int c&#x3D;1&lt;&lt;2; &#x2F;&#x2F;1 &#x3D;&gt; 00000001 &#x3D;&gt; 00000100 本质 1 * 2 * 2 &#x3D; 4</p>
-</li>
-<li><p><strong>逻辑右移 &gt;&gt;&gt;</strong>:  也叫无符号右移,运算规则是: <strong>低位溢出，高位补 0</strong></p>
-</li>
+<li><strong>算术右移 &gt;&gt;<strong>：</strong>低位溢出，符号位不变，并用符号位补溢出的高位</strong> int a&#x3D;1&gt;&gt;2; &#x2F;&#x2F;1 &#x3D;&gt; 00000001 &#x3D;&gt; 00000000 本质 1&#x2F;2&#x2F;2&#x3D;0</li>
+<li>**算术左移 &lt;&lt;**:  **符号位不变，低位补 0**  int c&#x3D;1&lt;&lt;2; &#x2F;&#x2F;1 &#x3D;&gt; 00000001 &#x3D;&gt; 00000100 本质 1 * 2 * 2 &#x3D; 4</li>
+<li><strong>逻辑右移 &gt;&gt;&gt;</strong>:  也叫无符号右移,运算规则是: <strong>低位溢出，高位补 0</strong></li>
 </ol>
 <h2 id="三元运算符"><a href="#三元运算符" class="headerlink" title="三元运算符"></a>三元运算符</h2><ul>
 <li><p>条件表达式 ? 表达式 1: 表达式 2; </p>
@@ -12245,7 +12240,7 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 <h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>修饰符可以修饰类中的属性，成员方法以及类</p>
 <p><strong>只有默认的和public才能修饰类</strong></p>
 <h1 id="OOP"><a href="#OOP" class="headerlink" title="OOP"></a>OOP</h1><h2 id="面向对象编程三大特征"><a href="#面向对象编程三大特征" class="headerlink" title="面向对象编程三大特征"></a>面向对象编程三大特征</h2><p>封装、继承和多态</p>
-<h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><p>把抽象出的数据[属性]和对数据的操作[方法]封装在一起，数据被保护在内部，程序的其他部分只能通过被授权的操作[方法]，才能对数据进行操作</p>
+<h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><p>把抽象出的数据[<strong>属性</strong>]和对数据的操作[<strong>方法</strong>]封装在一起，数据被保护在内部，程序的其他部分只能通过被授权的操作[方法]，才能对数据进行操作</p>
 <ol>
 <li><p>将属性进行私有化private</p>
 </li>
@@ -12254,182 +12249,249 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 <li><p>提供一个公共的get方法，用于获取属性的值</p>
 </li>
 </ol>
-<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>继承可以解决代码复用,让我们的编程更加靠近人类思维.当多个类存在相同的属性(变量)和方法时,可以从这些类中抽象出父类,在父类中定义这些相同的属性和方法，所有的子类不需要重新定义这些属性和方法，只需要通过 extends 来声明继承父类即可。</p>
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>继承可以解决代码复用，让我们的编程更加靠近人类思维。当多个类存在相同的属性(变量)和方法时，可以从这些类中抽象出父类，在父类中定义这些相同的属性和方法，所有的子类不需要重新定义这些属性和方法，只需要通过 extends 来声明继承父类即可。</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220503220735855.png" alt="image-20220503220735855"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220503220812342.png" alt="image-20220503220812342"></p>
 <p>继承的深入讨论&#x2F;细节问题</p>
 <ol>
-<li><p>子类继承了所有的属性和方法，非私有的属性和方法可以在子类直接访问, 但是私有属性和方法不能在子类直接访 问，要通过父类提供公共的方法去访问</p>
-</li>
-<li><p>子类必须调用父类的构造器， 完成父类的初始化 </p>
-</li>
-<li><p>当创建子类对象时，不管使用子类的哪个构造器，默认情况下总会去调用父类的无参构造器，如果父类没有提供无参构造器，则必须在子类的构造器中用super</p>
-<p>  去指定使用父类的哪个构造器完成对父类的初始化工作，否则，编译不会通过</p>
-</li>
-<li><p>如果希望指定去调用父类的某个构造器，则显式的调用一下 : super(参数列表)</p>
-</li>
-<li><p>super 在使用时，必须放在构造器第一行(super只能在构造器中使用) </p>
-</li>
-<li><p>super() 和 this() 都只能放在构造器第一行，因此这两个方法不能共存在一个构造器</p>
-</li>
-<li><p>java 所有类都是 Object 类的子类, Object 是所有类的基类. </p>
-</li>
-<li><p>父类构造器的调用不限于直接父类！将一直往上追溯直到 Object 类(顶级父类) </p>
-</li>
-<li><p>子类最多只能继承一个父类(指直接继承)，即 java 中是单继承机制。 思考：如何让 A 类继承 B 类和 C 类？ 【A 继承 B， B 继承 C】 </p>
-</li>
-<li><p>不能滥用继承，子类和父类之间必须满足 <strong>is-a</strong> 的逻辑</p>
-</li>
+<li>子类继承了所有的属性和方法，非私有的属性和方法可以在子类直接访问, 但是私有属性和方法不能在子类直接访问，要通过父类提供公共的方法去访问</li>
+<li><strong>子类必须调用父类的构造器， 完成父类的初始化</strong> </li>
+<li>当创建子类对象时，不管使用子类的哪个构造器，<strong>默认情况下总会去调用父类的无参构造器</strong>，如果父类没有提供无参构造器，则必须在子类的构造器中用 <strong>super</strong> 去指定使用父类的哪个构造器完成对父类的初始化工作，否则，编译不会通过</li>
+<li>如果希望指定去调用父类的某个构造器，则显式的调用一下 : <strong>super(参数列表)</strong></li>
+<li><strong>super 在使用时，必须放在构造器第一行(super只能在构造器中使用)</strong> </li>
+<li><strong>super() 和 this() 都只能放在构造器第一行，因此这两个方法不能共存在一个构造器</strong></li>
+<li>java 所有类都是 Object 类的子类, Object 是所有类的基类。</li>
+<li>父类构造器的调用不限于直接父类！将一直往上追溯直到 Object 类(顶级父类) </li>
+<li>子类最多只能继承一个父类(指直接继承)，即 java 中是单继承机制。 思考：如何让 A 类继承 B 类和 C 类？ 【A 继承 B， B 继承 C】 </li>
+<li>不能滥用继承，子类和父类之间必须满足 <strong>is-a</strong> 的逻辑</li>
 </ol>
 <h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><p>方法或对象具有多种形态。是面向对象的第三大特征，多态是建立在封装和继承基础之上的。</p>
-<ol>
-<li>方法的多态：重写和重载就体现多态</li>
-</ol>
-<p>2）<strong>对象的多态</strong></p>
-<p>a.一个对象的编译类型和运行类型可以不一致</p>
-<p>b.编译类型在定义对象时就确定了，不能改变</p>
-<p>c.运行类型可以改变</p>
-<p><strong>d.编译看左，运行看右</strong></p>
+<ul>
+<li>方法的多态：重写和重载就体现多态 </li>
+<li><strong>对象的多态</strong><ul>
+<li>一个对象的编译类型和运行类型可以不一致</li>
+<li><strong>编译类型在定义对象时就确定了，不能改变</strong></li>
+<li><strong>运行类型可以改变</strong></li>
+<li><strong>编译看左，运行看右</strong></li>
+</ul>
+</li>
+</ul>
 <h4 id="多态的注意事项"><a href="#多态的注意事项" class="headerlink" title="多态的注意事项"></a>多态的注意事项</h4><p>多态的<strong>前提</strong>是：两个对象(类)存在继承关系</p>
 <p><strong>多态的向上转型</strong></p>
-<p>​		本质：父类引用指向子类对象</p>
-<p>​		语法：父类类型 引用名 &#x3D; new 子类类型()；</p>
-<p>​		特点：<strong>编译看左，运行看右</strong></p>
-<p>​					可以调用父类中的所有成员</p>
-<p>​					不能调用子类中的特有成员</p>
-<p>​					最终运行效果看子类的具体实现</p>
+<ul>
+<li>本质：父类引用指向子类对象</li>
+<li>语法：父类类型 引用名 &#x3D; new 子类类型()；</li>
+<li>特点：<ul>
+<li><strong>编译看左，运行看右</strong></li>
+<li>可以调用父类中的所有成员</li>
+<li><strong>不能调用子类中的特有成员</strong></li>
+<li>最终运行效果看子类的具体实现</li>
+</ul>
+</li>
+</ul>
 <p><strong>多态的向下转型</strong></p>
-<p>​		语法：子类类型 引用名 &#x3D; (子类类型) 父类引用；</p>
-<p>​		特点：只能强转父类的引用，不能强转父类的对象</p>
-<p>​					要求父类的引用必须指向的是当前目标类型的对象</p>
-<p>​					向下转型后可以调用子类类型中的所有成员</p>
-<p><strong>instanceOf</strong> 比较操作符，用于判断对象的运行类型是否为 XX 类型或 XX 类型的子类型</p>
-<h4 id="java-的动态绑定机制"><a href="#java-的动态绑定机制" class="headerlink" title="java 的动态绑定机制"></a>java 的动态绑定机制</h4><p>1）当调用对象方法的时候，该方法会与该对象的内存地址&#x2F;运行类型绑定</p>
-<p>2）当调用对象属性的时候，没有动态绑定机制，哪里声明，哪里使用</p>
-<h2 id="super-关键字"><a href="#super-关键字" class="headerlink" title="super 关键字"></a>super 关键字</h2><p>super代表父类的引用，用于访问父类的属性、方法、构造器。</p>
-<h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>1）访问父类的属性，但不能访问父类的private属性  例：super.属性名</p>
-<p>2）访问父类的方法，但不能访问父类的private方法  例：super.方法名(参数列表)</p>
-<p>3）访问父类的构造器 例：super(参数列表) 只能放在构造器的第一句，只能出现一句</p>
-<h3 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h3><p>1）调用父类的构造器（分工明确，父类属性由父类初始化，子类属性由子类初始化）</p>
-<p>2）当子类中有和父类中的成员（属性和方法）重名时，为了访问父类的成员，必须通过super</p>
-<p>3）super的访问不限于直接父类，如果爷爷类有和本类中有同名的成员，也可以使用super去访问爷爷类的成员；</p>
-<p>​		如果多个基类中都有相同的成员，则super访问遵循就近原则</p>
+<ul>
+<li>语法：子类类型 引用名 &#x3D; (子类类型) 父类引用；</li>
+<li>特点：<ul>
+<li><strong>只能强转父类的引用，不能强转父类的对象</strong></li>
+<li>要求父类的引用必须指向的是<strong>当前目标类型的对象</strong></li>
+<li>向下转型后可以调用子类类型中的所有成员</li>
+</ul>
+</li>
+</ul>
+<p><strong>instanceOf</strong> 比较操作符，用于判断对象的<strong>运行类型</strong>是否为 XX 类型或 XX 类型的子类型</p>
+<h4 id="java-的动态绑定机制"><a href="#java-的动态绑定机制" class="headerlink" title="java 的动态绑定机制"></a>java 的动态绑定机制</h4><ul>
+<li>当调用对象方法的时候，该方法会与该对象的内存地址&#x2F;运行类型绑定</li>
+<li>当调用对象属性的时候，没有动态绑定机制，哪里声明，哪里使用</li>
+</ul>
+<h2 id="super-关键字"><a href="#super-关键字" class="headerlink" title="super 关键字"></a>super 关键字</h2><p>super 代表父类的引用，用于访问父类的属性、方法、构造器。</p>
+<h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><ul>
+<li>访问父类的属性，但不能访问父类的 private 属性  例：super.属性名</li>
+<li>访问父类的方法，但不能访问父类的 private 方法  例：super.方法名(参数列表)</li>
+<li>访问父类的构造器  例：super(参数列表) 只能放在构造器的<strong>第一句</strong>，只能出现一句</li>
+</ul>
+<h3 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h3><ol>
+<li>调用父类的构造器（分工明确，父类属性由父类初始化，子类属性由子类初始化）</li>
+<li>当子类中有和父类中的成员（属性和方法）重名时，<strong>为了访问父类的成员，必须通过super</strong></li>
+<li>super 的访问不限于直接父类，如果爷爷类有和本类中有同名的成员，也可以使用super去访问爷爷类的成员；如果多个基类中都有相同的成员，则 super 访问遵循<strong>就近原则</strong></li>
+</ol>
 <h3 id="super与this的比较"><a href="#super与this的比较" class="headerlink" title="super与this的比较"></a>super与this的比较</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220505145216027.png" alt="image-20220505145216027"></p>
-<h2 id="方法重写-x2F-覆盖-override"><a href="#方法重写-x2F-覆盖-override" class="headerlink" title="方法重写&#x2F;覆盖(override)"></a>方法重写&#x2F;覆盖(override)</h2><p>子类中有一个方法，和父类的某个方法的名称、返回值类型、参数一样</p>
+<h2 id="方法重写-x2F-覆盖-override"><a href="#方法重写-x2F-覆盖-override" class="headerlink" title="方法重写&#x2F;覆盖(override)"></a>方法重写&#x2F;覆盖(override)</h2><p>子类中有一个方法，和父类的某个方法的<strong>名称、返回值类型、参数</strong>一样</p>
 <h3 id="重写与重载的区别"><a href="#重写与重载的区别" class="headerlink" title="重写与重载的区别"></a>重写与重载的区别</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220505145536052.png" alt="image-20220505145536052"></p>
 <h2 id="Object-类"><a href="#Object-类" class="headerlink" title="Object 类"></a>Object 类</h2><p><img src="https://uploadfiles.nowcoder.com/images/20200717/257056865_1594996230591_77654A637F366FC03F9C293582926971" alt="img"></p>
 <p><img src="https://uploadfiles.nowcoder.com/images/20190412/242025553_1555068065653_1F768A0737B2E9FBB49649C7465CBFCE" alt="img"></p>
 <h3 id="equals方法"><a href="#equals方法" class="headerlink" title="equals方法"></a>equals方法</h3><h4 id="x3D-x3D-和-equals比较"><a href="#x3D-x3D-和-equals比较" class="headerlink" title="&#x3D;&#x3D;和 equals比较"></a>&#x3D;&#x3D;和 equals比较</h4><p>&#x3D;&#x3D;是一个比较运算符</p>
-<p>1）&#x3D;&#x3D;：既可以判断基本类型，又可以判断引用类型</p>
-<p>2）&#x3D;&#x3D;：如果判断基本类型，判断的是<strong>值</strong>是否相等</p>
-<p>3）&#x3D;&#x3D;：如果判断引用类型，判断的是**地址值 **是否相等</p>
-<p>4）equals：是Object类中的方法，只能判断引用类型，默认判断的是地址值是否相等，子类中往往重写该方法，用于判断<strong>内容</strong>是否相等（例：Integer, String）</p>
+<ol>
+<li>&#x3D;&#x3D;：既可以判断基本类型，又可以判断引用类型</li>
+<li>&#x3D;&#x3D;：如果判断<strong>基本类型</strong>，判断的是<strong>值</strong>是否相等</li>
+<li>&#x3D;&#x3D;：如果判断<strong>引用类型</strong>，判断的是<strong>地址值</strong>是否相等</li>
+<li>equals：是Object类中的方法，只能判断引用类型，默认判断的是地址值是否相等，<strong>子类</strong>中往往<strong>重写该方法</strong>，用于判断<strong>内容</strong>是否相等</li>
+</ol>
 <h3 id="hashCode方法"><a href="#hashCode方法" class="headerlink" title="hashCode方法"></a>hashCode方法</h3><ol>
-<li><p>返回对象的哈希码值，提高具有哈希结构的容器的效率！ </p>
-</li>
-<li><p>两个引用，如果指向的是同一个对象，则哈希值肯定是一样的！ </p>
-</li>
-<li><p>两个引用，如果指向的是不同对象，则哈希值是不一样的 </p>
-</li>
-<li><p>哈希值主要根据地址号来的！不能完全将哈希值等价于地址</p>
-</li>
+<li>返回对象的哈希码值，提高具有哈希结构的容器的效率！ </li>
+<li>两个引用，如果指向的是同一个对象，则哈希值肯定是一样的！ </li>
+<li>两个引用，如果指向的是不同对象，则哈希值是不一样的 </li>
+<li>哈希值主要根据地址号来的！不能完全将哈希值等价于地址</li>
 </ol>
-<h3 id="toString-方法"><a href="#toString-方法" class="headerlink" title="toString 方法"></a>toString 方法</h3><ol>
-<li>基本介绍</li>
-</ol>
-<p>​	默认返回：全类名+@+哈希值的十六进制</p>
-<p>​	子类往往重写 toString 方法，用于返回对象的属性信息 </p>
-<ol start="2">
+<p><strong>String的hashCode方法源码</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">h</span> <span class="operator">=</span> hash;</span><br><span class="line">    <span class="keyword">if</span> (h == <span class="number">0</span> &amp;&amp; value.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="type">char</span> val[] = value;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; value.length; i++) &#123;</span><br><span class="line">            h = <span class="number">31</span> * h + val[i];</span><br><span class="line">        &#125;</span><br><span class="line">        hash = h;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> h;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>String 重写了 Object 的 hashCode 方法，如果没有重写该方法默认返回的是对象的内存地址。</p>
+<p>由于 String 重写了 hashCode 采用的算法即上面源码 ，是会出现两个不同对象 hashCode 相同的情况的。</p>
+<p>如果重写了 equals 方法则必定要重写 hashCode 方法</p>
+<p>因为以 set 集合为例，它用 equals 方法判断两个对象是否相等，如果两个对象相等但是 hashCode 不同，这时候 set 是会添加成功的，与 set 规则冲突</p>
+<h3 id="toString-方法"><a href="#toString-方法" class="headerlink" title="toString 方法"></a>toString 方法</h3><ul>
+<li><p>基本介绍 </p>
+<ul>
+<li>默认返回：全类名+@+哈希值的十六进制</li>
+<li>子类往往重写 toString 方法，用于返回对象的属性信息</li>
+</ul>
+</li>
 <li><p>重写 toString 方法，打印对象或拼接对象时，都会自动调用该对象的 toString 形式</p>
 </li>
 <li><p>当直接输出一个对象时，toString 方法会被默认的调用</p>
 </li>
-</ol>
-<h3 id="finalize-方法"><a href="#finalize-方法" class="headerlink" title="finalize 方法"></a>finalize 方法</h3><ol>
-<li><p>当对象被回收时，系统自动调用该对象的 finalize 方法。子类可以重写该方法，做一些释放资源的操作</p>
-</li>
-<li><p>什么时候被回收：当某个对象没有任何引用时，则 jvm 就认为这个对象是一个垃圾对象，就会使用垃圾回收机制来销毁该对象，在销</p>
-</li>
-</ol>
-<p>​		毁该对象前，会先调用finalize 方法。 </p>
-<ol start="3">
+</ul>
+<h3 id="finalize-方法"><a href="#finalize-方法" class="headerlink" title="finalize 方法"></a>finalize 方法</h3><ul>
+<li>当对象被回收时，系统自动调用该对象的 finalize 方法。子类可以重写该方法，做一些释放资源的操作</li>
+<li>什么时候被回收：当某个对象没有任何引用时，则 jvm 就认为这个对象是一个垃圾对象，就会使用垃圾回收机制来销毁该对象，在销毁该对象前，会先调用finalize 方法。 </li>
 <li>垃圾回收机制的调用，是由系统来决定(即有自己的 GC 算法), 也可以通过 System.gc() 主动触发垃圾回收机制</li>
+</ul>
+<h3 id="clone-方法"><a href="#clone-方法" class="headerlink" title="clone 方法"></a>clone 方法</h3><p>新建并返回这个对象的copy，copy的准确含义要取决于这个对象的class</p>
+<p>特性：</p>
+<ol>
+<li>对于任何对象x，表达式：x.clone() !&#x3D; x 为true，表达式：x.clone().getClass() &#x3D;&#x3D; x.getClass() 也为true ，但这些并非必须要满足的要求。一般情况下：x.clone().equals(x) 为true 。但这并非必须要满足的要求。</li>
+<li>object 类本身不实现接口Cloneable，所以在类为 Object 的对象上调用 clone 方法将会导致在运行时抛出异常。</li>
 </ol>
-<h2 id="类变量和类方法（静态变量和静态方法）"><a href="#类变量和类方法（静态变量和静态方法）" class="headerlink" title="类变量和类方法（静态变量和静态方法）"></a>类变量和类方法（静态变量和静态方法）</h2><h3 id="静态变量"><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h3><p>​	特点：会被本类的所有的对象实例共享，随着类的加载而创建，可以直接通过类名调用</p>
-<p>​	<strong>内存布局</strong>：在堆的永久生成区域中</p>
-<p>​	定义：访问修饰符 static 数据类型 变量名；</p>
-<p>​	访问：类名.变量名[前提：满足访问修饰符的访问权限和范围]</p>
-<p>​	生命周期：随类的加载开始，随类的消亡而销毁</p>
-<h3 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h3><p>​	特点：不创建实例，也可以调用，可通过类名调用；不允许使用与对象有关的关键字，<strong>this、super</strong></p>
-<p>​	定义：访问修饰符 static 数据返回类型 方法名(){}</p>
+<h5 id="深拷贝和浅拷贝"><a href="#深拷贝和浅拷贝" class="headerlink" title="深拷贝和浅拷贝"></a>深拷贝和浅拷贝</h5><p>所谓拷贝，就是赋值。把一个变量赋给另外一个变量，就是把变量的内容进行拷贝。把一个对象的值赋给另外一个对象，就是把一个对象拷贝一份。</p>
+<p><strong>浅拷贝</strong></p>
+<p>创建一个新对象，然后将当前对象的非静态字段复制到该对象，如果字段类型是值类型（基本类型)的，那么对该字段进行复制；如果字段是引用类型的，则只复制该字段的引用而不复制引用指向的对象。此时新对象里面的引用类型字段相当于是原始对象里面引用类型字段的一个副本，原始对象与新对象里面的引用字段指向的是同一个对象。</p>
+<p><strong>深拷贝</strong></p>
+<p>实现方式：</p>
+<ol>
+<li><p>将内部的引用类型也clone</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> Object <span class="title function_">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException &#123;</span><br><span class="line">    <span class="type">Person</span> <span class="variable">person</span> <span class="operator">=</span> (Person)<span class="built_in">super</span>.clone0:</span><br><span class="line">    <span class="comment">//手动对address属性进行clone ,并赋值给新的person对象</span></span><br><span class="line">    person.address = (Address) address.clone0:</span><br><span class="line">    <span class="keyword">return</span> person;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>序列-反序列</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protected</span> Object <span class="title function_">deepclone</span><span class="params">( <span class="keyword">throws</span> Exception&#123;</span></span><br><span class="line"><span class="params">	//序列化</span></span><br><span class="line"><span class="params">	ByteArrayOutputStream bos = new ByteArrayOutputStreamO;ObjectOutputStream oos = new 		ObjectOutputStream(bos)</span>;</span><br><span class="line">	oos.writeObject(<span class="built_in">this</span>)</span><br><span class="line">	<span class="comment">//反序列化</span></span><br><span class="line">	<span class="type">ByteArrayInputStream</span> <span class="variable">bis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ByteArrayInputStream</span>(bos.toByteArrayO2:<span class="type">ObjectInputstream</span> <span class="variable">ois</span> <span class="operator">=</span> <span class="keyword">new</span> 	<span class="title class_">ObjectInputStream</span>(bis);</span><br><span class="line">	<span class="keyword">return</span> ois.readObjectQ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="类变量和类方法（静态变量和静态方法）"><a href="#类变量和类方法（静态变量和静态方法）" class="headerlink" title="类变量和类方法（静态变量和静态方法）"></a>类变量和类方法（静态变量和静态方法）</h2><h3 id="静态变量"><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h3><ul>
+<li>特点：会被本类的所有的对象实例共享，随着类的加载而创建，可以直接通过类名调用</li>
+<li><strong>内存布局</strong>：在堆的永久生成区域中，在java8之前把静态变量存放于方法区，在java8时存放在<strong>堆</strong>中</li>
+<li>定义：访问修饰符 static 数据类型 变量名；</li>
+<li>访问：类名.变量名[前提：满足访问修饰符的访问权限和范围]</li>
+<li>生命周期：随类的加载开始，随类的消亡而销毁</li>
+</ul>
+<h3 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h3><ul>
+<li>特点：不创建实例，也可以调用，可通过类名调用；不允许使用与对象有关的关键字，<strong>this、super</strong></li>
+<li>定义：访问修饰符 static 数据返回类型 方法名(){}</li>
+</ul>
 <p><strong>静态方法，只能访问静态的成员，非静态方法，可以访问静态成员和非静态成员</strong></p>
 <h2 id="main方法"><a href="#main方法" class="headerlink" title="main方法"></a>main方法</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220505162645471.png" alt="image-20220505162645471"></p>
-<p>在main方法中，可以直接调用main方法所在类的静态方法或静态属性</p>
-<p>但是，不能直接访问该类中的非静态成员，必须创建该类的一个实例对象后，才能通过这个对象去访问类中的非静态成员</p>
-<h2 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h2><p>又称初始化块，属于类中的成员，类似于方法，将逻辑语句封装在方法体中，通过{}包围起来</p>
-<p>但和方法不同，没有方法名，没有返回，没有参数，只有方法体，而且不能通过对象或类显示调用，而是加载类时，或创建对象时隐式调用</p>
-<p>两类：静态代码块和普通&#x2F;非静态代码块</p>
-<p>相当于另一种形式的构造器，可以做初始化操作</p>
-<h3 id="注意事项-1"><a href="#注意事项-1" class="headerlink" title="注意事项"></a>注意事项</h3><p>1）静态代码块随着类的加载而执行，并且只会执行一次</p>
-<p>2）<strong>类加载时间</strong></p>
-<p>​		a.创建对象实例时(new)</p>
-<p>​		b.创建子类对象实例，父类也会被加载</p>
-<p>​		c.使用类的静态成员时</p>
-<p>3）普通代码块，在创建对象实例时，会被隐式的调用</p>
-<p>​		<strong>创建一次，调用一次</strong></p>
-<p>4）创建对象时，类的调用顺序</p>
-<p>​		a.调用静态代码块和静态属性初始化(优先级一样，按定义顺序调用)</p>
-<p>​		b.调用普通代码块和普通属性初始化(优先级一样，按定义顺序调用)</p>
-<p>​		c.调用构造方法</p>
-<p>5）子父类的调用顺序</p>
+<p>在main方法中，可以直接调用 main 方法所在类的静态方法或静态属性。但是，<strong>不能直接访问该类中的非静态成员</strong>，必须创建该类的一个实例对象后，才能通过这个对象去访问类中的非静态成员</p>
+<h2 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h2><ul>
+<li>又称初始化块，属于类中的成员，类似于方法，将逻辑语句封装在方法体中，通过<code>&#123;&#125;</code>包围起来</li>
+<li>但和方法不同，没有方法名，没有返回，没有参数，只有方法体，而且不能通过对象或类显示调用，而是加载类时，或创建对象时隐式调用</li>
+<li>两类：静态代码块和普通&#x2F;非静态代码块</li>
+<li>相当于另一种形式的构造器，可以做初始化操作</li>
+</ul>
+<h3 id="注意事项-1"><a href="#注意事项-1" class="headerlink" title="注意事项"></a>注意事项</h3><ul>
+<li><p><strong>静态代码块随着类的加载而执行</strong>，并且<strong>只会执行一次</strong></p>
+</li>
+<li><p><strong>类加载时间</strong></p>
+<ul>
+<li>创建对象实例时(new)</li>
+<li>创建子类对象实例，父类也会被加载</li>
+<li>使用类的静态成员时</li>
+</ul>
+</li>
+<li><p>普通代码块，在创建对象实例时，会被隐式的调用<strong>创建一次，调用一次</strong></p>
+</li>
+<li><p>创建对象时，类的调用顺序</p>
+<ul>
+<li>调用静态代码块和静态属性初始化(优先级一样，按定义顺序调用)</li>
+<li>调用普通代码块和普通属性初始化(优先级一样，按定义顺序调用)</li>
+<li>调用构造方法</li>
+</ul>
+</li>
+<li><p>子父类的调用顺序</p>
+</li>
+</ul>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220505172401550.png" alt="image-20220505172401550"></p>
 <h2 id="单例设计模式"><a href="#单例设计模式" class="headerlink" title="单例设计模式"></a>单例设计模式</h2><p>设计模式是在大量的实践中总结和理论化之后优化的代码结构、编程风格、以及解决问题的思考方式。</p>
 <p>单例设计模式：采取一定的方法保证在整个的软件系统中，对某个类只能存在一个对象实例，并且该类只提供一个取得其对象实例的方法</p>
-<p>方式：1）饿汉式；2）懒汉式</p>
+<p>方式：1）<strong>饿汉式</strong>；2）<strong>懒汉式</strong></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506133052141.png" alt="image-20220506133052141"></p>
+<p><strong>应用实例</strong></p>
 <ol>
 <li>将构造器私有化</li>
 <li>在类的内部直接创建对象(该对象是 static) </li>
 <li>提供一个公共的 static 方法，返回对象</li>
 </ol>
+<p><strong>饿汉式</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">girlfriend</span> <span class="variable">t01</span> <span class="operator">=</span> girlfriend.getInstance();</span><br><span class="line">        System.out.println(t01);</span><br><span class="line">        girlfriend t02=girlfriend.getInstance();</span><br><span class="line">        System.out.println(t02);</span><br><span class="line">        <span class="keyword">if</span>(t01 == t02)</span><br><span class="line">            System.out.println(<span class="string">&quot;true&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//有一个类，girlfriend</span></span><br><span class="line"><span class="comment">//只能有一个girlfriend</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">girlfriend</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="comment">//1.构造器私有化</span></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">girlfriend</span><span class="params">(String name)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.name=name;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//2.在类的内部直接创建</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">girlfriend</span> <span class="variable">g</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">girlfriend</span>(<span class="string">&quot;小红&quot;</span>);</span><br><span class="line">    <span class="comment">//3.提供一个公共的static方法，返回对象g</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> girlfriend <span class="title function_">getInstance</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> g;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;girlfriend&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>懒汉式</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        cat instence=cat.getInstance();</span><br><span class="line">        System.out.println(instence);</span><br><span class="line">        <span class="comment">//再次执行，依然是大黄，cat.getInstance()中的if语句不再执行</span></span><br><span class="line">        cat instence2=cat.getInstance();</span><br><span class="line">        System.out.println(instence2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//希望在程序运行过程中，，只能创建一个cat对象</span></span><br><span class="line"><span class="comment">//使用单例模式</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">cat</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//1,将构造器私有化</span></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">cat</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;构造器被调用&quot;</span>);</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//2，定义一个静态属性对象</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> cat c1;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//3,提供一个public的static方法，可以返回一个cat对象</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> cat <span class="title function_">getInstance</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(c1 == <span class="literal">null</span>)&#123;</span><br><span class="line">            c1 = <span class="keyword">new</span> <span class="title class_">cat</span>(<span class="string">&quot;大黄&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> c1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;cat&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//4,总结：只有当用户使用getInstence()时，才返回cat c1对象，</span></span><br><span class="line"><span class="comment">// 当后面再次调用时，会返回上次创建的对象</span></span><br></pre></td></tr></table></figure>
+
 <h2 id="final关键字"><a href="#final关键字" class="headerlink" title="final关键字"></a>final关键字</h2><p><strong>可以修饰类、属性、方法和局部变量，不能修饰构造器</strong></p>
-<p>1）被final修饰的类，不能被继承，但可以实例化</p>
-<p>2）被final修饰的方法，不能被子类重写</p>
-<p>3）被final修饰的局部变量或类中的某个属性，又叫常量，不能被修改</p>
-<p>4）final修饰的属性在定义时，<strong>必须赋初值</strong>，赋值可以在以下位置：</p>
-<p>​		a.定义时 b.在构造器中 c.在代码块中</p>
-<p>5）如果final修饰的属性是静态的，则初始化的位置只能是a.定义时 b.在静态代码块中，不能在构造器中赋值</p>
-<p>6）如果一个类已经是final类，就没有必要再将方法修饰成final方法</p>
-<p>7）final和static往往搭配使用，效率更高，<strong>不会导致类加载</strong>，底层编译器做了优化处理</p>
-<p>8）包装类，String类都是final类</p>
-<h2 id="抽象类"><a href="#抽象类" class="headerlink" title="抽象类"></a>抽象类</h2><p>当父类的一些方法不能确定时，可以用abstract关键字来修饰该方法，这个方法就是抽象方法，用abstract来修饰该类就是抽象类</p>
-<p>1）抽象类不能被实例化</p>
-<p>2）abstract只能修饰类和方法，不能修饰属性和其它的</p>
-<p>3）抽象类的本质还是类，可以有任意成员，例如：非抽象方法、构造器、静态属性等</p>
-<p>4）抽象方法不能有主体，即不能实现</p>
-<p>5）一个类继承了抽象类，则它必须实现抽象类的所有抽象方法</p>
-<p>6）<strong>抽象方法不能使用private、final和static来修饰，因为这些关键字都是和重写相违背的</strong></p>
+<ol>
+<li><p>被 final 修饰的类，不能被继承，但可以实例化</p>
+</li>
+<li><p>被 final 修饰的方法，不能被子类重写</p>
+</li>
+<li><p>被 final 修饰的局部变量或类中的某个属性，又叫常量，不能被修改</p>
+</li>
+<li><p>final 修饰的属性在定义时，<strong>必须赋初值</strong>，赋值可以在以下位置：</p>
+<p>a.定义时 b.在构造器中 c.在代码块中</p>
+</li>
+<li><p>如果 final 修饰的属性是静态的，则初始化的位置只能是：a.定义时 b.在静态代码块中，不能在构造器中赋值</p>
+</li>
+<li><p>如果一个类已经是 final 类，就没有必要再将方法修饰成 final 方法</p>
+</li>
+<li><p>final 和 static 往往搭配使用，效率更高，<strong>不会导致类加载</strong>，底层编译器做了优化处理</p>
+</li>
+<li><p>包装类，String 类都是 final 类</p>
+</li>
+</ol>
+<h2 id="抽象类"><a href="#抽象类" class="headerlink" title="抽象类"></a>抽象类</h2><p>当父类的一些方法不能确定时，可以用 abstract 关键字来修饰该方法，这个方法就是抽象方法，用 abstract 来修饰该类就是抽象类</p>
+<ol>
+<li>抽象类不能被实例化，只能被子类继承，是一种 <code>is-a</code> 的关系。</li>
+<li>abstract 只能修饰类和方法，不能修饰属性和其它的</li>
+<li>抽象类的本质还是类，可以有任意成员，例如：<strong>非抽象方法、成员变量、成员方法、构造器、静态属性</strong>等</li>
+<li>抽象方法不能有主体，即不能实现，<strong>无{}</strong></li>
+<li>一个类继承了抽象类，则它必须实现抽象类的所有抽象方法</li>
+<li><strong>抽象方法不能使用 private、final 和 static 来修饰，因为这些关键字都是和重写相违背的</strong></li>
+</ol>
 <p>关于抽象类</p>
-<p><strong>JDK 1.8以前</strong>，抽象类的方法默认访问权限为<strong>protected</strong></p>
-<p><strong>JDK 1.8时</strong>，抽象类的方法默认访问权限变为<strong>default</strong></p>
+<p><strong>JDK 1.8以前</strong>，抽象类的方法默认访问权限为 <strong>protected</strong></p>
+<p><strong>JDK 1.8时</strong>，抽象类的方法默认访问权限变为 <strong>default</strong></p>
 <h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>给出一些没有实现的方法，封装在一起，到某个类要使用的时候，再根据具体情况把这些方法写出来</p>
-<p>接口体现了程序设计的多态和高内聚低耦合的设计思想</p>
-<p>JDK7.0中接口是更加抽象的抽象类，抽象类里的方法可以有方法体，接口里的方法都没有方法体</p>
-<p>JDK8.0后接口类可以有静态方法、默认方法，也就是说接口中可以有方法的具体实现</p>
-<p><strong>接口中的属性，只能是final的，而且是public static final修饰符，必须初始化</strong></p>
+<p>接口体现了程序设计的<strong>多态和高内聚低耦合</strong>的设计思想</p>
+<p>JDK7.0 中接口是更加抽象的抽象类，抽象类里的方法可以有方法体，接口里的方法都没有方法体</p>
+<p><strong>JDK8.0 后接口类可以有静态方法、默认方法，也就是说接口中可以有方法的具体实现</strong></p>
+<p><strong>接口中的属性，只能是 final 的，而且是 public static final 修饰符，必须初始化</strong></p>
 <p>接口不能继承其他的类，但是可以继承多个接口</p>
-<p><strong>接口的修饰符只能是public和默认，这点和类的修饰符一样</strong></p>
+<p><strong>接口的修饰符只能是 public 和默认，这点和类的修饰符一样</strong></p>
 <p><strong>like-a</strong>的关系</p>
 <p>关于接口</p>
-<p><strong>JDK 1.8以前</strong>，接口中的方法必须是<strong>public</strong>的</p>
-<p><strong>JDK 1.8时</strong>，接口中的方法可以是<strong>public</strong>的，也可以是<strong>default</strong>的</p>
-<p><strong>JDK 1.9时</strong>，接口中的方法可以是<strong>private</strong>的</p>
-<p><strong>高内聚低耦合</strong>，是<a href="https://baike.baidu.com/item/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/25279">软件工程</a>中的概念，是判断软件设计好坏的标准，主要用于程序的<a href="https://baike.baidu.com/item/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/2262089">面向对象</a>的设计，主要看类的内聚性是否高，<a href="https://baike.baidu.com/item/%E8%80%A6%E5%90%88%E5%BA%A6/2603938">耦合度</a>是否低。目的是使程序模块的可重用性、移植性大大增强。通常程序结构中各模块的内聚程度越高，模块间的耦合程度就越低。内聚是从功能角度来度量模块内的联系，一个好的内聚模块应当恰好做一件事，它描述的是模块内的功能联系；耦合是软件结构中各模块之间相互连接的一种<a href="https://baike.baidu.com/item/%E5%BA%A6%E9%87%8F/34036">度量</a>，耦合强弱取决于模块间接口的复杂程度、进入或访问一个模块的点以及通过接口的数据。</p>
+<p><strong>JDK 1.8 以前</strong>，接口中的方法必须是 <strong>public</strong> 的</p>
+<p><strong>JDK 1.8 时</strong>，接口中的方法可以是 <strong>public</strong> 的，也可以是 <strong>default</strong> 的</p>
+<p><strong>JDK 1.9 时</strong>，接口中的方法可以是 <strong>private</strong> 的</p>
+<p><strong>高内聚低耦合</strong>，是软件工程中的概念，是判断软件设计好坏的标准，主要用于程序的面向对象的设计，主要看类的内聚性是否高，耦合度耦合度&#x2F;2603938)是否低。目的是使程序模块的可重用性、移植性大大增强。通常程序结构中各模块的内聚程度越高，模块间的耦合程度就越低。内聚是从功能角度来度量模块内的联系，一个好的内聚模块应当恰好做一件事，它描述的是模块内的功能联系；耦合是软件结构中各模块之间相互连接的一种度量，耦合强弱取决于模块间接口的复杂程度、进入或访问一个模块的点以及通过接口的数据。</p>
 <h2 id="内部类"><a href="#内部类" class="headerlink" title="内部类"></a>内部类</h2><p>类的五大成员：<strong>属性、方法、构造器、代码块、内部类</strong></p>
 <p>类在局部位置(方法中&#x2F;代码块)：<strong>局部内部类、匿名内部类</strong></p>
 <p>类在成员位置：<strong>成员内部类、静态内部类</strong></p>
 <p>特点：可以直接访问私有属性，并且可以体现类与类之间的包含关系</p>
 <h3 id="局部内部类"><a href="#局部内部类" class="headerlink" title="局部内部类"></a>局部内部类</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506150105202.png" alt="image-20220506150105202"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Outer</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">s1</span> <span class="operator">=</span> <span class="string">&quot;this is s1 in Outer&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">s_outer</span> <span class="operator">=</span> <span class="string">&quot;this is s_outer in Outer&quot;</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">method1</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;this is method1 in Outer&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">method2</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;this is method2 in Outer&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">method3</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">String</span> <span class="variable">s_method</span> <span class="operator">=</span> <span class="string">&quot;this is s_method in method3&quot;</span>;</span><br><span class="line">        <span class="keyword">class</span> <span class="title class_">Inner</span> &#123;</span><br><span class="line">            <span class="keyword">private</span> <span class="type">String</span> <span class="variable">s1</span> <span class="operator">=</span> <span class="string">&quot;this is s1 in Inner&quot;</span>;</span><br><span class="line"> </span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">method1</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="comment">// 内部类访问外部方法的变量，需要有final修饰</span></span><br><span class="line">                System.out.println(s_method);</span><br><span class="line">                <span class="comment">// 局部内部类可直接访问外部类的变量，即使是私有的</span></span><br><span class="line">                System.out.println(s_outer);</span><br><span class="line">                <span class="comment">// 内部类和外部类有同名变量和方法时</span></span><br><span class="line">                System.out.println(s1);</span><br><span class="line">                System.out.println(Outer.<span class="built_in">this</span>.s1);</span><br><span class="line">                System.out.println(method2());</span><br><span class="line">                System.out.println(Outer.<span class="built_in">this</span>.method2());</span><br><span class="line">            &#125;</span><br><span class="line"> </span><br><span class="line">            <span class="keyword">private</span> String <span class="title function_">method2</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">&quot;this is method2 in Inner&quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">Inner</span> <span class="variable">inner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Inner</span>();</span><br><span class="line">        inner.method1();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>调用</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainClass</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Outer</span> <span class="variable">outer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Outer</span>();</span><br><span class="line">        outer.method3();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>输出</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="built_in">this</span> is s_method in method3</span><br><span class="line"><span class="built_in">this</span> is s_outer in Outer</span><br><span class="line"><span class="built_in">this</span> is s1 in Inner</span><br><span class="line"><span class="built_in">this</span> is s1 in Outer</span><br><span class="line"><span class="built_in">this</span> is method2 in Inner</span><br><span class="line"><span class="built_in">this</span> is method2 in Outer</span><br></pre></td></tr></table></figure>
+
 <h3 id="匿名内部类"><a href="#匿名内部类" class="headerlink" title="匿名内部类"></a>匿名内部类</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506150255497.png" alt="image-20220506150255497"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506150420023.png" alt="image-20220506150420023"></p>
 <h3 id="成员内部类"><a href="#成员内部类" class="headerlink" title="成员内部类"></a>成员内部类</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506150551210.png" alt="image-20220506150551210"></p>
@@ -12438,130 +12500,94 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 <h3 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506150811300.png" alt="image-20220506150811300"></p>
 <h2 id="枚举-enum"><a href="#枚举-enum" class="headerlink" title="枚举(enum)"></a>枚举(enum)</h2><p>枚举是一组常量的集合</p>
 <p>枚举是一种特殊的类，里面包含一组有限的特定的对象</p>
-<h3 id="自定义类实现枚举"><a href="#自定义类实现枚举" class="headerlink" title="自定义类实现枚举"></a>自定义类实现枚举</h3><p>可以提供getXxx方法，不需要提供setXxx方法，防止属性被修改，因为枚举对象通常为只读</p>
-<p>对枚举对象&#x2F;属性使用final+static共同修饰，实现底层优化</p>
+<h3 id="自定义类实现枚举"><a href="#自定义类实现枚举" class="headerlink" title="自定义类实现枚举"></a>自定义类实现枚举</h3><p>可以提供 getXxx 方法，不需要提供 setXxx 方法，防止属性被修改，因为枚举对象通常为<strong>只读</strong></p>
+<p>对枚举对象&#x2F;属性使用 <strong>final+static</strong> 共同修饰，实现底层优化</p>
 <p>枚举对象名全部大写</p>
-<p>将构造器私有化，目的防止直接 new</p>
+<p>将<strong>构造器私有化</strong>，目的防止直接 new</p>
 <p>本类内部创建一组对象</p>
-<p>对外暴露对象（通过为对象添加 public final static修饰符）</p>
+<p>对外暴露对象（通过为对象添加 <strong>public final static</strong> 修饰符）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SeasonTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line">        <span class="type">Season</span> <span class="variable">spring</span> <span class="operator">=</span> Season.SPRING;</span><br><span class="line">        System.out.println(spring);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//自定义枚举类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Season</span>&#123;</span><br><span class="line">    <span class="comment">//1.声明Season对象的属性：private final修饰</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String seasonDesc;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//2.私有化类的构造器，并给对象属性赋值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Season</span><span class="params">(String name,String seasonDesc)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.seasonDesc = seasonDesc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//3.提供当前枚举类的多个对象：public static final</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Season</span> <span class="variable">SPRING</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Season</span>(<span class="string">&quot;春天&quot;</span>,<span class="string">&quot;春暖花开&quot;</span>);</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Season</span> <span class="variable">SUMMER</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Season</span>(<span class="string">&quot;夏天&quot;</span>,<span class="string">&quot;夏日绵绵&quot;</span>);</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Season</span> <span class="variable">AUTUMN</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Season</span>(<span class="string">&quot;秋天&quot;</span>,<span class="string">&quot;秋高气爽&quot;</span>);</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Season</span> <span class="variable">WINTER</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Season</span>(<span class="string">&quot;冬天&quot;</span>,<span class="string">&quot;冰天雪地&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//4.其它诉求1：获取枚举类对象的属性</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getSeasonDesc</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> seasonDesc;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//4其它诉求2：提供toString()</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Season&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, seasonDesc=&#x27;&quot;</span> + seasonDesc + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="enum-关键字实现枚举"><a href="#enum-关键字实现枚举" class="headerlink" title="enum 关键字实现枚举"></a>enum 关键字实现枚举</h3><p>使用关键字 enum 替代 class</p>
-<p> enum 关键字开发一个枚举类时，默认会<strong>继承 Enum 类</strong>, 而且是一个 final 类</p>
+<p>enum 关键字开发一个枚举类时，默认会<strong>继承 Enum 类</strong>, 而且是一个 final 类</p>
 <p>public static final Season SPRING &#x3D; new Season(“春天”, “温暖”) 直接使用  SPRING(“春天”, “温暖”)    解读：<strong>常量名(实参列表)</strong></p>
 <p>如果有多个常量(对象)， 使用<strong>逗号</strong>间隔，<strong>分号</strong>结尾</p>
 <p>enum 来实现枚举，要求将定义常量对象，写在前面</p>
 <p>如果使用无参构造器创建 枚举对象，则实参列表和小括号都可以省略</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SeasonTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line">        Season spring=Season.SPRING;</span><br><span class="line">        System.out.println(spring);</span><br><span class="line">        System.out.println(Season.class.getSuperclass());<span class="comment">//说明定义的枚举类继承于class java.lang.Enum</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//使用enum关键字定义枚举类</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Season</span>&#123;</span><br><span class="line">    <span class="comment">//5.提供当前枚举类的多个对象，多个对象之间用&quot;,&quot;隔开，末尾对象&quot;;&quot;结束</span></span><br><span class="line">    SPRING(<span class="string">&quot;春天&quot;</span>,<span class="string">&quot;春暖花开&quot;</span>),</span><br><span class="line">    SUMMER(<span class="string">&quot;夏天&quot;</span>,<span class="string">&quot;夏日绵绵&quot;</span>),</span><br><span class="line">    AUTUMN(<span class="string">&quot;秋天&quot;</span>,<span class="string">&quot;秋高气爽&quot;</span>),</span><br><span class="line">    WINTER(<span class="string">&quot;冬天&quot;</span>,<span class="string">&quot;冰天雪地&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//1.声明Season对象的属性：private final修饰</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String seasonDesc;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//2.私有化类的构造器，并给对象属性赋值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Season</span><span class="params">(String name,String seasonDesc)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.name=name;</span><br><span class="line">        <span class="built_in">this</span>.seasonDesc=seasonDesc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//4.其它诉求1：获取枚举类对象的属性</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getSeasonDesc</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> seasonDesc;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//4其它诉求2：提供toString()</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Season&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, seasonDesc=&#x27;&quot;</span> + seasonDesc + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="Enum-类"><a href="#Enum-类" class="headerlink" title="Enum 类"></a>Enum 类</h3><ol>
-<li><p>toString：Enum 类已经重写过了，返回的是当前对象名,子类可以重写该方法，用于返回对象的属性信息 </p>
-</li>
-<li><p>name：返回当前对象名（常量名），子类中不能重写 </p>
-</li>
-<li><p>ordinal：返回当前对象的位置号，默认从 0 开始 </p>
-</li>
-<li><p>values：返回当前枚举类中所有的常量</p>
-</li>
-<li><p>valueOf：将字符串转换成枚举对象，要求字符串必须为已有的常量名，否则报异常！</p>
-</li>
-<li><p>compareTo：比较两个枚举常量，比较的就是编号！</p>
-</li>
+<li>toString：Enum 类已经重写过了，返回的是当前对象名，子类可以重写该方法，用于返回对象的属性信息 </li>
+<li>name：返回当前对象名（常量名），子类中不能重写 </li>
+<li>ordinal：返回当前对象的位置号，默认从 0 开始 </li>
+<li>values：返回当前枚举类中所有的常量</li>
+<li>valueOf：将字符串转换成枚举对象，要求字符串必须为已有的常量名，否则报异常！</li>
+<li>compareTo：比较两个枚举常量，比较的就是编号！</li>
 </ol>
 <h3 id="enum-实现接口"><a href="#enum-实现接口" class="headerlink" title="enum 实现接口"></a>enum 实现接口</h3><ol>
 <li><p>使用 enum 关键字后，就不能再继承其它类了，因为 enum 会隐式继承 Enum，而 Java 是单继承机制。</p>
 </li>
 <li><p>枚举类和普通类一样，可以实现接口，如下形式。 enum 类名 implements 接口 1，接口 2{}</p>
-</li>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SeasonTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line">        Season spring=Season.SPRING;</span><br><span class="line">        spring.show();   </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Info</span>&#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">show</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用enum关键字定义枚举类</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Season</span> <span class="keyword">implements</span> <span class="title class_">Info</span> &#123;</span><br><span class="line">    <span class="comment">//5.提供当前枚举类的多个对象，多个对象之间用&quot;,&quot;隔开，末尾对象&quot;;&quot;结束</span></span><br><span class="line">    SPRING(<span class="string">&quot;春天&quot;</span>,<span class="string">&quot;春暖花开&quot;</span>),</span><br><span class="line">    SUMMER(<span class="string">&quot;夏天&quot;</span>,<span class="string">&quot;夏日绵绵&quot;</span>),</span><br><span class="line">    AUTUMN(<span class="string">&quot;秋天&quot;</span>,<span class="string">&quot;秋高气爽&quot;</span>),</span><br><span class="line">    WINTER(<span class="string">&quot;冬天&quot;</span>,<span class="string">&quot;冰天雪地&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//1.声明Season对象的属性：private final修饰</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String seasonDesc;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//2.私有化类的构造器，并给对象属性赋值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Season</span><span class="params">(String name,String seasonDesc)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.name=name;</span><br><span class="line">        <span class="built_in">this</span>.seasonDesc=seasonDesc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//4.其它诉求1：获取枚举类对象的属性</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getSeasonDesc</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> seasonDesc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">show</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;这是一个季节&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ol>
-<h2 id="注解-Annotation"><a href="#注解-Annotation" class="headerlink" title="注解(Annotation)"></a>注解(Annotation)</h2><ol>
-<li><p>注解(Annotation)也被称为元数据(Metadata)，用于修饰解释包、类、方法、属性、构造器、局部变量等数据信息。 </p>
-</li>
-<li><p>和注释一样，注解不影响程序逻辑，但注解可以被编译或运行，相当于嵌入在代码中的补充信息。 </p>
-</li>
-<li><p>在 JavaSE 中，注解的使用目的比较简单，例如标记过时的功能，忽略警告等。在 JavaEE 中注解占据了更重要的角 色，例如用来配置应用程序的任何切面，代	替 java EE 旧版中所遗留的繁冗代码和 XML 配置等</p>
-</li>
-</ol>
-<p>使用 Annotation 时要在其前面增加 @ 符号, 并把该 Annotation 当成一个修饰符使用。用于修饰它支持的程序元素</p>
+<h2 id="注解-Annotation"><a href="#注解-Annotation" class="headerlink" title="注解(Annotation)"></a>注解(Annotation)</h2><ul>
+<li>注解(Annotation)也被称为元数据(Metadata)，用于修饰解释包、类、方法、属性、构造器、局部变量等数据信息。 </li>
+<li>和注释一样，注解不影响程序逻辑，但注解可以被编译或运行，相当于嵌入在代码中的补充信息。 </li>
+<li>在 JavaSE 中，注解的使用目的比较简单，例如标记过时的功能，忽略警告等。在 JavaEE 中注解占据了更重要的角 色，例如用来配置应用程序的任何切面，代替 java EE 旧版中所遗留的繁冗代码和 XML 配置等</li>
+<li>使用 Annotation 时要在其前面增加 @ 符号, 并把该 Annotation 当成一个修饰符使用。用于修饰它支持的程序元素</li>
+</ul>
 <p>三个基本的 Annotation: </p>
 <ol>
-<li>@Override: 限定某个方法，是重写父类方法, 该注解只能用于方法</li>
+<li><p><strong>@Override</strong>：限定某个方法，是重写父类方法, 该注解只能用于方法 </p>
+<p>如果写了@Override 注解，编译器就会去检查该方法是否真的重写了父类的方法，如果的确重写了，则编译通过，如果没有构成重写，则编译错误</p>
+<p>@Override注解源码：**@Target(ElementType.METHOD)**，说明只能修饰方法，不能修饰其它类、包、和属性等</p>
+</li>
+<li><p><strong>@Deprecated</strong>: 用于表示某个程序元素(类, 方法等)已过时，即不在推荐使用，但是仍然可以使用</p>
+<p>@Deprecated 注解类的源码：**@Target(value&#x3D;{CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE}**，说明可以修饰方法，类，字段，包，参数等等</p>
+<p>@Deprecated 可以做版本升级过渡使用</p>
+</li>
+<li><p><strong>@SuppressWarnings</strong>: 抑制编译器警告，在{“”} 中，可以写入你希望抑制(不显示)警告信息</p>
+<p>@SuppressWarnings 源码：**@Target({TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE})**，通常我们可以放置具体的语句，方法，类</p>
+<p>可以指定的警告类型有 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//all，抑制所有警告</span></span><br><span class="line"><span class="comment">//boxing，抑制与封装/拆装作业相关的警告</span></span><br><span class="line"><span class="comment">//cast，抑制与强制转型作业相关的警告 </span></span><br><span class="line"><span class="comment">//dep-ann，抑制与淘汰注释相关的警告</span></span><br><span class="line"><span class="comment">//deprecation，抑制与淘汰的相关警告</span></span><br><span class="line"><span class="comment">//fallthrough，抑制与 switch 陈述式中遗漏 break 相关的警告</span></span><br><span class="line"><span class="comment">//finally，抑制与未传回 finally 区块相关的警告 </span></span><br><span class="line"><span class="comment">//hiding，抑制与隐藏变数的区域变数相关的警告</span></span><br><span class="line"><span class="comment">//incomplete-switch，抑制与 switch 陈述式(enum case)中遗漏项目相关的警告  </span></span><br><span class="line"><span class="comment">//javadoc，抑制与 javadoc 相关的警告</span></span><br><span class="line"><span class="comment">//nls，抑制与非 nls 字串文字相关的警告</span></span><br><span class="line"><span class="comment">//null，抑制与空值分析相关的警告 </span></span><br><span class="line"><span class="comment">//rawtypes，抑制与使用 raw 类型相关的警告</span></span><br><span class="line"><span class="comment">//resource，抑制与使用 Closeable 类型的资源相关的警告 </span></span><br><span class="line"><span class="comment">//restriction，抑制与使用不建议或禁止参照相关的警告  </span></span><br><span class="line"><span class="comment">//serial，抑制与可序列化的类别遗漏 serialVersionUID 栏位相关的警告 </span></span><br><span class="line"><span class="comment">//static-access，抑制与静态存取不正确相关的警告</span></span><br><span class="line"><span class="comment">//static-method，抑制与可能宣告为 static 的方法相关的警告</span></span><br><span class="line"><span class="comment">//super，抑制与置换方法相关但不含 super 呼叫的警告</span></span><br><span class="line"><span class="comment">//synthetic-access，抑制与内部类别的存取未最佳化相关的警告</span></span><br><span class="line"><span class="comment">//sync-override，抑制因为置换同步方法而遗漏同步化的警告</span></span><br><span class="line"><span class="comment">//unchecked，抑制与未检查的作业相关的警告</span></span><br><span class="line"><span class="comment">//unqualified-field-access，抑制与栏位存取不合格相关的警告 </span></span><br><span class="line"><span class="comment">//unused，抑制与未用的程式码及停用的程式码相关的警告</span></span><br></pre></td></tr></table></figure></li>
 </ol>
-<p>​	如果写了@Override 注解，编译器就会去检查该方法是否真的重写了父类的 方法，如果的确重写了，则编译通过，如果没有构成重写，则编译错误</p>
-<p>​	 @Override注解源码：@Target(ElementType.METHOD)，说明只能修饰方法，不能修饰其它类、包、和属性等</p>
-<ol start="2">
-<li>@Deprecated: 用于表示某个程序元素(类, 方法等)已过时，即不在推荐使用，但是仍然可以使用</li>
-</ol>
-<p>​	@Deprecated 注解类的源码：@Target(value&#x3D;{CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE}，说明可以修饰方法，</p>
-<p>​	类，字段, 包, 参数等等</p>
-<p>​	@Deprecated 可以做版本升级过渡使用</p>
-<ol start="3">
-<li>@SuppressWarnings: 抑制编译器警告，在{“”} 中，可以写入你希望抑制(不显示)警告信息</li>
-</ol>
-<p>​	@SuppressWarnings 源码：@Target({TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE})，通常我们可以放置具体的语句, 方法, 类</p>
-<p>​	可以指定的警告类型有 </p>
-<p>​	&#x2F;&#x2F;all，抑制所有警告</p>
-<p>​	&#x2F;&#x2F;boxing，抑制与封装&#x2F;拆装作业相关的警告</p>
-<p>​	&#x2F;&#x2F;cast，抑制与强制转型作业相关的警告 </p>
-<p>​	&#x2F;&#x2F;dep-ann，抑制与淘汰注释相关的警告</p>
-<p>​	&#x2F;&#x2F;deprecation，抑制与淘汰的相关警告</p>
-<p>​	&#x2F;&#x2F;fallthrough，抑制与 switch 陈述式中遗漏 break 相关的警告</p>
-<p>​	&#x2F;&#x2F;finally，抑制与未传回 finally 区块相关的警告 </p>
-<p>​	hiding，抑制与隐藏变数的区域变数相关的警告</p>
-<p>​	&#x2F;&#x2F;incomplete-switch，抑制与 switch 陈述式(enum case)中遗漏项目相关的警告  </p>
-<p>​	&#x2F;&#x2F;javadoc，抑制与 javadoc 相关的警告</p>
-<p>​	&#x2F;&#x2F;nls，抑制与非 nls 字串文字相关的警告</p>
-<p>​	&#x2F;&#x2F;null，抑制与空值分析相关的警告 </p>
-<p>​	&#x2F;&#x2F;rawtypes，抑制与使用 raw 类型相关的警告</p>
-<p>​	&#x2F;&#x2F;resource，抑制与使用 Closeable 类型的资源相关的警告 </p>
-<p>​	&#x2F;&#x2F;restriction，抑制与使用不建议或禁止参照相关的警告  </p>
-<p>​	&#x2F;&#x2F;serial，抑制与可序列化的类别遗漏 serialVersionUID 栏位相关的警告 </p>
-<p>​	&#x2F;&#x2F;static-access，抑制与静态存取不正确相关的警告</p>
-<p>​	&#x2F;&#x2F;static-method，抑制与可能宣告为 static 的方法相关的警告</p>
-<p>​	&#x2F;&#x2F;super，抑制与置换方法相关但不含 super 呼叫的警告</p>
-<p>​	&#x2F;&#x2F;synthetic-access，抑制与内部类别的存取未最佳化相关的警告</p>
-<p>​	&#x2F;&#x2F;sync-override，抑制因为置换同步方法而遗漏同步化的警告</p>
-<p>​	&#x2F;&#x2F;unchecked，抑制与未检查的作业相关的警告</p>
-<p>​	&#x2F;&#x2F;unqualified-field-access，抑制与栏位存取不合格相关的警告 </p>
-<p>​	&#x2F;&#x2F;unused，抑制与未用的程式码及停用的程式码相关的警告</p>
-<h2 id="元注解"><a href="#元注解" class="headerlink" title="元注解"></a>元注解</h2><p>JDK 的元 Annotation 用于修饰其他 Annotation</p>
+<h2 id="元注解"><a href="#元注解" class="headerlink" title="元注解"></a>元注解</h2><p>JDK 的元 Annotation 用于<strong>修饰其他 Annotation</strong></p>
 <p>元注解的种类：</p>
 <ol>
-<li>Retention &#x2F;&#x2F;指定注解的作用范围，三种 SOURCE,CLASS,RUNTIME</li>
-</ol>
-<p>​	只能用于修饰一个 Annotation 定义, 用于指定该 Annotation 可以保留多长时间, @Rentention 包含一个 RetentionPolicy 类型的成员变量, 使用 @Rentention 	时必须为该 value</p>
+<li><p><strong>Retention</strong> &#x2F;&#x2F;指定注解的作用范围，三种 <strong>SOURCE，CLASS，RUNTIME</strong> </p>
+<p>只能用于修饰一个 Annotation 定义, 用于指定该 Annotation 可以保留多长时间, @Rentention 包含一个 RetentionPolicy 类型的成员变量, 使用 @Rentention 时必须为该 value</p>
 <p>@Retention 的三种值 </p>
-<p>a. RetentionPolicy.SOURCE: 编译器使用后，直接丢弃这种策略的注释 </p>
-<p>b. RetentionPolicy.CLASS: 编译器将把注解记录在 class 文件中. 	当运行 Java 程序时, JVM 不会保留注解。 这是默认值</p>
-<p>c. RetentionPolicy.RUNTIME:编译器将把注解记录在 class 文件中. 当运行 Java 程序时, JVM 会保留注解. 程序可以 通过反射获取该注解</p>
-<ol start="2">
-<li><p>Target &#x2F;&#x2F; 指定注解可以在哪些地方使用 </p>
+<ul>
+<li>RetentionPolicy.SOURCE: 编译器使用后，直接丢弃这种策略的注释 </li>
+<li>RetentionPolicy.CLASS: 编译器将把注解记录在 class 文件中。当运行 Java 程序时，JVM 不会保留注解。 这是默认值</li>
+<li>RetentionPolicy.RUNTIME：编译器将把注解记录在 class 文件中. 当运行 Java 程序时, JVM 会保留注解。程序可以通过反射获取该注解</li>
+</ul>
 </li>
-<li><p>Documented &#x2F;&#x2F;指定该注解是否会在 javadoc 体现</p>
+<li><p><strong>Target</strong> &#x2F;&#x2F; 指定注解可以在哪些地方使用 </p>
 </li>
-<li><p>Inherited &#x2F;&#x2F;子类会继承父类注解</p>
+<li><p><strong>Documented</strong> &#x2F;&#x2F;指定该注解是否会在 javadoc 体现</p>
+</li>
+<li><p><strong>Inherited</strong> &#x2F;&#x2F;子类会继承父类注解</p>
 </li>
 </ol>
 <h2 id="异常-Exception"><a href="#异常-Exception" class="headerlink" title="异常-Exception"></a>异常-Exception</h2><p>java语言中，将程序执行中发生的不正常情况称为“异常”(开发过程中的语法错误和逻辑错误不是异常)</p>
-<p>两类：Error—Java虚拟机无法解决的严重问题，如：JVM系统内部错误、资源耗尽等情况</p>
-<p>​			Exception—其他因编程错误或偶然的外在因素导致的一般性问题，可以使用针对性的代码进行处理。例如：空指针访问、试图读取不存在的文件、网络连接中断等，分为：运行时异常(可以不做处理，默认就是throws的方式处理，若全处理可能会对程序的可读性和运行效率产生影响)和编译时异常(必须处置，否则代码不能通过编译)。</p>
+<p>两类：</p>
+<ol>
+<li>Error—Java虚拟机无法解决的严重问题，如：JVM系统内部错误、资源耗尽等情况</li>
+<li>Exception—其他因编程错误或偶然的外在因素导致的一般性问题，可以使用针对性的代码进行处理。例如：空指针访问、试图读取不存在的文件、网络连接中断等，分为：<ul>
+<li>运行时异常(可以不做处理，默认就是throws的方式处理，若全处理可能会对程序的可读性和运行效率产生影响)</li>
+<li>编译时异常(必须处置，否则代码不能通过编译)。</li>
+</ul>
+</li>
+</ol>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506214357718.png" alt="image-20220506214357718"></p>
 <h3 id="常见的运行时异常"><a href="#常见的运行时异常" class="headerlink" title="常见的运行时异常"></a>常见的运行时异常</h3><ol>
-<li>NullPointerException 空指针异常</li>
+<li>NullPointerException 空指针异常：当应用程序试图在需要对象的地方使用 null 时，抛出该异常</li>
+<li>ArithmeticException 数学运算异常：当出现异常的运算条件时，抛出此异常。例如，一个整数“除以零”时，抛出此类的一个实例</li>
+<li>ArrayIndexOutOfBoundsException 数组下标越界异常：用非法索引访问数组时抛出的异常。如果索引为负或大于等于数组大小，则该索引为非法索引</li>
+<li>ClassCastException 类型转换异常：当试图将对象强制转换为不是实例的子类时，抛出该异常。</li>
+<li>NumberFormatException 数字格式不正确异常：当应用程序试图将字符串转换成一种数值类型，但该字符串不能转换为适当格式时，抛出该异常 &#x3D;&gt; 使用异常我们 可以确保输入是满足条件数字</li>
 </ol>
-<p>​	当应用程序试图在需要对象的地方使用 null 时，抛出该异常</p>
-<ol start="2">
-<li>ArithmeticException 数学运算异常</li>
-</ol>
-<p>​	当出现异常的运算条件时，抛出此异常。例如，一个整数“除以零”时，抛出此类的一个实例</p>
-<ol start="3">
-<li>ArrayIndexOutOfBoundsException 数组下标越界异常</li>
-</ol>
-<p>​	用非法索引访问数组时抛出的异常。如果索引为负或大于等于数组大小，则该索引为非法索引</p>
-<ol start="4">
-<li>ClassCastException 类型转换异常</li>
-</ol>
-<p>​	当试图将对象强制转换为不是实例的子类时，抛出该异常。</p>
-<ol start="5">
-<li>NumberFormatException 数字格式不正确异常</li>
-</ol>
-<p>​	当应用程序试图将字符串转换成一种数值类型，但该字符串不能转换为适当格式时，抛出该异常 &#x3D;&gt; 使用异常我们 可以确保输入是满足条件数字</p>
 <h3 id="常见的编译时异常"><a href="#常见的编译时异常" class="headerlink" title="常见的编译时异常"></a>常见的编译时异常</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506215045615.png" alt="image-20220506215045615"></p>
 <h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506215331954.png" alt="image-20220506215331954"></p>
 <h4 id="try-catch-finally"><a href="#try-catch-finally" class="headerlink" title="try-catch-finally"></a>try-catch-finally</h4><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506215507298.png" alt="image-20220506215507298"></p>
@@ -12569,323 +12595,473 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506220317153.png" alt="image-20220506220317153"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506215812627.png" alt="image-20220506215812627"></p>
 <h4 id="throws"><a href="#throws" class="headerlink" title="throws"></a>throws</h4><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506220018705.png" alt="image-20220506220018705"></p>
-<h3 id="自定义异常"><a href="#自定义异常" class="headerlink" title="自定义异常"></a>自定义异常</h3><p>当程序中出现了某些错误，但该错误信息并没有在Throwable子类中描述处理，则可以自己设计异常类，用于描述该错误信息。</p>
+<h3 id="自定义异常"><a href="#自定义异常" class="headerlink" title="自定义异常"></a>自定义异常</h3><p>当程序中出现了某些错误，但该错误信息并没有在 Throwable 子类中描述处理，则可以自己设计异常类，用于描述该错误信息。</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506220807103.png" alt="image-20220506220807103"></p>
 <h3 id="throw-和-throws-的区别"><a href="#throw-和-throws-的区别" class="headerlink" title="throw 和 throws 的区别"></a>throw 和 throws 的区别</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220506221123112.png" alt="image-20220506221123112"></p>
 <h1 id="常用类"><a href="#常用类" class="headerlink" title="常用类"></a>常用类</h1><h2 id="包装类"><a href="#包装类" class="headerlink" title="包装类"></a>包装类</h2><ol>
-<li><p>针对八种基本数据类型相应的引用类型—包装类 </p>
-</li>
-<li><p>有了类的特点，就可以调用类中的方法。</p>
-</li>
+<li>针对八种基本数据类型相应的引用类型—包装类 </li>
+<li>有了类的特点，就可以调用类中的方法。</li>
 </ol>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220507143234839.png" alt="image-20220507143234839"></p>
 <h3 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h3><p>包装类与基本数据类型之间的相互转换</p>
+<blockquote>
+<p>装箱指的是把值类型转化为引用类型<br>拆箱当然指的就是把引用类型转化为值类型</p>
+</blockquote>
 <p>JDK5.0以后(含5.0)有自动拆装箱</p>
-<p>自动拆装箱底层调用的是<strong>valueOf方法</strong>，例如：Integer.valueOf();</p>
-<h3 id="Integer-类和-Character-类的常用方法"><a href="#Integer-类和-Character-类的常用方法" class="headerlink" title="Integer 类和 Character 类的常用方法"></a>Integer 类和 Character 类的常用方法</h3><p>(Integer.MIN_VALUE); &#x2F;&#x2F;返回最小值</p>
-<p>(Integer.MAX_VALUE);&#x2F;&#x2F;返回最大值</p>
-<p>(Character.isDigit(‘a’));&#x2F;&#x2F;判断是不是数字</p>
-<p>(Character.isLetter(‘a’));&#x2F;&#x2F;判断是不是字母 </p>
-<p>(Character.isUpperCase(‘a’));&#x2F;&#x2F;判断是不是大写 </p>
-<p>(Character.isLowerCase(‘a’));&#x2F;&#x2F;判断是不是小写 </p>
-<p>(Character.isWhitespace(‘a’));&#x2F;&#x2F;判断是不是空格 </p>
-<p>(Character.toUpperCase(‘a’));&#x2F;&#x2F;转成大写 </p>
-<p>(Character.toLowerCase(‘A’));&#x2F;&#x2F;转成小写</p>
-<h2 id="String类"><a href="#String类" class="headerlink" title="String类"></a>String类</h2><p>1）String对象用于保存字符串，也就是一组字符序列</p>
-<p>2）字符串常量对象是用双引号括起的字符序列</p>
-<p>3）字符串的字符使用的是Unicode字符编码，一个字符(不区分字母还是汉字)占两个字节</p>
-<p>4）String 类实现了接口 Serializable【String 可以串行化:可以在网络传输】  接口 Comparable [String 对象可以比较大小]</p>
-<p>5）String 是 final 类，不能被其他的类继承，代表不可变的字符序列</p>
-<p>6）String 有属性 private final char value[]： 用于存放字符串内容 </p>
-<p>7）一定要注意：value 是一个 final 类型， 不可以修改(需要功力)：即 value 不能指向新的地址，但是单个字符内容是可以变化</p>
-<p>8）字符串是不可变的。一个字符串对象一旦被分配，其内容是不可变的</p>
-<p>9）intern方法：最终返回的是常量池的地址(对象)</p>
+<p>自动拆装箱底层调用的是 <strong>valueOf  方法</strong>，例如：Integer.valueOf();</p>
+<h3 id="Integer-类和-Character-类的常用方法"><a href="#Integer-类和-Character-类的常用方法" class="headerlink" title="Integer 类和 Character 类的常用方法"></a>Integer 类和 Character 类的常用方法</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">(Integer.MIN_VALUE); <span class="comment">//返回最小值</span></span><br><span class="line"></span><br><span class="line">(Integer.MAX_VALUE);<span class="comment">//返回最大值</span></span><br><span class="line"></span><br><span class="line">(Character.isDigit(<span class="string">&#x27;a&#x27;</span>));<span class="comment">//判断是不是数字</span></span><br><span class="line"></span><br><span class="line">(Character.isLetter(<span class="string">&#x27;a&#x27;</span>));<span class="comment">//判断是不是字母 </span></span><br><span class="line"></span><br><span class="line">(Character.isUpperCase(<span class="string">&#x27;a&#x27;</span>));<span class="comment">//判断是不是大写 </span></span><br><span class="line"></span><br><span class="line">(Character.isLowerCase(<span class="string">&#x27;a&#x27;</span>));<span class="comment">//判断是不是小写 </span></span><br><span class="line"></span><br><span class="line">(Character.isWhitespace(<span class="string">&#x27;a&#x27;</span>));<span class="comment">//判断是不是空格 </span></span><br><span class="line"></span><br><span class="line">(Character.toUpperCase(<span class="string">&#x27;a&#x27;</span>));<span class="comment">//转成大写 </span></span><br><span class="line"></span><br><span class="line">(Character.toLowerCase(<span class="string">&#x27;A&#x27;</span>));<span class="comment">//转成小写</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="String-类"><a href="#String-类" class="headerlink" title="String 类"></a>String 类</h2><ol>
+<li>String对象用于保存字符串，也就是一组字符序列</li>
+<li>字符串常量对象是用双引号括起的字符序列</li>
+<li>字符串的字符使用的是 Unicode 字符编码，一个字符(不区分字母还是汉字)占两个字节</li>
+<li>String 类实现了接口 <strong>Serializable</strong>【String 可以串行化:可以在网络传输】  接口 <strong>Comparable</strong> [String 对象可以比较大小]</li>
+<li>String 是 <strong>final</strong> 类，不能被其他的类继承，代表不可变的字符序列</li>
+<li>String 有属性 **private final char value[]**： 用于存放字符串内容 </li>
+<li>一定要注意：value 是一个 final 类型， 不可以修改，即 value 不能指向新的地址，但是单个字符内容是可以变化</li>
+<li>字符串是不可变的。一个字符串对象一旦被分配，其内容是不可变的</li>
+<li><strong>intern</strong>方法：最终返回的是常量池的地址(对象)</li>
+</ol>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220507145402726.png" alt="image-20220507145402726"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220507145435192.png" alt="image-20220507145435192"></p>
-<p>10）String类是保存字符串常量的。每次更新都需要重新开辟空间，效率极低，因此Java设计者还提供了StringBuilder和StringBuffer来增强String的功能</p>
-<h3 id="String类常用方法"><a href="#String类常用方法" class="headerlink" title="String类常用方法"></a>String类常用方法</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220507155349012.png" alt="image-20220507155349012"></p>
-<p>1）toUpperCase 转换成大写</p>
-<p>2）toLowerCase 转换成小写</p>
-<p>3）concat 拼接字符串</p>
-<p>4）replace 替换字符串中的字符</p>
-<p>5）split 分割字符串, 对于某些分割字符，我们需要转义比如 | \\等</p>
-<p>6）toCharArray 转换成字符数组</p>
-<p>7）compareTo 比较两个字符串的大小，如果前者大，则返回正数，后者大，则返回负数，如果相等，返回 0</p>
-<p>8）format 格式字符串(占位符有:%s 字符串 %c 字符 %d 整型 %.2f 浮点)</p>
+<ol start="10">
+<li>String类是保存字符串常量的。每次更新都需要重新开辟空间，效率极低，因此Java设计者还提供了StringBuilder和StringBuffer来增强String的功能</li>
+</ol>
+<h3 id="String-类源码分析"><a href="#String-类源码分析" class="headerlink" title="String 类源码分析"></a>String 类源码分析</h3><h4 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">String</span> <span class="keyword">implements</span> <span class="title class_">java</span>.io.Serializable, Comparable&lt;String&gt;, CharSequence &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 用不可变的 char 数组用来存放字符串</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">char</span> value[];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 缓存 String 的 hash 值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> hash; <span class="comment">// Default to 0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 实现序列化的标识</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> -<span class="number">6849794470754667710L</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ObjectStreamField[] serialPersistentFields = <span class="keyword">new</span> <span class="title class_">ObjectStreamField</span>[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/0ca03fb1b01241a290768dfcf8672633.png" alt="img"></p>
+<blockquote>
+<p><code>String 是一个 final 类，即不能被继承的类</code> 。<br>String类实现了 java.io.<code>Serializable</code> 接口，可以实现序列化。<br>String类实现了 Comparable&lt; String&gt;，可以用于比较大小（按顺序比较单个字符的ASCII码） 。<br>String 类实现了 CharSequence 接口，表示是一个有序字符的序列，因为 <code>String 的本质是一个 char 类型数组</code>。<br><code>private final char value[] 这是 String 字符串的本质，是一个字符集合，而且是 final 的，是不可变的</code>。</p>
+</blockquote>
+<h4 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h4><p><strong>无参构造方法（不用）</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 初始化 String 对象，将 &quot;&quot; 空字符串的 value 赋值给实例对象的 value，也是空字符,因为字符串是不可变的，所以不需要用这个方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">String</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.value = <span class="string">&quot;&quot;</span>.value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>示例</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>() </span><br><span class="line">str = <span class="string">&quot;hello&quot;</span>; </span><br></pre></td></tr></table></figure>
+
+<p>先创建了一个空的 String 对象，引用 str 指向该空对象，接着又在常量池中创建了一个 “hello”，并赋值给引用 str。 <code>这种方式实际上创建了两个对象</code>。</p>
+</blockquote>
+<p><strong>参数为 String 的有参构造方法</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 参数为一个String对象   	</span></span><br><span class="line"><span class="comment">// 将形参的value和hash赋值给实例对象作为初始化 	</span></span><br><span class="line"><span class="comment">// 相当于深拷贝了一个形参String对象</span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">String</span><span class="params">(String original)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.value = original.value;</span><br><span class="line">    <span class="built_in">this</span>.hash = original.hash;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>示例</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&quot;hello&quot;</span>)</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><strong>参数为字符数组的有参构造方法</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 参数为一个 char 字符数组</span></span><br><span class="line"><span class="comment">// 将数组值拷贝赋给不可变字符数组</span></span><br><span class="line"><span class="comment">// 这里为什么不直接赋值呢: 因为参数 char value[] 是可变的，如果直接赋值，当参数数组发生变化时，就会影响到新生成的 String 对象，着就破坏的 String 的“不可变性”。 </span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">String</span><span class="params">(<span class="type">char</span> value[])</span> &#123;</span><br><span class="line">    <span class="comment">// 使用java.utils包中的Arrays类复制</span></span><br><span class="line">    <span class="built_in">this</span>.value = Arrays.copyOf(value, value.length);</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>该方式<code>数组值拷贝给不可变字符数组而不是直接赋值</code>。</p>
+</blockquote>
+<p><strong>参数为字符数组(指定起止位置)的有参构造方法</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**    </span></span><br><span class="line"><span class="comment">*  参数为char字符数组,offset(起始位置，偏移量),count(个数)    </span></span><br><span class="line"><span class="comment">* 在char数组的基础上，从offset位置开始计数count个，构成一个新的String的字符串    </span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">String</span><span class="params">(<span class="type">char</span> value[], <span class="type">int</span> offset, <span class="type">int</span> count)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (offset &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">StringIndexOutOfBoundsException</span>(offset);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (count &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (count &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">StringIndexOutOfBoundsException</span>(count);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (offset &lt;= value.length) &#123;</span><br><span class="line">            <span class="built_in">this</span>.value = <span class="string">&quot;&quot;</span>.value;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Note: offset or count might be near -1&gt;&gt;&gt;1.</span></span><br><span class="line">    <span class="keyword">if</span> (offset &gt; value.length - count) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">StringIndexOutOfBoundsException</span>(offset + count);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">this</span>.value = Arrays.copyOfRange(value, offset, offset+count);</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p><strong>参数为 int 数组(指定起止位置)的有参构造方法</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**  	</span></span><br><span class="line"><span class="comment">* 参数为int字符数组,offset(起始位置，偏移量),count(个数) 	</span></span><br><span class="line"><span class="comment">* int 数组的元素则是字符对应的 ASCII 整数值 	</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">   <span class="keyword">public</span> <span class="title function_">String</span><span class="params">(<span class="type">int</span>[] codePoints, <span class="type">int</span> offset, <span class="type">int</span> count)</span> &#123;</span><br><span class="line">       <span class="keyword">if</span> (offset &lt; <span class="number">0</span>) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">StringIndexOutOfBoundsException</span>(offset);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">if</span> (count &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">           <span class="keyword">if</span> (count &lt; <span class="number">0</span>) &#123;</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">StringIndexOutOfBoundsException</span>(count);</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">if</span> (offset &lt;= codePoints.length) &#123;</span><br><span class="line">               <span class="built_in">this</span>.value = <span class="string">&quot;&quot;</span>.value;</span><br><span class="line">               <span class="keyword">return</span>;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">// Note: offset or count might be near -1&gt;&gt;&gt;1.</span></span><br><span class="line">       <span class="keyword">if</span> (offset &gt; codePoints.length - count) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">StringIndexOutOfBoundsException</span>(offset + count);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">final</span> <span class="type">int</span> <span class="variable">end</span> <span class="operator">=</span> offset + count;</span><br><span class="line"></span><br><span class="line">       <span class="comment">// Pass 1: Compute precise size of char[]</span></span><br><span class="line">       <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> count;</span><br><span class="line">       <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> offset; i &lt; end; i++) &#123;</span><br><span class="line">           <span class="type">int</span> <span class="variable">c</span> <span class="operator">=</span> codePoints[i];</span><br><span class="line">           <span class="keyword">if</span> (Character.isBmpCodePoint(c))</span><br><span class="line">               <span class="keyword">continue</span>;</span><br><span class="line">           <span class="keyword">else</span> <span class="keyword">if</span> (Character.isValidCodePoint(c))</span><br><span class="line">               n++;</span><br><span class="line">           <span class="keyword">else</span> <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(Integer.toString(c));</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment">// Pass 2: Allocate and fill in char[]</span></span><br><span class="line">       <span class="keyword">final</span> <span class="type">char</span>[] v = <span class="keyword">new</span> <span class="title class_">char</span>[n];</span><br><span class="line"></span><br><span class="line">       <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> offset, j = <span class="number">0</span>; i &lt; end; i++, j++) &#123;</span><br><span class="line">           <span class="type">int</span> <span class="variable">c</span> <span class="operator">=</span> codePoints[i];</span><br><span class="line">           <span class="keyword">if</span> (Character.isBmpCodePoint(c))</span><br><span class="line">               v[j] = (<span class="type">char</span>)c;</span><br><span class="line">           <span class="keyword">else</span></span><br><span class="line">               Character.toSurrogates(c, v, j++);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="built_in">this</span>.value = v;</span><br><span class="line">   &#125; </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>int 数组的元素则是字符对应的 ASCII 整数值</code>。</p>
+</blockquote>
+<p><strong>参数为 byte 数组(指定起止位置、字符编码)的有参构造方法</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**  	</span></span><br><span class="line"><span class="comment">* 参数为byte数组,offset(起始位置，偏移量),长度，和字符编码格式 	</span></span><br><span class="line"><span class="comment">* 传入一个byte数组，从offset开始截取length个长度，其字符编码格式为charsetName，如UTF-8 	</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"> <span class="comment">//从bytes数组中的offset位置开始，将长度为length的字节，以charsetName格式编码，拷贝到value</span></span><br><span class="line">   <span class="keyword">public</span> <span class="title function_">String</span><span class="params">(<span class="type">byte</span> bytes[], <span class="type">int</span> offset, <span class="type">int</span> length, String charsetName)</span></span><br><span class="line">           <span class="keyword">throws</span> UnsupportedEncodingException &#123;</span><br><span class="line">       <span class="keyword">if</span> (charsetName == <span class="literal">null</span>)</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>(<span class="string">&quot;charsetName&quot;</span>);</span><br><span class="line">       <span class="comment">//判断byte数组是否越界    </span></span><br><span class="line">       checkBounds(bytes, offset, length);</span><br><span class="line">       <span class="built_in">this</span>.value = StringCoding.decode(charsetName, bytes, offset, length);</span><br><span class="line">   &#125; </span><br></pre></td></tr></table></figure>
+
+<p><strong>参数为 StringBuffer 的有参构造方法</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**    </span></span><br><span class="line"><span class="comment">* 参数类型为StringBuffer,将StringBuffer值数组拷贝给String的值数组  </span></span><br><span class="line"><span class="comment">* 线程安全的   </span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line">   <span class="keyword">public</span> <span class="title function_">String</span><span class="params">(StringBuffer buffer)</span> &#123;</span><br><span class="line">       <span class="keyword">synchronized</span>(buffer) &#123;</span><br><span class="line">           <span class="built_in">this</span>.value = Arrays.copyOf(buffer.getValue(), buffer.length());</span><br><span class="line">       &#125;</span><br><span class="line">   &#125; </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>以 StringBuffer 为构造参数是线程安全的；也可以使用 StringBuilder 为参数构造，但不是线程安全的</code>。</p>
+</blockquote>
+<h3 id="String-类常用方法"><a href="#String-类常用方法" class="headerlink" title="String 类常用方法"></a>String 类常用方法</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220507155349012.png" alt="image-20220507155349012"></p>
+<ol>
+<li>toUpperCase 转换成大写</li>
+<li>toLowerCase 转换成小写</li>
+<li>concat 拼接字符串</li>
+<li>replace 替换字符串中的字符</li>
+<li>split 分割字符串, 对于某些分割字符，我们需要转义比如 | \\等</li>
+<li>toCharArray 转换成字符数组</li>
+<li>compareTo 比较两个字符串的大小，如果前者大，则返回正数，后者大，则返回负数，如果相等，返回 0</li>
+<li>format 格式字符串(占位符有:%s 字符串 %c 字符 %d 整型 %.2f 浮点)</li>
+</ol>
 <h2 id="StringBuffer类"><a href="#StringBuffer类" class="headerlink" title="StringBuffer类"></a>StringBuffer类</h2><p><strong>可变的字符序列</strong>，可以对字符串内容进行增删(**线程安全)**。</p>
-<p>很多方法与String相同，但StringBuffer是可变长度的。</p>
-<p>StringBuffer是一个<strong>容器</strong>。</p>
+<p>很多方法与String相同，但 StringBuffer 是可变长度的。</p>
+<p>StringBuffer 是一个<strong>容器</strong>。</p>
 <p>StringBuffer 的直接父类 是 AbstractStringBuilder</p>
 <p>StringBuffer 实现了 Serializable, 即 StringBuffer 的对象可以串行化</p>
-<p>在父类中 AbstractStringBuilder 有属性 char[] value,不是 fina，该 value 数组存放字符串内容，引出存放在堆中的</p>
+<p>在父类中 AbstractStringBuilder 有属性 char[] value，不是 final，该 value 数组存放字符串内容，引出存放在堆中的</p>
 <p>StringBuffer 是一个 final 类，不能被继承</p>
 <p>因为 StringBuffer 字符内容是存在 char[] value, 在变化(增加&#x2F;删除)时，不用每次都更换地址(即不是每次创建新对象)， 所以效率高于 String</p>
-<h3 id="String与StringBuffer的转换"><a href="#String与StringBuffer的转换" class="headerlink" title="String与StringBuffer的转换"></a>String与StringBuffer的转换</h3><h4 id="String—-gt-StringBuffer"><a href="#String—-gt-StringBuffer" class="headerlink" title="String—&gt;StringBuffer"></a>String—&gt;StringBuffer</h4><p>1）使用构造器：StringBuffer stringBuffer &#x3D; new StringBuffer(str)</p>
-<p>2）使用的是 append 方法：StringBuffer stringBuffer &#x3D; new StringBuffer(); stringBuffer &#x3D; stringBuffer.append(str)</p>
+<h3 id="String与StringBuffer的转换"><a href="#String与StringBuffer的转换" class="headerlink" title="String与StringBuffer的转换"></a>String与StringBuffer的转换</h3><h4 id="String—-gt-StringBuffer"><a href="#String—-gt-StringBuffer" class="headerlink" title="String—&gt;StringBuffer"></a>String—&gt;StringBuffer</h4><ol>
+<li><p>使用<strong>构造器</strong>：StringBuffer stringBuffer &#x3D; new StringBuffer(str)</p>
+</li>
+<li><p>使用的是 <strong>append</strong> 方法：StringBuffer stringBuffer &#x3D; new StringBuffer(); stringBuffer &#x3D; stringBuffer.append(str)</p>
+</li>
+</ol>
 <h4 id="StringBuffer—-gt-String"><a href="#StringBuffer—-gt-String" class="headerlink" title="StringBuffer—&gt;String"></a>StringBuffer—&gt;String</h4><p>StringBuffer stringBuffer &#x3D; new StringBuffer(“韩顺平教育”);</p>
-<p>1）使用 StringBuffer 提供的 toString 方法：String s &#x3D; stringBuffer.toString()</p>
-<p>2）使用构造器：String s &#x3D; new String(stringBuffer)</p>
-<h3 id="StringBuffer类常用方法"><a href="#StringBuffer类常用方法" class="headerlink" title="StringBuffer类常用方法"></a>StringBuffer类常用方法</h3><p>1）增：append</p>
-<p>2）删：delete</p>
-<p>3）改：replace</p>
-<p>4）查：indexOf</p>
-<p>5）插：insert</p>
-<p>6）长度：length</p>
-<h2 id="StringBuilder-类"><a href="#StringBuilder-类" class="headerlink" title="StringBuilder 类"></a>StringBuilder 类</h2><p>一个可变的字符序列。此类提供一个与StringBuffer兼容的API，但不保证同步(<strong>线程不安全</strong>)。</p>
-<p>StringBuilder 的方法，没有做互斥的处理,即没有 synchronized 关键字,因此在单线程的情况下使用</p>
+<ol>
+<li><p>使用 StringBuffer 提供的 <strong>toString</strong> 方法：String s &#x3D; stringBuffer.toString()</p>
+</li>
+<li><p>使用<strong>构造器</strong>：String s &#x3D; new String(stringBuffer)</p>
+</li>
+</ol>
+<h3 id="StringBuffer类常用方法"><a href="#StringBuffer类常用方法" class="headerlink" title="StringBuffer类常用方法"></a>StringBuffer类常用方法</h3><ol>
+<li>增：append</li>
+<li>删：delete</li>
+<li>改：replace</li>
+<li>查：indexOf</li>
+<li>插：insert</li>
+<li>长度：length</li>
+</ol>
+<h2 id="StringBuilder-类"><a href="#StringBuilder-类" class="headerlink" title="StringBuilder 类"></a>StringBuilder 类</h2><p>一个可变的字符序列。此类提供一个与 StringBuffer 兼容的API，但不保证同步(<strong>线程不安全</strong>)。</p>
+<p>StringBuilder 的方法，没有做互斥的处理，即没有 synchronized 关键字，因此在单线程的情况下使用</p>
 <p>该类用在字符串缓冲区被单个线程使用的时候，<strong>比StringBuffer要快</strong>。</p>
-<p>在StringBuilder上的主要操作是append和insert方法，可重载这些方法，已接受任意类型的数据</p>
+<p>在 StringBuilder 上的主要操作是 append 和 insert 方法，可重载这些方法，已接受任意类型的数据</p>
 <p>StringBuilder 接父类 是 AbstractStringBuilder</p>
 <p>StringBuilder 实现了 Serializable, 即 StringBuilder 的对象可以串行化</p>
-<p>在父类中 AbstractStringBuilder 有属性 char[] value,不是 fina，该 value 数组存放字符串内容，引出存放在堆中的</p>
+<p>在父类中 AbstractStringBuilder 有属性 char[] value,不是 final，该 value 数组存放字符串内容，引出存放在堆中的</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220507164322409.png" alt="image-20220507164322409"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220507164338156.png" alt="image-20220507164338156"></p>
 <h3 id="String、StringBuffer-和-StringBuilder-的选择"><a href="#String、StringBuffer-和-StringBuilder-的选择" class="headerlink" title="String、StringBuffer 和 StringBuilder 的选择"></a>String、StringBuffer 和 StringBuilder 的选择</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220507164449875.png" alt="image-20220507164449875"></p>
 <h2 id="Math-类"><a href="#Math-类" class="headerlink" title="Math 类"></a>Math 类</h2><p>Math 类包含用于执行基本数学运算的方法，如初等指数、对数、平方根和三角函数。均为静态方法</p>
-<p>abs 绝对值</p>
-<p>pow 求幂</p>
-<p>ceil 向上取整，返回&gt;&#x3D;该参数的最小整数(转成 double)</p>
-<p>floor 向下取整，返回&lt;&#x3D;该参数的最大整数(转成 double)</p>
-<p>round 四舍五入</p>
-<p>sqrt 求开方</p>
-<p>random 求随机数  返回的是 0 &lt;&#x3D; x &lt; 1 之间的一个随机小数</p>
+<ol>
+<li>abs 绝对值</li>
+<li>pow 求幂</li>
+<li>ceil 向上取整，返回&gt;&#x3D;该参数的最小整数(转成 double)</li>
+<li>floor 向下取整，返回&lt;&#x3D;该参数的最大整数(转成 double)</li>
+<li>round 四舍五入</li>
+<li>sqrt 求开方</li>
+<li>random 求随机数  返回的是 0 &lt;&#x3D; x &lt; 1 之间的一个随机小数</li>
+</ol>
 <h2 id="Arrays-类"><a href="#Arrays-类" class="headerlink" title="Arrays 类"></a>Arrays 类</h2><p>Arrays里面包含了一系列静态方法，用于管理或操作数组(例如排序和搜素)</p>
-<p>1）toString 返回数组的字符串形式</p>
-<p>2）sort 排序</p>
-<p>3）binarySearch 通过二分搜索法进行查找，要求必须排好序</p>
-<p>4）copyOf 数组元素的复制</p>
-<p>5）fill 数组元素的填充</p>
-<p>6）equals 比较两个数组元素内容是否完全一致</p>
-<p>7）asList 将一组值转换成List</p>
-<h2 id="System-类"><a href="#System-类" class="headerlink" title="System 类"></a>System 类</h2><p>1）exit 退出当前程序</p>
-<p>2）arraycopy 复制数组元素，比较适合底层调用，一般使用Arrays.copyOf完成复制数组</p>
-<p>3）currentTimeMillens 返回当前时间距离1970-1-1的毫秒数</p>
-<p>4）gc 运行垃圾回收机制</p>
-<p>5）fill 数组元素的填充</p>
-<p>6）equals 比较两个数组元素内容是否完全一致</p>
-<p>7）asList 将一组值转换成List</p>
+<ol>
+<li>toString 返回数组的字符串形式</li>
+<li>sort 排序</li>
+<li>binarySearch 通过二分搜索法进行查找，要求必须排好序</li>
+<li>copyOf 数组元素的复制</li>
+<li>fill 数组元素的填充</li>
+<li>equals 比较两个数组元素内容是否完全一致</li>
+<li>asList 将一组值转换成List</li>
+</ol>
+<h2 id="System-类"><a href="#System-类" class="headerlink" title="System 类"></a>System 类</h2><ol>
+<li>exit 退出当前程序</li>
+<li>arraycopy 复制数组元素，比较适合底层调用，一般使用Arrays.copyOf完成复制数组</li>
+<li>currentTimeMillens 返回当前时间距离1970-1-1的毫秒数</li>
+<li>gc 运行垃圾回收机制</li>
+</ol>
 <h2 id="BigInteger-和-BigDecimal-类"><a href="#BigInteger-和-BigDecimal-类" class="headerlink" title="BigInteger 和 BigDecimal 类"></a>BigInteger 和 BigDecimal 类</h2><p>BigInteger 适合保存比较大的整型</p>
-<p>BigDecimal适合保存精度更高的浮点型</p>
-<h3 id="常见方法"><a href="#常见方法" class="headerlink" title="常见方法"></a>常见方法</h3><p>1）add 加</p>
-<p>2）subtract 减</p>
-<p>3）multiply 乘</p>
-<p>4）divide 除</p>
-<h2 id="日期类"><a href="#日期类" class="headerlink" title="日期类"></a>日期类</h2><h3 id="第一代日期类"><a href="#第一代日期类" class="headerlink" title="第一代日期类"></a>第一代日期类</h3><p>1.Date：精确到毫秒，代表特定的瞬间</p>
-<p>2.SimpleDateFormat：格式和解析日期的类</p>
-<h3 id="第二代日期类"><a href="#第二代日期类" class="headerlink" title="第二代日期类"></a>第二代日期类</h3><p>Calendar类：抽象类，他为特定瞬间与一组诸如YEAR、MONTH、DAY_OF_MONTH、HOUR等日历字段之间的转换提供了一些方法，并为操作日历字段提供了一</p>
-<p>些方法。</p>
-<h3 id="第三代日期类"><a href="#第三代日期类" class="headerlink" title="第三代日期类"></a>第三代日期类</h3><p>LocalDate：只包含日期，可以获得日期字段</p>
-<p>LocalTime：只包含时间，可以获得时间字段</p>
-<p>LocalDateTime：包含日期+时间，可以获取日期和时间字段</p>
-<h3 id="DateTimeFormatter-格式日期类"><a href="#DateTimeFormatter-格式日期类" class="headerlink" title="DateTimeFormatter 格式日期类"></a>DateTimeFormatter 格式日期类</h3><h3 id="Instant-时间戳"><a href="#Instant-时间戳" class="headerlink" title="Instant 时间戳"></a>Instant 时间戳</h3><h1 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h1><p>数组缺点：长度开始时必须指定，而且一旦指定，不能更改</p>
-<p>​					保存的必须为同一类型的元素</p>
-<p>​					使用数组进行增删改查比较麻烦</p>
-<p>集合：可以<strong>动态保存</strong>任意多个对象</p>
-<p>​			提供了一系列方便的操作对象的方法：add、remove、set、get等</p>
-<p>​			使用集合添加、删除新元素简单</p>
+<p>BigDecimal 适合保存精度更高的浮点型</p>
+<h3 id="常见方法"><a href="#常见方法" class="headerlink" title="常见方法"></a>常见方法</h3><ol>
+<li>add 加</li>
+<li>subtract 减</li>
+<li>multiply 乘</li>
+<li>divide 除</li>
+</ol>
+<h2 id="日期类"><a href="#日期类" class="headerlink" title="日期类"></a>日期类</h2><h3 id="第一代日期类"><a href="#第一代日期类" class="headerlink" title="第一代日期类"></a>第一代日期类</h3><ol>
+<li><p>Date：精确到毫秒，代表特定的瞬间</p>
+</li>
+<li><p>SimpleDateFormat：格式和解析日期的类</p>
+</li>
+</ol>
+<h3 id="第二代日期类"><a href="#第二代日期类" class="headerlink" title="第二代日期类"></a>第二代日期类</h3><p>Calendar类：抽象类，他为特定瞬间与一组诸如YEAR、MONTH、DAY_OF_MONTH、HOUR等日历字段之间的转换提供了一些方法，并为操作日历字段提供了一些方法。</p>
+<h3 id="第三代日期类"><a href="#第三代日期类" class="headerlink" title="第三代日期类"></a>第三代日期类</h3><ol>
+<li>LocalDate：只包含日期，可以获得日期字段</li>
+<li>LocalTime：只包含时间，可以获得时间字段</li>
+<li>LocalDateTime：包含日期+时间，可以获取日期和时间字段</li>
+</ol>
+<h3 id="DateTimeFormatter-格式日期类"><a href="#DateTimeFormatter-格式日期类" class="headerlink" title="DateTimeFormatter 格式日期类"></a>DateTimeFormatter 格式日期类</h3><p>使用该类需要import java.time.format.DateTimeFormatter</p>
+<p>该类常用自定义日期格式的方法ofPattern(“yyyy-MM-dd hh:mm:ss”)</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">DateTimeFormatter</span> <span class="variable">formatter3</span> <span class="operator">=</span> DateTimeFormatter.ofPattern(<span class="string">&quot;yyyy-MM-dd hh:mm:ss&quot;</span>);</span><br><span class="line">        <span class="comment">//格式化</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">str4</span> <span class="operator">=</span> formatter3.format(LocalDateTime.now());</span><br><span class="line">        System.out.println(str4);<span class="comment">//2019-02-18 03:52:09</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//解析</span></span><br><span class="line">        <span class="type">TemporalAccessor</span> <span class="variable">accessor</span> <span class="operator">=</span> formatter3.parse(<span class="string">&quot;2019-02-18 03:52:09&quot;</span>);</span><br><span class="line">        System.out.println(accessor);</span><br></pre></td></tr></table></figure>
+
+<h1 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h1><p><strong>数组缺点</strong></p>
+<ol>
+<li>长度开始时必须指定，而且一旦指定，不能更改</li>
+<li>保存的必须为同一类型的元素</li>
+<li>使用数组进行增删改查比较麻烦</li>
+</ol>
+<p><strong>集合</strong></p>
+<ol>
+<li>可以<strong>动态保存</strong>任意多个对象</li>
+<li>提供了一系列方便的操作对象的方法：add、remove、set、get等</li>
+<li>使用集合添加、删除新元素简单</li>
+</ol>
 <p>Java的集合类主要分为两大类</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220510195334921.png" alt="image-20220510195334921"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220510195351280.png" alt="image-20220510195351280"></p>
 <p><img src="http://uploadfiles.nowcoder.com/images/20151109/403938_1447079573733_4F723777B74785B7A07A73C9792B8F6F" alt="img"></p>
 <p>集合主要是两组(单列集合，双列集合)</p>
-<p>Collection接口有两个重要的子接口List Set，他们的实现子类都是单列集合</p>
+<p>Collection接口有两个重要的子接口 <code>List Set</code>，他们的实现子类都是单列集合</p>
 <p>Map接口的实现子类是双列集合，存放的是K-V</p>
 <h2 id="Collection接口"><a href="#Collection接口" class="headerlink" title="Collection接口"></a>Collection接口</h2><p>Collection实现子类可以存放多个元素，每个元素可以是Object</p>
 <p>有些实现子类可以存放重复元素，有些不可以</p>
 <p>有些实现子类是有序的(List)，有些是无序的(Set)</p>
 <p>Collection接口没有直接的实现子类，是通过他的子接口Set和List来实现的</p>
-<h3 id="Collection-接口常用方法"><a href="#Collection-接口常用方法" class="headerlink" title="Collection 接口常用方法"></a>Collection 接口常用方法</h3><p>add:添加单个元素</p>
-<p>remove:删除指定元素</p>
-<p>contains:查找元素是否存在</p>
-<p>size:获取元素个数</p>
-<p>isEmpty:判断是否为空</p>
-<p>clear:清空</p>
-<p>addAll:添加多个元素</p>
-<p>containsAll:查找多个元素是否都存在</p>
-<p>removeAll：删除多个元素</p>
-<h3 id="Collection-接口遍历元素"><a href="#Collection-接口遍历元素" class="headerlink" title="Collection 接口遍历元素"></a>Collection 接口遍历元素</h3><h4 id="Iterator-迭代器"><a href="#Iterator-迭代器" class="headerlink" title="Iterator(迭代器)"></a>Iterator(迭代器)</h4><p>所有实现了Collection接口的集合类都有一个iterator()方法，用以返回一个实现了Iterator接口的对象，即可以返回一个迭代器</p>
+<h3 id="Collection-接口常用方法"><a href="#Collection-接口常用方法" class="headerlink" title="Collection 接口常用方法"></a>Collection 接口常用方法</h3><ol>
+<li>add:：添加单个元素</li>
+<li>remove：删除指定元素</li>
+<li>contains：查找元素是否存在</li>
+<li>size：获取元素个数</li>
+<li>isEmpty：判断是否为空</li>
+<li>clear：清空</li>
+<li>addAll：添加多个元素</li>
+<li>containsAll：查找多个元素是否都存在</li>
+<li>removeAll：删除多个元素</li>
+</ol>
+<h3 id="Collection-接口遍历元素"><a href="#Collection-接口遍历元素" class="headerlink" title="Collection 接口遍历元素"></a>Collection 接口遍历元素</h3><h4 id="Iterator-迭代器"><a href="#Iterator-迭代器" class="headerlink" title="Iterator(迭代器)"></a>Iterator(迭代器)</h4><p>所有实现了 Collection 接口的集合类都有一个 <strong>iterator()</strong> 方法，用以返回一个实现了 Iterator 接口的对象，即可以返回一个迭代器</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//得到一个集合的迭代器</span></span><br><span class="line"><span class="type">Iterator</span> <span class="variable">iterator</span> <span class="operator">=</span> coll.iterator();</span><br><span class="line"><span class="comment">//hasNext()：判断是否还有下一个元素</span></span><br><span class="line"><span class="keyword">while</span>(iterator.hasNext())&#123;</span><br><span class="line">    System.out.println(iterator.next());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220510200811204.png" alt="image-20220510200811204"></p>
-<h4 id="for-循环增强"><a href="#for-循环增强" class="headerlink" title="for 循环增强"></a>for 循环增强</h4><p>语法：for(元素类型 元素名：集合名或数组名){</p>
-<p>​						访问元素</p>
-<p>​			}</p>
-<h2 id="List接口"><a href="#List接口" class="headerlink" title="List接口"></a>List接口</h2><p>Collection接口的子接口</p>
-<p>List集合类中<strong>元素有序</strong>(添加顺序与取出顺序一致)、<strong>可重复</strong></p>
-<p>List集合中的每个元素都有其对应的顺序索引，即支持索引</p>
-<p>List容器中的元素都对应一个整数型的序号记载其在容器中的位置，可以根据序号存取容器中的元素</p>
-<h3 id="List的遍历"><a href="#List的遍历" class="headerlink" title="List的遍历"></a>List的遍历</h3><p>使用iterator</p>
-<p>增强for</p>
-<p>普通for</p>
+<h4 id="for-循环增强"><a href="#for-循环增强" class="headerlink" title="for 循环增强"></a>for 循环增强</h4><p>简化版的 iterator，本质一样，只能用于遍历集合或数组</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(元素类型 元素名：集合名或数组名)&#123;</span><br><span class="line">	访问元素</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="List-接口"><a href="#List-接口" class="headerlink" title="List 接口"></a>List 接口</h2><p>Collection 接口的子接口</p>
+<p>List 集合类中<strong>元素有序</strong>(添加顺序与取出顺序一致)、<strong>可重复</strong></p>
+<p>List 集合中的每个元素都有其对应的顺序索引，即支持索引</p>
+<p>List 容器中的元素都对应一个整数型的序号记载其在容器中的位置，可以根据序号存取容器中的元素</p>
+<h3 id="List的遍历"><a href="#List的遍历" class="headerlink" title="List的遍历"></a>List的遍历</h3><ol>
+<li>使用iterator</li>
+<li>增强for</li>
+<li>普通for</li>
+</ol>
 <h3 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h3><p>由数组实现数据存储</p>
 <p>可以加入<strong>null</strong>，并且<strong>多个</strong></p>
-<p>基本等同于<strong>Vector</strong>，除了**ArrayList是线程不安全的(执行效率高)**，多线程情况下，不建议使用ArrayList</p>
+<p>基本等同于 <strong>Vector</strong>，除了 **ArrayList 是线程不安全的(执行效率高)**，多线程情况下，不建议使用ArrayList</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220510203244326.png" alt="image-20220510203244326"></p>
-<h3 id="Vector"><a href="#Vector" class="headerlink" title="Vector"></a>Vector</h3><p>线程同步，即<strong>线程安全</strong>，Vector类的操作方法带有<strong>synchronized</strong></p>
+<h3 id="Vector"><a href="#Vector" class="headerlink" title="Vector"></a>Vector</h3><p>线程同步，即<strong>线程安全</strong>，Vector 类的操作方法带有 <strong>synchronized</strong></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220510204207739.png" alt="image-20220510204207739"></p>
 <h3 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h3><p>底层实现了双向链表和双端队列的特点</p>
-<p>可以添加任意元素(元素可以重复)，包括null</p>
+<p>可以添加任意元素(元素可以重复)，包括 null</p>
 <p>线程不安全，没有实现同步</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220510204439516.png" alt="image-20220510204439516"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220510204620749.png" alt="image-20220510204620749"></p>
-<h2 id="Set接口"><a href="#Set接口" class="headerlink" title="Set接口"></a>Set接口</h2><p><strong>无序</strong>(添加和取出的顺序不一致)，没有索引</p>
+<h2 id="Set-接口"><a href="#Set-接口" class="headerlink" title="Set 接口"></a>Set 接口</h2><p><strong>无序</strong>(添加和取出的顺序不一致)，没有索引</p>
 <p><strong>不允许重复元素</strong>，最多只能包含一个null</p>
-<h3 id="Set的遍历"><a href="#Set的遍历" class="headerlink" title="Set的遍历"></a>Set的遍历</h3><p>使用迭代器</p>
-<p>增强for</p>
-<p>不能使用索引的方式来获取</p>
-<h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><p>底层是HashMap，HashMap的底层是数组+链表+红黑树</p>
-<p>可以存放null值，但是只能有一个</p>
+<h3 id="Set-的遍历"><a href="#Set-的遍历" class="headerlink" title="Set 的遍历"></a>Set 的遍历</h3><ol>
+<li>使用迭代器</li>
+<li>增强for</li>
+</ol>
+<p>注意：不能使用索引的方式来获取</p>
+<h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><p>底层是 HashMap，HashMap 的底层是<code>数组+链表+红黑树</code></p>
+<p>可以存放 null 值，但是只能有一个</p>
 <p>不能有重复元素</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220510205506684.png" alt="image-20220510205506684"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220510205702116.png" alt="image-20220510205702116"></p>
-<h3 id="LinkedHashSet"><a href="#LinkedHashSet" class="headerlink" title="LinkedHashSet"></a>LinkedHashSet</h3><p>HashSet的子类</p>
-<p>底层是LinkedHashMap，底层维护了一个数组+双向链表</p>
-<p>根据元素的hashCode值来决定元素的存储位置，同时使用链表维护元素的次序，这使元素看起来是以插入顺序保存的</p>
+<h3 id="LinkedHashSet"><a href="#LinkedHashSet" class="headerlink" title="LinkedHashSet"></a>LinkedHashSet</h3><p>HashSet 的子类，有序</p>
+<p>底层是 LinkedHashMap，底层维护了<strong>一个数组+双向链表</strong></p>
+<p>根据元素的 hashCode 值来决定元素的存储位置，同时使用链表维护元素的次序，这使元素看起来是以插入顺序保存的</p>
 <p>不允许添加重复元素</p>
-<h2 id="Map接口"><a href="#Map接口" class="headerlink" title="Map接口"></a>Map接口</h2><p><strong>Map与Collection并列存在</strong>，用于保存具有映射关系的数据：Key-Value</p>
-<p>Key和Value可以是任何引用类型的数据，会封装到HashMap$Node对象中</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220826204824816.png" alt="image-20220826204824816"></p>
+<h2 id="Map-接口"><a href="#Map-接口" class="headerlink" title="Map 接口"></a>Map 接口</h2><p><strong>Map 与 Collection 并列存在</strong>，用于保存具有映射关系的数据：<strong>Key-Value</strong></p>
+<p>Key 和 Value 可以是任何引用类型的数据，会封装到 HashMap$Node 对象中</p>
 <p><strong>Key不允许重复</strong>，原因和HashSet一样</p>
 <p><strong>Value可以重复</strong></p>
-<p><strong>Key与Value可为null</strong></p>
-<p>常用String类作为Map的Key</p>
-<p>Key与Value存在<strong>单向一对一</strong>关系，即通过指定的Key总能找到对应的value</p>
-<p>一对K-V是存放在一个HashMap$Node中的，Node实现了Entry接口，故也可说，一对k-v就是一个Entry</p>
-<h3 id="Map接口常用方法"><a href="#Map接口常用方法" class="headerlink" title="Map接口常用方法"></a>Map接口常用方法</h3><p>put：添加数据，若key相等，则替换key对应的value值</p>
-<p>remove：根据键删除映射关系</p>
-<p>get：根据键获取值</p>
-<p>size：获取元素个数</p>
-<p>isEmpty：判断个数是否为 0</p>
-<p>clear：清除 k-v</p>
-<p>containsKey：查找键是否存在</p>
-<h3 id="Map的遍历"><a href="#Map的遍历" class="headerlink" title="Map的遍历"></a>Map的遍历</h3><p>1）containsKey：查找键是否存在</p>
-<p>2）KeySet：获取所有的键</p>
-<p>3）entrySet：获取所有关系</p>
-<p>4）values：获取所有的值</p>
-<h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><p>是Map接口使用频率最高的实现类</p>
-<p>以<strong>key-value</strong>对的方式来存储数据(HashMap$Node类型)</p>
-<p>key不能重复，但是值可以，允许使用null键和null值</p>
-<p>如果添加相同的key，则会覆盖原来的key-value，等同于修改</p>
-<p><strong>无序</strong>，与HashSet一样，不保证映射的顺序，因为底层是以hash表的方式来存储的</p>
-<p>Hash没有实现同步，因此是<strong>线程不安全</strong>的，方法没有做同步互斥的操作，没有synchronized</p>
+<p><strong>Key 与 Value 可为 null</strong></p>
+<p>常用String类作为 Map 的 Key</p>
+<p>Key 与 Value 存在<strong>单向一对一</strong>关系，即通过指定的 Key 总能找到对应的 value</p>
+<p>一对 K-V 是存放在一个 HashMap$Node 中的，Node 实现了 Entry 接口，故也可说，一对 k-v 就是一个 Entry</p>
+<h3 id="Map-接口常用方法"><a href="#Map-接口常用方法" class="headerlink" title="Map 接口常用方法"></a>Map 接口常用方法</h3><ol>
+<li>put：添加数据，若key相等，则替换key对应的value值</li>
+<li>remove：根据键删除映射关系</li>
+<li>get：根据键获取值</li>
+<li>size：获取元素个数</li>
+<li>isEmpty：判断个数是否为 0</li>
+<li>clear：清除 k-v</li>
+<li>containsKey：查找键是否存在</li>
+</ol>
+<h3 id="Map的遍历"><a href="#Map的遍历" class="headerlink" title="Map的遍历"></a>Map的遍历</h3><ol>
+<li>containsKey：查找键是否存在</li>
+<li>KeySet：获取所有的键</li>
+<li>entrySet：获取所有关系</li>
+<li>values：获取所有的值</li>
+</ol>
+<h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><p>是 Map 接口使用频率最高的实现类</p>
+<p>以 <strong>key-value</strong> 对的方式来存储数据( HashMap$Node 类型)</p>
+<p>key 不能重复，但是值可以，允许使用 null 键和 null 值</p>
+<p>如果添加相同的 key，则会覆盖原来的 key-value，等同于修改</p>
+<p><strong>无序</strong>，与 HashSet 一样，不保证映射的顺序，因为底层是以 hash 表的方式来存储的</p>
+<p>Hash 没有实现同步，因此是<strong>线程不安全</strong>的，方法没有做同步互斥的操作，没有 synchronized</p>
 <p>扩容机制</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220512151107133.png" alt="image-20220512151107133"></p>
+<h3 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h3><p>在HashMap的基础上，具备顺序存储的功能。底层实现是hashMap+双向列表的组合</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/bd8bdbd2ec9883948f28f56ee9c62d85.png" alt="img"></p>
 <h3 id="HashTable"><a href="#HashTable" class="headerlink" title="HashTable"></a>HashTable</h3><p>存放的元素是键值对：k-v</p>
-<p>hashTable的键和值都<strong>不能为null</strong>，否则会抛出NullPointerException</p>
-<p>hashTable使用方法基本与hashMap一样</p>
+<p>hashTable 的键和值都<strong>不能为 null</strong>，否则会抛出 NullPointerException</p>
+<p>hashTable 使用方法基本与 hashMap 一样</p>
 <p>**线程安全(synchronized)**，hashMap线程不安全</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220512151637502.png" alt="image-20220512151637502"></p>
-<h3 id="Properties"><a href="#Properties" class="headerlink" title="Properties"></a>Properties</h3><p>继承HashTable类，并实现了Map接口，也是使用一种键值对的形式来保存数据</p>
-<p>使用特点和HashTable类似</p>
-<p>可用于从xxx.properties文件中，加载数据到Properties类对象，并进行读取和修改</p>
+<h3 id="Properties"><a href="#Properties" class="headerlink" title="Properties"></a>Properties</h3><p>继承 HashTable 类，并实现了Map接口，也是使用一种键值对的形式来保存数据</p>
+<p>使用特点和 HashTable 类似</p>
+<p>可用于从 <strong>xxx.properties</strong> 文件中，加载数据到 Properties 类对象，并进行读取和修改</p>
 <p>专门用于读写配置文件的集合类，配置文件的格式：键&#x3D;值，键值对不需要有空格，值不需要用引号一起来，默认类型是String</p>
 <p>常见方法：</p>
-<p>1）load：加载配置文件的键值对到Properties对象</p>
-<p>2）list：将数据显示到指定设备</p>
-<p>3）getProperty(key)：根据键获取值</p>
-<p>4）setProperty(key, value)：设置键值对到Properties对象</p>
-<p>5）store：将Properties中的键值对存储到配置文件，在idea中，保存信息到配置文件，如果含有中文，会存储为unicode码</p>
+<ol>
+<li>load：加载配置文件的键值对到 Properties 对象</li>
+<li>list：将数据显示到指定设备</li>
+<li>getProperty(key)：根据键获取值</li>
+<li>setProperty(key, value)：设置键值对到 Properties 对象</li>
+<li>store：将 Properties 中的键值对存储到配置文件，在 idea 中，保存信息到配置文件，如果含有中文，会存储为 unicode 码</li>
+</ol>
 <h2 id="集合实现类的选取"><a href="#集合实现类的选取" class="headerlink" title="集合实现类的选取"></a>集合实现类的选取</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220512152145730.png" alt="image-20220512152145730"></p>
-<h2 id="Collections-工具类"><a href="#Collections-工具类" class="headerlink" title="Collections 工具类"></a>Collections 工具类</h2><p>操作Set、List、和Map等集合的工具类</p>
+<h2 id="Collections-工具类"><a href="#Collections-工具类" class="headerlink" title="Collections 工具类"></a>Collections 工具类</h2><p>操作 Set、List、和 Map 等集合的工具类</p>
 <p>提供了一系列<strong>静态方法</strong>对集合元素进行排序、查询和修改等操作</p>
-<h3 id="排序操作"><a href="#排序操作" class="headerlink" title="排序操作"></a>排序操作</h3><p>reverse(List)：反转 List 中元素的顺序</p>
-<p>shuffle(List)：对 List 集合元素进行随机排序</p>
-<p>sort(List)：根据元素的自然顺序对指定 List 集合元素按升序排序</p>
-<p>sort(List，Comparator)：根据指定的 Comparator 产生的顺序对 List 集合元素进行排序</p>
-<p>swap(List，int， int)：将指定 list 集合中的 i 处元素和 j 处元素进行交换</p>
-<h3 id="查找、替换"><a href="#查找、替换" class="headerlink" title="查找、替换"></a>查找、替换</h3><p>Object max(Collection)：根据元素的自然顺序，返回给定集合中的最大元素</p>
-<p>Object max(Collection，Comparator)：根据 Comparator 指定的顺序，返回给定集合中的最大元素</p>
-<p>int frequency(Collection，Object)：返回指定集合中指定元素的出现次数</p>
-<p>void copy(List dest,List src)：将 src 中的内容复制到 dest 中</p>
-<p>boolean replaceAll(List list，Object oldVal，Object newVal)：使用新值替换 List 对象的所有旧值</p>
+<h3 id="排序操作"><a href="#排序操作" class="headerlink" title="排序操作"></a>排序操作</h3><ol>
+<li>reverse(List)：反转 List 中元素的顺序</li>
+<li>shuffle(List)：对 List 集合元素进行随机排序</li>
+<li>sort(List)：根据元素的自然顺序对指定 List 集合元素按升序排序</li>
+<li>sort(List，Comparator)：根据指定的 Comparator 产生的顺序对 List 集合元素进行排序</li>
+<li>swap(List，int， int)：将指定 list 集合中的 i 处元素和 j 处元素进行交换</li>
+</ol>
+<h3 id="查找、替换"><a href="#查找、替换" class="headerlink" title="查找、替换"></a>查找、替换</h3><ol>
+<li>Object max(Collection)：根据元素的自然顺序，返回给定集合中的最大元素</li>
+<li>Object max(Collection，Comparator)：根据 Comparator 指定的顺序，返回给定集合中的最大元素</li>
+<li>int frequency(Collection，Object)：返回指定集合中指定元素的出现次数</li>
+<li>void copy(List dest,List src)：将 src 中的内容复制到 dest 中</li>
+<li>boolean replaceAll(List list，Object oldVal，Object newVal)：使用新值替换 List 对象的所有旧值</li>
+</ol>
 <h1 id="泛型E"><a href="#泛型E" class="headerlink" title="泛型E"></a>泛型E</h1><p>传统方法不能对加入到集合中的数据类型进行约束(不安全)</p>
 <p>遍历的时候需要进行类型转换，如果集合中的数据量较大，对效率有影响</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220512160747944.png" alt="image-20220512160747944"></p>
 <p>作用：可以在类声明时通过一个标识表示类中某个属性的类型，或者是某个方法的返回值的类型，或者是参数类型。</p>
-<p>泛型的声明：interface 接口<T>{}和class 类&lt;K,V&gt;{}</p>
-<p>​						T、K、V不代表值，而是表示类型，只能是<strong>引用类型</strong></p>
+<p>泛型的声明：**interface 接口&lt; T &gt;{}**和 <strong>class 类&lt;K,V&gt;{}<strong>，其中，T、K、V不代表值，而是表示类型，只能是</strong>引用类型</strong></p>
 <p>泛型的实例化：要在类名后面指定类型参数的值(类型)</p>
+<blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();</span><br><span class="line">Iterator&lt;Customer&gt; iterator = customers.iterator();</span><br></pre></td></tr></table></figure>
+</blockquote>
 <p>在给泛型指定具体类型后，可以传入该类型或者子类类型</p>
-<h2 id="自定义泛型类"><a href="#自定义泛型类" class="headerlink" title="自定义泛型类"></a>自定义泛型类</h2><p>class 类名&lt;T, R…&gt;{</p>
-<p>​		成员</p>
-<p>}</p>
-<p>普通成员可以使用泛型，静态不可以</p>
-<p>使用泛型的数组，不能初始化</p>
-<p>静态方法中不能使用类的泛型</p>
-<p>泛型类的类型，是在创建对象的时候确定的(因为创建对象时，需要指定确定类型</p>
-<p>如果在创建对象时，没有指定类型，默认为Object</p>
-<h2 id="自定义泛型接口"><a href="#自定义泛型接口" class="headerlink" title="自定义泛型接口"></a>自定义泛型接口</h2><p>interface 接口名&lt;T,R…&gt;{}</p>
-<p>接口中，静态成员也不能使用泛型</p>
-<p>泛型接口的类型，在继承接口或者实现接口时确定</p>
-<p>没有指定类型，默认为Object</p>
-<h2 id="自定义泛型方法"><a href="#自定义泛型方法" class="headerlink" title="自定义泛型方法"></a>自定义泛型方法</h2><p>修饰符 &lt;T,R&gt;返回类型 方法名(参数列表){}</p>
-<p>泛型方法，可以定义在普通类中，也可以定义在泛型类中</p>
-<p>泛型方法被调用时，类型会确定</p>
-<h2 id="泛型的继承和通配符"><a href="#泛型的继承和通配符" class="headerlink" title="泛型的继承和通配符"></a>泛型的继承和通配符</h2><p>泛型不具备继承性</p>
-<p>&lt; ? &gt;：支持任意泛型类型</p>
-<p>&lt; ? extends A &gt;：支持A类以及A类的子类，规定了泛型的上限</p>
-<p>&lt; ? super A &gt;：支持A类以及A类的父类，不限于直接父类，规定了泛型的下限</p>
-<h2 id="JUnit"><a href="#JUnit" class="headerlink" title="JUnit"></a>JUnit</h2><p>一个类有很多功能代码需要测试，为了测试，就需要写入到main方法中，如果有多个功能代码测试，就需要来回注销，切换很麻烦</p>
-<h1 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h1><h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><p>进程是指运行中的程序，比如我们使用QQ，就启动了一个进程，操作系统就会为该进程分配内存空间。当我们使用迅雷，又启动了一个进程，操作系统将为迅雷分配性的内存空间。</p>
-<p>进程是程序的一次执行过程，或是正在运行的一个程序。是动态过程：有他自身的产生、存在和消亡的过程。</p>
-<h2 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h2><p>由进程创建，是进程的一个实体</p>
-<p>一个进程可以拥有多个线程</p>
-<p>单线程：同一时刻，只允许执行一个线程</p>
-<p>多线程：同一时刻，可以执行多个线程，比如：一个QQ进程，可以同时打开多个聊天窗口，一个迅雷进程，可以同时下载多个文件</p>
-<p>并发：同一时刻，多个任务交替执行，造成一种“貌似同时”的错觉，简单地说，单核CPU实现的多任务就是并发</p>
-<p>并行：同一时刻，多个任务同时执行。多个CPU可以实现并行</p>
-<h2 id="线程的基本使用"><a href="#线程的基本使用" class="headerlink" title="线程的基本使用"></a>线程的基本使用</h2><h3 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h3><p>1）继承Thread类，重写run方法</p>
-<p>2）实现Runnable接口，实现run方法</p>
-<p>​		java是单继承的，在某些情况下一个类可能已经继承了某个父类，这时再用继承Thread类方法来创建线程显然不可能了，需要new Thread()来使用start方法</p>
-<p>​		实现Runnable接口方式更加适合多个线程共享一个资源情况，并且避免了单继承的限制，建议使用Runnable</p>
-<p>3）线程池创建线程</p>
+<h2 id="自定义泛型类"><a href="#自定义泛型类" class="headerlink" title="自定义泛型类"></a>自定义泛型类</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">class 类名&lt;T, R...&gt;&#123;</span><br><span class="line">	成员</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>普通成员可以使用泛型(属性，方法)，静态不可以</li>
+<li>使用泛型的数组，不能初始化</li>
+<li>静态方法中不能使用类的泛型</li>
+<li>泛型类的类型，是在创建对象的时候确定的，因为创建对象时，需要指定确定类型</li>
+<li>如果在创建对象时，没有指定类型，默认为Object</li>
+</ul>
+<h2 id="自定义泛型接口"><a href="#自定义泛型接口" class="headerlink" title="自定义泛型接口"></a>自定义泛型接口</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">interface 接口名&lt;T,R...&gt;&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>接口中，静态成员也不能使用泛型</li>
+<li>泛型接口的类型，在继承接口或者实现接口时确定</li>
+<li>没有指定类型，默认为Object</li>
+</ul>
+<h2 id="自定义泛型方法"><a href="#自定义泛型方法" class="headerlink" title="自定义泛型方法"></a>自定义泛型方法</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">修饰符 &lt;T,R&gt;返回类型 方法名(参数列表)&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>泛型方法，可以定义在普通类中，也可以定义在泛型类中</li>
+<li>泛型方法被调用时，类型会确定</li>
+</ul>
+<h2 id="泛型的继承和通配符"><a href="#泛型的继承和通配符" class="headerlink" title="泛型的继承和通配符"></a>泛型的继承和通配符</h2><ul>
+<li>泛型不具备继承性</li>
+<li>&lt; ? &gt;：支持任意泛型类型</li>
+<li>&lt; ? extends A &gt;：支持A类以及A类的子类，规定了泛型的<strong>上限</strong></li>
+<li>&lt; ? super A &gt;：支持A类以及A类的父类，不限于直接父类，规定了泛型的<strong>下限</strong></li>
+</ul>
+<h2 id="JUnit"><a href="#JUnit" class="headerlink" title="JUnit"></a>JUnit</h2><ul>
+<li>一个类有很多功能代码需要测试，为了测试，就需要写入到 main 方法中，如果有多个功能代码测试，就需要来回注销，切换很麻烦</li>
+<li>JUnit 是一个 Java 语言的单元测试框架</li>
+</ul>
+<h1 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h1><h2 id="程序-1"><a href="#程序-1" class="headerlink" title="程序"></a>程序</h2><p>为完成特定任务、用某种语言编写的一组指令的集合</p>
+<h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><ul>
+<li>进程是指运行中的程序，比如我们使用 QQ，就启动了一个进程，操作系统就会为该进程分配内存空间。当我们使用迅雷，又启动了一个进程，操作系统将为迅雷分配性的内存空间。</li>
+<li>进程是<strong>程序的一次执行过程，或是正在运行的一个程序</strong>。是动态过程：有他自身的产生、存在和消亡的过程。</li>
+</ul>
+<h2 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h2><ul>
+<li>由进程创建，是进程的一个实体，一个进程可以拥有多个线程</li>
+<li>单线程：同一时刻，只允许执行一个线程</li>
+<li>多线程：同一时刻，可以执行多个线程，比如：一个 QQ 进程，可以同时打开多个聊天窗口，一个迅雷进程，可以同时下载多个文件</li>
+<li>并发：同一时刻，多个任务交替执行，造成一种“貌似同时”的错觉，简单地说，单核CPU实现的多任务就是并发</li>
+<li>并行：同一时刻，多个任务同时执行。多个 CPU 可以实现并行</li>
+</ul>
+<h2 id="线程的基本使用"><a href="#线程的基本使用" class="headerlink" title="线程的基本使用"></a>线程的基本使用</h2><h3 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h3><ol>
+<li><p>继承 Thread 类，重写 run 方法</p>
+</li>
+<li><p>实现 Runnable 接口，实现 run 方法</p>
+<p>java 是单继承的，在某些情况下一个类可能已经继承了某个父类，这时再用继承Thread类方法来创建线程显然不可能了。</p>
+<p>实现 Runnable 接口方式更加适合多个线程共享一个资源情况，并且避免了单继承的限制，建议使用 Runnable。</p>
+</li>
+<li><p>线程池创建线程</p>
+</li>
+</ol>
 <h3 id="线程常用方法"><a href="#线程常用方法" class="headerlink" title="线程常用方法"></a>线程常用方法</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220514203110588.png" alt="image-20220514203110588"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220514203153934.png" alt="image-20220514203153934"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220514203305654.png" alt="image-20220514203305654"></p>
-<p>用户线程：也叫工作线程，当线程的任务执行完成或通知方式结束</p>
-<p>守护线程：一般是为工作线程服务的，当所有的用户线程结束，守护线程自动结束（常见的守护线程：垃圾回收机制）setDaemon()方法</p>
-<h2 id="线程的生命周期"><a href="#线程的生命周期" class="headerlink" title="线程的生命周期"></a>线程的生命周期</h2><p>Thread.State枚举表示了线程的几种状态</p>
+<ul>
+<li>用户线程：也叫工作线程，当线程的任务执行完成或通知方式结束</li>
+<li>守护线程：一般是为工作线程服务的，当所有的用户线程结束，守护线程自动结束（常见的守护线程：垃圾回收机制）**setDaemon()**方法，设置守护线程</li>
+</ul>
+<h2 id="线程的生命周期"><a href="#线程的生命周期" class="headerlink" title="线程的生命周期"></a>线程的生命周期</h2><p>Thread.State 枚举表示了线程的几种状态</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220514204340007.png" alt="image-20220514204340007"></p>
 <p><img src="https://uploadfiles.nowcoder.com/images/20180316/8955099_1521189690989_0BB28C2A1ECCC47EC020E89E8A554BBC" alt="img"></p>
 <p><strong>TCP客户端：</strong> </p>
-<p>1.建立连接套接字，设置Ip和端口监听，socket()</p>
-<p>2.建立连接 connect</p>
-<p>3.write() 获取网络流对象 发送数据</p>
-<p>4.read()获取网络流对象 接收数据</p>
-<p>5.关闭套接字</p>
+<ol>
+<li><p>建立连接套接字，设置 Ip 和端口监听，socket()</p>
+</li>
+<li><p>建立连接 connect</p>
+</li>
+<li><p>write() 获取网络流对象 发送数据</p>
+</li>
+<li><p>read() 获取网络流对象 接收数据</p>
+</li>
+<li><p>关闭套接字</p>
+</li>
+</ol>
 <p><strong>TCP服务器端：</strong></p>
-<p>1.建立端口监听 socket()</p>
-<p>2.绑定指定端口 bind()</p>
-<p>3.listen 进行端口监听</p>
-<p>4.accept() 阻塞式 直到有客户端访问</p>
-<p>5.read()获取客户端发送数据</p>
-<p>6.write()发送返回数据</p>
-<p>7.close关闭端口监听</p>
+<ol>
+<li><p>建立端口监听 socket()</p>
+</li>
+<li><p>绑定指定端口 bind()</p>
+</li>
+<li><p>listen 进行端口监听</p>
+</li>
+<li><p>accept() 阻塞式 直到有客户端访问</p>
+</li>
+<li><p>read() 获取客户端发送数据</p>
+</li>
+<li><p>write() 发送返回数据</p>
+</li>
+<li><p>close 关闭端口监听</p>
+</li>
+</ol>
 <h2 id="线程的同步"><a href="#线程的同步" class="headerlink" title="线程的同步"></a>线程的同步</h2><h3 id="线程同步机制"><a href="#线程同步机制" class="headerlink" title="线程同步机制"></a>线程同步机制</h3><p> <strong>Synchronized</strong></p>
 <p>在多线程编程，一些敏感数据不允许被多个线程同时访问，此时就使用同步访问技术，保证数据在任何同一时刻，最多有一个线程访问，以保证数据的完整性</p>
 <p>线程同步：即当有一个线程在内存进行操作时，其他线程都不可以对这个内存地址进行操作，直到该线程完成操作，其他线程才能对该内存地址进行操作</p>
-<h3 id="同步具体方法-Synchronized"><a href="#同步具体方法-Synchronized" class="headerlink" title="同步具体方法-Synchronized"></a>同步具体方法-Synchronized</h3><p>1）同步代码块，尽量使用</p>
+<h3 id="同步具体方法-Synchronized"><a href="#同步具体方法-Synchronized" class="headerlink" title="同步具体方法-Synchronized"></a>同步具体方法-Synchronized</h3><ul>
+<li>同步代码块，尽量使用</li>
+</ul>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span>(对象) &#123; <span class="comment">//得到对象的锁，才能操作同步代码块</span></span><br><span class="line">	<span class="comment">//需要被同步代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>2）synchronized还可以放在方法声明中，表示整个方法为同步方法</p>
+<ul>
+<li>synchronized 还可以放在方法声明中，表示整个方法为同步方法</li>
+</ul>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">m</span><span class="params">(String name)</span>&#123;</span><br><span class="line">    <span class="comment">//需要被同步的代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h3><p>Java语言中，引入了对象互斥锁的概念，来保证共享数据操作的完整性</p>
 <p>每个对象都对应于一个可称为”互斥锁“的标记，这个标记用来保证在任一时刻，只能有一个线程访问该对象</p>
-<p>关键字synchronized来与对象的互斥锁联系。当某个对象用synchronized修饰时，表明该对象在任一时刻只能由一个线程访问</p>
+<p>关键字 synchronized 来与对象的互斥锁联系。当某个对象用 synchronized 修饰时，表明该对象在任一时刻只能由一个线程访问</p>
 <p>同步的局限性：导致程序的执行效率要降低</p>
 <p>同步方法(非静态的)的锁可以是this，也可以是其他对象(要求是同一个对象)</p>
 <p>同步方法(静态的)的锁为当前类本身</p>
-<p>同步方法如果没有使用static修饰：默认锁对象为this，如果使用static修饰，默认锁对象为：当前类.class</p>
+<p><strong>同步方法如果没有使用 static 修饰：默认锁对象为this，如果使用static修饰，默认锁对象为：当前类.class</strong></p>
 <p>要求多个线程的锁对象为同一个即可！</p>
 <h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><p>多个线程都占用了对方的锁资源，但不肯相让，导致了死锁，在编程是一定要避免死锁的发生</p>
-<p>释放锁：当前线程的同步方法、同步代码块执行结束</p>
-<p>​				当前线程在同步代码块、同步方法中遇到break、return</p>
-<p>​				当前线程在同步代码块、同步方法中出现了未处理的Error或Exception，导致异常结束</p>
-<p>​				当前线程在同步代码块、同步方法中执行了线程对象的wait()方法，当前线程暂停，并释放锁</p>
-<p>不会释放锁：线程执行同步代码块或同步方法时，程序调用Thread.sleep()、Thread.yield()方法暂停当前线程的执行，不会释放锁</p>
-<p>​						线程执行同步代码块时，其他线程调用了该线程的suspend()方法将该线程挂起</p>
-<h1 id="IO-流"><a href="#IO-流" class="headerlink" title="IO 流"></a>IO 流</h1><h2 id="文件流"><a href="#文件流" class="headerlink" title="文件流"></a>文件流</h2><p>文件在程序中是以流的形式来操作的</p>
-<p>流：数据在数据源(文件)和程序(内存)之间经历的路径</p>
-<p>输入流：数据从数据源(文件)到程序(内存)的路径</p>
-<p>输出流：数据从程序(内存)到数据源(文件)的路径</p>
+<p><strong>释放锁</strong></p>
+<ol>
+<li>当前线程的同步方法、同步代码块执行结束</li>
+<li>当前线程在同步代码块、同步方法中遇到 break、return</li>
+<li>当前线程在同步代码块、同步方法中出现了未处理的 Error 或 Exception，导致异常结束</li>
+<li>当前线程在同步代码块、同步方法中执行了线程对象的 wait() 方法，当前线程暂停，并释放锁</li>
+</ol>
+<p><strong>不会释放锁</strong></p>
+<ol>
+<li>线程执行同步代码块或同步方法时，程序调用 Thread.sleep()、Thread.yield() 方法暂停当前线程的执行，不会释放锁</li>
+<li>线程执行同步代码块时，其他线程调用了该线程的 suspend() 方法将该线程挂起</li>
+</ol>
+<h1 id="IO-流"><a href="#IO-流" class="headerlink" title="IO 流"></a>IO 流</h1><h2 id="文件流"><a href="#文件流" class="headerlink" title="文件流"></a>文件流</h2><ul>
+<li>文件在程序中是以流的形式来操作的</li>
+<li>流：数据在数据源(文件)和程序(内存)之间经历的路径</li>
+<li>输入流：数据从数据源(文件)到程序(内存)的路径</li>
+<li>输出流：数据从程序(内存)到数据源(文件)的路径</li>
+</ul>
 <h2 id="常见的文件操作"><a href="#常见的文件操作" class="headerlink" title="常见的文件操作"></a>常见的文件操作</h2><p>创建文件相关构造器和方法</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">File</span>(String pathname)<span class="comment">//根据路径构建一个File对象</span></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">File</span>(File parent, String child)<span class="comment">//根据父目录文件+子路径构建一个File对象</span></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">File</span>(String parent, String child)<span class="comment">//根据父目录+子路径构建一个File对象</span></span><br><span class="line">    </span><br><span class="line">creatNewFile <span class="comment">//创建新文件</span></span><br></pre></td></tr></table></figure>
 
@@ -12896,59 +13072,83 @@ scope=&quot;prototype&quot; 当ApplicationContext调用getBean()时,创建对象
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">makdir<span class="comment">//创建一级目录</span></span><br><span class="line">mkdirs<span class="comment">//创建多级目录</span></span><br><span class="line">delete<span class="comment">//删除空目录或文件</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="IO-流原理及流的分类"><a href="#IO-流原理及流的分类" class="headerlink" title="IO 流原理及流的分类"></a>IO 流原理及流的分类</h2><p><strong>原理</strong></p>
-<p>1）I&#x2F;O是Input&#x2F;Output的缩写，I&#x2F;O技术，用于处理数据传输</p>
-<p>2）Java程序中，对于数据的输入&#x2F;输出操作以“流(stream)”的方式进行</p>
-<p>3）java.io包下提供了各种“流”类和接口，用以获得不同种类的数据，并通过方法输入或输出数据</p>
-<p>4）输入input：读取外部数据(磁盘、光盘等存储设备的数据)到程序(内存)中</p>
-<p>5）输出output：将程序(内存)数据输出到磁盘、光盘等存储设备中</p>
+<ul>
+<li>I&#x2F;O是Input&#x2F;Output的缩写，I&#x2F;O技术，用于处理数据传输</li>
+<li>Java程序中，对于数据的输入&#x2F;输出操作以“流(stream)”的方式进行</li>
+<li>java.io包下提供了各种“流”类和接口，用以获得不同种类的数据，并通过方法输入或输出数据</li>
+<li>输入input：读取外部数据(磁盘、光盘等存储设备的数据)到程序(内存)中</li>
+<li>输出output：将程序(内存)数据输出到磁盘、光盘等存储设备中</li>
+</ul>
 <p><strong>分类</strong></p>
-<p>按操作数据单位不同：字节流(8 bit)二进制文件，字符流(按字符)文本文件</p>
-<p>按数据流的流向不同：输入流，输出流</p>
-<p>按流的角色不同：节点流，处理流&#x2F;包装流</p>
+<ul>
+<li>按操作数据单位不同：<strong>字节流</strong>(8 bit)二进制文件，<strong>字符流</strong>(按字符)文本文件</li>
+<li>按数据流的流向不同：<strong>输入流，输出流</strong></li>
+<li>按流的角色不同：<strong>节点流，处理流&#x2F;包装流</strong></li>
+</ul>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220515222537824.png" alt="image-20220515222537824"></p>
-<p>1）Java的IO流共涉及40多个类，都是从如上4个抽象基类派生的</p>
-<p>2）由这四个类派生出来的子类名称都是以其父类名作为子类名后缀</p>
+<ol>
+<li><p>Java的IO流共涉及40多个类，都是从如上4个抽象基类派生的</p>
+</li>
+<li><p>由这四个类派生出来的子类名称都是以其父类名作为子类名后缀</p>
+</li>
+</ol>
 <h2 id="IO-流体系图"><a href="#IO-流体系图" class="headerlink" title="IO 流体系图"></a>IO 流体系图</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220516122221731.png" alt="image-20220516122221731"></p>
 <p><strong>FileOutputSream</strong></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220516142451047.png" alt="image-20220516142451047"></p>
 <p> <strong>FileReader 和 FileWriter</strong></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220516142644135.png" alt="image-20220516142644135"></p>
 <p><strong>FileReader 相关方法：</strong></p>
-<p>new FileReader(File&#x2F;String)</p>
-<p>read：每次读取单个字符，返回该字符，如果到文件末尾返回-1</p>
-<p>read(Char[])：批量读取多个字符到数组，返回读取到的字符数，如果到文件末尾返回-1</p>
-<p>相关API：new String(char[])：将char[]转换成String</p>
-<pre><code>             new String(char[], off, len)：将char[]的指定部分转换成String
-</code></pre>
+<ol>
+<li>new FileReader(File&#x2F;String)</li>
+<li>read：每次读取单个字符，返回该字符，如果到文件末尾返回-1</li>
+<li>read(Char[])：批量读取多个字符到数组，返回读取到的字符数，如果到文件末尾返回-1</li>
+</ol>
+<p><strong>相关API</strong>：</p>
+<p>new String(char[])：将char[]转换成String</p>
+<p>new String(char[], off, len)：将char[]的指定部分转换成String</p>
 <p><strong>FileWriter 相关方法：</strong></p>
-<p>new FileWriter(File&#x2F;String)：覆盖模式，相当于流的指针在首端</p>
-<p>new FileWriter(File&#x2F;String, true)：追加模式，相当于流的指针在尾端</p>
-<p>writer(int)：写入单个字符</p>
-<p>writer(char[])：写入指定数组</p>
-<p>writer(char[], off, len)：写入指定数组的指定部分</p>
-<p>writer(string)：写入整个字符串</p>
-<p>writer(string, off, len)：写入字符串的指定部分</p>
+<ol>
+<li>new FileWriter(File&#x2F;String)：覆盖模式，相当于流的指针在首端</li>
+<li>new FileWriter(File&#x2F;String, true)：追加模式，相当于流的指针在尾端</li>
+<li>writer(int)：写入单个字符</li>
+<li>writer(char[])：写入指定数组</li>
+<li>writer(char[], off, len)：写入指定数组的指定部分</li>
+<li>writer(string)：写入整个字符串</li>
+<li>writer(string, off, len)：写入字符串的指定部分</li>
+</ol>
 <p>FileWriter使用后，必须**关闭(close)或刷新(flush)**，否则写入不到指定文件！</p>
-<h2 id="节点流和处理流"><a href="#节点流和处理流" class="headerlink" title="节点流和处理流"></a>节点流和处理流</h2><p>节点流：可以从一个特定的数据源读写数据，如：FileReader、FileWriter</p>
-<p>处理流：是连接在已存在的流(节点流或处理流之上)，为程序提供更为强大的读写功能，也更加灵活，如：BufferedReader、BufferedWriter</p>
+<h2 id="节点流和处理流"><a href="#节点流和处理流" class="headerlink" title="节点流和处理流"></a>节点流和处理流</h2><ul>
+<li>节点流：可以从一个特定的数据源读写数据，如：<strong>FileReader、FileWriter</strong></li>
+<li>处理流：是连接在已存在的流(节点流或处理流之上)，为程序提供更为强大的读写功能，也更加灵活，如：<strong>BufferedReader、BufferedWriter</strong></li>
+</ul>
 <p>区别和联系：</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220516145022746.png" alt="image-20220516145022746"></p>
 <h2 id="处理流的优点"><a href="#处理流的优点" class="headerlink" title="处理流的优点"></a>处理流的优点</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220516145131925.png" alt="image-20220516145131925"></p>
-<h2 id="处理流-BufferedReader和BufferWriter"><a href="#处理流-BufferedReader和BufferWriter" class="headerlink" title="处理流-BufferedReader和BufferWriter"></a>处理流-BufferedReader和BufferWriter</h2><p>属于字符流，是按照字符来读取数据的</p>
-<p>关闭时处理流，只需要关闭外层流即可</p>
+<h2 id="处理流-BufferedReader和BufferWriter"><a href="#处理流-BufferedReader和BufferWriter" class="headerlink" title="处理流-BufferedReader和BufferWriter"></a>处理流-BufferedReader和BufferWriter</h2><ul>
+<li>属于字符流，是按照字符来读取数据的</li>
+<li>关闭时处理流，只需要关闭外层流即可</li>
+</ul>
 <h2 id="处理流-BufferedInputStream-和-BufferedOutputStream"><a href="#处理流-BufferedInputStream-和-BufferedOutputStream" class="headerlink" title="处理流-BufferedInputStream 和 BufferedOutputStream"></a>处理流-BufferedInputStream 和 BufferedOutputStream</h2><p>BufferedInputStream 是字节流，在创建 BufferedInputStream 时，会创建一个内部缓冲区数组</p>
+<p>BufferedOutputStream 是字节流，实现缓冲的输出流，可以将多个字节写入底层输出流中，而不必对每次字节写入调用底层系统</p>
 <p><strong>BufferedInputStream–&gt;FilterInputStream–&gt;InputStream–&gt;Closeable(接口)</strong></p>
 <p><strong>BufferedOutputStream–&gt;FilterOutputStream–&gt;OutputStream–&gt;Closeable和Flushable(接口)</strong></p>
-<h2 id="对象流-ObjectInputStream-和-ObjectOutputStrea"><a href="#对象流-ObjectInputStream-和-ObjectOutputStrea" class="headerlink" title="对象流-ObjectInputStream 和 ObjectOutputStrea"></a>对象流-ObjectInputStream 和 ObjectOutputStrea</h2><h3 id="序列和反序列化"><a href="#序列和反序列化" class="headerlink" title="序列和反序列化"></a>序列和反序列化</h3><p>1）序列化就是在保存数据时，保存数据的值和数据类型。</p>
-<p>​		将数据结构转换称为二进制数据流或者文本流的过程。序列化后的数据方便在网络上传输和在硬盘上存储。</p>
-<p>2）反序列化就是在恢复数据时，恢复数据的值和数据类型</p>
-<p>​		与序列化相反，是将二进制数据流或者文本流转换称为易于处理和阅读的数据结构的过程。</p>
-<p>3）需要让某个对象支持序列化机制，则必须让其类是可序列化的，为了让某个类是可序列化的，该类必须实现如下两个接口之一：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Serializable <span class="comment">//这是一个标记接口，没有方法</span></span><br><span class="line">   Externalizable <span class="comment">//该接口有方法需要实现，因此一般实现Serializable接口</span></span><br><span class="line">   <span class="comment">//transient关键字的作用，在已实现序列化的类中，有的变量不需要保存在磁盘中，就要transient关键字修饰，如银行卡密码等，</span></span><br><span class="line">   <span class="comment">//就这个作用------在已序列化的类中使变量不序列化，通常一个类实现序列化方式是实现序列化接口 Serializable</span></span><br></pre></td></tr></table></figure>
-
-<p>对象流功能：提供了对基本类型或对象类型的序列化和反序列化的方法 </p>
-<p>​						ObjectOutputStream 提供 序列化功能 </p>
-<p>​			   		 ObjectInputStream 提供 反序列化功能</p>
+<h2 id="对象流-ObjectInputStream-和-ObjectOutputStrea"><a href="#对象流-ObjectInputStream-和-ObjectOutputStrea" class="headerlink" title="对象流-ObjectInputStream 和 ObjectOutputStrea"></a>对象流-ObjectInputStream 和 ObjectOutputStrea</h2><h3 id="序列和反序列化"><a href="#序列和反序列化" class="headerlink" title="序列和反序列化"></a>序列和反序列化</h3><ul>
+<li><p>序列化就是在保存数据时，保存数据的值和数据类型。</p>
+<p>将数据结构转换称为二进制数据流或者文本流的过程。序列化后的数据方便在网络上传输和在硬盘上存储。</p>
+</li>
+<li><p>反序列化就是在恢复数据时，恢复数据的值和数据类型</p>
+<p>与序列化相反，是将二进制数据流或者文本流转换称为易于处理和阅读的数据结构的过程。</p>
+</li>
+<li><p>需要让某个对象支持序列化机制，则必须让其类是可序列化的，为了让某个类是可序列化的，该类必须实现如下两个接口之一：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Serializable <span class="comment">//这是一个标记接口，没有方法</span></span><br><span class="line">Externalizable <span class="comment">//该接口有方法需要实现，因此一般实现Serializable接口</span></span><br><span class="line"><span class="comment">//transient关键字的作用，在已实现序列化的类中，有的变量不需要保存在磁盘中，就要transient关键字修饰，如银行卡密码等，</span></span><br><span class="line"><span class="comment">//就这个作用------在已序列化的类中使变量不序列化，通常一个类实现序列化方式是实现序列化接口 Serializable</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="对象流"><a href="#对象流" class="headerlink" title="对象流"></a>对象流</h3><p><strong>功能</strong>：提供了对基本类型或对象类型的序列化和反序列化的方法 </p>
+<ol>
+<li><p>ObjectOutputStream 提供<strong>序列化</strong>功能 </p>
+</li>
+<li><p>ObjectInputStream 提供<strong>反序列化</strong>功能</p>
+</li>
+</ol>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220516201954245.png" alt="image-20220516201954245">			</p>
 <p>序列化数据和反序列化恢复数据</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220516201309591.png" alt="image-20220516201309591"></p>
