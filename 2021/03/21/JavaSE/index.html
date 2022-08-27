@@ -77,8 +77,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2022/06/28/JavaSE/" class="article-date">
-  <time datetime="2022-06-28T05:58:06.000Z" itemprop="datePublished">2022-06-28</time>
+      <a href="/2021/03/21/JavaSE/" class="article-date">
+  <time datetime="2021-03-21T05:58:06.000Z" itemprop="datePublished">2021-03-21</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
@@ -89,7 +89,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">22.5k</span>
+            <span class="post-count">24.6k</span>
         </span>
     </span>
 
@@ -98,7 +98,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">84 min</span>
+            <span class="post-count">92 min</span>
         </span>
     </span>
 </div>
@@ -944,7 +944,7 @@
 <li>LocalTime：只包含时间，可以获得时间字段</li>
 <li>LocalDateTime：包含日期+时间，可以获取日期和时间字段</li>
 </ol>
-<h3 id="DateTimeFormatter-格式日期类"><a href="#DateTimeFormatter-格式日期类" class="headerlink" title="DateTimeFormatter 格式日期类"></a>DateTimeFormatter 格式日期类</h3><p>使用该类需要import java.time.format.DateTimeFormatter</p>
+<h3 id="DateTimeFormatter-格式日期类"><a href="#DateTimeFormatter-格式日期类" class="headerlink" title="DateTimeFormatter 格式日期类"></a>DateTimeFormatter 格式日期类</h3><p>使用该类需要 import java.time.format.DateTimeFormatter</p>
 <p>该类常用自定义日期格式的方法ofPattern(“yyyy-MM-dd hh:mm:ss”)</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DateTimeFormatter</span> <span class="variable">formatter3</span> <span class="operator">=</span> DateTimeFormatter.ofPattern(<span class="string">&quot;yyyy-MM-dd hh:mm:ss&quot;</span>);</span><br><span class="line">        <span class="comment">//格式化</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">str4</span> <span class="operator">=</span> formatter3.format(LocalDateTime.now());</span><br><span class="line">        System.out.println(str4);<span class="comment">//2019-02-18 03:52:09</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//解析</span></span><br><span class="line">        <span class="type">TemporalAccessor</span> <span class="variable">accessor</span> <span class="operator">=</span> formatter3.parse(<span class="string">&quot;2019-02-18 03:52:09&quot;</span>);</span><br><span class="line">        System.out.println(accessor);</span><br></pre></td></tr></table></figure>
 
@@ -1057,7 +1057,7 @@
 <p>Hash 没有实现同步，因此是<strong>线程不安全</strong>的，方法没有做同步互斥的操作，没有 synchronized</p>
 <p>扩容机制</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220512151107133.png" alt="image-20220512151107133"></p>
-<h3 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h3><p>在HashMap的基础上，具备顺序存储的功能。底层实现是hashMap+双向列表的组合</p>
+<h3 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h3><p>在HashMap的基础上，具备顺序存储的功能。底层实现是hashMap+双向列表的组合，线程不安全</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/bd8bdbd2ec9883948f28f56ee9c62d85.png" alt="img"></p>
 <h3 id="HashTable"><a href="#HashTable" class="headerlink" title="HashTable"></a>HashTable</h3><p>存放的元素是键值对：k-v</p>
 <p>hashTable 的键和值都<strong>不能为 null</strong>，否则会抛出 NullPointerException</p>
@@ -1166,37 +1166,6 @@
 </ul>
 <h2 id="线程的生命周期"><a href="#线程的生命周期" class="headerlink" title="线程的生命周期"></a>线程的生命周期</h2><p>Thread.State 枚举表示了线程的几种状态</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220514204340007.png" alt="image-20220514204340007"></p>
-<p><img src="https://uploadfiles.nowcoder.com/images/20180316/8955099_1521189690989_0BB28C2A1ECCC47EC020E89E8A554BBC" alt="img"></p>
-<p><strong>TCP客户端：</strong> </p>
-<ol>
-<li><p>建立连接套接字，设置 Ip 和端口监听，socket()</p>
-</li>
-<li><p>建立连接 connect</p>
-</li>
-<li><p>write() 获取网络流对象 发送数据</p>
-</li>
-<li><p>read() 获取网络流对象 接收数据</p>
-</li>
-<li><p>关闭套接字</p>
-</li>
-</ol>
-<p><strong>TCP服务器端：</strong></p>
-<ol>
-<li><p>建立端口监听 socket()</p>
-</li>
-<li><p>绑定指定端口 bind()</p>
-</li>
-<li><p>listen 进行端口监听</p>
-</li>
-<li><p>accept() 阻塞式 直到有客户端访问</p>
-</li>
-<li><p>read() 获取客户端发送数据</p>
-</li>
-<li><p>write() 发送返回数据</p>
-</li>
-<li><p>close 关闭端口监听</p>
-</li>
-</ol>
 <h2 id="线程的同步"><a href="#线程的同步" class="headerlink" title="线程的同步"></a>线程的同步</h2><h3 id="线程同步机制"><a href="#线程同步机制" class="headerlink" title="线程同步机制"></a>线程同步机制</h3><p> <strong>Synchronized</strong></p>
 <p>在多线程编程，一些敏感数据不允许被多个线程同时访问，此时就使用同步访问技术，保证数据在任何同一时刻，最多有一个线程访问，以保证数据的完整性</p>
 <p>线程同步：即当有一个线程在内存进行操作时，其他线程都不可以对这个内存地址进行操作，直到该线程完成操作，其他线程才能对该内存地址进行操作</p>
@@ -1307,7 +1276,7 @@
 <p>BufferedOutputStream 是字节流，实现缓冲的输出流，可以将多个字节写入底层输出流中，而不必对每次字节写入调用底层系统</p>
 <p><strong>BufferedInputStream–&gt;FilterInputStream–&gt;InputStream–&gt;Closeable(接口)</strong></p>
 <p><strong>BufferedOutputStream–&gt;FilterOutputStream–&gt;OutputStream–&gt;Closeable和Flushable(接口)</strong></p>
-<h2 id="对象流-ObjectInputStream-和-ObjectOutputStrea"><a href="#对象流-ObjectInputStream-和-ObjectOutputStrea" class="headerlink" title="对象流-ObjectInputStream 和 ObjectOutputStrea"></a>对象流-ObjectInputStream 和 ObjectOutputStrea</h2><h3 id="序列和反序列化"><a href="#序列和反序列化" class="headerlink" title="序列和反序列化"></a>序列和反序列化</h3><ul>
+<h2 id="对象流-ObjectInputStream-和-ObjectOutputStream"><a href="#对象流-ObjectInputStream-和-ObjectOutputStream" class="headerlink" title="对象流-ObjectInputStream 和 ObjectOutputStream"></a>对象流-ObjectInputStream 和 ObjectOutputStream</h2><h3 id="序列和反序列化"><a href="#序列和反序列化" class="headerlink" title="序列和反序列化"></a>序列和反序列化</h3><ul>
 <li><p>序列化就是在保存数据时，保存数据的值和数据类型。</p>
 <p>将数据结构转换称为二进制数据流或者文本流的过程。序列化后的数据方便在网络上传输和在硬盘上存储。</p>
 </li>
@@ -1324,25 +1293,143 @@
 <li><p>ObjectInputStream 提供<strong>反序列化</strong>功能</p>
 </li>
 </ol>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220516201954245.png" alt="image-20220516201954245">			</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220516201954245.png" alt="image-20220516201954245"></p>
 <p>序列化数据和反序列化恢复数据</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220516201309591.png" alt="image-20220516201309591"></p>
 <h2 id="标准输入输出流"><a href="#标准输入输出流" class="headerlink" title="标准输入输出流"></a>标准输入输出流</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220516201438597.png" alt="image-20220516201438597"></p>
 <h2 id="转换流-InputStreamReader-和-OutputStreamWriter"><a href="#转换流-InputStreamReader-和-OutputStreamWriter" class="headerlink" title="转换流-InputStreamReader 和 OutputStreamWriter"></a>转换流-InputStreamReader 和 OutputStreamWriter</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220516201634261.png" alt="image-20220516201634261"></p>
 <h2 id="打印流-PrintStream-和-PrintWriter"><a href="#打印流-PrintStream-和-PrintWriter" class="headerlink" title="打印流-PrintStream 和 PrintWriter"></a>打印流-PrintStream 和 PrintWriter</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220516201859470.png" alt="image-20220516201859470"></p>
-<h1 id="反射-reflection"><a href="#反射-reflection" class="headerlink" title="反射(reflection)"></a>反射(reflection)</h1><p>需求：根据配置文件re.properties指定信息，创建对象并调用方法；即通过外部配置文件，在不修改源码的情况下来控制程序，也符合设计模式的<strong>ocp原则</strong>(<strong>开闭原则</strong>：不修改源码，扩容功能)</p>
-<h2 id="反射机制"><a href="#反射机制" class="headerlink" title="反射机制"></a>反射机制</h2><p>1）反射机制允许程序在执行期间借助于Reflection API 获得任何类的内部信息(比如：成员变量、构造器，成员方法等)，并能操作对象的属性及方法。反射在设计模式和框架底层都会用到</p>
-<p>2）加载完类之后，在堆中就产生了一个Class类型的对象(一个类只有一个Class对象)，这个对象包含了类的完整结构信息。通过这个对象得到类的结构。</p>
+<h1 id="反射-reflection"><a href="#反射-reflection" class="headerlink" title="反射(reflection)"></a>反射(reflection)</h1><p>需求：根据配置文件 re.properties 指定信息，创建对象并调用方法；即通过外部配置文件，在不修改源码的情况下来控制程序，也符合设计模式的 <strong>ocp 原则</strong>(<strong>开闭原则</strong>：不修改源码，扩容功能)</p>
+<h2 id="反射机制"><a href="#反射机制" class="headerlink" title="反射机制"></a>反射机制</h2><ul>
+<li><p>反射机制的相关类在哪个包下？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.reflect.*;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>反射机制允许程序在执行期间借助于 Reflection API 获得任何类的内部信息(比如：成员变量、构造器，成员方法等)，并能操作对象的属性及方法。反射在设计模式和框架底层都会用到</p>
+</li>
+<li><p>加载完类之后，在堆中就产生了一个 Class 类型的对象(<strong>一个类只有一个 Class 对象</strong>)，这个对象包含了类的完整结构信息。通过这个对象得到类的结构。</p>
+</li>
+</ul>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517143914000.png" alt="image-20220517143914000"></p>
 <p><strong>作用</strong></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517144131916.png" alt="image-20220517144131916"></p>
-<p><strong>反射相关的类</strong></p>
-<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517144239805.png" alt="image-20220517144239805"></p>
+<h2 id="反射相关的类"><a href="#反射相关的类" class="headerlink" title="反射相关的类"></a>反射相关的类</h2><table>
+<thead>
+<tr>
+<th align="center">类</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">java.lang.Class</td>
+<td align="center">代表整个字节码。代表一个类型，代表整个类。</td>
+</tr>
+<tr>
+<td align="center">java.lang.reflect.Method</td>
+<td align="center">代表字节码中的方法字节码。代表类中的方法。</td>
+</tr>
+<tr>
+<td align="center">java.lang.reflect.Constructor</td>
+<td align="center">代表字节码中的构造方法字节码。代表类中的构造方法。</td>
+</tr>
+<tr>
+<td align="center">java.lang.reflect.Field</td>
+<td align="center">代表字节码中的属性字节码。代表类中的成员变量（静态变量+实例变量）。</td>
+</tr>
+</tbody></table>
+<p>注：<code>必须先获得Class才能获取Method、Constructor、Field</code>。</p>
+<h2 id="获取Class的三方式"><a href="#获取Class的三方式" class="headerlink" title="获取Class的三方式"></a>获取Class的三方式</h2><table>
+<thead>
+<tr>
+<th align="center">方式</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Class.forName(“完整类名带包名”)</td>
+<td align="center">静态方法</td>
+</tr>
+<tr>
+<td align="center">对象.getClass()</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">任何类型.class</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<p>注：以上三种方式返回值都是<strong>Class类型</strong>。</p>
+<h2 id="通过反射实例化对象"><a href="#通过反射实例化对象" class="headerlink" title="通过反射实例化对象"></a>通过反射实例化对象</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">对象.newInstance()</span><br></pre></td></tr></table></figure>
+
+<p><strong>注</strong>：newInstance() 方法内部实际上调用了<strong>无参数构造方法</strong>，必须保证无参构造存在才可以。否则会抛出<code>java.lang.InstantiationException</code>异常。</p>
+<p>示例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ReflectTest02</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException, InstantiationException, IllegalAccessException &#123;</span><br><span class="line">        <span class="comment">// 下面这段代码是以反射机制的方式创建对象。</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 通过反射机制，获取Class，通过Class来实例化对象</span></span><br><span class="line">        <span class="type">Class</span> <span class="variable">c</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;javase.reflectBean.User&quot;</span>);</span><br><span class="line">        <span class="comment">// newInstance() 这个方法会调用User这个类的无参数构造方法，完成对象的创建。</span></span><br><span class="line">        <span class="comment">// 重点是：newInstance()调用的是无参构造，必须保证无参构造是存在的！</span></span><br><span class="line">        <span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> c.newInstance();</span><br><span class="line">        System.out.println(obj);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
 <h2 id="反射优点和缺点"><a href="#反射优点和缺点" class="headerlink" title="反射优点和缺点"></a>反射优点和缺点</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517144349140.png" alt="image-20220517144349140"></p>
 <h2 id="反射调用优化-关闭访问检查"><a href="#反射调用优化-关闭访问检查" class="headerlink" title="反射调用优化-关闭访问检查"></a>反射调用优化-关闭访问检查</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517144438188.png" alt="image-20220517144438188"></p>
 <h2 id="Class-类"><a href="#Class-类" class="headerlink" title="Class 类"></a>Class 类</h2><h3 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517144528389.png" alt="image-20220517144528389"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517144622172.png" alt="image-20220517144622172"></p>
-<h3 id="Class-类的常用方法"><a href="#Class-类的常用方法" class="headerlink" title="Class 类的常用方法"></a>Class 类的常用方法</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517144710973.png" alt="image-20220517144710973"></p>
+<h3 id="Class-类的常用方法"><a href="#Class-类的常用方法" class="headerlink" title="Class 类的常用方法"></a>Class 类的常用方法</h3><table>
+<thead>
+<tr>
+<th align="center">方法名</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">public T <strong>newInstance</strong>()</td>
+<td align="center">创建对象</td>
+</tr>
+<tr>
+<td align="center">public String <strong>getName</strong>()</td>
+<td align="center">返回完整类名带包名</td>
+</tr>
+<tr>
+<td align="center">public String <strong>getSimpleName</strong>()</td>
+<td align="center">返回类名</td>
+</tr>
+<tr>
+<td align="center">public Field[] <strong>getFields</strong>()</td>
+<td align="center">返回类中 public 修饰的属性</td>
+</tr>
+<tr>
+<td align="center">public Field[] <strong>getDeclaredFields</strong>()</td>
+<td align="center">返回类中所有的属性</td>
+</tr>
+<tr>
+<td align="center">public Field <strong>getDeclaredField</strong>(String name)</td>
+<td align="center">根据属性名name获取指定的属性</td>
+</tr>
+<tr>
+<td align="center">public native int <strong>getModifiers</strong>()</td>
+<td align="center">获取属性的修饰符列表,返回的修饰符是一个数字，每个数字是修饰符的代号【一般配合 Modifier 类的 toString(int x) 方法使用】</td>
+</tr>
+<tr>
+<td align="center">public Method[] <strong>getDeclaredMethods</strong>()</td>
+<td align="center">返回类中所有的实例方法</td>
+</tr>
+<tr>
+<td align="center">public Method <strong>getDeclaredMethod</strong>(String name, Class&lt;?&gt;… parameterTypes)</td>
+<td align="center">根据方法名 name 和方法形参获取指定方法</td>
+</tr>
+<tr>
+<td align="center">public Constructor&lt;?&gt;[] <strong>getDeclaredConstructors</strong>()</td>
+<td align="center">返回类中所有的构造方法</td>
+</tr>
+<tr>
+<td align="center">public Constructor <strong>getDeclaredConstructor</strong>(Class&lt;?&gt;… parameterTypes)</td>
+<td align="center">根据方法形参获取指定的构造方法</td>
+</tr>
+<tr>
+<td align="center">public native Class&lt;? super T&gt; <strong>getSuperclass</strong>()</td>
+<td align="center">返回调用类的父类</td>
+</tr>
+<tr>
+<td align="center">public Class&lt;?&gt;[] <strong>getInterfaces</strong>()</td>
+<td align="center">返回调用类实现的接口集合</td>
+</tr>
+</tbody></table>
 <h3 id="获取-Class-类对象"><a href="#获取-Class-类对象" class="headerlink" title="获取 Class 类对象"></a>获取 Class 类对象</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517144936294.png" alt="image-20220517144936294"></p>
 <h3 id="哪些类型有-Class-对象"><a href="#哪些类型有-Class-对象" class="headerlink" title="哪些类型有 Class 对象"></a>哪些类型有 Class 对象</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517145022485.png" alt="image-20220517145022485"></p>
 <h2 id="类加载"><a href="#类加载" class="headerlink" title="类加载"></a>类加载</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517145152479.png" alt="image-20220517145152479"></p>
@@ -1363,21 +1450,48 @@
 <h3 id="访问方法"><a href="#访问方法" class="headerlink" title="访问方法"></a>访问方法</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517150431898.png" alt="image-20220517150431898"></p>
 <h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><p>处理文本的利器，是对字符串执行模式匹配的技术</p>
 <p>一个正则表达式，就是用某种模式去匹配字符串的一个公式</p>
-<p>注：在Java正则表达式中，两个\\代表其它语言中的一个\</p>
-<h2 id="正则表达式底层实现"><a href="#正则表达式底层实现" class="headerlink" title="正则表达式底层实现"></a>正则表达式底层实现</h2><p>1）创建一个<strong>Pattern模式对象</strong>，即正则表达式对象；</p>
-<p>2）创建一个<strong>matcher匹配器对象</strong>，按照pattern(模式)，到字符串中去匹配；</p>
-<p>3）找到后，将子字符串的开始的索引记录到 matcher 对象的属性 grops[0]，把该子字符串的结束的索引+1 的值记录到 groups[1]；</p>
-<p>4）同时记录 oldLast 的值为子字符串的结束的索引 +1 的值即 groups[1]，即下次执行 find 时，就从此开始匹配；</p>
-<h3 id="matcher-group-0-分析"><a href="#matcher-group-0-分析" class="headerlink" title="matcher.group(0) 分析"></a>matcher.group(0) 分析</h3><p>根据 groups[0] 和 groups[1] 的记录的位置，从字符串中开始截取子字符串返回，就是 [groups[0], groups[1]) 包含groups[0] 但是不包</p>
-<p>含索引为groups[1]的位置</p>
-<p><strong>有分组</strong>：将子字符串的开始的索引记录到 matcher 对象的属性 grops[0]，把该子字符串的结束的索引+1 的值记录到 groups[1]</p>
-<p>​				记录第一个分组匹配到的字符串 groups[2] ，groups[3]为开始和结束+1的索引值</p>
-<pre><code>            记录第二个分组匹配到的字符串 groups[4]，groups[5]为开始和结束+1的索引值
-</code></pre>
-<p>​				如果有更多的分组以此类推</p>
-<p>​				group(0) 表示匹配到的子字符串</p>
-<p>​				group(1) 表示匹配到的子字符串的第一组字串 </p>
-<p>​				group(2) 表示匹配到的子字符串的第二组字串</p>
+<p>注：在 Java 正则表达式中，两个 \\ 代表其它语言中的一个 \</p>
+<h2 id="正则表达式底层实现"><a href="#正则表达式底层实现" class="headerlink" title="正则表达式底层实现"></a>正则表达式底层实现</h2><ol>
+<li>创建一个 <strong>Pattern 模式对象</strong>，即正则表达式对象；</li>
+<li>创建一个 <strong>matcher 匹配器对象</strong>，按照 pattern (模式)，到字符串中去匹配；</li>
+<li>找到后，将子字符串的开始的索引记录到 matcher 对象的属性 grops[0]，把该子字符串的结束的索引+1 的值记录到 groups[1]；</li>
+<li>同时记录 oldLast 的值为子字符串的结束的索引 +1 的值即 groups[1]，即下次执行 find 时，就从此开始匹配；</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Demo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">content</span> <span class="operator">=</span> <span class="string">&quot;2000年5月，JDK1.3、JDK1.4和J2SE1.3相继发布，几周后其获得了Apple公司Mac OS X的工业标准的支持。2001年9月24日，J2EE1.3发布。2002年2月26日，J2SE1.4发布。自此Java的计算能力有了大幅提升，与J2SE1.3相比，其多了近62%的类和接口。在这些新特性当中，还提供了广泛的XML支持、安全套接字（Socket）支持（通过SSL与TLS协议）、全新的I/OAPI、正则表达式、日志与断言。2004年9月30日，J2SE1.5发布，成为Java语言发展史上的又一里程碑。为了表示该版本的重要性，J2SE 1.5更名为Java SE 5.0（内部版本号1.5.0），代号为“Tiger”，Tiger包含了从1996年发布1.0版本以来的最重大的更新，其中包括泛型支持、基本类型的自动装箱、改进的循环、枚举类型、格式化I/O及可变参数。&quot;</span>;</span><br><span class="line">        <span class="type">Pattern</span> <span class="variable">compile</span> <span class="operator">=</span> Pattern.compile(<span class="string">&quot;\\d\\d\\d\\d&quot;</span>);</span><br><span class="line">        <span class="type">Matcher</span> <span class="variable">matcher</span> <span class="operator">=</span> compile.matcher(content);</span><br><span class="line">        <span class="comment">// 查找过程：</span></span><br><span class="line">        <span class="comment">// 1. 根据指定的规则，定位满足规则的字符串，比如2000</span></span><br><span class="line">        <span class="comment">// 2. 找到后将 子字符串的开始索引 group[0]=0 记录到 matcher 对象的 int[] groups数组中；</span></span><br><span class="line">        <span class="comment">// 3. 同时记录oldLast 的值为 子字符串的结束的 索引+1的位置值索引 group[1]=4，下次执行find是，就从记录的索引开始匹				配</span></span><br><span class="line">        <span class="comment">// 4. 如果matcher.group(i)，i超过了范围，就会报索引越界异常，因为 getSubSequence(groups[group * 2], 						groups[group * 2 + 1]).toString();</span></span><br><span class="line">        <span class="comment">// 5. 继续向下找的时候同理, 找到后将 子字符串的开始索引记录 group[0]=65 到 matcher 对象的 int[] groups数组中；同			时记录oldLast 的值为 子字符串的结束的 索引+1的位置值索引为group[1]=69，下次执行find是，就从记录的索引开始匹配</span></span><br><span class="line">        <span class="keyword">while</span> (matcher.find()) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;找到：&quot;</span> + matcher.group(<span class="number">0</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 开始匹配group - 源码：</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">group</span><span class="params">(<span class="type">int</span> group)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (first &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;No match found&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (group &lt; <span class="number">0</span> || group &gt; groupCount())</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IndexOutOfBoundsException</span>(<span class="string">&quot;No group &quot;</span> + group);</span><br><span class="line">    <span class="keyword">if</span> ((groups[group*<span class="number">2</span>] == -<span class="number">1</span>) || (groups[group*<span class="number">2</span>+<span class="number">1</span>] == -<span class="number">1</span>))</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">return</span> getSubSequence(groups[group * <span class="number">2</span>], groups[group * <span class="number">2</span> + <span class="number">1</span>]).toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>查找过程：</strong></p>
+<ol>
+<li>根据指定的规则，定位满足规则的字符串，比如2000</li>
+<li>找到后将子字符串的开始索引 group[0]&#x3D;0 记录到 matcher 对象的 int[] groups数组中；Debug如下图所示</li>
+</ol>
+<p><strong>第一次匹配成功：</strong></p>
+<ol start="3">
+<li>同时记录 oldLast 的值为子字符串的结束的 索引+1 的位置值索引 group[1]&#x3D;4，下次执行 find 时，就从记录的索引开始匹配</li>
+<li>如果matcher.group(i)，i 超过了范围，就会报索引越界异常，因为 getSubSequence(groups[group * 2]，groups[group * 2 + 1]).toString();</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220827135209883.png" alt="image-20220827135209883"></p>
+<p><strong>第二次匹配成功：</strong></p>
+<ol start="5">
+<li>继续向下找的时候同理, 找到后将子字符串的开始索引记录 group[0]&#x3D;65 到 matcher 对象的 int[] groups数组中；同时记录oldLast 的值为子字符串的结束的 索引+1的位置值索引为group[1]&#x3D;69，下次执行find是，就从记录的索引开始匹配</li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220827135451983.png" alt="image-20220827135451983"></p>
+<h3 id="matcher-group-0-分析"><a href="#matcher-group-0-分析" class="headerlink" title="matcher.group(0) 分析"></a>matcher.group(0) 分析</h3><p>根据 groups[0] 和 groups[1] 的记录的位置，从字符串中开始截取子字符串返回，就是 [groups[0], groups[1]) 包含 groups[0] 但是不包</p>
+<p>含索引为 groups[1] 的位置</p>
+<p><strong>有分组</strong>：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220827143645337.png" alt="image-20220827143645337"></p>
+<ol>
+<li>将子字符串的开始的索引记录到 matcher 对象的属性 grops[0]，把该子字符串的结束的索引+1 的值记录到 groups[1]</li>
+<li>记录第一个分组匹配到的字符串 groups[2] ，groups[3]为开始和结束+1的索引值</li>
+<li>记录第二个分组匹配到的字符串 groups[4]，groups[5]为开始和结束+1的索引值</li>
+<li>如果有更多的分组以此类推</li>
+</ol>
+<ul>
+<li>group(0) 表示匹配到的子字符串</li>
+<li>group(1) 表示匹配到的子字符串的第一组字串 </li>
+<li>group(2) 表示匹配到的子字符串的第二组字串</li>
+</ul>
 <p><strong>matches</strong>方法：用于整体匹配，在验证输入的字符串是否满足条件使用，返回ture或false</p>
 <h2 id="元字符"><a href="#元字符" class="headerlink" title="元字符"></a>元字符</h2><h3 id="mysql中的模糊查询"><a href="#mysql中的模糊查询" class="headerlink" title="mysql中的模糊查询"></a>mysql中的模糊查询</h3><p><code>%</code>: 匹配0个或者多个任意字符</p>
 <p><code>_</code>: 匹配任意一个字符</p>
@@ -1403,10 +1517,10 @@
 <p>lamda表达式由两部分组成：<strong>参数和语句块</strong>，参数可以不写参数类型也可以写参数类型，如果写参数类型，必须与对应方法的参数类型一致，</p>
 <p><strong>如果只有一个参数，可以省略小括号()<strong>；语句块中如果只有一条语句，</strong>可以省略大括号{ }和return关键字</strong>。</p>
 <p><strong>lamda表达式只支持函数式接口，函数式接口就是只有一个抽象方法的接口</strong>，例如Runnable</p>
-<p>避免匿名<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%86%85%E9%83%A8%E7%B1%BB&spm=1001.2101.3001.7020">内部类</a>定义过多</p>
+<p>避免匿名内部类定义过多</p>
 <p>可以让你的代码看起来很简洁</p>
 <p>去掉了一堆没有意义的代码，留下核心的逻辑</p>
-<p>其实质属于<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B&spm=1001.2101.3001.7020">函数式编程</a>的概念</p>
+<p>其实质属于函数式编程</p>
 <h1 id="GC"><a href="#GC" class="headerlink" title="GC"></a>GC</h1><h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><p>两个区域A和B，初始对象在A，继续存活的对象被转移到B。此为新生代最常用的算法</p>
 <h2 id="标记清理算法"><a href="#标记清理算法" class="headerlink" title="标记清理算法"></a>标记清理算法</h2><p>一块区域，标记可达对象（可达性分析），然后回收不可达对象，会出现碎片，那么引出标记-整理算法：多了碎片整理，整理出更大的内存放更大的对象</p>
 <p>两个概念：<strong>新生代和年老代</strong></p>
@@ -1421,14 +1535,32 @@
 <p>CMS收集器，基于标记清理</p>
 <p>G1收集器：整体上是基于标记 整理 ，局部采用复制</p>
 <p><strong>综上：新生代基本采用复制算法，老年代采用标记整理算法。cms采用标记清理。</strong></p>
-<h1 id="委托事件模型"><a href="#委托事件模型" class="headerlink" title="委托事件模型"></a>委托事件模型</h1><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/cac99c0f172b">https://www.jianshu.com/p/cac99c0f172b</a></p>
+<h1 id="委托事件模型"><a href="#委托事件模型" class="headerlink" title="委托事件模型"></a>委托事件模型</h1><p>委托事件模型是进行图形用户界面设计的核心</p>
+<h2 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h2><p>事件（event）是指一个状态的改变，或者一个活动的发生。例如，用户点击窗口关闭按钮，发生窗口关闭事件；用户单击一个按钮，产生动作事件。</p>
+<h2 id="事件源"><a href="#事件源" class="headerlink" title="事件源"></a>事件源</h2><p>发生事件的组件称为事件源。例如，用户单击窗口关闭按钮是在窗口上发生的事件，所以窗口为事件源；用户单击按钮产生的动作事件是在按钮上发生的，所以按钮为事件源。</p>
+<h2 id="事件类和事件监听器接口"><a href="#事件类和事件监听器接口" class="headerlink" title="事件类和事件监听器接口"></a>事件类和事件监听器接口</h2><p>Java将事件封装成事件类，并为每一个事件类定义一个事件监听器接口（listener interface），约定事件处理方法，指定产生事件时执行的操作。</p>
+<p>常用的事件类和对应的事件监听器接口：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20200522102153940.png" alt="img"></p>
+<h2 id="委托事件模型-1"><a href="#委托事件模型-1" class="headerlink" title="委托事件模型"></a>委托事件模型</h2><p>当我们点击窗口或按钮等组件，想让程序执行希望的操作时，需要实现该事件对应的事件监听器接口，也就是告诉程序如果发生这类事件，该怎么处理。单这样还不行，不是谁发生该事件都进行处理，要<strong>指明哪个事件源发生该事件才进行处理</strong>。因此还需要在事件源上注册该监听器对象。这样事件源和事件监听器之间就建立了联系，当事件源发生该事件时，注册在事件源上的监听器对象就能监听到该事件，从而执行事件监听器的对应方法。这就是事件委托模型。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20200522102037365.png" alt="img"></p>
+<p> 处理发生在某个图形用户界面组件上的 XxxEvent 事件的某种情况，其事件处理的通用编写流程：</p>
+<ol>
+<li>编写一个实现 XxxListener 接口的事件监听器类。</li>
+<li>在 XxxListener 类中的用于处理该事件情况的方法中，编写处理代码。</li>
+<li>调用组件的 addXxxListener 方法，将类 XxxListener 创建的实例对象注册到事件源组件上。</li>
+</ol>
+<p>举一个简单的例子，在Frame组件上添加一个Button按钮，点击Button按钮关闭窗口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyFrame</span> <span class="keyword">implements</span> <span class="title class_">ActionListener</span>&#123;</span><br><span class="line">	<span class="comment">//实现ActionListener监听器接口</span></span><br><span class="line">	Frame f;</span><br><span class="line">	Button bt;</span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">MyFrame</span><span class="params">()</span>&#123;</span><br><span class="line">        f=<span class="keyword">new</span> <span class="title class_">Frame</span>(<span class="string">&quot;My Frame&quot;</span>); <span class="comment">//实例化窗口</span></span><br><span class="line">        f.setSize(<span class="number">400</span>, <span class="number">300</span>);  <span class="comment">//设置窗口大小</span></span><br><span class="line">        f.setLocationRelativeTo(<span class="literal">null</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//设置窗口居中显示</span></span><br><span class="line">        bt=<span class="keyword">new</span> <span class="title class_">Button</span>(<span class="string">&quot;OK&quot;</span>); <span class="comment">//实例化Button按钮</span></span><br><span class="line">        bt.addActionListener(<span class="built_in">this</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 注册监听器对象</span></span><br><span class="line">        f.add(bt); <span class="comment">//将按钮bt添加到窗口f上</span></span><br><span class="line">        f.setVisible(<span class="literal">true</span>); <span class="comment">//设置窗口可显示</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">MyFrame</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="comment">//实现监听器接口方法</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">actionPerformed</span><span class="params">(ActionEvent e)</span> &#123;</span><br><span class="line">        <span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">        System.exit(<span class="number">0</span>);  <span class="comment">//结束程序</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h1 id="网络编程"><a href="#网络编程" class="headerlink" title="网络编程"></a>网络编程</h1><h2 id="网络的相关概念"><a href="#网络的相关概念" class="headerlink" title="网络的相关概念"></a>网络的相关概念</h2><h3 id="网络通信"><a href="#网络通信" class="headerlink" title="网络通信"></a>网络通信</h3><p>两台设备之间通过网络实现数据传输&#x2F;将数据通过网络从一台设备传输到另一台设备</p>
-<p>java.net包下提供了一系列的类或接口，供程序员使用，完成网络通信</p>
+<p>java.net 包下提供了一系列的类或接口，供程序员使用，完成网络通信</p>
 <h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><p>两台或多台设备通过一定物理设备连接起来构成了网络</p>
 <p>根据网络的覆盖范围进行分类：</p>
-<p>1）局域网：覆盖范围小，仅仅覆盖一个教室或一个机房</p>
-<p>2）城域网：覆盖范围较大，可以覆盖一个城市</p>
-<p>3）广域网：覆盖范围最大，可以覆盖全国，甚至全球，万维网是广域网的代表</p>
+<ol>
+<li>局域网：覆盖范围小，仅仅覆盖一个教室或一个机房</li>
+<li>城域网：覆盖范围较大，可以覆盖一个城市</li>
+<li>广域网：覆盖范围最大，可以覆盖全国，甚至全球，万维网是广域网的代表</li>
+</ol>
 <h3 id="ip-地址"><a href="#ip-地址" class="headerlink" title="ip 地址"></a>ip 地址</h3><p>用以标识网络中的每一台主机&#x2F;计算机</p>
 <p>查看IP地址：ipconfig</p>
 <p>ip地址的表示形式：点分十进制 xx.xx.xx.xx</p>
@@ -1438,13 +1570,19 @@
 <h3 id="ipv4地址分类"><a href="#ipv4地址分类" class="headerlink" title="ipv4地址分类"></a>ipv4地址分类</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220519170200444.png" alt="image-20220519170200444"></p>
 <h3 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h3><p>好处：为了方便记忆，解决记ip的困难</p>
 <p>概念：将ip地址映射成域名，HTTP</p>
-<p><strong>端口号：</strong>用于标识计算机上某个特定的网络程序</p>
-<p>​				以整数形式，端口范围：0-65535[两个字节表示端口]</p>
-<p>​				0-1024已经被占用，比如：ssh 22,  ftp 21,  smtp 25,  http 80</p>
-<p>​				常见的网络程序端口号：tomcat:8080</p>
-<p>​															mysql:3306</p>
-<p>​															oracle:1521</p>
-<p>​															sqlserver:1433</p>
+<p><strong>端口号：</strong></p>
+<ol>
+<li>用于标识计算机上某个特定的网络程序</li>
+<li>以整数形式，端口范围：0-65535[两个字节表示端口]</li>
+<li>0-1024已经被占用，比如：ssh 22,  ftp 21,  smtp 25,  http 80</li>
+<li>常见的网络程序端口号：<ol>
+<li>tomcat:8080</li>
+<li>mysql:3306</li>
+<li>oracle:1521</li>
+<li>sqlserver:1433</li>
+</ol>
+</li>
+</ol>
 <h3 id="网络通信协议"><a href="#网络通信协议" class="headerlink" title="网络通信协议"></a>网络通信协议</h3><p>TCP&#x2F;IP：传输控制协议，由网络层的IP协议和传输层的TCP协议组成</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220519172516839.png" alt="image-20220519172516839"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220519172535187.png" alt="image-20220519172535187"></p>
@@ -1453,6 +1591,37 @@
 <h2 id="TCP-网络通信编程"><a href="#TCP-网络通信编程" class="headerlink" title="TCP 网络通信编程"></a>TCP 网络通信编程</h2><p>基于客户端—服务端的网络通信</p>
 <p>底层使用的是TCP&#x2F;IP协议</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220519172850090.png" alt="image-20220519172850090"></p>
+<p><img src="https://uploadfiles.nowcoder.com/images/20180316/8955099_1521189690989_0BB28C2A1ECCC47EC020E89E8A554BBC" alt="img"></p>
+<p><strong>TCP客户端：</strong> </p>
+<ol>
+<li><p>建立连接套接字，设置 Ip 和端口监听，socket()</p>
+</li>
+<li><p>建立连接 connect</p>
+</li>
+<li><p>write() 获取网络流对象 发送数据</p>
+</li>
+<li><p>read() 获取网络流对象 接收数据</p>
+</li>
+<li><p>关闭套接字</p>
+</li>
+</ol>
+<p><strong>TCP服务器端：</strong></p>
+<ol>
+<li><p>建立端口监听 socket()</p>
+</li>
+<li><p>绑定指定端口 bind()</p>
+</li>
+<li><p>listen 进行端口监听</p>
+</li>
+<li><p>accept() 阻塞式 直到有客户端访问</p>
+</li>
+<li><p>read() 获取客户端发送数据</p>
+</li>
+<li><p>write() 发送返回数据</p>
+</li>
+<li><p>close 关闭端口监听</p>
+</li>
+</ol>
 <h3 id="netstat-指令"><a href="#netstat-指令" class="headerlink" title="netstat 指令"></a>netstat 指令</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220519172954362.png" alt="image-20220519172954362"></p>
 <p>-Xms1G -Xmx2G -Xmn500M -XX:MaxPermSize&#x3D;64M -XX:+UseConcMarkSweepGC -XX:SurvivorRatio&#x3D;3,</p>
 <p>-Xms：1G ， 就是说初始堆大小为1G<br>-Xmx：2G ， 就是说最大堆大小为2G<br>-Xmn：500M ，就是说年轻代大小是500M（包括一个Eden和两个Survivor）<br>-XX:MaxPermSize：64M ， 就是说设置持久代最大值为64M<br>-XX:+UseConcMarkSweepGC ， 就是说使用使用CMS内存收集算法<br>-XX:SurvivorRatio&#x3D;3 ， 就是说Eden区与Survivor区的大小比值为3：1：1</p>
@@ -1508,7 +1677,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/06/28/JavaSE/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2021/03/21/JavaSE/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -1519,20 +1688,15 @@
    
   <nav class="article-nav">
     
-      <a href="/2022/06/28/%E6%A1%86%E6%9E%B6%EF%BC%9ASpring/" class="article-nav-link">
+      <a href="/2021/08/15/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9Amysql%E5%9F%BA%E7%A1%80/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            Spring
+            mysql基础
           
         </div>
       </a>
     
-    
-      <a href="/2022/06/27/%E6%A1%86%E6%9E%B6%EF%BC%9ASpringAop/" class="article-nav-link">
-        <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">SpringAop</div>
-      </a>
     
   </nav>
 
@@ -1555,7 +1719,7 @@
     <ul>
       <li>
         Copyrights &copy;
-        2022
+        2021-2022
         <i class="ri-heart-fill heart_icon"></i> Yang Shiyu
       </li>
     </ul>
