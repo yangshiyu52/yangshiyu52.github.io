@@ -11,7 +11,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title>ajax |  Healer</title>
+      <title>Ajax |  Healer</title>
   <meta name="generator" content="hexo-theme-ayer">
       
       <link rel="shortcut icon" href="/favicon.ico" />
@@ -57,7 +57,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-前端：ajax"
+  id="post-前端：Ajax"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -69,7 +69,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  ajax
+  Ajax
 </h1>
  
 
@@ -77,8 +77,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2021/12/13/%E5%89%8D%E7%AB%AF%EF%BC%9Aajax/" class="article-date">
-  <time datetime="2021-12-13T08:49:59.000Z" itemprop="datePublished">2021-12-13</time>
+      <a href="/2021/12/13/%E5%89%8D%E7%AB%AF%EF%BC%9AAjax/" class="article-date">
+  <time datetime="2021-12-13T04:41:32.000Z" itemprop="datePublished">2021-12-13</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
@@ -114,7 +114,6 @@
     <div class="article-entry" itemprop="articleBody">
        
   <h1 id="通信协议"><a href="#通信协议" class="headerlink" title="通信协议"></a>通信协议</h1><p>协议: 规范</p>
-<hr>
 <h1 id="协议的写法"><a href="#协议的写法" class="headerlink" title="协议的写法"></a>协议的写法</h1><blockquote>
 <p>简单协议的写法:</p>
 </blockquote>
@@ -124,7 +123,6 @@
 </blockquote>
 <p><code>主协议名称:子协议名称://主机:端口/资源/子资源?key1=value1&amp;key2=value2</code></p>
 <p><a target="_blank" rel="noopener" href="http://baidu.com/index.html">http://baidu.com:80/index.html</a></p>
-<hr>
 <h1 id="获取服务器数据的方式"><a href="#获取服务器数据的方式" class="headerlink" title="获取服务器数据的方式"></a>获取服务器数据的方式</h1><ul>
 <li>同步获取数据:  页面有刷新,浏览器的地址栏会发生改变,用户体验不好</li>
 <li>异步获取数据:  实现页面的局部更新,浏览器的地址栏不发生改变,用户体验很好,也是现在主流的请求数据的方式;一般我们使用ajax进行异步数据的获取</li>
@@ -197,7 +195,6 @@
 <hr>
 <h1 id="Http协议为什么建立的是短连接"><a href="#Http协议为什么建立的是短连接" class="headerlink" title="Http协议为什么建立的是短连接?"></a>Http协议为什么建立的是短连接?</h1><p>长连接是非常耗费服务器的cpu资源的,web端的应用场景一般都是短连接</p>
 <p>http协议的短连接病并不是说tcp协议第短连接,而是一次请求建立tcp连接,响应结束之后又会断开tcp连接</p>
-<hr>
 <h1 id="Http的版本"><a href="#Http的版本" class="headerlink" title="Http的版本"></a>Http的版本</h1><ul>
 <li>http1.0</li>
 <li>http1.1(主流的版本),实现了同一会话的,固定时间之内的http连接的复用</li>
@@ -233,7 +230,7 @@
 </ul>
 </li>
 </ul>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#响应行</span><br><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">200</span> OK</span><br><span class="line">#响应头</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>no-cache, private</span><br><span class="line"><span class="attribute">Content-Encoding</span><span class="punctuation">: </span>gzip</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/json</span><br><span class="line"><span class="attribute">Date</span><span class="punctuation">: </span>Wed, 15 Dec 2021 11:57:24 GMT</span><br><span class="line"><span class="attribute">Server</span><span class="punctuation">: </span>Apache</span><br><span class="line"><span class="attribute">Tracecode</span><span class="punctuation">: </span>34440933802685789194121519</span><br><span class="line"><span class="attribute">Vary</span><span class="punctuation">: </span>Accept-Encoding</span><br><span class="line"><span class="attribute">Transfer-Encoding</span><span class="punctuation">: </span>chunked</span><br><span class="line"></span><br><span class="line"><span class="language-mathematica"><span class="type">#</span>响应实体</span></span><br><span class="line"><span class="language-mathematica"><span class="variable">eeb</span></span></span><br><span class="line"><span class="language-mathematica">        <span class="punctuation">]</span><span class="variable">mo</span><span class="type">#</span> <span class="variable">q</span> <span class="operator">+</span><span class="punctuation">&#125;</span>  <span class="number">8</span>      <span class="operator">!</span>  <span class="variable">$6</span> <span class="built_in">C</span> \ <span class="type">#X</span><span class="operator">-</span><span class="operator">|</span>  ą<span class="variable">DZ</span>   <span class="built_in">O</span> <span class="variable">S</span> <span class="variable">OW</span> <span class="operator">%</span>  <span class="variable">m</span><span class="built_in">C</span> <span class="variable">GV</span> <span class="variable">U</span><span class="operator">=</span><span class="variable">U</span>  <span class="variable">L</span>  <span class="variable">W</span>         <span class="variable">t</span>  <span class="type">_</span> <span class="variable">v</span>     <span class="variable">Rx</span>    <span class="built_in">C</span><span class="punctuation">&#123;</span><span class="punctuation">&#123;</span> <span class="variable">z</span>    </span></span><br></pre></td></tr></table></figure>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#响应行</span><br><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">200</span> OK</span><br><span class="line">#响应头</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>no-cache, private</span><br><span class="line"><span class="attribute">Content-Encoding</span><span class="punctuation">: </span>gzip</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/json</span><br><span class="line"><span class="attribute">Date</span><span class="punctuation">: </span>Wed, 15 Dec 2021 11:57:24 GMT</span><br><span class="line"><span class="attribute">Server</span><span class="punctuation">: </span>Apache</span><br><span class="line"><span class="attribute">Tracecode</span><span class="punctuation">: </span>34440933802685789194121519</span><br><span class="line"><span class="attribute">Vary</span><span class="punctuation">: </span>Accept-Encoding</span><br><span class="line"><span class="attribute">Transfer-Encoding</span><span class="punctuation">: </span>chunked</span><br><span class="line"></span><br><span class="line"><span class="language-1c"><span class="meta">#响应实体</span></span></span><br><span class="line"><span class="language-1c">eeb</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>注意:</p>
@@ -330,13 +327,7 @@
 <blockquote>
 <p>发送请求Get请求:</p>
 </blockquote>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">axios.<span class="title function_">get</span>(<span class="string">&quot;http://localhost:8080/city/listAll&quot;</span>)</span><br><span class="line">    .<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">resp</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;成功:&quot;</span>, resp)</span><br><span class="line">&#125;)</span><br><span class="line">    .<span class="title function_">catch</span>(<span class="keyword">function</span> (<span class="params">msg</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;失败:&quot;</span>, msg)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">axios.get(<span class="string">&quot;http://localhost:8080/city/listAll&quot;</span>)</span><br><span class="line">    .then(function (resp) &#123;</span><br><span class="line">    console.log(<span class="string">&quot;成功:&quot;</span>, resp)</span><br><span class="line">&#125;)</span><br><span class="line">    .<span class="keyword">catch</span>(function (msg) &#123;</span><br><span class="line">    console.log(<span class="string">&quot;失败:&quot;</span>, msg)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
  
       <!-- reward -->
@@ -390,7 +381,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2021/12/13/%E5%89%8D%E7%AB%AF%EF%BC%9Aajax/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2021/12/13/%E5%89%8D%E7%AB%AF%EF%BC%9AAjax/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -401,19 +392,19 @@
    
   <nav class="article-nav">
     
-      <a href="/2021/12/20/%E5%89%8D%E7%AB%AF%EF%BC%9AVue/" class="article-nav-link">
+      <a href="/2021/12/13/%E5%89%8D%E7%AB%AF%EF%BC%9Ajquery/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            vue
+            jquery
           
         </div>
       </a>
     
     
-      <a href="/2021/12/13/%E5%89%8D%E7%AB%AF%EF%BC%9Ajquery/" class="article-nav-link">
+      <a href="/2021/12/08/%E5%89%8D%E7%AB%AF%EF%BC%9Adom/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">jquery</div>
+        <div class="article-nav-title">dom</div>
       </a>
     
   </nav>

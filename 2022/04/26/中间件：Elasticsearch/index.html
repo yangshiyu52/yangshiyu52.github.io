@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Elasticsearch |  Healer</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Healer" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+      <canvas width="1777" height="841"
+        style="position: fixed; left: 0px; top: 0px; z-index: 99999; pointer-events: none;"></canvas>
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-中间件：Elasticsearch"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+	
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Elasticsearch
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/04/26/%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%9AElasticsearch/" class="article-date">
+  <time datetime="2022-04-26T08:36:18.000Z" itemprop="datePublished">2022-04-26</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">12.2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">50 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="1-全文搜索引擎"><a href="#1-全文搜索引擎" class="headerlink" title="1. 全文搜索引擎"></a>1. 全文搜索引擎</h1><p>Google，百度类的网站搜索，它们都是根据网页中的关键字生成索引，我们在搜索的时候</p>
+<p>输入关键字，它们会将该关键字即索引匹配到的所有网页返回；还有常见的项目中应用日志的搜索等等。对于这些非结构化的数据文本，关系型数据库搜索不是能很好的支持(虽然mysql5.7以后支持了全文索引(FULLTEXT),但是全文索引对mysql的数据库的压力是很大的)。</p>
+<p>一般传统数据库，全文检索都实现的很鸡肋，因为一般也没人用数据库存文本字段。进行全文检索需要扫描整个表，如果数据量大的话即使对 SQL 的语法优化，也收效甚微。</p>
+<p>如果建立了索引，但是维护起来也很麻烦，对于 insert 和 update 操作都会重新构建索引。</p>
+<p>基于以上原因可以分析得出，在一些生产环境中，使用常规的搜索方式，性能是非常差的：</p>
+<ul>
+<li><p>搜索的数据对象是大量的非结构化的文本数据。</p>
+</li>
+<li><p>文件记录量达到数十万或数百万个甚至更多。</p>
+</li>
+<li><p>支持大量基于交互式文本的查询。</p>
+</li>
+<li><p>需求非常灵活的全文搜索查询。</p>
+</li>
+<li><p>对高度相关的搜索结果的有特殊需求，但是没有可用的关系数据库可以满足</p>
+</li>
+<li><p>对不同记录类型、非文本数据操作或安全事务处理的需求相对较少的情况。</p>
+</li>
+</ul>
+<p>为了解决结构化数据搜索和非结构化数据搜索性能问题，我们就需要专业，健壮，强大的全文搜索引擎;</p>
+<p>这里说到的全文搜索引擎指的是目前广泛应用的主流搜索引擎。它的工作原理是计算机索引程序通过扫描文章中的每一个词，对每一个词建立一个索引，指明该词在文章中出现的次数和位置，当用户查询时，检索程序就根据事先建立的索引进行查找，并将查找的结果反馈给用户的检索方式。这个过程类似于通过字典中的检索字表查字的过程。</p>
+<hr>
+<h1 id="2-ElasticSearch介绍"><a href="#2-ElasticSearch介绍" class="headerlink" title="2. ElasticSearch介绍"></a>2. ElasticSearch介绍</h1><p>​	The Elastic Stack, 包括 Elasticsearch、Kibana和 Logstash（也称为 ELK </p>
+<p>Stack）。能够安全可靠地获取任何来源、任何格式的数据，然后实时地对数据进行搜索、分析和可视化。Elaticsearch，简称为 ES，ES 是一个<strong>开源的高扩展的分布式全文搜索引擎，</strong>是整个 Elastic Stack 技术栈的核心。它可以近乎实时的存储、检索数据；本身扩展性很好，可以扩展到上百台服务器，处理PB 级别的数据</p>
+<hr>
+<h1 id="3-如果用数据库做搜索会怎么样"><a href="#3-如果用数据库做搜索会怎么样" class="headerlink" title="3. 如果用数据库做搜索会怎么样?"></a>3. 如果用数据库做搜索会怎么样?</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在软件开发里面，数据都是存储在数据库里面的，比如电商网站的商品信息，员工的信息等等，如果从员工角度去做搜索功能，我们会这么设计:</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">name</th>
+<th align="center">age</th>
+<th align="center">sex</th>
+<th align="center">birthday</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">张三</td>
+<td align="center">20</td>
+<td align="center">男</td>
+<td align="center">1993-08-09</td>
+</tr>
+<tr>
+<td align="center">张三三</td>
+<td align="center">22</td>
+<td align="center">男</td>
+<td align="center">1992-09-02</td>
+</tr>
+<tr>
+<td align="center">李四</td>
+<td align="center">25</td>
+<td align="center">男</td>
+<td align="center">1992-09-01</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> employee <span class="keyword">where</span> name <span class="keyword">like</span> <span class="string">&#x27;张三%&#x27;</span> </span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><strong>以上会存在几个问题：</strong> </p>
+<ol>
+<li>如果表记录上千万上亿了这个性能问题，另外一个如果有一个本文字段要在里面模糊配置，这个就会出现严重的性能问题 </li>
+<li>还不能将搜索词拆分开来，比如上面这个只能搜索名字是“张三”开头的员工，如果想搜出“张小三”那是搜索不出来的。<br>&#x3D;&#x3D;总体来说，用数据库来实现搜索，是不太靠谱的，通常性能也会很差&#x3D;&#x3D;</li>
+</ol>
+<hr>
+<h1 id="4-ElasticSearch解决了哪些问题"><a href="#4-ElasticSearch解决了哪些问题" class="headerlink" title="4. ElasticSearch解决了哪些问题?"></a>4. ElasticSearch解决了哪些问题?</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Lucene是单机的模式，如果你的数据量超过了一台物理机的容量，你需要扩容，将数据拆分成2份放在不同的集群，这个就是典型的分布式计算了。需要拷贝容错，机器宕机，数据一致性等复杂的场景，这个实现就比较复杂了</span><br></pre></td></tr></table></figure>
+
+<p><strong>ES解决了这些问题</strong><br>1、自动维护数据的分布到多个节点的索引的建立，还有搜索请求分布到多个节点的执行<br>2、自动维护数据的冗余副本，保证了一旦机器宕机，不会丢失数据<br>3、封装了更多高级的功能，例如聚合分析的功能，基于地理位置的搜索</p>
+<hr>
+<h1 id="5-ElasticSearch的功能"><a href="#5-ElasticSearch的功能" class="headerlink" title="5. ElasticSearch的功能"></a>5. ElasticSearch的功能</h1><ul>
+<li>分布式的搜索引擎和数据分析引擎 <ul>
+<li>搜索：网站的站内搜索，IT系统的检索 </li>
+<li>数据分析：电商网站，统计销售排名前10的商家</li>
+</ul>
+</li>
+<li>全文检索，结构化检索，数据分析<ul>
+<li>全文检索：我想搜索商品名称包含某个关键字的商品 </li>
+<li>结构化检索：我想搜索商品分类为日化用品的商品都有哪些</li>
+<li>数据分析：我们分析每一个商品分类下有多少个商品</li>
+</ul>
+</li>
+<li>对海量数据进行近实时的处理 <ul>
+<li>分布式：ES自动可以将海量数据分散到多台服务器上去<strong>存储和检索</strong> </li>
+<li>海量数据的处理：分布式以后，就可以采用大量的服务器去存储和检索数据，自然而然就可以实现海量数据的处理了</li>
+<li>近实时：检索数据要花费1小时（这就不要近实时，离线批处理，batch-processing）；<strong>在秒级别对数据进行搜索和分析</strong>,数据更新在Elasticsearch中几乎是完全同步的。</li>
+<li>Restful风格，一切API都遵循Rest原则，容易上手</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="6-ElasticSearch的应用场景"><a href="#6-ElasticSearch的应用场景" class="headerlink" title="6. ElasticSearch的应用场景"></a>6. ElasticSearch的应用场景</h1><ul>
+<li>自己做搜索引擎</li>
+<li>新闻网站</li>
+<li>Stack Overflow（国外的程序异常讨论论坛）</li>
+<li>GitHub（开源代码管理)</li>
+<li>电商网站</li>
+<li>日志数据分析</li>
+<li>BI系统</li>
+<li>站内搜索</li>
+<li>新浪使用es处理32亿条实时日志</li>
+</ul>
+<hr>
+<h1 id="7-ElasticSearch的特点"><a href="#7-ElasticSearch的特点" class="headerlink" title="7. ElasticSearch的特点"></a>7. ElasticSearch的特点</h1><ul>
+<li>可以作为一个大型分布式集群（数百台服务器）技术，处理PB级数据，服务大公司；也可以运行在单机上，服务小公司</li>
+<li>Elasticsearch不是什么新技术，主要是将全文检索、数据分析以及分布式技术，合并在了一起</li>
+<li>对用户而言，是开箱即用的，非常简单，作为中小型的应用，直接3分钟部署一下ES</li>
+<li>Elasticsearch作为传统数据库的一个补充,比如全文检索，同义词处理，相关度排名，复杂数据分析，海量数据的近实时处理</li>
+</ul>
+<hr>
+<h1 id="8-ElasticSearch的安装"><a href="#8-ElasticSearch的安装" class="headerlink" title="8. ElasticSearch的安装"></a>8. ElasticSearch的安装</h1><h2 id="8-1-准备工作"><a href="#8-1-准备工作" class="headerlink" title="8.1 准备工作"></a>8.1 准备工作</h2><h3 id="8-1-1-进程并发数不足"><a href="#8-1-1-进程并发数不足" class="headerlink" title="8.1.1 进程并发数不足"></a>8.1.1 进程并发数不足</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[1]: max file descriptors [4096] for elasticsearch process likely too low, increase to at least [65536]</span><br></pre></td></tr></table></figure>
+
+<p><strong>首先用root用户登录。</strong></p>
+<p>然后修改配置文件:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/security/limits.conf</span><br></pre></td></tr></table></figure>
+
+<p>添加下面的内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">* soft nofile 65536</span><br><span class="line">* hard nofile 131072</span><br><span class="line">* soft nproc 4096</span><br><span class="line">* hard nproc 4096  </span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="8-1-2-单个进程中的内存大小"><a href="#8-1-2-单个进程中的内存大小" class="headerlink" title="8.1.2 单个进程中的内存大小"></a>8.1.2 单个进程中的内存大小</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[2]: max virtual memory areas vm.max_map_count [65530] likely too low, increase to at least [262144] </span><br></pre></td></tr></table></figure>
+
+<p>vm.max_map_count：限制一个进程可以拥有的VMA(虚拟内存区域)的数量，继续修改配置文件</p>
+<p><code>vim /etc/sysctl.conf</code> </p>
+<p>添加下面内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vm.max_map_count=655360</span><br></pre></td></tr></table></figure>
+
+<p>执行以下命令:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysctl -p</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="8-2-elasticsearch单机版的安装"><a href="#8-2-elasticsearch单机版的安装" class="headerlink" title="8.2 elasticsearch单机版的安装"></a>8.2 elasticsearch单机版的安装</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ElasticSearch不允许使用超级管理员用户来进行操作,需要创建普通用户</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>准备安装包</p>
+<p><code>elasticsearch-7.16.0-linux-x86_64.tar.gz</code></p>
+</li>
+<li><p>创建elasticsearch的用户</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useradd es #创建用户   cat /etc/passwd:查看所有用户  userdel xx -r:删除用户并且删除用户对应的家目录</span><br><span class="line">passwd es  #配置密码</span><br><span class="line">su es: #切换用户</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>上传安装包,解压(使用es用户)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">解压es到当前的家目录</span></span><br><span class="line">tar -zxvf elasticsearch-7.16.0-linux-aarch64.tar.gz  -C  /home/es/</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">更改目录名称</span></span><br><span class="line">mv elasticsearch-7.16.0 elasticsearch</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改配置 <code>jvm.options</code></p>
+<p>Elasticsearch基于Lucene的，而Lucene底层是java实现，因此我们需要配置jvm参数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">默认为两个参数的值都为4g</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-Xms512m</span><br><span class="line">-Xmx512m</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改配置 <code>elasticsearch.yml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">cluster.name:</span> <span class="string">my-elasticsearch</span> <span class="comment">#集群名称</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">es-node01</span> <span class="comment">#节点名称</span></span><br><span class="line"><span class="attr">path.data:</span> <span class="string">/home/es/elasticsearch/data</span> <span class="comment"># 数据目录位置(没有此目录则会自动创建)</span></span><br><span class="line"><span class="attr">path.logs:</span> <span class="string">/home/es/elasticsearch/logs</span> <span class="comment"># 日志目录位置(没有此目录则会自动创建)</span></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span> <span class="comment">#能通过本机所有的ip来访问,一旦配置了0.0.0.0则为生产模式,必须要配置cluster.initial_master_nodes来进行引导初始化集群(生产模式需要进行集群初始化引导)</span></span><br><span class="line"><span class="attr">http.port:</span> <span class="number">9200</span> <span class="comment">#http的通信端口</span></span><br><span class="line"><span class="attr">discovery.seed_hosts:</span> [<span class="string">&quot;10.10.10.101:9300&quot;</span>] <span class="comment">#参与选举主节点的主机列表(除了第一次启动外,每次启动集群时都加载)----&gt;注意:有的平台配置主机名无效,需要配置ip地址</span></span><br><span class="line"><span class="attr">cluster.initial_master_nodes:</span> [<span class="string">&quot;10.10.10.101:9300&quot;</span>]  <span class="comment">#参与选举主节点的主机列表(仅仅在第一次启动集群时加载,用来初始化集群数据)----&gt;注意:有的平台配置主机名无效,需要配置ip地址</span></span><br><span class="line"><span class="attr">xpack.security.enabled:</span> <span class="literal">false</span>  <span class="comment">#禁用安全校验(不禁用kibana会一直有提示安全警告),可以不配置</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+</li>
+</ul>
+<h2 id="8-3-elasticsearch集群的安装"><a href="#8-3-elasticsearch集群的安装" class="headerlink" title="8.3 elasticsearch集群的安装"></a>8.3 elasticsearch集群的安装</h2><p>搭建es的集群,节点的数量一定要&gt;1的奇数个机器(因为内部进行投票选举主节点);</p>
+<p>如果要做集群部署，只需要在配置文件中<code>修改节点名称</code>并且<code>添加其它节点信息</code>即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">修改每个机器的以下两项即可</span></span><br><span class="line">node.name: es-node02 #节点名称(每个从节点都不一样)</span><br><span class="line">discovery.seed_hosts: [&quot;10.10.10.101:9300&quot;, &quot;10.10.10.102:9300&quot;, &quot;10.10.10.103:9300&quot;]</span><br><span class="line">cluster.initial_master_nodes: [&quot;10.10.10.101:9300&quot;, &quot;10.10.10.102:9300&quot;, &quot;10.10.10.103:9300&quot;]</span><br><span class="line">~~~</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>如果是在单机版的基础上复制安装的集群一定要删除拷贝到其他机器的data目录</strong></p>
+</blockquote>
+<hr>
+<h1 id="9-ElasticSearch的其他配置信息"><a href="#9-ElasticSearch的其他配置信息" class="headerlink" title="9. ElasticSearch的其他配置信息"></a>9. ElasticSearch的其他配置信息</h1><table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cluster.name</td>
+<td>配置elasticsearch的集群名称，默认是elasticsearch。建议修改成一个有意义的名称。</td>
+</tr>
+<tr>
+<td>node.name</td>
+<td>节点名，es会默认随机指定一个名字，建议指定一个有意义的名称，方便管理</td>
+</tr>
+<tr>
+<td>node.master</td>
+<td>默认为true(可以被当选为主节点)</td>
+</tr>
+<tr>
+<td>path.conf</td>
+<td>设置配置文件的存储路径，tar或zip包安装默认在es根目录下的config文件夹，rpm安装默认在&#x2F;etc&#x2F; elasticsearch</td>
+</tr>
+<tr>
+<td>path.data</td>
+<td>设置索引数据的存储路径，默认是es根目录下的data文件夹，可以设置多个存储路径，用逗号隔开</td>
+</tr>
+<tr>
+<td>path.logs</td>
+<td>设置日志文件的存储路径，默认是es根目录下的logs文件夹</td>
+</tr>
+<tr>
+<td>path.plugins</td>
+<td>设置插件的存放路径，默认是es根目录下的plugins文件夹</td>
+</tr>
+<tr>
+<td>bootstrap.memory_lock</td>
+<td>设置为true可以锁住ES使用的内存，避免内存进行swap</td>
+</tr>
+<tr>
+<td>network.host</td>
+<td>设置bind_host和publish_host，设置为0.0.0.0允许外网访问</td>
+</tr>
+<tr>
+<td>http.port</td>
+<td>设置对外服务的http端口，默认为9200。</td>
+</tr>
+<tr>
+<td>transport.tcp.port</td>
+<td>集群结点之间通信端口 默认为9300</td>
+</tr>
+<tr>
+<td>discovery.zen.ping.timeout</td>
+<td>设置ES自动发现节点连接超时的时间，默认为3秒，如果网络延迟高可设置大些</td>
+</tr>
+<tr>
+<td>discovery.seed_hosts</td>
+<td>(7.x版本之后的配置)参与选举的种子主机列表,也就是说集群的主机地址列表，格式为：主机:端口;   (7.x版本之前的配置为 discovery.zen.ping.unicast.hosts)</td>
+</tr>
+<tr>
+<td>discovery.seed_providers</td>
+<td>也是参与选举的种子主机列表，只不过是文件方式的</td>
+</tr>
+<tr>
+<td>cluster.initial_master_nodes</td>
+<td>(7.x版本之后的配置)集群初始化时参与选举的种子主机列表;       (7.x版本之前的配置为 minimum_master_nodes min_master_count)</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="10-启动ElasticSearch"><a href="#10-启动ElasticSearch" class="headerlink" title="10. 启动ElasticSearch"></a>10. 启动ElasticSearch</h1><ul>
+<li><p>配置环境变量  <code>/home/es/.bash_profile</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export ES_HOME=/home/es/elasticsearch</span><br><span class="line">export PATH=$PATH:$ES_HOME/bin</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">es7.x以后的版本建议使用高版本的jdk,如果自己机器安装的jdk版本为1.8的,在启动时会有警告信息,需要配置es自带的jdk的环境变量  ES_JAVA_HOME</span></span><br><span class="line">export ES_JAVA_HOME=/home/es/elasticsearch/jdk</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>执行运行指令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">elasticsearch</span><br><span class="line">elasticsearch  -d</span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">publish_address &#123;10.10.10.61:9300&#125;, bound_addresses &#123;[::]:9300&#125;</span><br><span class="line">......</span><br><span class="line">publish_address &#123;10.10.10.61:9200&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">可以看到绑定了两个端口:</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>9300：集群节点间通讯端口</li>
+<li>9200：客户端访问端口</li>
+</ul>
+<p>我们在浏览器中访问：<a target="_blank" rel="noopener" href="http://10.10.10.101:9200/">http://10.10.10.101:9200/</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line"><span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;6wHCrFE&quot;</span><span class="punctuation">,</span>  #如果不配置node-name则随机生成</span><br><span class="line"><span class="attr">&quot;cluster_name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;elasticsearch&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;cluster_uuid&quot;</span><span class="punctuation">:</span> <span class="string">&quot;zH219LmpTPidGsekhyIIFg&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"><span class="attr">&quot;number&quot;</span><span class="punctuation">:</span> <span class="string">&quot;5.6.8&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;build_hash&quot;</span><span class="punctuation">:</span> <span class="string">&quot;688ecce&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;build_date&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2018-02-16T16:46:30.010Z&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;build_snapshot&quot;</span><span class="punctuation">:</span> <span class="keyword">false</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;lucene_version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;6.6.1&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;tagline&quot;</span><span class="punctuation">:</span> <span class="string">&quot;You Know, for Search&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="11-es中的倒排索引"><a href="#11-es中的倒排索引" class="headerlink" title="11. es中的倒排索引"></a>11. es中的倒排索引</h1><p>词条(term): 把一句话按照一定的规则,相邻的一个或者多个字组成的词语称为词条;</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220424163449626.png" alt="image-20220424163449626"></p>
+<p>正向索引: 根据id找数据;</p>
+<p>倒排索引: 根据词条找数据id;</p>
+<hr>
+<h1 id="12-ES的客户端工具"><a href="#12-ES的客户端工具" class="headerlink" title="12. ES的客户端工具"></a>12. ES的客户端工具</h1><h2 id="12-1-Elasticsearch-Header"><a href="#12-1-Elasticsearch-Header" class="headerlink" title="12.1 Elasticsearch-Header"></a>12.1 Elasticsearch-Header</h2><p>这个是一个es的插件,需要我们在es中安装此插件;也可以安装一个浏览器的插件来使用;</p>
+<p>这个工具对高版本的es的支持不是很好,在新版本中es的官方已经推荐我们使用kibana来进行es的可视化操作;</p>
+<hr>
+<h2 id="12-2-Http的客户端"><a href="#12-2-Http的客户端" class="headerlink" title="12.2 Http的客户端"></a>12.2 Http的客户端</h2><ul>
+<li>postman</li>
+<li>insomnia</li>
+</ul>
+<hr>
+<h2 id="12-3-Kibana插件"><a href="#12-3-Kibana插件" class="headerlink" title="12.3  Kibana插件"></a>12.3  Kibana插件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Kibana是一个基于Node.js的Elasticsearch索引库数据统计工具，可以利用Elasticsearch的聚合功能，生成各种图表，如柱形图，线状图，饼图等</span><br><span class="line"></span><br><span class="line">而且还提供了操作Elasticsearch索引数据的控制台，并且提供了一定的API提示，非常有利于我们学习Elasticsearch的语法。</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<h4 id="安装kibana"><a href="#安装kibana" class="headerlink" title="安装kibana"></a>安装kibana</h4></blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">因为Kibana依赖于node，我们的虚拟机没有安装node，而window中安装过。所以我们选择在window下使用kibana。</span><br><span class="line"></span><br><span class="line">kibana的版本最好保持和elasticsearch的版本一致</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>安装node环境</p>
+</blockquote>
+<p>​	准备安装包: <code>node-v16.14.2-linux-arm64.tar.xz</code>(.tar.xz是二次压缩格式)</p>
+<p>​	解压缩: <code>tar -Jxvf node-v16.14.2-linux-arm64.tar.xz</code></p>
+<p>​	配置环境变量: <code>~/.bash_profile</code>   </p>
+<blockquote>
+<p>准备kibana的安装包</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kibana-7.16.0-linux-aarch64.tar.gz</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>解压安装包</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf kibana-7.16.0-linux-aarch64.tar.gz -C /home/es/</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>配置kibana (<code>kibana.yml</code>)</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">elasticsearch.hosts: [&quot;http://10.10.10.101:9200&quot;]</span><br><span class="line">server.port: 5601</span><br><span class="line">server.host: &quot;0.0.0.0&quot; </span><br><span class="line">i18n.locale: &quot;zh-CN&quot; </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>运行</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kibana  </span><br><span class="line">kibana --allow-root(使用root用户启动)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>m1芯片的centos_arm64版本可能会出现错误 </p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.20&#x27; not found...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">解决方案(把es中的可用的动态库文件加入到系统中,替换系统的老版本的动态库)</span></span><br><span class="line">cp /home/es/elasticsearch/modules/x-pack-ml/platform/linux-aarch64/lib/libstdc++.so.6  /usr/lib64/</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>访问kibana</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kibana的监听端口默认是5601</span><br><span class="line"></span><br><span class="line">我们访问：http://10.10.10.101:5601</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="13-ES中的名词解释"><a href="#13-ES中的名词解释" class="headerlink" title="13. ES中的名词解释"></a>13. ES中的名词解释</h1><p><strong>索引 (index):</strong> 也称为索引库,ElasticSearch存储数据的地方，可以理解成关系型数据库中的数据库概念</p>
+<p>**映射 (mapping):**mapping定义了每个字段的类型、字段所使用的分词器等。相当于关系型数据库中的表结构</p>
+<p>**文档 (document):**Elasticsearch中的最小数据单元，常以json格式显示。—个document相当于关系型数据库中的一行数据</p>
+<p>**倒排索引:**一个倒排索引由文档中所有不重复词的列表抅成，对于其中每个词，对应一个包含它的文档id列表</p>
+<p>**类型 (type):**一种type就像一类表。如用户表、角色表等;在Elasticsearch7.X默认type为_doc;<br>ES 5.x中一个index可以有多种type;</p>
+<p>ES 6.x中—个index只能有一种type;</p>
+<p>ES 7.x以后，将逐步移除type这个概念,现在的操作已经不再使用，默认 <code>_doc</code></p>
+<hr>
+<h1 id="14-RESTFul方式"><a href="#14-RESTFul方式" class="headerlink" title="14. RESTFul方式"></a>14. RESTFul方式</h1><p>**REST (Representational State Transfer)**，表述性状态转移，是一组架构约束条件和原则。满足这些约束条件和原则的应用程序或设计就是RESTful。就是一种定义接口的规范</p>
+<ul>
+<li><p>基于HTTP<br>可以使用XML格式定义或JSON格式定义。</p>
+</li>
+<li><p>每一个URl代表1种资源<br>客户端使用GET、POST、 PUT、DELETE4个表示操作方式的动词对服务端资源进行操作：</p>
+<p>GET:  用来获取资源</p>
+<p>POST: 用来新建资源（也可以用于更新资源）</p>
+<p>PUT：用来更新资源</p>
+<p>DELETE：用来删除资源</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET /user/1  :查询用户</span><br><span class="line">DELETE /user/1: 删除用户</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h1 id="15-分词器"><a href="#15-分词器" class="headerlink" title="15. 分词器"></a>15. 分词器</h1><p>分词器 (Analyzer): 将一段文本，按照一定逻辑，分析成多个词语的一种工具</p>
+<p>如：华为手机 —＞华为、手、手机</p>
+<hr>
+<h2 id="ElasticSearch-内置的分词器"><a href="#ElasticSearch-内置的分词器" class="headerlink" title="ElasticSearch 内置的分词器"></a>ElasticSearch 内置的分词器</h2><ul>
+<li>Standard Analyzer-默认分词器，按词切分，小写处理</li>
+<li>Simple Analyzer- 按照非字母切分(符号被过滤)，小写处理</li>
+<li>Stop Analyzer - 小写处理，停用词过滤(the，a，is)</li>
+<li>Whitespace Analyzer- 按照空格切分，不转小写</li>
+<li>Keyword Analyzer- 不分词，直接将输入当作输出</li>
+<li>Patter Analyzer-正则表达式，默认(W+(非字符分割）</li>
+<li>Language -提供了30多种常见语言的分词器</li>
+</ul>
+<p>总结: 以上的Elasticsearch系统默认的分词器对中文非常不友好,<code>一个汉字一个词</code>,我们一般不会使用默认的分词器;</p>
+<hr>
+<h2 id="ik分词器"><a href="#ik分词器" class="headerlink" title="ik分词器"></a>ik分词器</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">IKAnalyzer是一个开源的，基于java语言开发的轻量级的中文分词工具包</span><br><span class="line">是一个基于Maven构建的项目</span><br><span class="line">具有60万字/秒的高速处理能力</span><br><span class="line">支持用户词典扩展定义</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Lucene的IK分词器早在2012年已经没有维护了，现在我们要使用的是在其基础上维护升级的版本，并且开发成ElasticSearch的插件了，与Elasticsearch一起维护升级，版本也保持一致.</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>准备elasticsearch的ik分词器插件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">elasticsearch-analysis-ik-7.16.0.zip</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解压分词器插件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">在插件目录中新建分词器目录</span></span><br><span class="line">mkdir  /home/es/elasticsearch/plugins/ik-analyzer</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">解压分词器插件</span></span><br><span class="line">unzip  elasticsearch-analysis-ik-7.16.0.zip -d /home/es/elasticsearch/plugins/ik-analyzer/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>需要重启elasticsearch才能使得ik-analyzer生效</p>
+</li>
+</ul>
+<hr>
+<h1 id="16-测试分词器"><a href="#16-测试分词器" class="headerlink" title="16. 测试分词器"></a>16. 测试分词器</h1><h2 id="16-1-测试内置默认的分词器"><a href="#16-1-测试内置默认的分词器" class="headerlink" title="16.1 测试内置默认的分词器"></a>16.1 测试内置默认的分词器</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GET _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;text&quot;: &quot;你好 hello java&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GET _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;text&quot;: &quot;你好 hello java&quot;,</span><br><span class="line">  &quot;analyzer&quot;: &quot;standard&quot;  #不指定分词器则使用的就是默认的standard分词器</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>默认英文一个单词一个分词</li>
+<li>默认一个中文汉字一个分词</li>
+</ul>
+<hr>
+<h2 id="16-2-测试ik分词器"><a href="#16-2-测试ik分词器" class="headerlink" title="16.2 测试ik分词器"></a>16.2 测试ik分词器</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GET _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;analyzer&quot;: &quot;ik_max_word&quot;,    #分词的模式有两种  ik_smart  和 ik_max_word</span><br><span class="line">  &quot;text&quot;:     &quot;我是中国人&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="17-索引-index-的操作"><a href="#17-索引-index-的操作" class="headerlink" title="17. 索引(index)的操作"></a>17. 索引(index)的操作</h1><h2 id="17-1-创建索引库"><a href="#17-1-创建索引库" class="headerlink" title="17.1 创建索引库"></a>17.1 创建索引库</h2><h4 id="非结构化创建索引-不指定mappings"><a href="#非结构化创建索引-不指定mappings" class="headerlink" title="非结构化创建索引(不指定mappings)"></a>非结构化创建索引(不指定mappings)</h4><ul>
+<li><p>请求方式：<code>PUT</code></p>
+</li>
+<li><p>请求路径：<code>http://10.10.10.101:9200/索引库名</code></p>
+</li>
+<li><p>请求参数：json格式(创建索引库可以没有请求参数)</p>
+<ul>
+<li>settings：索引的设置<ul>
+<li>number_of_shards：分片数量(7.x之前不配置默认为<code>5</code>;  7.x之后默认为<code>1</code>)</li>
+<li>number_of_replicas：副本数量(默认为1)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">http://10.10.10.101:9200/索引库名  #没有请求参数也可以创建索引库</span><br><span class="line">&#123;</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">        &quot;number_of_shards&quot;: 3,</span><br><span class="line">        &quot;number_of_replicas&quot;: 1</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="结构化创建索引-指定mappings"><a href="#结构化创建索引-指定mappings" class="headerlink" title="结构化创建索引(指定mappings)"></a>结构化创建索引(指定mappings)</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">PUT index02</span><br><span class="line">&#123;</span><br><span class="line">  &quot;mappings&quot;: &#123;     </span><br><span class="line">          &quot;properties&quot;: &#123;</span><br><span class="line">              &quot;id&quot;:&#123;</span><br><span class="line">                &quot;type&quot;: &quot;long&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;name&quot;:&#123;</span><br><span class="line">                  &quot;type&quot;: &quot;text&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;age&quot;:&#123;</span><br><span class="line">                  &quot;type&quot;: &quot;integer&quot;,                  </span><br><span class="line">                &#125;          </span><br><span class="line">      &#125;    </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="17-2-查看索引库的属性"><a href="#17-2-查看索引库的属性" class="headerlink" title="17.2 查看索引库的属性"></a>17.2 查看索引库的属性</h2><blockquote>
+<p>查看具体索引库的语法</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET 索引库名</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>查看所有的索引库的语法</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET *</span><br><span class="line">GET _all</span><br></pre></td></tr></table></figure>
+
+<h2 id="17-3-删除索引库"><a href="#17-3-删除索引库" class="headerlink" title="17.3 删除索引库"></a>17.3 删除索引库</h2><blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE 索引库名</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="17-4-关闭索引库"><a href="#17-4-关闭索引库" class="headerlink" title="17.4 关闭索引库"></a>17.4 关闭索引库</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">关闭索引库之后可以查看索引库的元信息,但不能再进行其他操作了</span></span><br><span class="line">POST  index01/_close</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="17-5-打开索引库"><a href="#17-5-打开索引库" class="headerlink" title="17.5 打开索引库"></a>17.5 打开索引库</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST  index01/_open</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="18-ES中的数据类型"><a href="#18-ES中的数据类型" class="headerlink" title="18. ES中的数据类型"></a>18. ES中的数据类型</h1><h2 id="简单数据类型"><a href="#简单数据类型" class="headerlink" title="简单数据类型"></a>简单数据类型</h2><blockquote>
+<p><strong>字符串类型</strong></p>
+</blockquote>
+<p>​	text: 会分词,不支持聚合</p>
+<p>​	keyword: 不会分词,将全部内容作为一个词条,支持聚合</p>
+<blockquote>
+<p><strong>数值类型</strong></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">数据类型</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">long</td>
+<td align="center">带符号的64位整数</td>
+</tr>
+<tr>
+<td align="center">integer</td>
+<td align="center">带符号的32位整数</td>
+</tr>
+<tr>
+<td align="center">short</td>
+<td align="center">带符号的16位整数</td>
+</tr>
+<tr>
+<td align="center">byte</td>
+<td align="center">带符号的8位整数</td>
+</tr>
+<tr>
+<td align="center">double</td>
+<td align="center">双精度64位浮点数</td>
+</tr>
+<tr>
+<td align="center">float</td>
+<td align="center">单精度32位浮点数</td>
+</tr>
+<tr>
+<td align="center">half_float</td>
+<td align="center">半精度16位浮点数</td>
+</tr>
+<tr>
+<td align="center">scaled_float</td>
+<td align="center">由a支持的有限浮点数long,由固定的double比例因子缩放</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>布尔值</strong></p>
+</blockquote>
+<p>​	boolean类型</p>
+<blockquote>
+<p><strong>二进制类型</strong></p>
+</blockquote>
+<p>​	binary类型</p>
+<blockquote>
+<p><strong>范围类型</strong></p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">integer_range, float_range, long_range, double_range, date_range</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>日期</p>
+</blockquote>
+<p>date类型</p>
+<hr>
+<h2 id="复杂数据类型"><a href="#复杂数据类型" class="headerlink" title="复杂数据类型"></a>复杂数据类型</h2><p>​	数组类型:<code>[]</code></p>
+<p>​	对象类型: <code>&#123;&#125;</code></p>
+<hr>
+<p>其实我们也可以按照<code>能否进行分词</code>来给数据类型进行分类:</p>
+<ul>
+<li>整体类型: <code>非text类型的</code></li>
+<li>可分词类型: <code>text</code></li>
+</ul>
+<hr>
+<h1 id="19-映射-mappings-的操作"><a href="#19-映射-mappings-的操作" class="headerlink" title="19. 映射(mappings)的操作"></a>19. 映射(mappings)的操作</h1><h2 id="添加映射"><a href="#添加映射" class="headerlink" title="添加映射"></a>添加映射</h2><blockquote>
+<p>在创建索引(库)的时候直接指定映射</p>
+</blockquote>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">PUT /index01</span><br><span class="line">#在此不能出现空行  要不然下面的映射信息无效</span><br><span class="line">&#123;</span><br><span class="line">  &quot;mappings&quot;: &#123;</span><br><span class="line">    &quot;properties&quot;: &#123;</span><br><span class="line">      &quot;name&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;age&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;integer&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>单独为索引添加映射</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">先添加索引库</span></span><br><span class="line">PUT index01</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">为索引库添加映射</span></span><br><span class="line">PUT /index01/_mapping</span><br><span class="line">&#123;</span><br><span class="line">    &quot;properties&quot;: &#123;</span><br><span class="line">      &quot;name&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;age&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;integer&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="查询映射"><a href="#查询映射" class="headerlink" title="查询映射"></a>查询映射</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">只查询映射</span></span><br><span class="line">GET /index01/_mapping</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查询索引库的全部信息</span></span><br><span class="line">GET /index01</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="添加字段"><a href="#添加字段" class="headerlink" title="添加字段"></a>添加字段</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PUT /index01/_mapping   </span><br><span class="line">&#123;</span><br><span class="line">    &quot;properties&quot;: &#123;</span><br><span class="line">      &quot;sex&quot;:&#123;</span><br><span class="line">        &quot;type&quot;:&quot;keyword&quot;</span><br><span class="line">      &#125;   </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="20-文档-document-的操作"><a href="#20-文档-document-的操作" class="headerlink" title="20. 文档(document)的操作"></a>20. 文档(document)的操作</h1><h2 id="20-1-添加文档"><a href="#20-1-添加文档" class="headerlink" title="20.1 添加文档"></a>20.1 添加文档</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加文档(指定<span class="built_in">id</span>) PUT和POST都可以</span></span><br><span class="line">PUT index01/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;:&quot;张三&quot;,</span><br><span class="line">  &quot;age&quot;:20</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加文档(不指定<span class="built_in">id</span>)</span></span><br><span class="line">POST  index01/_doc</span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;:&quot;李四&quot;,</span><br><span class="line">  &quot;age&quot;:30</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="20-2-修改文档"><a href="#20-2-修改文档" class="headerlink" title="20.2 修改文档"></a>20.2 修改文档</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">修改文档(整个文档都会被替换成以下的新文档)</span></span><br><span class="line">PUT index01/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;:&quot;张三1&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="20-3-删除文档"><a href="#20-3-删除文档" class="headerlink" title="20.3 删除文档"></a>20.3 删除文档</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE index01/_doc/1</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="20-4-查询文档"><a href="#20-4-查询文档" class="headerlink" title="20.4 查询文档"></a>20.4 查询文档</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查询索引库index01中的全部文档</span></span><br><span class="line">GET index01/_search</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查询索引库index01中指定<span class="built_in">id</span>的文档</span></span><br><span class="line">DELETE index01/_doc/1</span><br></pre></td></tr></table></figure>
+
+<h2 id="20-5-批量操作"><a href="#20-5-批量操作" class="headerlink" title="20.5 批量操作"></a>20.5 批量操作</h2><p>Bulk 批量操作是将文档的增删改查一些列操作，通过一次请求全都做完。减少网络传输次数(批量操作中的各个单元互相不受影响)</p>
+<p>语法:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">POST /_bulk</span><br><span class="line">(&quot;action&quot;:&#123;&quot;metadata&quot;)&#125;</span><br><span class="line">&#123;&quot;data&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST _bulk</span><br><span class="line">&#123;&quot;delete&quot;:&#123;&quot;_index&quot;:&quot;index01&quot;,&quot;_id&quot;:&quot;1&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;create&quot;:&#123;&quot;_index&quot;:&quot;index01&quot;,&quot;_id&quot;:&quot;2&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;name&quot;:&quot;admin&quot;,&quot;age&quot;:20&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="21-文档的查询"><a href="#21-文档的查询" class="headerlink" title="21. 文档的查询"></a>21. 文档的查询</h1><h2 id="查询所有"><a href="#查询所有" class="headerlink" title="查询所有"></a>查询所有</h2><p>es默认查询10条数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET index01/_search</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">与下面的查询等价</span></span><br><span class="line">GET index01/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match_all&quot;: &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="词条-term-查询"><a href="#词条-term-查询" class="headerlink" title="词条(term)查询"></a>词条(term)查询</h2><p>term词条查询: 比较呆板,无论查询条件是什么类型, 查询的条件就是<code>一个词条</code>,不会对查询条件进行分词,直接去索引库中去查询;</p>
+<p><strong>term词条查询只支持一个字段查询</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">GET shop/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;term&quot;: &#123;</span><br><span class="line">      &quot;brandName&quot;: &#123;</span><br><span class="line">        &quot;value&quot;: &quot;华为&quot; #不会对这个条件值进行分词,直接去倒排索引中查询</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>term一般查询 <code>keyword类型</code></p>
+<p><strong>terms: 多个条件匹配一个字段,取并集</strong></p>
+<hr>
+<h2 id="匹配-match-查询"><a href="#匹配-match-查询" class="headerlink" title="匹配(match)查询"></a>匹配(match)查询</h2><blockquote>
+<p>math匹配查询: </p>
+</blockquote>
+<ol>
+<li><p>首先判断查询条件中的字段的类型: <code>(text | 非text)</code> 类型</p>
+</li>
+<li><p>知道类型之后:</p>
+<ol>
+<li>如果是整体(非text)类型,则不会对条件字段分词,进行精准查询(功能与term一致);</li>
+<li>如果是text类型,那么就看<code>text类型</code>指定的分词器是哪个(如果没有指定分词默认为standard分词器),然后对查询条件的字段使用该分词器进行分词,再去倒排索引查询,随后取分词查询的<code>并集</code>返回</li>
+</ol>
+</li>
+</ol>
+<p><strong>math匹配查询只支持一个字段</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">match(分词匹配查询)</span></span><br><span class="line">GET shop/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;name&quot;: &quot;我想买个华为手机&quot;  #会对这个查询条件进行分词,分词器使用mappings上绑定的分词器</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="范围-range-查询"><a href="#范围-range-查询" class="headerlink" title="范围(range)查询"></a>范围(range)查询</h2><p>范围(range)查询: 查找指定字段在指定范围内包含的值,只能查询一个字段</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">范围查询</span></span><br><span class="line">GET shop/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;range&quot;: &#123;</span><br><span class="line">      &quot;id&quot;: &#123;</span><br><span class="line">        &quot;gte&quot;: 1,</span><br><span class="line">        &quot;lte&quot;: 4</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;sort&quot;: [   #可以对查询结果进行排序</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;id&quot;: &#123;</span><br><span class="line">        &quot;order&quot;: &quot;desc&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="QueryString查询"><a href="#QueryString查询" class="headerlink" title="QueryString查询"></a>QueryString查询</h2><p>QueryStrin查询: math查询的规范+匹配到多个字段(多个字段的关系的操作符为OR)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET index01/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;query_string&quot;: &#123;</span><br><span class="line">      &quot;fields&quot;: [&quot;title&quot;,&quot;content&quot;], </span><br><span class="line">      &quot;query&quot;: &quot;华为手机&quot; # 对 华为手机 进行分词</span><br><span class="line">        #&quot;query&quot;: &quot;华为 AND 手机&quot; # 既包含 华为 又包含 手机 的</span><br><span class="line">        #&quot;query&quot;: &quot;华为 OR 手机&quot; # 包含 华为 或者包含 手机 的</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>simple_query_string查询:</code>与query_string类似,但是不支持and 和or的连接符,会把and和or当成普通的单词;</p>
+<hr>
+<h2 id="布尔-bool-查询"><a href="#布尔-bool-查询" class="headerlink" title="布尔(bool)查询"></a>布尔(bool)查询</h2><p>布尔查询: 其实就是对多个条件进行连接,然后查询;</p>
+<p><code>must和should一般不进行结合使用;</code></p>
+<p> bool查询的连接方式有以下几种:</p>
+<ul>
+<li>must (and)：条件必须成立</li>
+<li>must not (not)：条件必须不成立</li>
+<li>should (or)：条件可以成立</li>
+<li>filter：条件必须成立。不会计算得分,一般用来对上面三个操作的结果进行过滤</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">GET shop/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;bool&quot;: &#123;</span><br><span class="line">      &quot;must&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;match&quot;: &#123;</span><br><span class="line">            &quot;name&quot;: &quot;华为手机&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;match&quot;: &#123;</span><br><span class="line">            &quot;brandName&quot;: &quot;华为&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      ],</span><br><span class="line">      &quot;filter&quot;: [  //filter相当于给上面的查询结果,再次 and </span><br><span class="line">        &#123;</span><br><span class="line">          &quot;range&quot;: &#123;</span><br><span class="line">            &quot;id&quot;: &#123;</span><br><span class="line">              &quot;gt&quot;: 1,</span><br><span class="line">              &quot;lte&quot;: 2</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这几个操作符可以嵌套使用:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">and or and</span></span><br><span class="line">GET shop/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;bool&quot;: &#123;</span><br><span class="line">      &quot;should&quot;: [</span><br><span class="line">          &#123;</span><br><span class="line">            &quot;bool&quot;: &#123;</span><br><span class="line">              &quot;must&quot;: [</span><br><span class="line">                &#123;</span><br><span class="line">                  &quot;match&quot;: &#123;</span><br><span class="line">                    &quot;name&quot;: &quot;手机&quot;</span><br><span class="line">                  &#125;</span><br><span class="line">                &#125;</span><br><span class="line">              ]</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            &quot;bool&quot;: &#123;</span><br><span class="line">              &quot;must&quot;: [</span><br><span class="line">                &#123;</span><br><span class="line">                  &quot;match&quot;: &#123;</span><br><span class="line">                    &quot;brandName&quot;: &quot;索尼&quot;</span><br><span class="line">                  &#125;</span><br><span class="line">                &#125;</span><br><span class="line">              ]</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="聚合查询"><a href="#聚合查询" class="headerlink" title="聚合查询"></a>聚合查询</h2><ul>
+<li>指标聚合: 相当于MySQL的聚合函数。max、 min、 avg、 sum等</li>
+<li>桶聚合：相当于MySQL的 group by 操作。不要对text类型的数据进行分组，会失败</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">指标聚合</span></span><br><span class="line">GET index01/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;name&quot;: &quot;手机&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;aggs&quot;: &#123;</span><br><span class="line">    &quot;my_age_sum&quot;: &#123;  #起一个名字(my_age_sum)接收返回值</span><br><span class="line">      &quot;sum&quot;: &#123;</span><br><span class="line">        &quot;field&quot;: &quot;age&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">桶聚合</span></span><br><span class="line">GET index01/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;name&quot;: &quot;手机&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;aggs&quot;: &#123;</span><br><span class="line">    &quot;brand_name_list&quot;: &#123;</span><br><span class="line">      &quot;terms&quot;: &#123;</span><br><span class="line">        &quot;field&quot;: &quot;brandName&quot;,</span><br><span class="line">        &quot;size&quot;: 10</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="高亮查询"><a href="#高亮查询" class="headerlink" title="高亮查询"></a>高亮查询</h2><p>高亮三要素：</p>
+<ul>
+<li><p>高亮字段</p>
+</li>
+<li><p>前缀</p>
+</li>
+<li><p>后缀</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">GET index01/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;name&quot;: &quot;4g手机&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;highlight&quot;: &#123;</span><br><span class="line">    &quot;fields&quot;: &#123;</span><br><span class="line">      &quot;name&quot;:&#123;</span><br><span class="line">        &quot;pre_tags&quot;: &quot;&lt;font color=&#x27;red&#x27;&gt;&quot;,</span><br><span class="line">        &quot;post_tags&quot;: &quot;&lt;/font&gt;&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="22-索引别名和重建索引"><a href="#22-索引别名和重建索引" class="headerlink" title="22. 索引别名和重建索引"></a>22. 索引别名和重建索引</h1><p>随着业务需求的变更，索引的结构可能发生改变。</p>
+<p>ElasticSearch的索引—旦创建，只允许添加字段，不允许改变字段(因为改变字段，需要重建倒排索引，影响内部缓存结构，性能太低)</p>
+<p>我们需要重新创建一个索引,<code>把原来的索引数据导入到新的索引(重建索引)</code>即可;</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">先重新创建一个索引</span></span><br><span class="line">PUT index02 </span><br><span class="line">&#123;</span><br><span class="line">    &quot;mappings&quot;: &#123;</span><br><span class="line">      &quot;properties&quot;: &#123;</span><br><span class="line">        &quot;name&quot;:&#123;</span><br><span class="line">          &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">          &quot;analyzer&quot;: &quot;ik_smart&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;age&quot;:&#123;</span><br><span class="line">          &quot;type&quot;: &quot;integer&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">把原来索引库中的数据进行拷贝</span></span><br><span class="line">POST _reindex</span><br><span class="line">&#123;</span><br><span class="line">  &quot;source&quot;: &#123;</span><br><span class="line">    &quot;index&quot;: &quot;index01&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;dest&quot;: &#123;</span><br><span class="line">    &quot;index&quot;: &quot;index02&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看新索引中的数据</span></span><br><span class="line">GET index02/_search</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">可以直接给新的索引 index02指定别名,这样做就可以不用修改java中的代码了(先删除原来的索引)</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">删除老的索引库</span></span><br><span class="line">DELETE index01</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">给新的索引起别名</span></span><br><span class="line">POST index02/_alias/index01</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="23-集群的原理及其参数优化"><a href="#23-集群的原理及其参数优化" class="headerlink" title="23. 集群的原理及其参数优化"></a>23. 集群的原理及其参数优化</h1><p>在创建索引时，如果不指定分片配置，则默认在es7.x之后,分片的数量为1,副本的数量也为1,(在es7.x之前默认分片的数量为5,副本的数量为1)<br>在创建索引时，可以通过settings设置分片</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">“settings“：&#123;</span><br><span class="line">	&quot;number_of_shards&quot;:3，</span><br><span class="line">	&quot;number_of_replicas&quot;:1：</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分片与自平衡：当节点挂掉后，挂掉的节点分片会自平衡到其他节点中</p>
+<p>在Elasticsearch 中，每个查询在每个分片的单个线程中执行，但是，可以并行处理多个分片。</p>
+<p>分片数量一旦确定好，不能修改。<br>索引分片推荐配置方案：</p>
+<blockquote>
+<p>每个分片推荐大小10-30GB</p>
+<p>分片数量推荐&#x3D;节点数量*1~3倍</p>
+</blockquote>
+<hr>
+<h1 id="24-ES中的路由原理"><a href="#24-ES中的路由原理" class="headerlink" title="24. ES中的路由原理"></a>24. ES中的路由原理</h1><p>文档存入对应的分片，ES计算分片编号的过程，称为路由。</p>
+<p>Elasticsearch 是怎么知道一个文档应该存放到哪个分片中呢？</p>
+<p>查询时，根据文档id查询文档，Elasticsearch又该去哪个分片中查询数据呢？</p>
+<p>路由算法：<code>shard index = hash(id) % number_of_primary_shards(主分片的数量)</code></p>
+<hr>
+<h1 id="25-ES集群的脑裂现象"><a href="#25-ES集群的脑裂现象" class="headerlink" title="25. ES集群的脑裂现象"></a>25. ES集群的脑裂现象</h1><h2 id="脑裂的概念"><a href="#脑裂的概念" class="headerlink" title="脑裂的概念"></a>脑裂的概念</h2><p>一个正常es集群中只有一个主节点(Master)，主节点负责管理整个集群;如创建或删除索引，跟腙哪些节点是群集的一部分，并决定哪些分片分配给相关的节点。</p>
+<p>集群的所有节点都会选择同一个节点作为主节点。</p>
+<p>脑裂问题的出现就是因为从节点在选择主节点上出现分岐导致一个集群出现多个主节点从而使集群分裂，使得集群处于异常状态。</p>
+<hr>
+<h2 id="引发脑裂的原因"><a href="#引发脑裂的原因" class="headerlink" title="引发脑裂的原因"></a>引发脑裂的原因</h2><ol>
+<li>网络原因：网络延迟较高</li>
+<li>节点负载：主节点的角色既为master又为data</li>
+<li>JVM内存回收：JVM内存设置太小</li>
+</ol>
+<hr>
+<h2 id="解决脑裂"><a href="#解决脑裂" class="headerlink" title="解决脑裂"></a>解决脑裂</h2><p>&#x3D;&#x3D;对不起,如果出现脑裂问题无法解决,重启集群吧!&#x3D;&#x3D;</p>
+<hr>
+<h2 id="避免出现脑裂问题"><a href="#避免出现脑裂问题" class="headerlink" title="避免出现脑裂问题"></a>避免出现脑裂问题</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1. 网络原因:discovery.zen.ping.timeout 超时时间配置大一点.默认是3S</span><br><span class="line">2. 节点负载:角色分离策略</span><br><span class="line">候选主节点配置为</span><br><span class="line">node.master: true   #可以作为master的选举节点参与选举</span><br><span class="line">node.data: false  #可以存储数据</span><br><span class="line">数据节点配置为</span><br><span class="line">node.master: false</span><br><span class="line">node.data: true</span><br><span class="line">3. JVM内存回收:修改 config/jvm.options文件的 -Xms 和 -Xmx 为服务器的内存一半.</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="26-集群的动态扩容"><a href="#26-集群的动态扩容" class="headerlink" title="26. 集群的动态扩容"></a>26. 集群的动态扩容</h1><blockquote>
+<p>开启一个新的主机,搭建es环境即可,es的集群有自动发现的机制</p>
+</blockquote>
+<hr>
+<h1 id="27-ES的java客户端"><a href="#27-ES的java客户端" class="headerlink" title="27. ES的java客户端"></a>27. ES的java客户端</h1><p>我们通过java客户端访问es,提供了两种方式</p>
+<ul>
+<li><p>TransportClient</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Elasticsearch从7.0.0版本开始TransportClient已经过时了不再推荐使用，将在8.0版本删除，具体参考https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/transport-client.html。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>RestHighLevelClient</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Elasticsearch7.x之后就推荐使用这个高级别的客户端了</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Elasticsearch Java API Client</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在Es7.15版本之后，es官方将它的高级客户端RestHighLevelClient标记为弃用状态。同时推出了全新的java API客户端Elasticsearch Java API Client，该客户端也将在Elasticsearch8.0及以后版本中成为官方推荐使用的客户端。</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h1 id="28-SpringBoot整合ES"><a href="#28-SpringBoot整合ES" class="headerlink" title="28. SpringBoot整合ES"></a>28. SpringBoot整合ES</h1><p><strong>导入maven依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.0.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-elasticsearch<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意:每个SpringBoot版本内置的<code>elasticsearch-rest-high-level-client</code>的版本都是不同的,如果SpringBoot内置的<code>elasticsearch-rest-high-level-client</code>的版本和我们服务器的es版本不相同,可能会出现一些兼容性问题,需要尽量保持一致;我们在项目中可以定义一个maven属性,SpringBoot如果发现有两个相同的属性就会优先加载我们自定义的maven属性;</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">elasticsearch.version</span>&gt;</span>7.16.0<span class="tag">&lt;/<span class="name">elasticsearch.version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<blockquote>
+<p>自己创建es的客户端对象(不推荐使用)</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建高级别的es的客户端</span></span><br><span class="line"><span class="type">HttpHost</span> <span class="variable">httpHost</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HttpHost</span>(<span class="string">&quot;10.10.10.101&quot;</span>, <span class="number">9200</span>, <span class="string">&quot;http&quot;</span>);</span><br><span class="line"><span class="type">RestClientBuilder</span> <span class="variable">builder</span> <span class="operator">=</span> RestClient.builder(httpHost);</span><br><span class="line"><span class="type">RestHighLevelClient</span> <span class="variable">restHighLevelClient</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RestHighLevelClient</span>(builder);<span class="comment">//RestHighLevelClient IDEA工具有可能没有代码提示此类,不用管,正常写import导入包就行了</span></span><br><span class="line"><span class="type">CreateIndexRequest</span> <span class="variable">createIndexReq</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CreateIndexRequest</span>(<span class="string">&quot;index100&quot;</span>);</span><br><span class="line"><span class="type">CreateIndexResponse</span> <span class="variable">createIndexResponse</span> <span class="operator">=</span> restHighLevelClient.indices().create(createIndexReq, RequestOptions.DEFAULT);</span><br><span class="line">System.out.println(createIndexResponse);</span><br><span class="line">restHighLevelClient.close();</span><br></pre></td></tr></table></figure>
+
+<p><strong>配置es的服务器信息:</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">elasticsearch:</span></span><br><span class="line">    <span class="attr">rest:</span></span><br><span class="line">      <span class="attr">uris:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">http://10.10.10.101:9200</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">http://10.10.10.102:9200</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">http://10.10.10.103:9200</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>注意: 下面导入包的时候一定要注意jar包: 不要导入低级别的客户端的jar包,要导入rest高级别的客户端的jar包,要不然会出现api特别难用的问题(因为可能导入低级别的客户端的jar包)</p>
+</blockquote>
+<hr>
+<h2 id="28-1-索引的操作"><a href="#28-1-索引的操作" class="headerlink" title="28.1 索引的操作"></a>28.1 索引的操作</h2><h3 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">CreateIndexRequest createIndexReq = new CreateIndexRequest(&quot;index01&quot;);</span><br><span class="line">String mappingString = &quot;&#123;\n&quot; +</span><br><span class="line">&quot;  \&quot;properties\&quot;: &#123;\n&quot; +</span><br><span class="line">&quot;    \&quot;id\&quot;:&#123;\n&quot; +</span><br><span class="line">&quot;      \&quot;type\&quot;: \&quot;integer\&quot;\n&quot; +</span><br><span class="line">&quot;    &#125;,\n&quot; +</span><br><span class="line">&quot;    \&quot;name\&quot;:&#123;\n&quot; +</span><br><span class="line">&quot;      \&quot;type\&quot;:\&quot;text\&quot;,\n&quot; +</span><br><span class="line">&quot;      \&quot;analyzer\&quot;: \&quot;ik_smart\&quot;\n&quot; +</span><br><span class="line">&quot;    &#125;,\n&quot; +</span><br><span class="line">&quot;    \&quot;brandName\&quot;:&#123;\n&quot; +</span><br><span class="line">&quot;      \&quot;type\&quot;:\&quot;keyword\&quot;\n&quot; +</span><br><span class="line">&quot;    &#125;\n&quot; +</span><br><span class="line">&quot;  &#125;\n&quot; +</span><br><span class="line">&quot;&#125;&quot;;</span><br><span class="line">createIndexReq.mapping(mappingString, XContentType.JSON);</span><br><span class="line">CreateIndexResponse createIndexResponse = restHighLevelClient.indices().create(createIndexReq, RequestOptions.DEFAULT);</span><br><span class="line">System.out.println(createIndexResponse.isAcknowledged());</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取索引信息"><a href="#获取索引信息" class="headerlink" title="获取索引信息"></a>获取索引信息</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GetIndexResponse index01 = restHighLevelClient.indices().get(new GetIndexRequest(&quot;index01&quot;), RequestOptions.DEFAULT);</span><br><span class="line">Map&lt;String, MappingMetaData&gt; mappings = index01.getMappings();</span><br><span class="line">MappingMetaData index01MetaData = mappings.get(&quot;index01&quot;);</span><br><span class="line">Map&lt;String, Object&gt; sourceAsMap = index01MetaData.getSourceAsMap();</span><br><span class="line">System.out.println(sourceAsMap);</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DeleteIndexRequest deleteIndexRequest =  new DeleteIndexRequest(&quot;index01&quot;);</span><br><span class="line">restHighLevelClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="28-2-文档的操作"><a href="#28-2-文档的操作" class="headerlink" title="28.2 文档的操作"></a>28.2 文档的操作</h2><h3 id="添加文档"><a href="#添加文档" class="headerlink" title="添加文档"></a>添加文档</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Shop shop = new Shop();</span><br><span class="line">shop.setId(1);</span><br><span class="line">shop.setName(&quot;苹果笔记本电脑&quot;);</span><br><span class="line">shop.setBrandName(&quot;apple&quot;);</span><br><span class="line">IndexRequest indexRequest = new IndexRequest(&quot;index01&quot;).id(String.valueOf(shop.getId())).source(JSON.toJSONString(shop), XContentType.JSON);</span><br><span class="line">restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="修改文档"><a href="#修改文档" class="headerlink" title="修改文档"></a>修改文档</h3><blockquote>
+<p>注意: api的修改文档与kibana有些不同,api修改如果字段少于es中的全量字段,则只修改提交的部分</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Shop shop2 = new Shop();</span><br><span class="line">shop2.setId(1);</span><br><span class="line">shop2.setName(&quot;苹果笔记本电脑2&quot;);</span><br><span class="line">shop2.setBrandName(&quot;apple2&quot;);</span><br><span class="line">UpdateRequest updateRequest = new UpdateRequest(&quot;index01&quot;, &quot;1&quot;).doc(JSON.toJSONString(shop2), XContentType.JSON);</span><br><span class="line">restHighLevelClient.update(updateRequest,RequestOptions.DEFAULT);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="根据-id删除文档"><a href="#根据-id删除文档" class="headerlink" title="根据_id删除文档"></a>根据<code>_id</code>删除文档</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DeleteRequest deleteRequest = new DeleteRequest(&quot;index01&quot;,&quot;1&quot;);</span><br><span class="line">DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);</span><br><span class="line">System.out.println(deleteResponse.status());</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="根据-id查询文档"><a href="#根据-id查询文档" class="headerlink" title="根据_id查询文档"></a>根据<code>_id</code>查询文档</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GetRequest getRequest = new GetRequest(&quot;index01&quot;, &quot;1&quot;);</span><br><span class="line">GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);</span><br><span class="line">String json = getResponse.getSourceAsString();</span><br><span class="line">System.out.println(JSON.parseObject(json, Shop.class));</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="批量操作"><a href="#批量操作" class="headerlink" title="批量操作"></a>批量操作</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">BulkRequest bulkRequest = new BulkRequest();</span><br><span class="line">Shop shop = new Shop();</span><br><span class="line">shop.setId(1);</span><br><span class="line">shop.setName(&quot;苹果笔记本电脑&quot;);</span><br><span class="line">shop.setBrandName(&quot;apple&quot;);</span><br><span class="line">IndexRequest indexRequest = new IndexRequest(&quot;index01&quot;).id(String.valueOf(shop.getId())).source(JSON.toJSONString(shop),XContentType.JSON);</span><br><span class="line">//添加批处理</span><br><span class="line">bulkRequest.add(indexRequest);</span><br><span class="line"></span><br><span class="line">Shop shop2 = new Shop();</span><br><span class="line">shop2.setId(1);</span><br><span class="line">shop2.setName(&quot;苹果笔记本电脑2&quot;);</span><br><span class="line">shop2.setBrandName(&quot;apple2&quot;);</span><br><span class="line">UpdateRequest updateRequest = new UpdateRequest(&quot;index01&quot;, &quot;1&quot;).doc(JSON.toJSONString(shop2), XContentType.JSON);</span><br><span class="line">//添加批处理</span><br><span class="line">bulkRequest.add(updateRequest);</span><br><span class="line">BulkResponse bulkResponse = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);</span><br><span class="line">System.out.println(bulkResponse.status());</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="MatchAll查询"><a href="#MatchAll查询" class="headerlink" title="MatchAll查询"></a>MatchAll查询</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();</span><br><span class="line">//添加条件(matchAll:查询所有)</span><br><span class="line">searchSourceBuilder.query(QueryBuilders.matchAllQuery());</span><br><span class="line"></span><br><span class="line">//分组</span><br><span class="line">searchSourceBuilder.from(2);</span><br><span class="line">searchSourceBuilder.size(6);</span><br><span class="line"></span><br><span class="line">SearchRequest searchRequest = new SearchRequest(new String[]&#123;&quot;index01&quot;&#125;, searchSourceBuilder);</span><br><span class="line">SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);</span><br><span class="line">System.out.println(&quot;总记录数:&quot; + searchResponse.getHits().getTotalHits().value);</span><br><span class="line">Arrays.stream(searchResponse.getHits().getHits()).forEach(hit -&gt; &#123;</span><br><span class="line">System.out.println(hit.getSourceAsString());</span><br><span class="line">&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="Term查询"><a href="#Term查询" class="headerlink" title="Term查询"></a>Term查询</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//term: 一个条件匹配到一个字段       searchSourceBuilder.query(QueryBuilders.termQuery(&quot;brandName&quot;,&quot;苹果&quot;));</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="Terms查询"><a href="#Terms查询" class="headerlink" title="Terms查询"></a>Terms查询</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//terms多个条件匹配到一个字段(OR)</span><br><span class="line"></span><br><span class="line">searchSourceBuilder.query(QueryBuilders.termsQuery(&quot;brandName&quot;,&quot;苹果&quot;,&quot;华为&quot;));</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="Match查询"><a href="#Match查询" class="headerlink" title="Match查询"></a>Match查询</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//默认的操作符位OR(并集) </span><br><span class="line">searchSourceBuilder.query(QueryBuilders.matchQuery(&quot;name&quot;,&quot;苹果手机&quot;).operator(Operator.OR));</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="QueryString查询-1"><a href="#QueryString查询-1" class="headerlink" title="QueryString查询"></a>QueryString查询</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">searchSourceBuilder.query(QueryBuilders.queryStringQuery(&quot;手机&quot;).field(&quot;name&quot;).field(&quot;brandName&quot;));</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="Bool查询"><a href="#Bool查询" class="headerlink" title="Bool查询"></a>Bool查询</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">searchSourceBuilder.query(QueryBuilders.boolQuery().must(QueryBuilders.matchQuery(<span class="string">&quot;name&quot;</span>,<span class="string">&quot;手机&quot;</span>)).filter(QueryBuilders.termQuery(<span class="string">&quot;brandName&quot;</span>,<span class="string">&quot;索尼&quot;</span>)));</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="聚合查询-1"><a href="#聚合查询-1" class="headerlink" title="聚合查询"></a>聚合查询</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();</span><br><span class="line"></span><br><span class="line">searchSourceBuilder.query(QueryBuilders.matchQuery(&quot;name&quot;, &quot;手机&quot;));</span><br><span class="line">searchSourceBuilder.aggregation(AggregationBuilders.sum(&quot;myidSums&quot;).field(&quot;id&quot;));</span><br><span class="line"></span><br><span class="line">SearchRequest searchRequest = new SearchRequest(new String[]&#123;&quot;shop&quot;&#125;, searchSourceBuilder);</span><br><span class="line"></span><br><span class="line">SearchResponse searchResponse = </span><br><span class="line">restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);</span><br><span class="line">System.out.println(&quot;总记录数:&quot; + searchResponse.getHits().getTotalHits().value);</span><br><span class="line"></span><br><span class="line">Map&lt;String, Aggregation&gt; aggregationMap = searchResponse.getAggregations().asMap();</span><br><span class="line"></span><br><span class="line">ParsedSum parsedSum = (ParsedSum) aggregationMap.get(&quot;myidSums&quot;);</span><br><span class="line"></span><br><span class="line">System.out.println( parsedSum.getValue());</span><br></pre></td></tr></table></figure>
+
+<h1 id="29-ElasticSearch数据同步解决方案"><a href="#29-ElasticSearch数据同步解决方案" class="headerlink" title="29. ElasticSearch数据同步解决方案"></a>29. ElasticSearch数据同步解决方案</h1><table>
+<thead>
+<tr>
+<th align="left">同步方案</th>
+<th align="left">原理说明</th>
+<th align="left">适用场景</th>
+<th align="left">使用限制</th>
+<th align="left">相关文档</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">DTS实现数据实时同步</td>
+<td align="left">DTS采用binlog方式实现数据同步，在不影响源数据库的情况下，同步延迟可降至毫秒级别。</td>
+<td align="left">对数据同步的实时性要求较高的场景。</td>
+<td align="left">DTS在执行全量数据初始化时将占用源库和目标库一定的读写资源，可能会导致数据库负载上升。支持自定义索引Mapping，但需保证Mapping中定义的字段与MySQL中一致。需要购买DTS数据同步作业。购买方式，请参见<a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/26604.htm#concept-26604-zh">购买流程</a>；定价说明，请参见<a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/117780.htm#concept-261679">产品定价</a>。</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/94826.htm#task-2481742">通过DTS将MySQL数据实时同步到阿里云Elasticsearch</a></td>
+</tr>
+<tr>
+<td align="left">Logstash JDBC数据同步</td>
+<td align="left">通过logstash-input-jdbc插件实现通过Logstash批量查询RDS中的数据，并将数据迁移到Elasticsearch。实现的本质是该插件会定期对RDS中的数据进行循环轮询，从而在当前循环中找到上次插入或更改的记录，然后批量查询这些记录并迁移至Elasticsearch。与DTS同步方案相比，该方案的实时性较差，存在秒级延迟。</td>
+<td align="left">同步全量数据，接受秒级延迟的场景。批量查询数据然后进行同步的场景。</td>
+<td align="left">使用前，需要先在Logstash中上传与RDS版本兼容的SQL JDBC驱动。需要在RDS的白名单中加入Logstash集群中节点的IP地址。需要确保Logstash和RDS在同一时区（避免同步过程中出现时间标记不符的情况）。需要确保Elasticsearch中的**_id<strong>字段与RDS中的</strong>id**字段相同。当您在RDS中插入或更新数据时，需要确保对应记录有一个包含更新或插入时间的字段。</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/146038.htm#task-2476577">通过Logstash将RDS MySQL数据同步至Elasticsearch</a></td>
+</tr>
+<tr>
+<td align="left">DataWorks实现离线数据同步</td>
+<td align="left">DataWorks是一款提供数据集成、数据开发及数据质量等全方位的产品服务。支持引入并存储关系型数据，然后进行转化和开发，最后将处理后的数据同步到Elasticsearch或其他数据系统。</td>
+<td align="left">大数据离线同步场景（可实现最快5分钟一次的离线数据采集任务）。需要自定义查询语句，以及多表联合查询后同步数据的场景。同步整个数据库中数据的场景。</td>
+<td align="left">需要开通DataWorks服务。对于传输速度要求较高或复杂环境中的数据源同步场景，需要自定义资源组。需要在RDS的白名单中添加资源组的IP地址。</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/90777.htm#task-2481135">通过DataWorks将MySQL数据同步至Elasticsearch</a></td>
+</tr>
+<tr>
+<td align="left">Canal实现MySQL数据同步</td>
+<td align="left">通过binlog方式实现数据实时同步及订阅。</td>
+<td align="left">对数据同步的实时性要求较高的场景。</td>
+<td align="left">需要手动在ECS上搭建Canal环境，会增加操作成本。Canal 1.1.4版本暂不支持Elasticsearch 7.x版本。建议使用Canal 1.1.5版本，或者通过其他方式（例如Logstash、DTS）实现MySQL数据同步。支持自定义索引Mapping，但需保证Mapping中定义的字段与MySQL中一致。</td>
+<td align="left"><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/135297.htm#task-2054659">通过Canal将MySQL数据同步到阿里云Elasticsearch</a></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="Canal"><a href="#Canal" class="headerlink" title="Canal"></a>Canal</h2><p>​	阿里巴巴B2B公司，因为业务的特性，卖家主要集中在国内，买家主要集中在国外，所<br>以衍生出了同步杭州和美国异地机房的需求，从2010年开始，阿里系公司开始逐步的尝试<br>基于数据库的日志解析，获取增量变更进行同步，由此行生出了增量订阅&amp;消费的业务。</p>
+<p>​	Canal 是用 <code>Java 开发</code>的基于数据库增量日志解析，提供增量数据订阅&amp;消费的中间件。<br>目前。Canal 主要支持了 MysQL 的 Binlog 解析，解析完成后才利用 Canal Client 来处理获得的相关数据。(数据库同步需要阿里的 Otter 中间件，基于 Canal)</p>
+<hr>
+<h1 id="30-Mysql的Binlog"><a href="#30-Mysql的Binlog" class="headerlink" title="30. Mysql的Binlog"></a>30. Mysql的Binlog</h1><h2 id="30-1-什么是Binlog"><a href="#30-1-什么是Binlog" class="headerlink" title="30.1 什么是Binlog?"></a>30.1 什么是Binlog?</h2><p>MysQL 的二进制日志可以说 MysQL 最重要的日志了，它记录了所有的 DDL 和 DML(除<br>了数据查询语句)语句，以事件形式记录，还包含语句所执行的消耗的时间，MysQL 的二进<br>制日志是事务安全型的。</p>
+<p>一般来说开启二进制日志大概会有1%的性能损耗。二进制有两个最重要的使用场景：<br>其一：MysQL Replication 在 Master 端开启 Binlog， Master 把它的二进制日志传递给 Slaves来达到 Master-Slave 数据一致的目的。</p>
+<p>其二：自然就是数据恢复了，通过使用 MysQL Binlog 工具来使恢复数据。</p>
+<p>二进制日志包括两类文件：二进制日志索引文件(文件名后缀为<code>.index</code>)用于记录所有<br>的二进制文件，二进制日志文件（文件名后缀为<code>.00000*</code>）记录数据库所有的 DDL 和 DML(除了数据查询语句)语句事件</p>
+<hr>
+<h2 id="30-2-Binlog的分类"><a href="#30-2-Binlog的分类" class="headerlink" title="30.2 Binlog的分类"></a>30.2 Binlog的分类</h2><p>MysaL Binlog 的格式有三种,分别是 <code>statement</code>,<code>row</code>,<code>mixed</code>,在配置文件中可以选择配<br>置 <code>binlog_format= statement|row|mixed</code></p>
+<blockquote>
+<p>三种格式的区别:</p>
+</blockquote>
+<ul>
+<li><p>statement：语句级，binlog 会记录每次一执行写操作的语句。相对row 模式节省空<br>闻，但是可能产生不一致性，比如 “update tt set create_date&#x3D;now()”，如果用 binlog 日志进行恢复，由于执行时间不同可能产生的数据就不同。</p>
+<ul>
+<li>优点：节省空间。</li>
+<li>缺点：有可能造成数据不一致</li>
+</ul>
+</li>
+<li><p>row: 行级，binlog 会记录每次操作后每行记录的变化。</p>
+<ul>
+<li>优点：保持数据的绝对一致性。因为不管 sql 是什么，引用了什么函数，他只记录执行后的效果。</li>
+<li>缺点：占用较大空间。</li>
+</ul>
+</li>
+<li><p>mixed： statement 的升级版，一定程度上解决了，因为一些情况而造成的 statement<br>模式不一致问题，默认还是 statement，在某些情况下譬如：当函数中包含 UUID(） 时：包含AUTO_INCREMENT 字段的表被更新时：执行 INSERT DELAYED 语句时；用 UDF 时；会按照ROW 的方式进行处理-</p>
+<ul>
+<li>优点：节省空间，同时兼顾了一定的一致性。</li>
+<li>缺点：还有些极个别情况依旧会造成不一致，另外 statement 和 mixed 对于需要对<br>binlog 的监控的情况都不方便。</li>
+</ul>
+</li>
+</ul>
+<p><strong>综合上面对比，Cannel 想做监控分析，选择 <code>row</code>格式最为合适。</strong></p>
+<hr>
+<h1 id="31-mysql主从复制的过程"><a href="#31-mysql主从复制的过程" class="headerlink" title="31. mysql主从复制的过程"></a>31. mysql主从复制的过程</h1><ol>
+<li><p>Master 主库将改变记录，写到二进制日志(Binary Log)中</p>
+</li>
+<li><p>Slave 从库向 MysQL Master 发送 dump 协议，将 Master 主库的 binary log events 拷贝到它的中继日志(relay log)：</p>
+</li>
+<li><p>Slave 从库读取并重做中继日志中的事件，将改变的数据同步到自己的数据库。</p>
+</li>
+</ol>
+<hr>
+<h1 id="32-开启binlog"><a href="#32-开启binlog" class="headerlink" title="32. 开启binlog"></a>32. 开启binlog</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看binlog是否开启(mysql高版本8.x中的binlog默认是开启的)</span></span><br><span class="line">show global variables like &#x27;log_%&#x27;;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看binlog的格式(mysql高版本8.x中的binlog格式为row)</span></span><br><span class="line">show global variables like &#x27;%binlog_format%&#x27;;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看binlog的过期时间  默认为30天</span></span><br><span class="line">show global variables like &#x27;%logs%&#x27;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>手动开启binlog   <code>/etc/my.cnf</code></p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">server-id=1</span><br><span class="line">log-bin=binlog</span><br><span class="line">binlog_format=row</span><br></pre></td></tr></table></figure>
+
+<p>可以观察binlog日志文件:  <code>/var/lib/mysql/</code> ,有很多<code>binlog.0000XXXX</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show master status# 查看最新的binlog</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="33-安装canal"><a href="#33-安装canal" class="headerlink" title="33.  安装canal"></a>33.  安装canal</h1><blockquote>
+<p>环境要求</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">当前环境</span></span><br><span class="line">mysql 8.0.22</span><br><span class="line">es7.16.0</span><br><span class="line">canal.1.1.5 </span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">mysql驱动的注意点:  mysql-connector-java-5.1.48.jar是兼容型驱动,兼容5.x 和8.x,canal中使用的mysql驱动就是mysql-connector-java-5.1.48.jar</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>创建canal用户</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">创建一个canal用户专门用来读取mysql的数据</span></span><br><span class="line">CREATE USER &#x27;canal&#x27;@&#x27;%&#x27; IDENTIFIED WITH mysql_native_password BY &#x27;canalCANAL123...&#x27;; </span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">授权</span></span><br><span class="line">GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO &#x27;canal&#x27;@&#x27;%&#x27;;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>下载canal  <a target="_blank" rel="noopener" href="https://github.com/alibaba/canal/">https://github.com/alibaba/canal/</a></p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">canal.deployer-1.1.5.tar.gz</span><br><span class="line">canal.adapter-1.1.5.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h2 id="33-1-安装canal服务端"><a href="#33-1-安装canal服务端" class="headerlink" title="33.1 安装canal服务端"></a>33.1 安装canal服务端</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">先创建目录</span></span><br><span class="line">mkdir /opt/canal/depolyer</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">解压</span></span><br><span class="line">tar -zxvf canal.deployer-1.1.5.tar.gz -C /opt/canal/depolyer/</span><br></pre></td></tr></table></figure>
+
+<p><strong>配置canal-depolyer:</strong></p>
+<p><code>vim /opt/canal/depolyer/conf/canal.properties</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">端口默认为11111</span></span><br><span class="line">canal.port = 11111 </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">canal服务端把采集到的数据,输出的目标介质: tcp, kafka, rocketMQ, rabbitMQ 默认为tcp,不需要配置</span></span><br><span class="line">canal.serverMode = tcp</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">默认的destination(目的地)为example实例</span></span><br><span class="line">canal.destinations = example</span><br></pre></td></tr></table></figure>
+
+<p><strong>配置canal-depolyer采集mysql数据的实例:</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">注意:</span><br><span class="line">	如果想要创建多个canal实例，一个canal服务中是可以有多个instance的，conf/下的每一个 example 即是一个实例，每个实例下面都有独立的配置文件。</span><br><span class="line">	默认只有一个实例 example，如果需要多个实例处理不同的 MySQL 数据的话，直接拷贝出多个 example，并对其重新命名，命名和配置文件中指定的名称一致，然后修改 conf/canal.properties 中的 canal.destinations=实例1，实例2，实例3</span><br></pre></td></tr></table></figure>
+
+<p>编辑配置文件: <code>vim /opt/canal/depolyer/conf/example/instance.properties</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">配置此实例采集数据库的 ip:端口</span></span><br><span class="line">canal.instance.master.address=10.10.10.104:3306</span><br><span class="line"></span><br><span class="line">canal.instance.dbUsername=canal</span><br><span class="line">canal.instance.dbPassword=canalCANAL123...</span><br><span class="line">canal.instance.connectionCharset = UTF-8</span><br></pre></td></tr></table></figure>
+
+<p>启动<code>canal-depolyer(server)</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/canal/depolyer/bin/startup.sh</span><br></pre></td></tr></table></figure>
+
+<p>查看日志canal是否启动并且加载实例(instance)成功:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /opt/canal/depolyer/logs/example/example.log</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="33-2-安装canal-adapter"><a href="#33-2-安装canal-adapter" class="headerlink" title="33.2 安装canal-adapter"></a>33.2 安装canal-adapter</h2><p>canal-adapter是一个canal的适配器,其实就是canal的客户端,此客户端可以通过TCP把canal采集到的数据同步到不同的数据仓库中(eg: <code>es</code>);当然也可以根据canal提供的TCP的api来自己解析canal采集的数据.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir  /opt/canal/adapter</span><br><span class="line">tar -zxvf canal.adapter-1.1.5.tar.gz  -C /opt/canal/adapter/</span><br></pre></td></tr></table></figure>
+
+<p>编辑canal-adapter的配置文件:   <code>vim /opt/canal/adapter/conf/application.yml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8081</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">jackson:</span></span><br><span class="line">    <span class="attr">date-format:</span> <span class="string">yyyy-MM-dd</span> <span class="string">HH:mm:ss</span></span><br><span class="line">    <span class="attr">time-zone:</span> <span class="string">GMT+8</span></span><br><span class="line">    <span class="attr">default-property-inclusion:</span> <span class="string">non_null</span></span><br><span class="line"></span><br><span class="line"><span class="attr">canal.conf:</span></span><br><span class="line">  <span class="attr">mode:</span> <span class="string">tcp</span> <span class="comment">#tcp kafka rocketMQ rabbitMQ</span></span><br><span class="line">  <span class="attr">flatMessage:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">zookeeperHosts:</span></span><br><span class="line">  <span class="attr">syncBatchSize:</span> <span class="number">1000</span></span><br><span class="line">  <span class="attr">retries:</span> <span class="number">0</span></span><br><span class="line">  <span class="attr">timeout:</span></span><br><span class="line">  <span class="attr">accessKey:</span></span><br><span class="line">  <span class="attr">secretKey:</span></span><br><span class="line">  <span class="attr">consumerProperties:</span></span><br><span class="line">    <span class="comment"># canal tcp consumer</span></span><br><span class="line">    <span class="attr">canal.tcp.server.host:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="string">:11111</span></span><br><span class="line">    <span class="attr">canal.tcp.zookeeper.hosts:</span></span><br><span class="line">    <span class="attr">canal.tcp.batch.size:</span> <span class="number">500</span></span><br><span class="line">    </span><br><span class="line">  <span class="attr">srcDataSources:</span></span><br><span class="line">    <span class="attr">defaultDS:</span></span><br><span class="line">      <span class="attr">url:</span> <span class="string">jdbc:mysql://10.10.10.104:3306/db04?useUnicode=true</span></span><br><span class="line">      <span class="attr">username:</span> <span class="string">canal</span></span><br><span class="line">      <span class="attr">password:</span> <span class="string">canalCANAL123...</span></span><br><span class="line">  <span class="attr">canalAdapters:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">instance:</span> <span class="string">example</span> <span class="comment"># canal instance Name or mq topic name</span></span><br><span class="line">    <span class="attr">groups:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">groupId:</span> <span class="string">g1</span></span><br><span class="line">      <span class="attr">outerAdapters:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">logger</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">es7</span>  <span class="comment">#es6 或者es7</span></span><br><span class="line">        <span class="attr">hosts:</span> <span class="number">10.10</span><span class="number">.10</span><span class="number">.101</span><span class="string">:9200,10.10.10.102:9200,10.10.103:9200</span> <span class="comment">#主机之间不能出现空格</span></span><br><span class="line">        <span class="attr">properties:</span></span><br><span class="line">          <span class="attr">mode:</span> <span class="string">rest</span> <span class="comment"># or rest</span></span><br><span class="line">          <span class="comment"># security.auth: test:123456 #  only used for rest mode</span></span><br><span class="line">          <span class="attr">cluster.name:</span> <span class="string">myelasticsearch</span></span><br></pre></td></tr></table></figure>
+
+<p>配置表映射文件: <code>/opt/canal/adapter/conf/es7/</code></p>
+<p>在此目录中创建个表名一致的 <code>表名.yml</code>文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">dataSourceKey: defaultDS  # 源数据源的key, 对应adapater中application.yml配置的srcDataSources中的值</span><br><span class="line">destination: example #cannal的instance或者MQ的topic</span><br><span class="line">esMapping:</span><br><span class="line">  _index: article_index #es 的索引名称,需要先在es中手动创建索引</span><br><span class="line">  _id: _id #es 的_id, 如果不配置该项,必须配置下面的pk项,_id则会由es自动分配</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"> pk: <span class="built_in">id</span>   <span class="comment"># 如果不需要_id, 则需要指定一个属性为主键属性</span></span></span><br><span class="line"><span class="meta prompt_">	#</span><span class="language-bash">mysql字段和es文档属性的对应关系</span></span><br><span class="line">  sql: &quot;select a.id as _id, a.title, a.content, a.author,</span><br><span class="line">        a.release_time from article a&quot; </span><br><span class="line">  etlCondition:  # etl全量同步的条件 eg: where a.c_time&gt;,空代表全部同步</span><br><span class="line">  commitBatch: 3000</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>启动adapter</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sh /opt/canal/adapter/bin/start.sh</span><br><span class="line">cat /opt/canal/adapter/logs/adapter/adapter.log  发现出错了</span><br><span class="line">....</span><br><span class="line">com.alibaba.druid.pool.DruidDataSource cannot be cast to com.alibaba.druid.pool.DruidDataSource</span><br><span class="line">	at com.alibaba.otter.canal.client.adapter.es7x.ES7xAdapter.init(ES7xAdapter.java:54) ~[client-adapter.es7x-1.1.5-jar-with-dependencies.jar:na]</span><br><span class="line">.....</span><br><span class="line">以上这个错误是因为canal-adapter1.1.5的安装包存在bug,需要把下载上一个版本(v1.1.5-alpha-2)的 client-adapter.es7x-1.1.5-SNAPSHOT-jar-with-dependencies.jar 替换掉 canal-adapter/plugin中的对应jar包,注意名称要修改为1.1.5中对应的jar包的名称:client-adapter.es7x-1.1.5-jar-with-dependencies.jar </span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="33-3-全量同步mysql的数据到es"><a href="#33-3-全量同步mysql的数据到es" class="headerlink" title="33.3 全量同步mysql的数据到es"></a>33.3 全量同步mysql的数据到es</h2><p>在真实的应用场景中，我们一般的需求会是，首先将Mysql中的历史数据同步，然后再同步增删改的数据。也就是说我们先要进行全量数据同步然后在进行增量同步</p>
+<p>然后canal它会监听binglog来实现增量同步，所以说增量数据同步是自动的。那么我们只有解决全量同步的问题就行了。</p>
+<p><strong>cannal并没有明确的说明支持全量同步,但是……..</strong></p>
+<p>查看源码得知在一个 <strong>CommonRest.java</strong> 中提供了一个全量同步的接口</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220504235257200.png" alt="image-20220504235257200"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">type</span>：代表同步的终端数据存储库, 这里是es7版本, 所以这里传递es7。如果是es6传递es6</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">task：代表要全量同步的配置文件，我们这里的配置文件路径放在 adapter\conf\es7中。也是就article.yml</span></span><br><span class="line">http://10.10.10.104:8081/etl/es7/article.yml</span><br></pre></td></tr></table></figure>
+
+<p>发送请求即可全量同步</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/04/26/%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%9AElasticsearch/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2022/05/10/%E6%A1%86%E6%9E%B6%EF%BC%9ASpringSecurity/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            SpringSecurity
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2022/04/18/%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%9ARedis/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Redis</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2021-2022
+        <i class="ri-heart-fill heart_icon"></i> Yang Shiyu
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Healer"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+ 
+<script src="/js/clickBoom2.js"></script>
+ 
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

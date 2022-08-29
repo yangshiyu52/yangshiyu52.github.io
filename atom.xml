@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2022-08-23T09:23:47.216Z</updated>
+  <updated>2022-08-29T08:45:45.339Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>设计模式</title>
+    <link href="http://example.com/2022/08/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://example.com/2022/08/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</id>
+    <published>2022-08-29T08:44:47.000Z</published>
+    <updated>2022-08-29T08:45:45.339Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;单例模式&quot;&gt;&lt;a href=&quot;#单例模式&quot; class=&quot;headerlink&quot; title=&quot;单例模式&quot;&gt;&lt;/a&gt;单例模式&lt;/h1&gt;&lt;h2 id=&quot;定义&quot;&gt;&lt;a href=&quot;#定义&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="设计模式" scheme="http://example.com/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>MVCC</title>
@@ -467,31 +490,6 @@
         
         
     <summary type="html">&lt;h1 id=&quot;进程&quot;&gt;&lt;a href=&quot;#进程&quot; class=&quot;headerlink&quot; title=&quot;进程&quot;&gt;&lt;/a&gt;进程&lt;/h1&gt;&lt;p&gt;&lt;img</summary>
-        
-      
-    
-    
-    
-    <category term="计算机基础知识" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
-    
-    <category term="操作系统" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>概念</title>
-    <link href="http://example.com/2022/08/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E6%A6%82%E5%BF%B5/"/>
-    <id>http://example.com/2022/08/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E6%A6%82%E5%BF%B5/</id>
-    <published>2022-08-06T08:11:57.000Z</published>
-    <updated>2022-08-06T09:48:38.284Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;操作系统的概念、功能&quot;&gt;&lt;a href=&quot;#操作系统的概念、功能&quot; class=&quot;headerlink&quot; title=&quot;操作系统的概念、功能&quot;&gt;&lt;/a&gt;操作系统的概念、功能&lt;/h1&gt;&lt;p&gt;&lt;img</summary>
         
       
     

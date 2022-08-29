@@ -77,8 +77,8 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2022/07/15/%E6%A1%86%E6%9E%B6%EF%BC%9ASpringMvc/" class="article-date">
-  <time datetime="2022-07-15T14:11:46.000Z" itemprop="datePublished">2022-07-15</time>
+      <a href="/2022/03/28/%E6%A1%86%E6%9E%B6%EF%BC%9ASpringMvc/" class="article-date">
+  <time datetime="2022-03-28T14:11:46.000Z" itemprop="datePublished">2022-03-28</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/%E6%A1%86%E6%9E%B6/">框架</a>
@@ -89,7 +89,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">4.4k</span>
+            <span class="post-count">5.2k</span>
         </span>
     </span>
 
@@ -98,7 +98,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">21 min</span>
+            <span class="post-count">23 min</span>
         </span>
     </span>
 </div>
@@ -113,7 +113,7 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="1-Web开发的发展"><a href="#1-Web开发的发展" class="headerlink" title="1. Web开发的发展"></a>1. Web开发的发展</h1><h2 id="1-1-model1的开发方式"><a href="#1-1-model1的开发方式" class="headerlink" title="1.1 model1的开发方式"></a>1.1 model1的开发方式</h2><p>统一把显示层、控制层、数据层的操作全部交给 JSP 或者 JavaBean 来进行处理</p>
+  <h1 id="1-Web-开发的发展"><a href="#1-Web-开发的发展" class="headerlink" title="1. Web 开发的发展"></a>1. Web 开发的发展</h1><h2 id="1-1-model1-的开发方式"><a href="#1-1-model1-的开发方式" class="headerlink" title="1.1 model1 的开发方式"></a>1.1 model1 的开发方式</h2><p>统一把显示层、控制层、数据层的操作全部交给 JSP 或者 JavaBean 来进行处理</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20210308143854691.png" alt="image-20210308143854691"></p>
 <p><strong>出现的弊端：</strong></p>
 <ul>
@@ -127,13 +127,19 @@
 </li>
 </ul>
 <hr>
-<h2 id="1-2-model2的开发方式"><a href="#1-2-model2的开发方式" class="headerlink" title="1.2 model2的开发方式"></a>1.2 model2的开发方式</h2><p>Servlet + JSP + Java Bean</p>
+<h2 id="1-2-model2-的开发方式"><a href="#1-2-model2-的开发方式" class="headerlink" title="1.2 model2 的开发方式"></a>1.2 model2 的开发方式</h2><p>Servlet + JSP + Java Bean</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20210308144038275.png" alt="image-20210308144038275"></p>
 <p>首先用户的请求会到达 Servlet，然后根据请求调用相应的 Java Bean，并把所有的显示结果交给 JSP 去完成，这样的模式我们就称为 MVC 模式。</p>
 <ul>
-<li><strong>M 代表 模型（Model）</strong><br>模型是什么呢？ 模型就是数据，就是 dao,bean</li>
-<li><strong>V 代表 视图（View）</strong><br>视图是什么呢？ 就是网页, JSP，用来展示模型中的数据</li>
-<li><strong>C 代表 控制器（controller)</strong><br>控制器是什么？ 控制器的作用就是把不同的数据(Model)，显示在不同的视图(View)上，Servlet 扮演的就是这样的角色。</li>
+<li><p><strong>M 代表 模型（Model）</strong></p>
+<p>模型是什么呢？ 模型就是数据，就是 dao,bean</p>
+</li>
+<li><p><strong>V 代表 视图（View）</strong></p>
+<p>视图是什么呢？ 就是网页，JSP，用来展示模型中的数据</p>
+</li>
+<li><p><strong>C 代表 控制器（controller)</strong></p>
+<p>控制器是什么？ 控制器的作用就是把不同的数据(Model)，显示在不同的视图(View)上，Servlet 扮演的就是这样的角色。</p>
+</li>
 </ul>
 <hr>
 <h1 id="2-Spring-MVC-框架介绍"><a href="#2-Spring-MVC-框架介绍" class="headerlink" title="2. Spring MVC 框架介绍"></a>2. Spring MVC 框架介绍</h1><p>SpringMVC 是类似于 Struts2 的一个 <strong>MVC 框架</strong>，在实际开发中，接收浏览器的请求响应，对数据进行处理，然后返回页面进行显示，但是上手难度却比 Struts2 简单多了。而且由于 Struts2 所暴露出来的安全问题，SpringMVC 已经成为了大多数企业优先选择的框架。</p>
@@ -146,21 +152,56 @@
 </li>
 </ul>
 <hr>
-<h1 id="3-SpringMvc的执行流程"><a href="#3-SpringMvc的执行流程" class="headerlink" title="3. SpringMvc的执行流程"></a>3. SpringMvc的执行流程</h1><img src="D:/桌面文件/Java/Springmvc.assets/image-20210309195355880.png" alt="image-20210309195355880" style="zoom:200%;" />
+<h1 id="3-SpringMvc的执行流程"><a href="#3-SpringMvc的执行流程" class="headerlink" title="3. SpringMvc的执行流程"></a>3. SpringMvc的执行流程</h1><p><strong>传统的 JavaWeb 开发</strong></p>
+<p>一个请求资源路径（url） 对应一个控制器（Controller），每次请求之后都会自动根据所请求的资源找到对应的Servlet类，执行相应的业务。</p>
+<p><strong>SpringMVC 开发</strong></p>
+<p><strong>前后端不分离</strong></p>
+<p>SpringMVC 底层有一个核心对象：<strong>DispatcherServlet 前端控制器</strong>（分发器），使用了 SpringMVC  框架之后，所有的请求都会执行 DispatcherServlet 这个对象，不再去直接执行对应的 Controller，而是先通过 DispatcherServlet 前端控制器找到该请求路径（URL） 对应的控制器，前端控制器再去调用该控制器执行具体业务。</p>
+<img src="D:/桌面文件/Java/Springmvc.assets/image-20210309195355880.png" alt="image-20210309195355880" style="zoom:200%;" />
 
-<ul>
-<li>一个请求匹配<strong>前端控制器 DispatcherServlet</strong> 的请求映射路径(在 web.xml中指定), WEB 容器将该<strong>请求转交给 DispatcherServlet 处理</strong></li>
+<ol>
+<li>一个请求匹配<strong>前端控制器 DispatcherServlet</strong> 的请求映射路径(在 web.xml中指定)，WEB 容器将该<strong>请求转交给 DispatcherServlet 处理</strong></li>
 <li>DispatcherServlet 接收到请求后，解析URL，将根据请求信息交给<strong>处理器映射器 （HandlerMapping）</strong></li>
-<li>HandlerMapping 根据用户的url请求 <strong>查找匹配该url的 Handler</strong>，并<strong>返回一个执行链</strong> </li>
-<li><strong>DispatcherServlet 再 请求 处理器适配器(HandlerAdapter)</strong> 调用相应的 <strong>Handler</strong> 进行处理并返回 <strong>ModelAndView 给 DispatcherServlet</strong></li>
+<li>HandlerMapping 根据用户的url请求 <strong>查找匹配该 url 的 Handler</strong>，并<strong>返回一个执行链</strong> </li>
+<li><strong>DispatcherServlet 再请求处理器适配器(HandlerAdapter)</strong> 调用相应的 <strong>Handler</strong> 进行处理并返回 <strong>ModelAndView 给 DispatcherServlet</strong></li>
 <li>DispatcherServlet 将 ModelAndView <strong>请求 ViewReslover（视图解析器）解析，返回具体 View</strong></li>
 <li>DispatcherServlet <strong>对 View 进行渲染视图</strong>（即将模型数据填充至视图中）</li>
 <li><strong>DispatcherServlet 将页面响应给用户</strong></li>
+</ol>
+<p>注意：</p>
+<ul>
+<li>在前端浏览器上第一次请求我们的 DispatchServlet 前端控制器（核心组件），会创建该DispatchServlet对象的实例，再执行 DispatchServlet 中的 init （）方法 ， 从 spring 容器中 按照 类型注入 来获取 DispatchServlet 中的属性对应的组件 来进行 依赖注入 ！！！</li>
+<li>如果不是 第一次请求的话，各大组件依赖注入完毕，直接执行 doService（）方法来完成后续操作！！！</li>
+<li>SpringMvc 底层也有自己的一个容器：WebXmlApplicationContext ，和 spring的 ApplicationContext 容器是父子关系，SpringMVC 的容器是继承了 Spring容器的，spring容器是父容器，springmvc容器是子容器！！！</li>
+<li>springmvc 在需要使用到某个功能组件的时候，先去自己的 WebXmlApplicationContext容器中去找，如果没有则去spring容器中去找</li>
+<li>springmvc可以获取 spring容器中的bean，而spring则无法获取 springmvc容器中的bean ！！！！</li>
+<li>一般的话像 Controller 层对象 一般都是存放在 springmvc 的容器中 来共 springmvc 中的 处理器适配器去调用！！！</li>
+<li>Service 层 和 Dao 层对象，一般则是放在 spring 容器中，因为像一些事务的处理和 mybatis 核心对象的生成不是加上注解之后就会立即生效，而是先生成代理对象，一般这些代理对象一般都在 spring 容器中注册！！！</li>
 </ul>
+<p><strong>前后端分离</strong></p>
+<p>使用 <strong>@ResponseBody</strong> 来把数据写入到响应体中。所以不需要进行页面的跳转。</p>
+<ol>
+<li><p>用户发起请求被 <strong>DispatchServlet</strong> 所处理</p>
+</li>
+<li><p>DispatchServlet通过HandlerMapping 根据具体的请求查找能处理这个请求的Handler。（HandlerMapping 主要是处理请求和Handler方法的映射关系的）</p>
+</li>
+<li><p>HandlerMapping 返回一个能够处理请求的执行链给 DispatchServlet，这个链中除了包含Handler方法也包含拦截器。</p>
+</li>
+<li><p>DispatchServlet 拿着执行链去找 HandlerAdapter 执行链中的方法。</p>
+</li>
+<li><p>HandlerAdater 会去执行对应的 Handler 方法，把数据处理转换成合适的类型然后作为方法参数传入</p>
+</li>
+<li><p>Handler 方法执行完后的返回值会被 HandlerAdapter 转换成 ModelAndView 类型。由于使用了 @ResponseBody 注解，返回的ModelAndView 会为 null，并且 HandlerAdapter 会把方法返回值放到响应体中。（HandlerAdater 主要进行 Handler 方法参数和返回值的处理。）</p>
+</li>
+<li><p>返回 ModelAndView 给 DispatchServlet。</p>
+</li>
+<li><p>因为返回的 ModelAndView 为null,所以不用去解析视图解析和其后面的操作</p>
+</li>
+</ol>
 <hr>
 <h1 id="4-SpringMvc应用程序的编写"><a href="#4-SpringMvc应用程序的编写" class="headerlink" title="4. SpringMvc应用程序的编写"></a>4. SpringMvc应用程序的编写</h1><h2 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--只需要引入这一个依赖即可,因为这个依赖包含  beans  core  context   web ..--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-webmvc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.2.1.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.servlet-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet.jsp<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.servlet.jsp-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>jstl<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jstl<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>taglibs<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>standard<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="创建Spring与SpringMvc配置文件"><a href="#创建Spring与SpringMvc配置文件" class="headerlink" title="创建Spring与SpringMvc配置文件"></a>创建Spring与SpringMvc配置文件</h2><ul>
+<h2 id="创建-Spring-与-SpringMvc-配置文件"><a href="#创建-Spring-与-SpringMvc-配置文件" class="headerlink" title="创建 Spring 与 SpringMvc 配置文件"></a>创建 Spring 与 SpringMvc 配置文件</h2><ul>
 <li><code>applicationContext.xml</code></li>
 <li><code>spring-mvc.xml</code></li>
 </ul>
@@ -300,8 +341,8 @@
 <li>端口</li>
 </ul>
 <p><code>默认浏览器中不支持后台的ajax跨域访问的;处于安全因素考虑的</code></p>
-<p>浏览器对于javascript的同源策略的限制,例如<a href="https://link.zhihu.com/?target=http://a.cn">http://a.cn</a>下面的js不能调用<a href="https://link.zhihu.com/?target=http://b.cn">http://b.cn</a>中的js对象或数据(因为<a href="https://link.zhihu.com/?target=http://a.cn">http://a.cn</a>和<a href="https://link.zhihu.com/?target=http://b.cn">http://b.cn</a>是不同域)</p>
-<p>同源策略会阻止一个域的JavaScript脚本和另一个域的内容进行交互</p>
+<p>浏览器对于 javascript 的同源策略的限制,例如 <a target="_blank" rel="noopener" href="http://a.cn/">http://a.cn</a> 下面的 js 不能调用 <a target="_blank" rel="noopener" href="http://b.cn/">http://b.cn</a> 中的 js 对象或数据(因为 <a target="_blank" rel="noopener" href="http://a.cn/">http://a.cn</a> 和 <a target="_blank" rel="noopener" href="http://b.cn/">http://b.cn</a> 是不同域)</p>
+<p>同源策略会阻止一个域的 JavaScript 脚本和另一个域的内容进行交互</p>
 <p>跨域问题的解决方案:</p>
 <ul>
 <li><p>前端解决(通过代理的方式解决,不推荐)</p>
@@ -368,7 +409,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/07/15/%E6%A1%86%E6%9E%B6%EF%BC%9ASpringMvc/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/03/28/%E6%A1%86%E6%9E%B6%EF%BC%9ASpringMvc/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -379,19 +420,19 @@
    
   <nav class="article-nav">
     
-      <a href="/2022/07/16/JVM%EF%BC%9A%E5%A0%86/" class="article-nav-link">
+      <a href="/2022/04/02/%E6%A1%86%E6%9E%B6%EF%BC%9AMyBatis/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            堆
+            MyBatis
           
         </div>
       </a>
     
     
-      <a href="/2022/07/11/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%9A%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/" class="article-nav-link">
+      <a href="/2022/03/26/%E6%A1%86%E6%9E%B6%EF%BC%9ASpringAop/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">双向链表</div>
+        <div class="article-nav-title">SpringAop</div>
       </a>
     
   </nav>
