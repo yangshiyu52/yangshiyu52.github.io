@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2022-08-29T08:45:45.339Z</updated>
+  <updated>2022-08-29T11:56:27.741Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>npm</title>
+    <link href="http://example.com/2022/08/29/%E5%85%B6%E5%AE%83%EF%BC%9Anpm/"/>
+    <id>http://example.com/2022/08/29/%E5%85%B6%E5%AE%83%EF%BC%9Anpm/</id>
+    <published>2022-08-29T11:55:25.000Z</published>
+    <updated>2022-08-29T11:56:27.741Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;1-npm介绍&quot;&gt;&lt;a href=&quot;#1-npm介绍&quot; class=&quot;headerlink&quot; title=&quot;1. npm介绍&quot;&gt;&lt;/a&gt;1. npm介绍&lt;/h1&gt;&lt;p&gt;npm 是 Node.js 官方提供的包管理工具，他已经成了 Node.js</summary>
+        
+      
+    
+    
+    
+    <category term="其它" scheme="http://example.com/categories/%E5%85%B6%E5%AE%83/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>设计模式</title>
@@ -465,31 +488,6 @@
         
         
     <summary type="html">&lt;h1 id=&quot;处理机调度的概念、层次&quot;&gt;&lt;a href=&quot;#处理机调度的概念、层次&quot; class=&quot;headerlink&quot; title=&quot;处理机调度的概念、层次&quot;&gt;&lt;/a&gt;处理机调度的概念、层次&lt;/h1&gt;&lt;p&gt;&lt;img</summary>
-        
-      
-    
-    
-    
-    <category term="计算机基础知识" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
-    
-    <category term="操作系统" scheme="http://example.com/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>进程与线程</title>
-    <link href="http://example.com/2022/08/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/"/>
-    <id>http://example.com/2022/08/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</id>
-    <published>2022-08-06T11:18:25.000Z</published>
-    <updated>2022-08-08T07:09:26.729Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;进程&quot;&gt;&lt;a href=&quot;#进程&quot; class=&quot;headerlink&quot; title=&quot;进程&quot;&gt;&lt;/a&gt;进程&lt;/h1&gt;&lt;p&gt;&lt;img</summary>
         
       
     
