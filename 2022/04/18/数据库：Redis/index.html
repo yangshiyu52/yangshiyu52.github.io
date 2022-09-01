@@ -114,7 +114,7 @@
     <div class="article-entry" itemprop="articleBody">
        
   <h1 id="1-Redis的简介"><a href="#1-Redis的简介" class="headerlink" title="1. Redis的简介"></a>1. Redis的简介</h1><ul>
-<li><p>Redis是一个开源（BSD许可），内存存储的数据结构服务器,可用作<strong>数据库</strong>，<strong>高速缓存</strong>和<strong>消息队列代理</strong> </p>
+<li><p>Redis是一个开源（BSD许可），内存存储的数据结构服务器，可用作<strong>数据库</strong>，<strong>高速缓存</strong>和<strong>消息队列代理</strong> </p>
 </li>
 <li><p>它支持<strong>字符串、哈希表、列表、集合、有序集合，位图，hyperloglogs</strong>等数据类型 </p>
 </li>
@@ -126,7 +126,7 @@
 <h1 id="2-Redis的特点"><a href="#2-Redis的特点" class="headerlink" title="2. Redis的特点"></a>2. Redis的特点</h1><ul>
 <li>Redis支持数据的持久化，可以将内存中的数据保存在磁盘中，重启的时候可以再次加载进行使用 </li>
 <li>Redis不仅仅支持简单的k-v类型的数据，同时还提供list，set，zset，hash等数据结构的存储 </li>
-<li>Redis支持数据的备份，即master-slave主从模式的数据备份</li>
+<li>Redis支持数据的备份，即 master-slave 主从模式的数据备份</li>
 </ul>
 <h1 id="3-Redis的优势"><a href="#3-Redis的优势" class="headerlink" title="3. Redis的优势"></a>3. Redis的优势</h1><ul>
 <li><strong>性能极高——Redis读的速度为11w&#x2F;s，写的速度为8.1w&#x2F;s</strong> </li>
@@ -216,7 +216,7 @@
 </li>
 <li><p>一个key对应一个value</p>
 </li>
-<li><p>string类型的value是基于二进制存储的,所以完全可以存储图片和影音等二进制数据</p>
+<li><p>string类型的value是基于二进制存储的，所以完全可以存储图片和影音等二进制数据</p>
 </li>
 <li><p>string类型的value大小最大512mb</p>
 </li>
@@ -229,7 +229,7 @@
 <li><p>删除redis中的key说对应的value: <code>del key</code>  </p>
 </li>
 <li><p>设置多个值</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MSET key1 value1  key2  value2 key3 value3...</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MSET key1 value1  key2 value2 key3 value3...</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>计数器操作</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">set mage 20  #添加一个value</span><br><span class="line">incr  mage  #自增1</span><br><span class="line">decr mage  #自减1</span><br><span class="line">incrby mage 100  #自增指定的值</span><br><span class="line">decrby mage 55  #自减指定的值 </span><br></pre></td></tr></table></figure>
@@ -388,12 +388,10 @@
 </blockquote>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">900秒之内，如果超过1个key被修改，则发起快照保存；</span><br><span class="line">300秒内，如果超过10个key被修改，则发起快照保存</span><br><span class="line">1分钟之内，如果1万个key被修改，则发起快照保存</span><br><span class="line"></span><br><span class="line">注意:以上的配置只要触发任意一个操作都会执行备份rdb快照的操作 &#x27;BGSAVE&#x27;</span><br></pre></td></tr></table></figure>
 
-<p>这种方式不能完全保证数据持久化，因为是定时保存，所以当redis服务down掉，</p>
-<p>就会丢失一部分数据，而且数据量大，写操作多的情况下，会引起大量的磁盘IO操</p>
-<p>作，会影响性能;</p>
+<p>这种方式不能完全保证数据持久化，因为是定时保存，所以当redis服务down掉，就会丢失一部分数据，而且数据量大，写操作多的情况下，会引起大量的磁盘IO操作，会影响性能;</p>
 <p>所以，如果这两种方式同时开启，如果对数据进行恢复，不应该用<strong>rdb</strong>持久化方式对数据库进行恢复</p>
-<h2 id="AOF策略"><a href="#AOF策略" class="headerlink" title="AOF策略"></a>AOF策略</h2><p>AOF持久化记录服务器执行的所有写操作命令，并在服务器启动时，通过重新执行这些命令来还原数据集，它可以实现每次操作都持久化;</p>
-<p>AOF文件中的命令全部以redis协议的格式来保存，新命令会被追加到文件的末尾。 redis还可以在后台对AOF文件进行重写（rewrite），使得AOF文件的体积不会超出保存数据集状态所需的实际大小。redis还可以同时使用AOF持久化和RDB持久化。在这种情况下，当redis重启时，它会<strong>优先使用AOF文件来还原数据集</strong>， 因为AOF文件保存的数据集通常比RDB文件所保存的数据集更完整。也可以关闭持久化功能，让数据只在服务器运行时存在。</p>
+<h2 id="AOF-策略"><a href="#AOF-策略" class="headerlink" title="AOF 策略"></a>AOF 策略</h2><p>AOF 持久化记录服务器执行的所有写操作命令，并在服务器启动时，通过重新执行这些命令来还原数据集，它可以实现每次操作都持久化;</p>
+<p>AOF 文件中的命令全部以 redis 协议的格式来保存，新命令会被追加到文件的末尾。 redis 还可以在后台对 AOF 文件进行重写（rewrite），使得 AOF 文件的体积不会超出保存数据集状态所需的实际大小。redis 还可以同时使用 AOF 持久化和 RDB 持久化。在这种情况下，当 redis 重启时，它会<strong>优先使用AOF文件来还原数据集</strong>， 因为 AOF 文件保存的数据集通常比RDB文件所保存的数据集更完整。也可以关闭持久化功能，让数据只在服务器运行时存在。</p>
 <p>配置方式：启动<strong>aof</strong>持久化的方式 </p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">appendonly yes </span><br></pre></td></tr></table></figure>
 
@@ -401,11 +399,13 @@
 <p><code>appendfsync everysec</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">appendfsync always：每次收到写命令就立即强制写入磁盘，是最有保证的完全的持久化，但速度也是最慢的，一般不推荐使用</span><br><span class="line">appendfsync everysec：每秒钟都调用fsync刷新到AOF文件，很快，但可能会丢失一秒以内的数据；(推荐)</span><br><span class="line">appendfsync no：依靠OS进行刷新(一般30s左右一次刷新)，redis不主动刷新AOF，但安全性就差。</span><br><span class="line">默认并推荐每秒刷新，这样在速度和安全上都做到了兼顾。</span><br></pre></td></tr></table></figure>
 
-<h2 id="redis持久化策略优先级"><a href="#redis持久化策略优先级" class="headerlink" title="redis持久化策略优先级"></a>redis持久化策略优先级</h2><p>AOF优先于RDB<br>RDB性能优于AOF，因为里面没有重复<br>Redis一次性将数据加载到内存中，一次性预热</p>
+<h2 id="redis-持久化策略优先级"><a href="#redis-持久化策略优先级" class="headerlink" title="redis 持久化策略优先级"></a>redis 持久化策略优先级</h2><p>AOF优先于RDB<br>RDB性能优于AOF，因为里面没有重复<br>Redis一次性将数据加载到内存中，一次性预热</p>
 <h2 id="生产环境的备份"><a href="#生产环境的备份" class="headerlink" title="生产环境的备份"></a>生产环境的备份</h2><p>为以防万一（机器坏掉或磁盘坏掉），最好定期把使用filesnapshotting 或 Append-only 生成的*rdb *.aof文件备份到远程机器上，然后可以用crontab定时（比如每半小时）scp一次。如果没有使用redis的主从功能 ，半小时备份一次应该是可以了；并且如果应用数据量不大的话，可以单机部署，做主从有点浪费。具体还是要根据应用而定。</p>
-<h2 id="生产环境恢复数据"><a href="#生产环境恢复数据" class="headerlink" title="生产环境恢复数据"></a>生产环境恢复数据</h2><p>1)确保redis是未启动状态</p>
-<p>2)把备份的rdb或者aof文件放入redis的安装路径 <code>/opt/redis</code></p>
-<p>3)启动redis,会主动加载rdb或者aof备份文件,加载哪个文件取决于是否开启aof,没开启默认加载rdb,开启了优先加载aof;</p>
+<h2 id="生产环境恢复数据"><a href="#生产环境恢复数据" class="headerlink" title="生产环境恢复数据"></a>生产环境恢复数据</h2><ol>
+<li>确保redis是未启动状态</li>
+<li>把备份的rdb或者aof文件放入redis的安装路径 <code>/opt/redis</code></li>
+<li>启动redis,会主动加载rdb或者aof备份文件,加载哪个文件取决于是否开启aof,没开启默认加载rdb,开启了优先加载aof;</li>
+</ol>
  
       <!-- reward -->
       
