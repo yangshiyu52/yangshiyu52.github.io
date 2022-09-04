@@ -129,7 +129,7 @@
 <h1 id="ThreadPoolExecutor"><a href="#ThreadPoolExecutor" class="headerlink" title="ThreadPoolExecutor"></a>ThreadPoolExecutor</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/1649578267379-ce33f3f4-f85c-4e26-81d6-fc827301c809.png" alt="img"></p>
 <h2 id="线程池状态"><a href="#线程池状态" class="headerlink" title="线程池状态"></a>线程池状态</h2><p>ThreadPoolExecutor 使用 int 的<strong>高 3 位</strong>来表示<strong>线程池状态</strong>，<strong>低 29 位</strong>表示<strong>线程数量</strong></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/1649578294816-7de57308-6d74-48e7-9d16-c33c5aabecbb.png" alt="img"></p>
-<p>从数字上比较，TERMINATED &gt; TIDYING &gt; STOP &gt; SHUTDOWN &gt; RUNNING。因为第一位是符号位,RUNNING 是负数，所以最小.</p>
+<p>从数字上比较，TERMINATED &gt; TIDYING &gt; STOP &gt; SHUTDOWN &gt; RUNNING。因为第一位是符号位，RUNNING 是负数，所以最小。</p>
 <p>这些信息存储在一个原子变量 ctl 中，目的是<strong>将线程池状态与线程个数合二为一</strong>，这样就可以用一次 cas 原子操作进行赋值</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// c 为旧值， ctlOf 返回结果为新值</span></span><br><span class="line">ctl.compareAndSet(c, ctlOf(targetState, workerCountOf(c))));</span><br><span class="line"></span><br><span class="line"><span class="comment">// rs 为高 3 位代表线程池状态， wc 为低 29 位代表线程个数，ctl 是合并它们</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">ctlOf</span><span class="params">(<span class="type">int</span> rs, <span class="type">int</span> wc)</span> &#123; <span class="keyword">return</span> rs | wc; &#125;</span><br></pre></td></tr></table></figure>
 
@@ -173,7 +173,7 @@
 </li>
 </ul>
 </li>
-<li><p>当高峰过去后，超过corePoolSize 的救急线程如果一段时间没有任务做，需要结束节省资源，这个时间由keepAliveTime 和 unit 来控制。</p>
+<li><p>当高峰过去后，超过corePoolSize 的救急线程如果一段时间没有任务做，需要结束节省资源，这个时间由 keepAliveTime 和 unit 来控制。</p>
 </li>
 </ul>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/1649578410665-d7c1d654-0415-4215-b7fe-063f2be602ea.png" alt="img"></p>

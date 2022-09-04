@@ -114,8 +114,8 @@
     <div class="article-entry" itemprop="articleBody">
        
   <h1 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h1><h2 id="什么是MVCC"><a href="#什么是MVCC" class="headerlink" title="什么是MVCC"></a>什么是MVCC</h2><ul>
-<li>全称Multi-Version Concurrency Control，即<code>多版本并发控制</code>，主要是为了提高数据库的<code>并发性能</code>。以下文章都是围绕InnoDB引擎来讲，因为myIsam不支持事务。</li>
-<li>同一行数据平时发生读写请求时，会<strong>上锁阻塞住</strong>。但mvcc用更好的方式去处理读-写请求，做到在发生读-写请求冲突时<strong>不用加锁</strong>。</li>
+<li>全称 Multi-Version Concurrency Control，即<code>多版本并发控制</code>，主要是为了提高数据库的<code>并发性能</code>。以下文章都是围绕 InnoDB 引擎来讲，因为 myIsam 不支持事务。</li>
+<li>同一行数据平时发生读写请求时，会<strong>上锁阻塞住</strong>。但 mvcc 用更好的方式去处理读-写请求，做到在发生读-写请求冲突时<strong>不用加锁</strong>。</li>
 <li>这个读是指的<strong>快照读</strong>，而不是<strong>当前读</strong>，当前读是一种加锁操作，是<strong>悲观锁</strong>。</li>
 </ul>
 <h2 id="当前读和快照读"><a href="#当前读和快照读" class="headerlink" title="当前读和快照读"></a>当前读和快照读</h2><h3 id="当前读"><a href="#当前读" class="headerlink" title="当前读"></a>当前读</h3><p>它读取的数据库记录，都是<strong>当前最新的版本</strong>，会对当前读取的数据进行<strong>加锁</strong>，防止其他事务修改数据。是<strong>悲观锁</strong>的一种操作。</p>
@@ -128,19 +128,19 @@
 <li>delete (排他锁)</li>
 <li>串行化事务隔离级别</li>
 </ul>
-<h3 id="快照读"><a href="#快照读" class="headerlink" title="快照读"></a>快照读</h3><p>快照读的实现是<strong>基于多版本并发控制</strong>，即MVCC，既然是多版本，那么快照读读到的数据不一定是当前最新的数据，有可能是之前<strong>历史版本</strong>的数据。</p>
+<h3 id="快照读"><a href="#快照读" class="headerlink" title="快照读"></a>快照读</h3><p>快照读的实现是<strong>基于多版本并发控制</strong>，即 MVCC，既然是多版本，那么快照读读到的数据不一定是当前最新的数据，有可能是之前<strong>历史版本</strong>的数据。</p>
 <p>如下操作是快照读：</p>
 <ul>
-<li>不加锁的select操作（注：事务级别不是串行化）</li>
+<li>不加锁的 select 操作（注：事务级别不是串行化）</li>
 </ul>
-<h3 id="快照读与mvcc的关系"><a href="#快照读与mvcc的关系" class="headerlink" title="快照读与mvcc的关系"></a>快照读与mvcc的关系</h3><p>MVCCC是“维持一个数据的多个版本，使读写操作没有冲突”的一个<strong>抽象概念</strong>。</p>
-<p>这个概念需要具体功能去实现，这个具体实现就是<strong>快照读</strong>。（具体实现下面讲）</p>
+<h3 id="快照读与-mvcc-的关系"><a href="#快照读与-mvcc-的关系" class="headerlink" title="快照读与 mvcc 的关系"></a>快照读与 mvcc 的关系</h3><p>MVCCC 是“维持一个数据的多个版本，使读写操作没有冲突”的一个<strong>抽象概念</strong>。</p>
+<p>这个概念需要具体功能去实现，这个具体实现就是<strong>快照读</strong>。</p>
 <h2 id="数据库并发场景"><a href="#数据库并发场景" class="headerlink" title="数据库并发场景"></a>数据库并发场景</h2><ul>
 <li><strong>读-读</strong>：不存在任何问题，也不需要并发控制</li>
 <li><strong>读-写</strong>：有线程安全问题，可能会造成事务隔离性问题，可能遇到脏读，幻读，不可重复读</li>
 <li><strong>写-写</strong>：有线程安全问题，可能会存在更新丢失问题，比如第一类更新丢失，第二类更新丢失</li>
 </ul>
-<h2 id="MVCC解决并发哪些问题？"><a href="#MVCC解决并发哪些问题？" class="headerlink" title="MVCC解决并发哪些问题？"></a>MVCC解决并发哪些问题？</h2><p>mvcc用来解决读-写冲突的无锁并发控制，就是为事务分配<strong>单向增长的时间戳</strong>。为每个数据修改保存一个<strong>版本</strong>，<strong>版本与事务时间戳相关联</strong>。</p>
+<h2 id="MVCC-解决并发哪些问题"><a href="#MVCC-解决并发哪些问题" class="headerlink" title="MVCC 解决并发哪些问题"></a>MVCC 解决并发哪些问题</h2><p>mvcc 用来解决读-写冲突的无锁并发控制，就是为事务分配<strong>单向增长的时间戳</strong>。为每个数据修改保存一个<strong>版本</strong>，<strong>版本与事务时间戳相关联</strong>。</p>
 <p><strong>读</strong>操作只读取该事务<strong>开始前</strong>的<strong>数据库快照</strong>。</p>
 <p>解决问题如下：</p>
 <ul>
@@ -160,32 +160,32 @@
 <li>db_roll_pointer（版本链关键）：7byte，<strong>回滚指针</strong>，指向这条记录的<strong>上一个版本</strong>（存储于rollback segment里）</li>
 <li>db_row_id：6byte，隐含的<strong>自增ID</strong>（隐藏主键），如果数据表<strong>没有主键</strong>，InnoDB 会自动以 db_row_id 产生一个<strong>聚簇索引</strong>。</li>
 </ul>
-<p>实际还有一个删除flag隐藏字段, 记录被更新或删除并不代表真的删除，而是删除flag变了</p>
+<p>实际还有一个删除 flag 隐藏字段, 记录被更新或删除并不代表真的删除，而是删除 flag 变了</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/07185018_6225e36a1908b38436.png" alt="img"></p>
-<p>如上图，<strong>db_row_id</strong>是数据库默认为该行记录生成的<strong>唯一隐式主键</strong>，<strong>db_trx_id</strong>是当前操作该记录的<strong>事务ID</strong>，而<strong>db_roll_pointer</strong>是一个<strong>回滚指针</strong>，用于配合<strong>undo日志</strong>，指向<strong>上一个旧版本</strong>。</p>
-<p>每次对数据库记录进行改动，都会记录一条<strong>undo日志</strong>，每条undo日志也都有一个<strong>roll_pointer</strong>属性（INSERT操作对应的undo日志没有该属性，因为该记录并没有更早的版本），可以将这些<strong>undo日志都连起来，串成一个链表</strong>，所以现在的情况就像下图一样：</p>
+<p>如上图，<strong>db_row_id</strong> 是数据库默认为该行记录生成的<strong>唯一隐式主键</strong>，<strong>db_trx_id</strong> 是当前操作该记录的<strong>事务 ID</strong>，而 <strong>db_roll_pointer</strong> 是一个<strong>回滚指针</strong>，用于配合 <strong>undo 日志</strong>，指向<strong>上一个旧版本</strong>。</p>
+<p>每次对数据库记录进行改动，都会记录一条 <strong>undo 日志</strong>，每条 undo 日志也都有一个 <strong>roll_pointer</strong> 属性（INSERT 操作对应的 undo 日志没有该属性，因为该记录并没有更早的版本），可以将这些 <strong>undo 日志都连起来，串成一个链表</strong>，所以现在的情况就像下图一样：</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/07185018_6225e36a2225f29690.png" alt="img"></p>
-<p>对该记录每次更新后，都会将旧值放到一条undo日志中，就算是该记录的一个旧版本，随着更新次数的增多，所有的版本都会被<strong>roll_pointer</strong>属性连接成一个<strong>链表</strong>，我们把这个链表称之为<strong>版本链</strong>，版本链的头节点就是当前记录最新的值。另外，每个版本中还包含生成该版本时对应的事务id，这个信息很重要，在根据ReadView判断版本可见性的时候会用到。</p>
+<p>对该记录每次更新后，都会将旧值放到一条 undo 日志中，就算是该记录的一个旧版本，随着更新次数的增多，所有的版本都会被<strong>roll_pointer</strong> 属性连接成一个<strong>链表</strong>，我们把这个链表称之为<strong>版本链</strong>，版本链的头节点就是当前记录最新的值。另外，每个版本中还包含生成该版本时对应的事务 id，这个信息很重要，在根据 Read View 判断版本可见性的时候会用到。</p>
 <h2 id="undo日志"><a href="#undo日志" class="headerlink" title="undo日志"></a>undo日志</h2><p>Undo log 主要用于<strong>记录数据被修改之前的日志</strong>，在表信息修改之前先会<strong>把数据拷贝到 undo log</strong>里。</p>
 <p>当<strong>事务</strong>进行<strong>回滚</strong>时可以通过 undo log 里的日志进行<strong>数据还原</strong>。</p>
 <h3 id="Undo-log-的用途"><a href="#Undo-log-的用途" class="headerlink" title="Undo log 的用途"></a>Undo log 的用途</h3><ul>
 <li>保证<strong>事务</strong>进行 <strong>rollback</strong> 时的<strong>原子性和一致性</strong>，当事务进行<strong>回滚</strong>的时候可以用 undo log 的数据进行<strong>恢复</strong>。</li>
 <li>用于 MVCC <strong>快照读</strong>的数据，在 MVCC 多版本控制中，通过读取 undo log 的<strong>历史版本数据</strong>可以实现<strong>不同事务版本号</strong>都拥有自己<strong>独立的快照数据版本</strong>。</li>
 </ul>
-<h3 id="undo-log主要分为两种："><a href="#undo-log主要分为两种：" class="headerlink" title="undo log主要分为两种："></a>undo log主要分为两种：</h3><ul>
-<li><strong>insert undo log</strong>：代表事务在 insert 新记录时产生的 undo log , 只在事务回滚时需要，并且在事务提交后可以被立即丢弃</li>
+<h3 id="undo-log-主要分为两种："><a href="#undo-log-主要分为两种：" class="headerlink" title="undo log 主要分为两种："></a>undo log 主要分为两种：</h3><ul>
+<li><strong>insert undo log</strong>：代表事务在 insert 新记录时产生的 undo log，只在事务回滚时需要，并且在事务提交后可以被立即丢弃</li>
 <li><strong>update undo log</strong>（主要）：事务在进行 update 或 delete 时产生的 undo log ; 不仅在事务回滚时需要，在快照读时也需要；所以不能随便删除，只有在快速读或事务回滚不涉及该日志时，对应的日志才会被 purge 线程统一清除</li>
 </ul>
 <h2 id="Read-View-读视图"><a href="#Read-View-读视图" class="headerlink" title="Read View(读视图)"></a>Read View(读视图)</h2><p>事务进行<strong>快照读</strong>操作的时候生产的<strong>读视图</strong>(Read View)，在该事务执行的快照读的那一刻，会生成数据库系统当前的一个<strong>快照</strong>。</p>
-<p>记录并维护系统当前<strong>活跃事务的ID</strong>(没有 commit，当每个事务开启时，都会被分配一个 ID, 这个 ID 是递增的，所以越新的事务，ID值越大)，是系统中当前<strong>不应该被本事务看到的其他事务 id 列表</strong>。</p>
+<p>记录并维护系统当前<strong>活跃事务的 ID</strong>(没有 commit，当每个事务开启时，都会被分配一个 ID, 这个 ID 是递增的，所以越新的事务，ID值越大)，是系统中当前<strong>不应该被本事务看到的其他事务 id 列表</strong>。</p>
 <p>Read View 主要是用来做<strong>可见性</strong>判断的, 即当我们<strong>某个事务执行快照读的时候</strong>，对该记录创建一个 Read View 读视图，把它比作条件用来<strong>判断当前事务</strong>能够看到<strong>哪个版本的数据</strong>，既可能是当前<strong>最新</strong>的数据，也有可能是该行记录的 undo log 里面的<strong>某个版本</strong>的数据。</p>
 <h3 id="Read-View几个属性"><a href="#Read-View几个属性" class="headerlink" title="Read View几个属性"></a>Read View几个属性</h3><ul>
-<li><strong>trx_ids</strong>: 当前系统活跃(<strong>未提交</strong>)事务版本号集合。</li>
-<li><strong>min_trx_id</strong><strong>: 创建当前 read view 时</strong>系统正处于活跃的读写事务中最小的事务 id**。</li>
-<li><strong>max_trx_id</strong>: 创建当前 read view 时“<strong>系统中应该分配给下一个事务的 id 值”，即“</strong>当前系统最大事务版本号+1**”</li>
+<li><strong>trx_ids</strong>: 当前系统活跃(<strong>未提交</strong>)事务版本号。</li>
+<li><strong>min_trx_id</strong>: 创建当前 read view 时<strong>系统正处于活跃的读写事务中最小的事务 id</strong>。</li>
+<li><strong>max_trx_id</strong>: 创建当前 read view 时“<strong>系统中应该分配给下一个事务的 id 值”，即“当前系统最大事务版本号+1</strong>”</li>
 <li><strong>creator_trx_id</strong>: 创建当前 read view 的事务版本号，即<strong>生成该“read view”的事物的事务id</strong>；</li>
 </ul>
-<h3 id="Read-View可见性判断条件"><a href="#Read-View可见性判断条件" class="headerlink" title="Read View可见性判断条件"></a>Read View可见性判断条件</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/1d865d61c3b535d7e7dcfa4bbb78834a.png" alt="img"></p>
+<h3 id="Read-View-可见性判断条件"><a href="#Read-View-可见性判断条件" class="headerlink" title="Read View 可见性判断条件"></a>Read View 可见性判断条件</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/1d865d61c3b535d7e7dcfa4bbb78834a.png" alt="img"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/bc9ce42e33df050243df97fe53ff3404.png" alt="img"></p>
 <ul>
 <li><p><strong>trx_id &lt; min_trx_id || trx_id &#x3D;&#x3D; creator_trx_id</strong>（显示）</p>
@@ -197,21 +197,21 @@
 </li>
 <li><p><strong>rx_id是否在活跃事务（trx_ids）中</strong></p>
 <ul>
-<li><strong>不存在</strong>：则说明read view产生的时候事务<strong>已经commit</strong>了，这种情况数据则可以<strong>显示</strong>。</li>
-<li><strong>已存在</strong>：则代表我Read View生成时刻，你这个事务还在活跃，还没有Commit，你修改的数据，我当前事务也是<strong>看不见</strong>的。</li>
+<li><strong>不存在</strong>：则说明 read view 产生的时候事务<strong>已经commit</strong>了，这种情况数据则可以<strong>显示</strong>。</li>
+<li><strong>已存在</strong>：则代表我 Read View 生成时刻，你这个事务还在活跃，还没有 Commit，你修改的数据，我当前事务也是<strong>看不见</strong>的。</li>
 </ul>
 </li>
 </ul>
-<h1 id="MVCC和事务隔离级别"><a href="#MVCC和事务隔离级别" class="headerlink" title="MVCC和事务隔离级别"></a>MVCC和事务隔离级别</h1><p><strong>Read View</strong> 用于支持<strong>RC</strong>（Read Committed，读提交）和RR（<strong>Repeatable Read</strong>，可重复读）<strong>隔离级别</strong>的实现。</p>
-<h2 id="RR、RC生成时机"><a href="#RR、RC生成时机" class="headerlink" title="RR、RC生成时机"></a>RR、RC生成时机</h2><ul>
+<h1 id="MVCC-和事务隔离级别"><a href="#MVCC-和事务隔离级别" class="headerlink" title="MVCC 和事务隔离级别"></a>MVCC 和事务隔离级别</h1><p><strong>Read View</strong> 用于支持<strong>RC</strong>（Read Committed，<strong>读已提交</strong>）和RR（<strong>Repeatable Read</strong>，<strong>可重复读</strong>）隔离级别的实现。</p>
+<h2 id="RR、RC-生成时机"><a href="#RR、RC-生成时机" class="headerlink" title="RR、RC 生成时机"></a>RR、RC 生成时机</h2><ul>
 <li><strong>RC</strong> 隔离级别下，是每个<strong>快照读</strong>都会<strong>生成并获取最新</strong>的 <strong>Read View</strong>；</li>
 <li>而在 <strong>RR</strong> 隔离级别下，则是<strong>同一个事务中的第一个快照读</strong>才会创建 <strong>Read View</strong>, <strong>之后的快照读</strong>获取的都是<strong>同一个Read View</strong>，之后的查询就<strong>不会重复生成</strong>了，所以一个事务的查询结果每次<strong>都是一样的</strong>。</li>
 </ul>
 <h3 id="解决幻读问题"><a href="#解决幻读问题" class="headerlink" title="解决幻读问题"></a>解决幻读问题</h3><ul>
-<li><strong>快照读</strong>：通过MVCC来进行控制的，不用加锁。按照MVCC中规定的“语法”进行增删改查等操作，以避免幻读。</li>
-<li><strong>当前读</strong>：通过next-key锁（行锁+gap锁）来解决问题的。</li>
+<li><strong>快照读</strong>：通过 MVCC 来进行控制的，不用加锁。按照 MVCC 中规定的“语法”进行增删改查等操作，以避免幻读。</li>
+<li><strong>当前读</strong>：通过 next-key 锁（行锁+ gap 锁）来解决问题的。</li>
 </ul>
-<h3 id="RC、RR级别下的InnoDB快照读区别"><a href="#RC、RR级别下的InnoDB快照读区别" class="headerlink" title="RC、RR级别下的InnoDB快照读区别"></a>RC、RR级别下的InnoDB快照读区别</h3><ul>
+<h3 id="RC、RR-级别下的-InnoDB-快照读区别"><a href="#RC、RR-级别下的-InnoDB-快照读区别" class="headerlink" title="RC、RR 级别下的 InnoDB 快照读区别"></a>RC、RR 级别下的 InnoDB 快照读区别</h3><ul>
 <li>在 RR 级别下的某个事务的对某条记录的第一次快照读会创建一个快照及 Read View， 将当前系统活跃的其他事务记录起来，此后在调用快照读的时候，还是使用的是同一个 Read View，所以只要当前事务在其他事务提交更新之前使用过快照读，那么之后的快照读使用的都是同一个 Read View，所以对之后的修改不可见；</li>
 <li>即 RR 级别下，快照读生成 Read View 时，Read View 会记录此时所有其他活动事务的快照，这些事务的修改对于当前事务都是不可见的。而早于 Read View创建的事务所做的修改均是可见</li>
 <li>而在 RC 级别下的，事务中，每次快照读都会新生成一个快照和 Read View, 这就是我们在 RC 级别下的事务中可以看到别的事务提交的更新的原因</li>

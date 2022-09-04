@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>树 |  Healer</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Healer" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+      <canvas width="1777" height="841"
+        style="position: fixed; left: 0px; top: 0px; z-index: 99999; pointer-events: none;"></canvas>
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-数据结构与算法：树"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+	
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  树
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/09/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%9A%E6%A0%91/" class="article-date">
+  <time datetime="2022-09-04T12:49:32.000Z" itemprop="datePublished">2022-09-04</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">10 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="树"><a href="#树" class="headerlink" title="树"></a>树</h1><h2 id="树的定义"><a href="#树的定义" class="headerlink" title="树的定义"></a>树的定义</h2><p>树是n（n&gt;&#x3D;0）个结点的有限集。当n &#x3D; 0时，称为空树。在任意一棵非空树中应满足：</p>
+<ol>
+<li>有且仅有一个特定的称为根的结点。</li>
+<li>当 n&gt;1 时，其余节点可分为m（m&gt;0）个互不相交的有限集T1,T2,…,Tm，其中每个集合本身又是一棵树，并且称为根的子树。</li>
+</ol>
+<p>显然，树的定义是<strong>递归</strong>的，即在树的定义中又用到了自身，<strong>树是一种递归的数据结构</strong>。树作为一种逻辑结构，同时也是一种分层结构，具有以下两个特点：</p>
+<ol>
+<li>树的根结点没有前驱，除根结点外的所有结点有且只有一个前驱。</li>
+<li>树中所有结点可以有零个或多个后继。</li>
+</ol>
+<p>因此 <strong>n 个结点的树中有 n-1 条边</strong>。</p>
+<h2 id="基本术语"><a href="#基本术语" class="headerlink" title="基本术语"></a>基本术语</h2><p>下面结合图示来说明一下树的一些基本术语和概念。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20210222170426652.png" alt="在这里插入图片描述"></p>
+<ul>
+<li><p>考虑结点 K。根 A 到结点 K 的唯一路径上的任意结点，称为结点 K 的<strong>祖先</strong>。如结点 B 是结点 K 的祖先，而结点 K 是结点 B 的<strong>子孙</strong>。路径上最接近结点 K 的结点 E 称为 K 的<strong>双亲</strong>，而 K 为结点 E 的<strong>孩子</strong>。根 A 是树中唯一没有双亲的结点。有相同双亲的结点称为<strong>兄弟</strong>，如结点 K 和结点 L 有相同的双亲 E，即 K 和 L 为兄弟。</p>
+</li>
+<li><p>树中一个结点的孩子个数称为该<strong>结点的度</strong>，树中结点的最大度数称为<strong>树的度</strong>。如结点 B 的度为 2，结点 D 的度为3，树的度为3。</p>
+</li>
+<li><p>度大于 0 的结点称为**分支结点(又称非终端结点)<strong>；度为 0 (没有子女结点)的结点称为</strong>叶子结点(又称终端结点)**。在分支结点中，每个结点的分支数就是该结点的度。</p>
+</li>
+<li><p>结点的深度、高度和层次。</p>
+<ul>
+<li><strong>结点的层次</strong>从树根开始定义，根结点为第 1 层，它的子结点为第 2 层，以此类推。双亲在同一层的结点互为堂兄弟，图中结点 G 与 E,F,H,I,J 互为堂兄弟。</li>
+<li><strong>结点的深度</strong>是从根结点开始自顶向下逐层累加的。</li>
+<li><strong>结点的高度</strong>是从叶结点开始自底向上逐层累加的。</li>
+<li>树的高度(或深度)是树中结点的最大层数。图中树的高度为4。</li>
+</ul>
+</li>
+<li><p>有序树和无序树。树中结点的各子树从左到右是有次序的，不能互换，称该树为<strong>有序树</strong>，否则称为<strong>无序树</strong>。假设图为有序树，若将子结点位置互换，则变成一棵不同的树。</p>
+</li>
+<li><p>路径和路径长度。树中两个结点之间的<strong>路径</strong>是由这两个结点之间所经过的结点序列构成的，而路径长度是路径上所经过的边的个数。</p>
+<p>注意:由于树中的分支是有向的，即从双亲指向孩子，所以树中的路径是从上向下的，同一双亲的两个孩子之间不存在路径。</p>
+</li>
+<li><p>森林。森林是 m (m≥0) 棵互不相交的树的集合。森林的概念与树的概念十分相近，因为只要把树的根结点删去就成了森林。反之，只要给m棵独立的树加上一个结点，并把这m棵树作为该结点的子树，则森林就变成了树。</p>
+</li>
+</ul>
+<h2 id="树的性质"><a href="#树的性质" class="headerlink" title="树的性质"></a>树的性质</h2><p>树具有如下最基本的性质：</p>
+<ul>
+<li>树中的结点数等于所有结点的度数加1.</li>
+<li>度为 m 的树中第 i 层上至多有 m^(i-1) 个结点</li>
+<li>高度为 h 的 m 叉树至多有( m^h − 1 ) &#x2F; ( m − 1 )个结点。</li>
+</ul>
+<h1 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h1><h2 id="二叉树的定义"><a href="#二叉树的定义" class="headerlink" title="二叉树的定义"></a>二叉树的定义</h2><p>二叉树是另一种树形结构，其特点是每个结点至多只有两棵子树( 即二叉树中不存在度大于 2 的结点)，并且二叉树的子树有左右之分，其次序不能任意颠倒。</p>
+<p>与树相似，二叉树也以递归的形式定义。二叉树是n (n≥0) 个结点的有限集合:</p>
+<ol>
+<li>或者为空二叉树，即 n&#x3D;0。</li>
+<li>或者由一个根结点和两个互不相交的被称为根的左子树和右子树组成。左子树和右子树又分别是一棵二叉树。</li>
+</ol>
+<p>二叉树是<strong>有序树</strong>，若将其左、右子树颠倒，则成为另一棵不同的二叉树。即使树中结点只有一棵子树，也要区分它是左子树还是右子树。二叉树的5种基本形态如图所示。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20210223141038540.png" alt="img"></p>
+<h2 id="几个特殊的二叉树"><a href="#几个特殊的二叉树" class="headerlink" title="几个特殊的二叉树"></a>几个特殊的二叉树</h2><h3 id="斜树"><a href="#斜树" class="headerlink" title="斜树"></a>斜树</h3><p>所有的结点都只有左子树的二叉树叫<strong>左斜树</strong>。所有结点都是只有右子树的二叉树叫<strong>右斜树</strong>。这两者统称为<strong>斜树</strong>。</p>
+<h3 id="满二叉树"><a href="#满二叉树" class="headerlink" title="满二叉树"></a>满二叉树</h3><p>一棵高度为 h，且含有 <strong>2^h-1</strong> 个结点的二叉树称为满二叉树，即树中的每层都含有最多的结点。满二叉树的叶子结点都集中在二叉树的最下一层，并且除叶子结点之外的每个结点度数均为 2。可以对满二叉树按层序编号：约定编号从根结点(根结点编号为1)起，自上而下，自左向右。这样，每个结点对应一个编号，对于编号为 i 的结点，若有双亲，则其双亲为 <strong>i &#x2F; 2</strong>，若有左孩子，则左孩子为 <strong>2i</strong>；若有右孩子，则右孩子为 <strong>2i + 1</strong>。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20210223141540595.png" alt="在这里插入图片描述"></p>
+<h3 id="完全二叉树"><a href="#完全二叉树" class="headerlink" title="完全二叉树"></a>完全二叉树</h3><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20210223141920389.png" alt="在这里插入图片描述"></p>
+<h3 id="二叉排序树"><a href="#二叉排序树" class="headerlink" title="二叉排序树"></a>二叉排序树</h3><p>左子树上所有结点的关键字均小于根结点的关键字；右子树上的所有结点的关键字均大于根结点的关键字；左子树和右子树又各是一棵二叉排序树。</p>
+<h3 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h3><p>树上任一结点的左子树和右子树的深度之差不超过1。又称 AVL 树。</p>
+<h1 id="平衡二叉树-1"><a href="#平衡二叉树-1" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><ul>
+<li><p>平衡二叉树，又称<strong>AVL</strong>树，用于解决二叉排序树高度不确定的情况，如果二叉排序树的子树间的高度相差太大，就会让二叉排序树操作的时间复杂度升级为O(n)，为了避免这一情况，为最坏的情况做准备，就出现了平衡二叉树，使树的高度尽可能的小，其本质还是一棵二叉搜索树。</p>
+</li>
+<li><p>平衡二叉树的性质：</p>
+<ul>
+<li>左子树和右子树的高度之差的绝对值小于等于1</li>
+<li>左子树和右子树也是平衡二叉树</li>
+</ul>
+</li>
+<li><p>为了方便起见，给树上的每个结点附加一个数字，给出该结点左子树与右子树的高度差，这个数字称为结点的<strong>平衡因子</strong>（BF）</p>
+</li>
+<li><p><strong>平衡因子</strong>&#x3D;结点左子树的高度-结点右子树的高度。</p>
+</li>
+</ul>
+<p>因此平衡二叉树所有结点的平衡因子只能是-1、0、1，如下图，是一个平衡二叉树</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/9dd2eab0c7f04a2fbd74949ae6e24b3b.png" alt="img"></p>
+<blockquote>
+<p>平衡二叉树的高度为 <strong>logn</strong></p>
+</blockquote>
+<h2 id="失衡"><a href="#失衡" class="headerlink" title="失衡"></a>失衡</h2><p>当我们在一个平衡二叉树上插入一个结点时，有可能会<strong>导致失衡</strong>，即出现平衡因子绝对值大于1 的结点，如下图，当插入结点后，其中 key 为 53 的结点失去了平衡，我们称该结点为<strong>失衡结点</strong>，我们必须重新调整树的结构，使之恢复平衡。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/c009402e7d7248f7a880433ce642253e.png" alt="img"></p>
+<blockquote>
+<p> 不一定只有一个结点失去平衡，有可能插入一个结点会让多个结点失衡。这时候找 <strong>最小的失衡子树的根节点作为失衡结点</strong>。</p>
+</blockquote>
+<h2 id="恢复平衡"><a href="#恢复平衡" class="headerlink" title="恢复平衡"></a>恢复平衡</h2><p>那如何去恢复平衡，使得二叉搜索树依然成立为一棵平衡树？先来看平衡调整的四种类型：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/72056669f68a409280c5acefdb2c35e8.png" alt="img"></p>
+<p>举个例子：如第一个，当平衡二叉树为 AB 时，插入一个 C 结点，使得失衡了，失衡结点为 A，此时因为 C 结点插入的位置为失衡结点的左孩子的左孩子，所以是LL型，以此类推。</p>
+<p>为了恢复平衡，针对每一种都不一样，但目的都是调整为平衡的，且不能违背二叉搜索树的性质：如下图是每种失衡类型的解决方法，每个都不太一样，目的都是一样的，把 key 的值为中等的变为树的根，最小的放在左孩子，做大的放右孩子，通过这一目的，降低树的高度，也不用死记硬背。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/b4bbc276614c4e9c93fc77be3fcc3060.png" alt="img"></p>
+<h1 id="2-3-4-树"><a href="#2-3-4-树" class="headerlink" title="2-3-4 树"></a>2-3-4 树</h1><h1 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/%E7%BA%A2%E9%BB%91%E6%A0%91%20(1).jpg" alt="红黑树"></p>
+<h1 id="B树"><a href="#B树" class="headerlink" title="B树"></a>B树</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20181217172405313.png" alt="img"></p>
+<ul>
+<li><p>树中每个节点最多含有 m 棵子树。</p>
+</li>
+<li><p>根结点至少有 2 个子树。</p>
+</li>
+<li><p>非根非叶节点至少有⌈m&#x2F;2⌉(向上取整)棵子树。</p>
+</li>
+<li><p>如果一个节点有 n-1 个关键字，则该节点有 n 个分支，且这 n-1 个关键字按照递增顺序排列。</p>
+</li>
+<li><p>每个非终端结点中包含信息：（N，A0，K1，A1，K2，A2，…，KN，一）其中：</p>
+<ul>
+<li>Ki（1≤i≤n）为关键字，且关键字按升序排序。</li>
+<li>指针Ai（0≤i≤n）指向子树的根结点，Ai-1指向子树中所有结点的关键字均小于Ki，且大于Ki-1;</li>
+<li>关键字的个数 n 必须满足：<strong>⌈m&#x2F;2⌉-1≤n≤m-1</strong>。</li>
+<li>结点内关键字各不相等且按从小到大排列。</li>
+<li>所有叶子节点具有相同的深度，这也说明B树是平衡的</li>
+</ul>
+</li>
+<li><p>在搜索 B 树时，很明显，访问节点（即读取磁盘）的次数与树的高度呈正比，而 B 树与二叉查找树相比，虽然高度都是对数级的，但是显然 B 树中底数比 2 大。因此，和二叉树相比，极大地减少了磁盘读取的次数。</p>
+</li>
+<li><p>平衡m叉查找树是指每个关键字的左侧子树与右侧子树的高度差的绝对值不超过1的查找树，其结点结构与上面提到的B-树结点结构相同，由此可见，<strong>B 树是平衡 m 叉查找树，但限制更强，要求所有叶结点都在同一层。</strong></p>
+</li>
+</ul>
+<h1 id="B-树"><a href="#B-树" class="headerlink" title="B+树"></a>B+树</h1><p>一个 m 阶的 B+树 具有如下几个特征：</p>
+<ul>
+<li>有 k 个子树的中间节点包含有 k 个元素（B树中是k-1个元素），每个元素不保存数据，只用来保存索引，所有数据都保存在叶子节点。</li>
+<li>所有的叶子结点中包含了全部元素的信息，及指向含这些元素记录的指针，且叶子结点本身依关键字的大小自小而大顺序链接。</li>
+<li>所有的中间节点元素都同时存在于子节点，在子节点元素中是最大（或最小）元素。</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/71cfccb87da28e4cc5b618bcef02a2ac.webp" alt="img"></p>
+<ul>
+<li>根节点的最大元素也就是整个 B+树 的最大元素，以后无论插入删除多少元素，始终要保持最大的元素在根节点当中。</li>
+<li>由于父节点的元素都出现在子节点中，因此所有的叶子节点包含了全部元素信息，并且每一个叶子节点都带有指向下一个节点的指针，形成了一个<strong>有序链表</strong>。</li>
+</ul>
+<h2 id="B-树添加和删除数据"><a href="#B-树添加和删除数据" class="headerlink" title="B+树添加和删除数据"></a>B+树添加和删除数据</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/%E6%A0%91%E6%B7%BB%E5%8A%A0%E5%92%8C%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE%E5%9B%BE%E8%A7%A3.png" alt="B+树添加和删除数据图解"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2022/09/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%EF%BC%9A%E6%A0%91/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2022/09/02/%E9%9D%A2%E8%AF%95%E4%B9%8B%E6%95%B0%E6%8D%AE%E5%BA%93/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">面试之数据库</div>
+      </a>
+    
+  </nav>
+
+  
+   
+    
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2021-2022
+        <i class="ri-heart-fill heart_icon"></i> Yang Shiyu
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Healer"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+ 
+<script src="/js/clickBoom2.js"></script>
+ 
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

@@ -113,7 +113,7 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="日期转换的问题"><a href="#日期转换的问题" class="headerlink" title="日期转换的问题"></a>日期转换的问题</h1><h2 id="问题提出-线程不安全类SimpleDateFormat"><a href="#问题提出-线程不安全类SimpleDateFormat" class="headerlink" title="问题提出 (线程不安全类SimpleDateFormat)"></a>问题提出 (线程不安全类SimpleDateFormat)</h2><p>下面的代码在运行时，由于 <strong>SimpleDateFormat 不是线程安全的</strong>,有很大几率出现 java.lang.NumberFormatException 或者出现不正确的日期解析结果</p>
+  <h1 id="日期转换的问题"><a href="#日期转换的问题" class="headerlink" title="日期转换的问题"></a>日期转换的问题</h1><h2 id="问题提出-线程不安全类-SimpleDateFormat"><a href="#问题提出-线程不安全类-SimpleDateFormat" class="headerlink" title="问题提出 (线程不安全类 SimpleDateFormat)"></a>问题提出 (线程不安全类 SimpleDateFormat)</h2><p>下面的代码在运行时，由于 <strong>SimpleDateFormat 不是线程安全的</strong>，有很大几率出现 java.lang.NumberFormatException 或者出现不正确的日期解析结果</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">SimpleDateFormat</span> <span class="variable">sdf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy-MM-dd&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            log.debug(<span class="string">&quot;&#123;&#125;&quot;</span>, sdf.parse(<span class="string">&quot;1951-04-21&quot;</span>));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;&#123;&#125;&quot;</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;).start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>例如：</p>
@@ -122,7 +122,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">SimpleDateFormat</span> <span class="variable">sdf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy-MM-dd&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">50</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (sdf) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                log.debug(<span class="string">&quot;&#123;&#125;&quot;</span>, sdf.parse(<span class="string">&quot;1951-04-21&quot;</span>));</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                log.error(<span class="string">&quot;&#123;&#125;&quot;</span>, e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;).start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="思路-不可变-DateTimeFormatter"><a href="#思路-不可变-DateTimeFormatter" class="headerlink" title="思路 - 不可变 DateTimeFormatter"></a>思路 - 不可变 DateTimeFormatter</h2><p>如果一个对象在不能够修改其内部状态（属性），那么它就是线程安全的，因为不存在并发修改啊！</p>
-<p>这样的对象在Java 中有很多，例如在 Java 8 后，提供了一个新的日期格式化类：</p>
+<p>这样的对象在 Java 中有很多，例如在 Java 8 后，提供了一个新的日期格式化类：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DateTimeFormatter</span> <span class="variable">dtf</span> <span class="operator">=</span> DateTimeFormatter.ofPattern(<span class="string">&quot;yyyy-MM-dd&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">        <span class="type">LocalDate</span> <span class="variable">date</span> <span class="operator">=</span> dtf.parse(<span class="string">&quot;2018-10-01&quot;</span>, LocalDate::from);</span><br><span class="line">        log.debug(<span class="string">&quot;&#123;&#125;&quot;</span>, date);</span><br><span class="line">    &#125;).start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以看 DateTimeFormatter 的文档：</p>
@@ -177,7 +177,7 @@
 </blockquote>
 <h4 id="2-2-String-串池"><a href="#2-2-String-串池" class="headerlink" title="2.2 String 串池"></a>2.2 String 串池</h4><p>参见jvm课程</p>
 <h4 id="2-3-BigDecimal-BigInteger"><a href="#2-3-BigDecimal-BigInteger" class="headerlink" title="2.3 BigDecimal BigInteger"></a>2.3 BigDecimal BigInteger</h4><blockquote>
-<p>这些类的单个方法是线程安全的,但多个方法的组合使用如果也要保证线程安全就需要使用锁来保护了</p>
+<p>这些类的单个方法是线程安全的，但多个方法的组合使用如果也要保证线程安全就需要使用锁来保护了</p>
 </blockquote>
 <h3 id="DIY-自定义数据库连接池"><a href="#DIY-自定义数据库连接池" class="headerlink" title="DIY 自定义数据库连接池"></a>DIY 自定义数据库连接池</h3><p>例如：一个线上商城应用，QPS 达到数千，如果每次都重新创建和关闭数据库连接，性能会受到极大影响。 </p>
 <p>这时预先创建好一批连接，放入连接池。一次请求到达后，从连接池获取连接，使用完毕后再还回连接池，这样既节约了连接的创建和关闭时间，也实现了连接的重用，不至于让庞大的连接数压垮数据库。</p>
@@ -211,11 +211,11 @@
 <p><strong>为什么需要用final修饰局部变量呢?</strong></p>
 <p>按照习惯，我依旧先给出问题的答案：用final修饰实际上就是为了保护数据的一致性。</p>
 <p>这里所说的数据一致性，<strong>对引用变量来说是引用地址的一致性，对基本类型来说就是值的一致性</strong>。</p>
-<p>final修饰符对变量来说，深层次的理解就是保障变量值的一致性。为什么这么说呢？因为引用类型变量其本质是存入的是一个引用地址，说白了还是一个值（可以理解为内存中的地址值）。用final修饰后，这个这个引用变量的地址值不能改变，所以这个引用变量就无法再指向其它对象了。</p>
+<p>final修饰符对变量来说，深层次的理解就是保障变量值的一致性。为什么这么说呢？因为引用类型变量其本质是存入的是一个引用地址，说白了还是一个值（可以理解为内存中的地址值）。用final修饰后，这个引用变量的地址值不能改变，所以这个引用变量就无法再指向其它对象了。</p>
 <p>回到正题，为什么需要用final保护数据的一致性呢？</p>
-<p>因为将数据拷贝完成后，如果不用final修饰，则原先的局部变量可以发生变化。这里到了问题的核心了，如果局部变量发生变化后，匿名内部类是不知道的（因为他只是拷贝了局不变量的值，并不是直接使用的局部变量）。这里举个例子：原先局部变量指向的是对象A，在创建匿名内部类后，匿名内部类中的成员变量也指向A对象。但过了一段时间局部变量的值指向另外一个B对象，但此时匿名内部类中还是指向原先的A对象。那么程序再接着运行下去，可能就会导致程序运行的结果与预期不同。</p>
+<p>因为将数据拷贝完成后，如果不用final修饰，则原先的局部变量可以发生变化。这里到了问题的核心了，如果局部变量发生变化后，匿名内部类是不知道的（因为他只是拷贝了局部变量的值，并不是直接使用的局部变量）。这里举个例子：原先局部变量指向的是对象A，在创建匿名内部类后，匿名内部类中的成员变量也指向A对象。但过了一段时间局部变量的值指向另外一个B对象，但此时匿名内部类中还是指向原先的A对象。那么程序再接着运行下去，可能就会导致程序运行的结果与预期不同。</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/1649577164771-5fb1ad58-5a02-4cc6-aa5f-fe5722c8ce63.png" alt="img"></p>
-<p>介绍到这里，关于为什么匿名内部类访问局部变量需要加final修饰符的原理基本讲完了。</p>
+<p>介绍到这里，关于为什么匿名内部类访问局部变量需要加 final 修饰符的原理基本讲完了。</p>
 <p>那现在我们来谈一谈JDK8对这一问题的新的知识点。在JDK8中如果我们在匿名内部类中需要访问局部变量，那么这个局部变量不需要用final修饰符修饰。看似是一种编译机制的改变，实际上就是一个语法糖（<strong>底层还是帮你加了final</strong>）。但通过反编译没有看到底层为我们加上final，但我们无法改变这个局部变量的引用值，如果改变就会编译报错。</p>
 <h1 id="无状态-即无成员变量"><a href="#无状态-即无成员变量" class="headerlink" title="无状态  即无成员变量"></a>无状态  即无成员变量</h1><p>在 web 阶段学习时，设计 Servlet 时为了保证其线程安全，都会有这样的建议，不要为 Servlet 设置成员变量，这种<strong>没有任何成员变量的类是线程安全的</strong> </p>
 <blockquote>
@@ -227,14 +227,12 @@
 <li><p>不可变类设计 </p>
 </li>
 <li><p>原理方面 </p>
-</li>
-<li><ul>
+<ul>
 <li>final</li>
 </ul>
 </li>
 <li><p>模式方面 </p>
-</li>
-<li><ul>
+<ul>
 <li>享元</li>
 </ul>
 </li>

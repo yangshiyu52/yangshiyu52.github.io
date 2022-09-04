@@ -116,7 +116,7 @@
   <h1 id="锁机制"><a href="#锁机制" class="headerlink" title="锁机制"></a>锁机制</h1><ul>
 <li>事务与锁是不同的。事务具有ACID( 原子性、一致性、隔离性和持久性)，锁是用于<strong>解决隔离级别</strong>的一种机制。事务的隔离级别通过锁的机制来实现。</li>
 <li>为了保证数据并发访问时的<strong>一致性和有效性</strong>，任何一个数据库都存在锁机制。锁机制的优劣直接影响到数据库的并发处理能力和系统性能，所以锁机制也就成为了各种数据库的核心技术之一。</li>
-<li>锁机制是为了解决数据库的并发控制问题而产生的。如在同一时刻，客户端对同一个表做更新或查询操作，为了保证数据的一致性，必须对并发操作进行控制。同时，锁机制也为实现 MySQL 的各个隔离级别提供了保证。</li>
+<li>锁机制是为了解决数据库的<strong>并发控制</strong>问题而产生的。如在同一时刻，客户端对同一个表做更新或查询操作，为了保证数据的一致性，必须对并发操作进行控制。同时，锁机制也为实现 MySQL 的各个隔离级别提供了保证。</li>
 <li>可以将锁机制理解为使各种资源在被并发访问时变得有序所设计的一种规则。</li>
 <li>如何保证数据并发访问的一致性、有效性是所有数据库必须解决的一个问题，锁冲突也是影响数据库并发访问性能的一个重要因素。从这个角度来说，锁对数据库显得尤其重要，也更加复杂。</li>
 </ul>
@@ -125,10 +125,10 @@
 <li>按照锁的粒度划分：<strong>行锁、表锁、页锁</strong></li>
 <li>按照锁的使用方式划分：<strong>共享锁、排它锁</strong>（悲观锁的一种实现）</li>
 <li>还有两种思想上的锁：<strong>悲观锁、乐观锁</strong>。</li>
-<li>InnoDB中有几种行级锁类型：Record Lock、Gap Lock、Next-key Lock</li>
+<li>InnoDB 中有几种行级锁类型：Record Lock、Gap Lock、Next-key Lock</li>
 <li>按<strong>锁级别分类，可分为共享锁、排他锁和意向锁。</strong></li>
 </ol>
-<p>MySQL的锁机制最显著的特点是不同的存储引擎支持不同的锁机制。比如，MyISAM和MEMORY存储引擎采用的是表级锁，<strong>不支持行锁</strong>；BDB存储引擎采用的是页面锁，但也支持表级锁；InnoDB存储引擎既支持行级锁，也支持表级锁，但默认情况下是采用<strong>行级锁</strong>。不支持行锁意味着并发控制只能使用表锁，对于这种引擎的表，同 一张表上任何时刻只能有一个更新在执行，这就会影响到业务并发度。<strong>InnoDB是支持行锁的， 这也是MyISAM被InnoDB替代的重要原因之一。</strong></p>
+<p>MySQL 的锁机制最显著的特点是不同的存储引擎支持不同的锁机制。比如，MyISAM 和 MEMORY 存储引擎采用的是表级锁，<strong>不支持行锁</strong>；BDB 存储引擎采用的是页面锁，但也支持表级锁；InnoDB 存储引擎<strong>既支持行级锁，也支持表级锁</strong>，但默认情况下是采用<strong>行级锁</strong>。不支持行锁意味着并发控制只能使用表锁，对于这种引擎的表，同 一张表上任何时刻只能有一个更新在执行，这就会影响到业务并发度。<strong>InnoDB 是支持行锁的， 这也是 MyISAM 被 InnoDB 替代的重要原因之一。</strong></p>
 <h1 id="行锁（row-level-locking）"><a href="#行锁（row-level-locking）" class="headerlink" title="行锁（row-level locking）"></a>行锁（row-level locking）</h1><ul>
 <li>行级锁的锁定颗粒度在 MySQL 中是最小的，<strong>只针对操作的当前行进行加锁</strong>，所以<strong>行级锁发生锁定资源争用的概率也最小</strong>。</li>
 <li>行级锁能够给予应用程序尽可能大的并发处理能力，从而提高需要高并发应用系统的整体性能。虽然行级锁在并发处理能力上面有较大的优势，但也因此带来了不少弊端。</li>
@@ -165,9 +165,9 @@
 <h1 id="排他锁（EXclusive-Lock）"><a href="#排他锁（EXclusive-Lock）" class="headerlink" title="排他锁（EXclusive Lock）"></a>排他锁（EXclusive Lock）</h1><ul>
 <li><p>排他锁的代号是<code>X</code>，是 <code>eXclusive</code> 的缩写，也可称为<strong>写锁</strong>，是基本的锁类型。</p>
 </li>
-<li><p>排他锁的粒度与共享锁相同，也是行或者元组。<strong>一个事务获取了排他锁之后，可以对锁定范围内的数据执行写操作。允许获得排他锁的事务更新数据，阻止其它事务取得相同数据集的共享锁和排他锁。</strong></p>
+<li><p>排他锁的粒度与共享锁相同，也是<strong>行或者元组</strong>。<strong>一个事务获取了排他锁之后，可以对锁定范围内的数据执行写操作。允许获得排他锁的事务更新数据，阻止其它事务取得相同数据集的共享锁和排他锁。</strong></p>
 </li>
-<li><p>当有事务对数据加写锁后，其他事务不能再对锁定的数据加任何锁，又因为InnoDB对select语句默认不加锁，所以其他事务<strong>除了不能写操作外，照样是允许读的（尽管不允许加读锁）</strong>。</p>
+<li><p>当有事务对数据加写锁后，其他事务不能再对锁定的数据加任何锁，又因为 InnoDB 对 select 语句默认不加锁，所以其他事务<strong>除了不能写操作外，照样是允许读的（尽管不允许加读锁）</strong>。</p>
 </li>
 <li><p><strong>主要为了在事务进行写操作时，不允许其他事务修改。</strong></p>
 </li>
@@ -178,21 +178,18 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">commit、rollback;</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h1 id="意向锁（Intention-Lock）"><a href="#意向锁（Intention-Lock）" class="headerlink" title="意向锁（Intention Lock）"></a>意向锁（Intention Lock）</h1><ul>
-<li><p>又称<strong>I锁</strong>。针对<strong>表锁</strong>。</p>
-</li>
-<li><p>为了允许行锁和表锁共存，实现多粒度锁机制，InnoDB 还有两种内部使用的意向锁。</p>
-</li>
-<li><p>意向锁是一种表锁，锁定的粒度是整张表，分为意向**共享锁(IS)和意向排他锁(IX)**两类。</p>
-</li>
-<li><p>意向共享锁表示一个事务有意对数据上共享锁或者排他锁。“有意”表示事务想执行操作但还没有真正执行。</p>
-</li>
-<li><p>当有事务给表的数据行加了共享锁或排他锁，同时会给表设置一个标识，代表已经有行锁了，其他事务要想对表加表锁时，就不必逐行判断有没有行锁可能跟表锁冲突了，直接读这个标识就可以确定自己该不该加表锁。特别是表中的记录很多时，逐行判断加表锁的方式效率很低。而<strong>这个标识就是意向锁</strong>。</p>
-<ul>
+<li>又称<strong>I锁</strong>。针对<strong>表锁</strong>。</li>
+<li>为了允许行锁和表锁共存，实现多粒度锁机制，InnoDB 还有两种内部使用的意向锁。</li>
+<li>意向锁是一种表锁，锁定的粒度是整张表，分为**意向共享锁(IS)和意向排他锁(IX)**两类。</li>
+<li>意向共享锁表示一个事务有意对数据上共享锁或者排他锁。“有意”表示事务想执行操作但还没有真正执行。</li>
+<li>当有事务给表的数据行加了共享锁或排他锁，同时会给表设置一个标识，代表已经有行锁了，其他事务要想对表加表锁时，就不必逐行判断有没有行锁可能跟表锁冲突了，直接读这个标识就可以确定自己该不该加表锁。特别是表中的记录很多时，逐行判断加表锁的方式效率很低。而<strong>这个标识就是意向锁</strong>。<ul>
 <li>意向共享锁，IS锁，对整个表加共享锁之前，需要先获取到意向共享锁。</li>
 <li>意向排他锁，IX锁，对整个表加排他锁之前，需要先获取到意向排他锁。</li>
-<li>主要是为了提高加表锁的效率。</li>
 </ul>
 </li>
+</ul>
+<p>主要是为了提高加表锁的效率。</p>
+<ul>
 <li><p>加锁方式：</p>
 <p>无法手动创建。</p>
 </li>
@@ -200,21 +197,21 @@
 <p>锁和锁之间的关系，要么是相容的，要么是互斥的。</p>
 <ul>
 <li>锁 a 和锁 b 相容是指：操作同样一组数据时，如果事务 t1 获取了锁 a，另一个事务 t2 还可以获取锁 b；</li>
-<li>锁 a 和锁 b 互斥是指：操作同样一组数据时，如果事务 t1 获取了锁 a，另一个事务 t2 在 t1 释放锁 a 之前无法释放锁 b</li>
+<li>锁 a 和锁 b 互斥是指：操作同样一组数据时，如果事务 t1 获取了锁 a，另一个事务 t2 在 t1 释放锁 a 之前无法获取锁 b</li>
 </ul>
 <p>其中<strong>共享锁</strong>、<strong>排他锁</strong>、<strong>意向共享锁、意向排他锁</strong>相互之间的兼容&#x2F;互斥关系如下表所示，其中 Y 表示相容，N 表示互斥。</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/24c690732b2a23eaaf35d230f986d830.png" alt="image-20220303132033771"></p>
 <p><strong>如果一个事务请求的锁模式与当前的锁兼容，InnoDB 就将请求的锁授予该事务；反之，如果两者不兼容，该事务就要等待锁释放。</strong></p>
 <p><strong>为了尽可能提高数据库的并发量，需每次锁定的数据范围越小越好，越小的锁其耗费的系统资源越多，系统性能下降。为在高并发响应和系统性能两方面进行平衡，这样就产生了“锁粒度”的概念。</strong></p>
 <h1 id="并发控制"><a href="#并发控制" class="headerlink" title="并发控制"></a>并发控制</h1><ul>
-<li><p>当程序中可能出现并发的情况时，就需要保证在并发情况下数据的准确性，以此确保当前用户和其他用户一起操作时，所得到的结果和他单独操作时的结果是一样的。这就叫做并发控制。并发控制的目的是保证一个用户的工作不会对另一个用户的工作产生不合理的影响。</p>
+<li><p>当程序中可能出现并发的情况时，就需要保证在并发情况下数据的准确性，以此确保当前用户和其他用户一起操作时，所得到的结果和他单独操作时的结果是一样的，这就叫做并发控制。并发控制的目的是<strong>保证一个用户的工作不会对另一个用户的工作产生不合理的影响</strong>。</p>
 </li>
 <li><p><strong>没有做好并发控制，就可能导致脏读、幻读和不可重复读等问题。</strong></p>
 </li>
 </ul>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/16b34e4c9b6784337b498623ea0dd849.png" alt="img"></p>
-<p>常说的并发控制，一般都和数据库管理系统(DBMS)有关。在 DBMS 中并发控制的任务，是确保多个事务同时增删改查同一数据时，不破坏事务的隔离性、一致性和数据库的统一性。</p>
-<p><code>实现并发控制的主要手段分为乐观并发控制和悲观并发控制两种。</code></p>
+<p>常说的并发控制，一般都和数据库管理系统(DBMS)有关。在 DBMS 中并发控制的任务，是<strong>确保多个事务同时增删改查同一数据时，不破坏事务的隔离性、一致性和数据库的统一性</strong>。</p>
+<p><code>实现并发控制的主要手段分为乐观并发控制和悲观并发控制两种</code></p>
 <p>无论是悲观锁还是乐观锁，都是人们定义出来的概念，<strong>可以认为是一种思想</strong>。其实不仅仅是关系型数据库系统中有乐观锁和悲观锁的概念，像 hibernate、tair、memcache 等都有类似的概念。所以，不应该拿乐观锁、悲观锁和其他的数据库锁等进行对比。<strong>乐观锁比较适用于读多写少的情况(多读场景)，悲观锁比较适用于写多读少的情况(多写场景)。</strong></p>
 <h1 id="悲观锁（Pessimistic-Lock）"><a href="#悲观锁（Pessimistic-Lock）" class="headerlink" title="悲观锁（Pessimistic Lock）"></a>悲观锁（Pessimistic Lock）</h1><ul>
 <li><p>在关系数据库管理系统里，悲观并发控制（又名“悲观锁”，Pessimistic Concurrency Control，缩写“PCC”）是一种并发控制的方法。它可以阻止一个事务以影响其他用户的方式来修改数据。<strong>如果一个事务执行的操作对某行数据应用了锁，那只有当这个事务把锁释放，其他事务才能够执行与该锁冲突的操作</strong>。悲观并发控制主要用于数据争用激烈的环境，以及发生并发冲突时使用锁保护数据的成本要低于回滚事务的成本的环境中。</p>
@@ -238,39 +235,39 @@
 <li>如果加锁失败，说明该记录正在被修改，那么当前查询可能要等待或者抛出异常。 具体响应方式由开发者根据实际需要决定。</li>
 <li>如果成功加锁，那么就可以对记录做修改，事务完成后就会解锁了。</li>
 <li>期间如果有其他对该记录做修改或加排他锁的操作，都会等待我们解锁或直接抛出异常。</li>
-<li><strong>总而言之就是一句话：mysql中悲观锁的实现是通过排他锁来实现的</strong></li>
+<li><strong>总而言之就是一句话：mysql 中悲观锁的实现是通过排他锁来实现的</strong></li>
 </ol>
 </li>
 </ul>
-<p><strong>在mysql（InnoDB）中使用悲观锁：</strong></p>
+<p><strong>在 mysql(InnoDB) 中使用悲观锁：</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1.开始事务</span><br><span class="line">begin;/begin work;/start transaction; (三者选一就可以)</span><br><span class="line">2.查询出商品信息</span><br><span class="line">select ... for update;(这里是使用的行锁的排他锁)</span><br><span class="line">4.提交事务</span><br><span class="line">commit;/commit work;</span><br></pre></td></tr></table></figure>
 
 <p>通过下面的例子来说明：</p>
-<p><strong>1. 当你手动加上排它锁，但是并没有关闭mysql中的autocommit。</strong></p>
+<p><strong>1. 当你手动加上排它锁，但是并没有关闭 mysql 中的 autocommit。</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">1.这里先给user表所有的行加上行锁的排他锁</span><br><span class="line">mysql&gt; select * from user for update;</span><br><span class="line">+----+------+--------+</span><br><span class="line">| id | name | psword |</span><br><span class="line">+----+------+--------+</span><br><span class="line">|  1 | a    | 1      |</span><br><span class="line">|  2 | b    | 2      |</span><br><span class="line">|  3 | c    | 3      |</span><br><span class="line">+----+------+--------+</span><br><span class="line">3 rows in set</span><br><span class="line"></span><br><span class="line">2.再对加了排他锁的行更改数据时，这里他会一直提示Unknown</span><br><span class="line">mysql&gt; update user set name=aa where id=1;</span><br><span class="line">1054 - Unknown column &#x27;aa&#x27; in &#x27;field list&#x27;</span><br><span class="line">mysql&gt; insert into user values(4,d,4);</span><br><span class="line">1054 - Unknown column &#x27;d&#x27; in &#x27;field list&#x27;</span><br></pre></td></tr></table></figure>
 
-<p><strong>2. 关闭mysql中的autocommit后的正常流程</strong></p>
+<p><strong>2. 关闭 mysql 中的 autocommit 后的正常流程</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">窗口1：</span><br><span class="line">mysql&gt; set autocommit=0;（先关闭mysql中的autocommit）</span><br><span class="line">Query OK, 0 rows affected</span><br><span class="line">我这里锁的是表中的所有行</span><br><span class="line">mysql&gt; select * from user for update;</span><br><span class="line">+----+-------+</span><br><span class="line">| id | price |</span><br><span class="line">+----+-------+</span><br><span class="line">|  1 |   500 |</span><br><span class="line">|  2 |   800 |</span><br><span class="line">+----+-------+</span><br><span class="line">2 rows in set</span><br><span class="line"></span><br><span class="line">窗口2：</span><br><span class="line">mysql&gt; update user set price=price-100 where id=1;</span><br><span class="line">执行上面操作的时候，会显示等待状态，一直到窗口1执行commit提交事务才会出现下面的显示结果</span><br><span class="line">Database changed</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 0</span><br><span class="line"></span><br><span class="line">窗口1：执行commit手动提交事务</span><br><span class="line">mysql&gt; commit;</span><br><span class="line">Query OK, 0 rows affected</span><br><span class="line">再查询一下user表，发现已经执行了窗口2的更新操作</span><br><span class="line">mysql&gt; select * from user;</span><br><span class="line">+----+-------+</span><br><span class="line">| id | price |</span><br><span class="line">+----+-------+</span><br><span class="line">|  1 |   400 |</span><br><span class="line">|  2 |   800 |</span><br><span class="line">+----+-------+</span><br><span class="line">2 rows in set</span><br></pre></td></tr></table></figure>
 
 <p>上面的例子展示了排它锁的原理：一个锁在某一时刻只能被一个线程占有，其它线程必须等待锁被释放之后才可能获取到锁或者进行数据的操作。</p>
 <ul>
 <li><p><strong>悲观锁的优点和不足</strong></p>
-<p>悲观锁实际上是采取了“先取锁在访问”的策略，为数据的处理安全提供了保证，但是在效率方面，由于额外的加锁机制产生了额外的开销，并且<strong>增加了死锁的机会</strong>。并且降低了并发性；当一个事务加锁一行数据的时候，其他事务必须等待该事务提交之后，才能操作这行数据。</p>
+<p>悲观锁实际上是采取了“先取锁再访问”的策略，为数据的处理安全提供了保证，但是在效率方面，由于额外的加锁机制产生了额外的开销，并且<strong>增加了死锁的机会</strong>。并且降低了并发性；当一个事务加锁一行数据的时候，其他事务必须等待该事务提交之后，才能操作这行数据。</p>
 </li>
 </ul>
 <h1 id="乐观锁（Optimistic-Locking）"><a href="#乐观锁（Optimistic-Locking）" class="headerlink" title="乐观锁（Optimistic Locking）"></a>乐观锁（Optimistic Locking）</h1><ul>
-<li><p>在关系数据库管理系统里，乐观并发控制（又名“乐观锁”，Optimistic Concurrency Control，缩写“OCC”）是一种并发控制的方法。它假设多用户并发的事务在处理时不会彼此互相影响，各事务能够在不产生锁的情况下处理各自影响的那部分数据。在提交数据更新之前，每个事务会先检查在该事务读取数据后，有没有其他事务又修改了该数据。如果其他事务有更新的话，正在提交的事务会进行回滚。</p>
+<li><p>在关系数据库管理系统里，乐观并发控制（又名“乐观锁”，Optimistic Concurrency Control，缩写“OCC”）是一种并发控制的方法。它假设多用户并发的事务在处理时不会彼此互相影响，各事务能够在不产生锁的情况下处理各自影响的那部分数据。在提交数据更新之前，每个事务会先检查在该事务读取数据后，有没有其他事务又修改了该数据。如果其他事务有更新的话，正在提交的事务会进行<strong>回滚</strong>。</p>
 </li>
 <li><p>乐观锁（ Optimistic Locking ） 相对悲观锁而言，乐观锁假设认为数据一般情况下不会造成冲突，所以在数据进行提交更新的时候，才会正式对数据的冲突与否进行检测，如果发现冲突了，则让返回用户错误的信息，让用户决定如何去做。</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/569ff4e1a29633f4039ff83c0438346d.png" alt="img"></p>
 </li>
 <li><p>相对于悲观锁，在对数据库进行处理的时候，乐观锁并不会使用数据库提供的锁机制。</p>
 </li>
-<li><p>mysql实现乐观锁一般来说有3种方式：</p>
+<li><p>mysql 实现乐观锁一般来说有3种方式：</p>
 <ol>
-<li>使用<strong>数据版本（Version）记录机制</strong>实现，这是乐观锁最常用的一种实现方式。一般是通过为数据库表增加一个数字类型的 “version” 字段，表示数据被修改的次数。当读取数据时，将version字段的值一同读出，数据每更新一次，对此version值加一。<br>当提交更新的时候，判断数据库表对应记录的当前版本信息与第一次取出来的version值进行比对，如果数据库表当前版本号与第一次取出来的version值相等，就进行更新操作，否则认为是过期数据，正在提交的事务会进行回滚。</li>
-<li>第二种实现方式和第一种差不多，同样是在需要乐观锁控制的table中增加一个字段，名称无所谓，字段类型使用<strong>时间戳</strong>（timestamp）, 和上面的version类似，也是在更新提交的时候检查当前数据库中数据的时间戳和自己更新前取到的时间戳进行对比，如果一致就更新，否则就是版本冲突。</li>
-<li>CAS 实现：Java 中java.util.concurrent.atomic包下面的原子变量使用了乐观锁的一种 CAS 实现方式</li>
+<li>使用<strong>数据版本（Version）记录机制</strong>实现，这是乐观锁最常用的一种实现方式。一般是通过为数据库表增加一个数字类型的 “version” 字段，表示数据被修改的次数。当读取数据时，将 version 字段的值一同读出，数据每更新一次，对此 version 值加一。当提交更新的时候，判断数据库表对应记录的当前版本信息与第一次取出来的 version 值进行比对，如果数据库表当前版本号与第一次取出来的 version 值相等，就进行更新操作，否则认为是过期数据，正在提交的事务会进行回滚。</li>
+<li>第二种实现方式和第一种差不多，同样是在需要乐观锁控制的 table 中增加一个字段，名称无所谓，字段类型使用<strong>时间戳</strong>（timestamp）, 和上面的 version 类似，也是在更新提交的时候检查当前数据库中数据的时间戳和自己更新前取到的时间戳进行对比，如果一致就更新，否则就是版本冲突。</li>
+<li>CAS 实现：Java 中 java.util.concurrent.atomic 包下面的原子变量使用了乐观锁的一种 CAS 实现方式</li>
 </ol>
 </li>
 <li><p>乐观锁的优点和不足</p>
@@ -279,7 +276,7 @@
 <li><p>具体流程</p>
 <ul>
 <li>主要就是两个步骤：<strong>冲突检测和数据更新</strong>。比较典型的就是 CAS (Compare and Swap)。</li>
-<li><strong>CAS 即比较并交换</strong>。是解决多线程并行情况下使用锁造成性能损耗的一种机制，CAS 操作包含三个操作数——<strong>内存位置(V)、预期原值(A)和新值(B)<strong>。如果内存位置的值(V)与预期原值(A)相匹配，那么处理器会自动将该位置值更新为新值(B)。否则，处理器不做任何操作。无论哪种情况，它都会在 CAS 指令之前返回该位置的值。CAS 有效地说明了“我认为位置(V)应该包含值(A)。如果包含该值，则将新值(B)放到这个位置；否则，不要更改该位置，只告诉我这个位置现在的值即可”。Java 中，</strong>sun.misc.Unsafe</strong> 类提供了硬件级别的原子操作来实现这个 CAS。<strong>java.util.concurrent</strong>包下大量的类都使用了这个 Unsafe.java 类的 CAS 操作。</li>
+<li><strong>CAS 即比较并交换</strong>。是解决多线程并行情况下使用锁造成性能损耗的一种机制，CAS 操作包含三个操作数——<strong>内存位置(V)、预期原值(A)和新值(B)<strong>。如果内存位置的值(V)与预期原值(A)相匹配，那么处理器会自动将该位置值更新为新值(B)。否则，处理器不做任何操作。无论哪种情况，它都会在 CAS 指令之前返回该位置的值。CAS 有效地说明了“我认为位置(V)应该包含值(A)。如果包含该值，则将新值(B)放到这个位置；否则，不要更改该位置，只告诉我这个位置现在的值即可”。Java 中，</strong>sun.misc.Unsafe</strong> 类提供了硬件级别的原子操作来实现这个 CAS。<strong>java.util.concurrent</strong> 包下大量的类都使用了这个 Unsafe.java 类的 CAS 操作。</li>
 <li>当多个线程尝试使用 CAS 同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败，失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。比如前面的扣减库存问题，</li>
 </ul>
 </li>
@@ -289,7 +286,7 @@
 <ul>
 <li><p>在更新之前，先查询一下库存表中当前库存数(quantity)，然后在做 update 的时候，以库存数作为一个修改条件。当提交更新的时候，判断数据库表对应记录的当前库存数与第一次取出来的库存数进行比对，如果数据库表当前库存数与第一次取出来的库存数相等，则予以更新，否则认为是过期数据。</p>
 </li>
-<li><p>以上更新语句存在一个比较严重的问题，即<strong>ABA问题</strong>：</p>
+<li><p>以上更新语句存在一个比较严重的问题，即 <strong>ABA问题</strong>：</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/b67b363facf7760af75bfbad53b4e593.png" alt="img"></p>
 <ol>
 <li>比如说线程一从数据库中取出库存数 3，这时候线程二也从数据库中取出库存数 3，并且线程二进行了一些操作变成了 2。</li>
@@ -322,7 +319,7 @@
 <li>然后 CAS 操作里，会比较一下，现在的值是不是刚才获取到的那个值。如果是，说明没人改过这个值，然后设置成累加 1 之后的一个值。</li>
 <li>同理，如果有人在执行 CAS 的时候，发现之前获取的值跟当前的值不一样，会导致 CAS 失败。失败之后，进入一个无限循环，再次获取值，接着执行 CAS 操作。</li>
 </ol>
-<h1 id="CAS-典型应用"><a href="#CAS-典型应用" class="headerlink" title="CAS 典型应用"></a>CAS 典型应用</h1><p>java.util.concurrent.atomic包下的类大多是使用 CAS 操作来实现的，比如 AtomicInteger、AtomicBoolean、AtomicLong。一般在竞争不是特别激烈的时候，使用该包下的原子操作性能比使用 synchronized关键字的方式高效的多(查看 getAndSet()，可知如果资源竞争十分激烈的话，这个 for 循环可能会持续很久都不能成功跳出。不过这种情况可能需要考虑降低资源竞争才是)。</p>
+<h1 id="CAS-典型应用"><a href="#CAS-典型应用" class="headerlink" title="CAS 典型应用"></a>CAS 典型应用</h1><p>java.util.concurrent.atomic 包下的类大多是使用 CAS 操作来实现的，比如 AtomicInteger、AtomicBoolean、AtomicLong。一般在竞争不是特别激烈的时候，使用该包下的原子操作性能比使用 synchronized 关键字的方式高效的多(查看 getAndSet()，可知如果资源竞争十分激烈的话，这个 for 循环可能会持续很久都不能成功跳出。不过这种情况可能需要考虑降低资源竞争才是)。</p>
 <p>在较多的场景都可能会使用到这些原子类操作。一个典型应用就是计数了，在多线程的情况下需要考虑线程安全问题。</p>
 <ol>
 <li>支持计数功能 Demo 实现</li>
@@ -376,22 +373,22 @@
 <p><strong>要解决冲突，一种办法是是锁，即基于锁的并发控制，比如2PL两阶段锁协议，这种方式开销比较高，而且无法避免死锁。而基于无锁的并发控制有两种方式：就是MVCC多版本并发控制和OCC乐观并发控制，这两种方式分别解决上面的第2,3种情况。</strong></p>
 <p><strong>多版本并发控制（MVCC）是一种用来解决读-写冲突的无锁并发控制</strong>，也就是为事务分配单向增长的时间戳，为每个修改保存一个版本，版本与事务时间戳关联，读操作只读该事务开始前的数据库的快照。 这样在读操作不用阻塞写操作，写操作不用阻塞读操作的同时，避免了脏读和不可重复读</p>
 <p><strong>乐观并发控制（OCC）是一种用来解决写-写冲突的无锁并发控制</strong>，认为事务间争用没有那么多，所以先进行修改，在提交事务前，检查一下事务开始后，有没有新提交改变，如果没有就提交，如果有就放弃并重试。乐观并发控制类似自旋锁。乐观并发控制适用于低数据争用，写冲突比较少的环境。</p>
-<p><strong>多版本并发控制可以结合基于锁的并发控制来解决写-写冲突</strong>，即MVCC+2PL，也可以结合乐观并发控制来解决写-写冲突。</p>
-<h1 id="InnoDB锁的特性"><a href="#InnoDB锁的特性" class="headerlink" title="InnoDB锁的特性"></a>InnoDB锁的特性</h1><ol>
-<li><p>在不通过索引条件查询的时候，InnoDB使用的确实是表锁（锁的是整张表）！</p>
+<p><strong>多版本并发控制可以结合基于锁的并发控制来解决写-写冲突</strong>，即 MVCC+2PL，也可以结合乐观并发控制来解决写-写冲突。</p>
+<h1 id="InnoDB-锁的特性"><a href="#InnoDB-锁的特性" class="headerlink" title="InnoDB 锁的特性"></a>InnoDB 锁的特性</h1><ol>
+<li><p>在不通过索引条件查询的时候，InnoDB 使用的确实是表锁（锁的是整张表）！</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">price属性并没有加索引，因此这时候虽然是用的行锁，锁的却是整张表</span><br><span class="line">窗口1：</span><br><span class="line">mysql&gt; select * from product where price=88 for update;</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line">| id | name | price | num |</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line">|  2 | 蒙牛 |    88 |   1 |</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line"></span><br><span class="line">窗口2：</span><br><span class="line">mysql&gt; update product set price=price-100 where id=6;</span><br><span class="line">这里会等待，直到窗口1 commit后显示下面结果！</span><br><span class="line">Query OK, 1 row affected</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 0</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>由于 MySQL 的行锁是<strong>针对索引加的锁</strong>,不是针对记录加的锁,所以虽然是访问不同行的记录,但是如果是使用相同的索引键,是会出现锁冲突的。</p>
+<li><p>由于 MySQL 的行锁是<strong>针对索引加的锁</strong>，不是针对记录加的锁，所以虽然是访问不同行的记录，但是如果是使用相同的索引键，是会出现锁冲突的。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">这里的num属性 加上了普通索引，price属性并没有索引</span><br><span class="line">窗口1：</span><br><span class="line">mysql&gt; set autocommit=0;</span><br><span class="line">Query OK, 0 rows affected</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from product where num=1 and price=68 for update;</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line">| id | name | price | num |</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line">|  1 | 伊利 |    68 |   1 |</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line"></span><br><span class="line">窗口2：</span><br><span class="line">mysql&gt; update product set price=price+100 where num=1 and price=88;</span><br><span class="line">这里会发生等待，直到窗口1 commit 显示下面结果</span><br><span class="line">Query OK, 1 row affected</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 0</span><br><span class="line">mysql&gt; select * from product;</span><br><span class="line">+----+----------+-------+-----+</span><br><span class="line">| id | name     | price | num |</span><br><span class="line">+----+----------+-------+-----+</span><br><span class="line">|  1 | 伊利     |    68 |   1 |</span><br><span class="line">|  2 | 蒙牛     |   188 |   1 |</span><br><span class="line">+----+----------+-------+-----+</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>当表有多个索引的时候,不同的事务可以使用不同的索引锁定不同的行,另外,不论是使用主键索引、唯一索引或普通索引,InnoDB都会使用行锁来对数据加锁。</p>
+<li><p>当表有多个索引的时候，不同的事务可以使用不同的索引锁定不同的行，另外，不论是使用主键索引、唯一索引或普通索引，InnoDB 都会使用行锁来对数据加锁。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">锁一行数据，DML操作其他行并没有影响</span><br><span class="line">窗口1：</span><br><span class="line">mysql&gt; select * from user where id=1 for update;</span><br><span class="line">+----+-------+</span><br><span class="line">| id | price |</span><br><span class="line">+----+-------+</span><br><span class="line">|  1 |   400 |</span><br><span class="line">+----+-------+</span><br><span class="line"></span><br><span class="line">窗口2：</span><br><span class="line">mysql&gt; update user set price=price+100 where id=2;</span><br><span class="line">无需等待窗口1 commit</span><br><span class="line">Database changed</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 0</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>即便在条件中使用了索引字段,但是否使用索引来检索数据是由 MySQL 通过判断不同 执行计划的代价来决定的,如果 MySQL 认为全表扫效率更高,比如对一些很小的表,它 就不会使用索引,这种情况下 InnoDB 将使用表锁,而不是行锁。因此,在分析锁冲突时, 别忘了检查SQL 的执行计划（explain查看）,以确认是否真正使用了索引。</p>
+<li><p>即便在条件中使用了索引字段，但是否使用索引来检索数据是由 MySQL 通过判断不同执行计划的代价来决定的，如果 MySQL 认为全表扫效率更高，比如对一些很小的表，它就不会使用索引，这种情况下 InnoDB 将使用表锁，而不是行锁。因此，在分析锁冲突时, 别忘了检查SQL 的执行计划（explain查看），以确认是否真正使用了索引。</p>
 </li>
 </ol>
-<h1 id="死锁的原理及分析"><a href="#死锁的原理及分析" class="headerlink" title="死锁的原理及分析"></a>死锁的原理及分析</h1><h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><p>MySQL InnoDB存储引擎，实现的是基于多版本并发控制协议—MVCC(Multi-Version Concurrency Control) MVCC最大的好处，相信也是耳熟能详：<strong>读不加锁，读写不冲突</strong>。在读多写少的OLTP应用中，读写不冲突是非常重要的，极大的增加了系统的并发性能，这也是为什么现阶段，几乎所有的RDBMS，都支持了MVCC。</p>
-<h2 id="PL：Two-Phase-Locking"><a href="#PL：Two-Phase-Locking" class="headerlink" title="PL：Two-Phase Locking"></a>PL：Two-Phase Locking</h2><p>传统RDBMS（关系数据库管理系统）加锁的一个原则，就是2PL (二阶段锁)：Two-Phase Locking。相对而言，2PL比较容易理解，说的是锁操作分为两个阶段：<strong>加锁阶段与解锁阶段</strong>，并且保证加锁阶段与解锁阶段不相交。下面，仍旧以MySQL为例，来简单看看2PL在MySQL中的实现。</p>
+<h1 id="死锁的原理及分析"><a href="#死锁的原理及分析" class="headerlink" title="死锁的原理及分析"></a>死锁的原理及分析</h1><h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><p>MySQL InnoDB 存储引擎，实现的是基于多版本并发控制协议—MVCC(Multi-Version Concurrency Control) MVCC最大的好处，相信也是耳熟能详：<strong>读不加锁，读写不冲突</strong>。在读多写少的 OLTP 应用中，读写不冲突是非常重要的，极大的增加了系统的并发性能，这也是为什么现阶段，几乎所有的 RDBMS，都支持了 MVCC。</p>
+<h2 id="PL：Two-Phase-Locking"><a href="#PL：Two-Phase-Locking" class="headerlink" title="PL：Two-Phase Locking"></a>PL：Two-Phase Locking</h2><p>传统 RDBMS（关系数据库管理系统）加锁的一个原则，就是 2PL (二阶段锁)：Two-Phase Locking。相对而言，2PL 比较容易理解，说的是锁操作分为两个阶段：<strong>加锁阶段与解锁阶段</strong>，并且保证加锁阶段与解锁阶段不相交。下面，仍旧以 MySQL 为例，来简单看看 2PL 在MySQL 中的实现。</p>
 <table>
 <thead>
 <tr>
@@ -425,26 +422,26 @@
 </tr>
 </tbody></table>
 <p>上面的例子可以看出2PL就是将加锁、解锁分为两个阶段，并且互相不干扰。加锁阶段只加锁，解锁阶段只解锁。</p>
-<h2 id="为什么会发生死锁"><a href="#为什么会发生死锁" class="headerlink" title="为什么会发生死锁"></a>为什么会发生死锁</h2><p>MyISAM中是不会产生死锁的，因为MyISAM总是一次性获得所需的全部锁，要么全部满足，要么全部等待。而在InnoDB中，锁是逐步获得的，就造成了死锁的可能。（不过现在一般都是InnoDB引擎，关于MyISAM不做考虑）</p>
-<p>在InnoDB中，行级锁并不是直接锁记录，而是锁索引。索引分为主键索引和非主键索引两种，如果一条sql语句操作了主键索引，MySQL就会锁定这条主键索引；如果一条语句操作了非主键索引，MySQL会先锁定该非主键索引，再锁定相关的主键索引。</p>
+<h2 id="为什么会发生死锁"><a href="#为什么会发生死锁" class="headerlink" title="为什么会发生死锁"></a>为什么会发生死锁</h2><p>MyISAM 中是不会产生死锁的，因为 MyISAM 总是一次性获得所需的全部锁，要么全部满足，要么全部等待。而在 InnoDB 中，锁是逐步获得的，就造成了死锁的可能。（不过现在一般都是 InnoDB 引擎，关于MyISAM不做考虑）</p>
+<p>在 InnoDB 中，行级锁并不是直接锁记录，而是锁索引。索引分为主键索引和非主键索引两种，如果一条 sql 语句操作了主键索引，MySQL 就会锁定这条主键索引；如果一条语句操作了非主键索引，MySQL 会先锁定该非主键索引，再锁定相关的主键索引。</p>
 <p>当两个事务同时执行，一个锁住了主键索引，在等待其他相关索引。另一个锁定了非主键索引，在等待主键索引。这样就会发生死锁。</p>
 <p>通过两个SQL死锁的例子来说明</p>
 <ol>
 <li><strong>两个session的两条语句</strong></li>
 </ol>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20190406184514611.jpg" alt="img"></p>
-<p>这种情况很好理解，首先session1获得 id&#x3D;1的锁 session2获得id&#x3D;5的锁，然后session想要获取id&#x3D;5的锁 等待，session2想要获取id&#x3D;1的锁 ，也等待！</p>
+<p>这种情况很好理解，首先 session1 获得 id&#x3D;1 的锁 session2 获得 id&#x3D;5 的锁，然后 session 想要获取 id&#x3D;5 的锁等待，session2 想要获取id&#x3D;1 的锁 ，也等待！</p>
 <ol start="2">
 <li><strong>两个session的一条语句</strong></li>
 </ol>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20190406184524757.jpg" alt="img"></p>
 <p>这种情况需要我们了解<strong>数据的索引的检索顺序</strong>原理简单说下：<strong>普通索引上面保存了主键索引，当我们使用普通索引检索数据时，如果所需的信息不够，那么会继续遍历主键索引。</strong></p>
-<p>假设默认情况是RR隔离级别，针对session 1 从name索引出发，检索到的是（hdc,1）（hdc,6）不仅会加name索引上的记录X锁，而且会加聚簇索引上的记录X锁，加锁顺序为先[1,hdc,100]，后[6,hdc,10] 这个顺序是因为B+树结构的有序性。而Session 2，从pubtime索引出发，[10,6],[100,1]均满足过滤条件，同样也会加聚簇索引上的记录X锁，加锁顺序为[6,hdc,10]，后[1,hdc,100]。发现没有，跟Session 1的加锁顺序正好相反，如果两个Session恰好都持有了第一把锁，请求加第二把锁，死锁就发生了。</p>
+<p>假设默认情况是 RR 隔离级别，针对 session 1 从 name 索引出发，检索到的是（hdc,1）（hdc,6）不仅会加 name 索引上的记录 X 锁，而且会加聚簇索引上的记录 X 锁，加锁顺序为先[1,hdc,100]，后[6,hdc,10] 这个顺序是因为 B+树 结构的有序性。而 Session 2，从pubtime 索引出发，[10,6]、[100,1]均满足过滤条件，同样也会加聚簇索引上的记录 X 锁，加锁顺序为[6,hdc,10]，后[1,hdc,100]。发现没有，跟 Session 1的加锁顺序正好相反，如果两个Session恰好都持有了第一把锁，请求加第二把锁，死锁就发生了。</p>
 <p><strong>避免死锁，这里只介绍常见的三种</strong></p>
 <ol>
-<li>如果不同程序会并发存取多个表，尽量约定以相同的顺序访问表，可以大大降低死锁机会。</li>
+<li>如果不同程序会并发存取多个表，尽量约定<strong>以相同的顺序访问表</strong>，可以大大降低死锁机会。</li>
 <li>在同一个事务中，尽可能做到一次锁定所需要的所有资源，减少死锁产生概率；</li>
-<li>对于非常容易产生死锁的业务部分，可以尝试使用升级锁定颗粒度，通过表级锁定来减少死锁产生的概率；</li>
+<li>对于非常容易产生死锁的业务部分，可以尝试使用<strong>升级锁定颗粒度</strong>，通过表级锁定来减少死锁产生的概率；</li>
 </ol>
  
       <!-- reward -->

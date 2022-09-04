@@ -114,14 +114,14 @@
     <div class="article-entry" itemprop="articleBody">
        
   <h1 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h1><h2 id="局部性原理"><a href="#局部性原理" class="headerlink" title="局部性原理"></a>局部性原理</h2><p>程序和数据的访问都有聚集成群的倾向，在一个时间段内，仅使用其中一小部分，称为<strong>空间局部性</strong></p>
-<p>最经访问过的程序代码和数据，很快又被访问的可能性很大，称为<strong>时间局部性</strong></p>
+<p>最近访问过的程序代码和数据，很快又被访问的可能性很大，称为<strong>时间局部性</strong></p>
 <h2 id="磁盘预读"><a href="#磁盘预读" class="headerlink" title="磁盘预读"></a>磁盘预读</h2><ul>
 <li>预读的长度一般为页（page）的整数倍</li>
 <li>页是存储器的逻辑块，操作系统往往将主存和磁盘存储区分割为连续的大小相等的块，每个存储块称为一页（在许多操作系统中，页大小通常为4K），主存和磁盘以页为单位交换数据</li>
-<li>考虑到磁盘IO是非常高昂的操作，计算机操作系统做了一些优化，<strong>当一次IO时，不光把当前磁盘地址的数据，而是把相邻的数据也都读取到内存缓冲区内</strong>，因为局部预读性原理告诉我们，当计算机访问一个地址的数据的时候，与其相邻的数据也会很快被访问到。每一次IO读取的数据我们称之为一页(page)。具体一页有多大数据跟操作系统有关，一般为4k或8k，也就是我们读取一页内的数据时候，实际上才发生了一次IO，这个理论对于索引的数据结构设计非常有帮助。</li>
+<li>考虑到磁盘 IO 是非常高昂的操作，计算机操作系统做了一些优化，<strong>当一次 IO 时，不光把当前磁盘地址的数据，而是把相邻的数据也都读取到内存缓冲区内</strong>，因为局部预读性原理告诉我们，当计算机访问一个地址的数据的时候，与其相邻的数据也会很快被访问到。每一次 IO 读取的数据我们称之为一页(page)。具体一页有多大数据跟操作系统有关，一般为4k或8k，也就是我们读取一页内的数据时候，实际上才发生了一次 IO，这个理论对于索引的数据结构设计非常有帮助。</li>
 </ul>
 <h1 id="索引概述"><a href="#索引概述" class="headerlink" title="索引概述"></a>索引概述</h1><ul>
-<li><p>MySql官方对索引的定义为：<strong>索引是帮助MySql高效获取数据的数据结构</strong>。在数据之外，数据库系统还维护着满足特定查找算法的数据结构，这些数据结构以某种方式引用数据，这样就可以在这些数据结构上实现高级查找算法，这种数据结构就是索引。</p>
+<li><p>MySql官方对索引的定义为：<strong>索引是帮助 MySql 高效获取数据的数据结构</strong>。在数据之外，数据库系统还维护着满足特定查找算法的数据结构，这些数据结构以某种方式引用数据，这样就可以在这些数据结构上实现高级查找算法，这种数据结构就是索引。</p>
 </li>
 <li><p>索引存储在文件系统中</p>
 </li>
@@ -282,48 +282,48 @@
 </tbody></table>
 <h1 id="索引优化-基本知识"><a href="#索引优化-基本知识" class="headerlink" title="索引优化-基本知识"></a>索引优化-基本知识</h1><p><strong>原因</strong>：</p>
 <ul>
-<li>索引在MySQL中也叫做“键”，是存储引擎用于快速找到记录的一种数据结构。索引对于良好的性能非常关键，尤其是当表中的数据量越来越大时，索引对于性能的影响愈发重要。索引优化应该是对查询性能优化最有效的手段了。索引能够轻易将查询性能提高好几个数量级。索引相当于字典的音序表，如果要查某个字，如果不使用音序表，则需要从几百页中逐页去查。</li>
+<li>索引在 MySQL 中也叫做“键”，是存储引擎用于快速找到记录的一种数据结构。索引对于良好的性能非常关键，尤其是当表中的数据量越来越大时，索引对于性能的影响愈发重要。索引优化应该是对查询性能优化最有效的手段了。索引能够轻易将查询性能提高好几个数量级。索引相当于字典的音序表，如果要查某个字，如果不使用音序表，则需要从几百页中逐页去查。</li>
 </ul>
 <p><strong>优点</strong>：</p>
 <ul>
-<li>使用主键索引或者唯一索引,可以保证数据库中的表的数据是唯一</li>
-<li><strong>通过建立索引可以大大的提高数据检索的效率,减少表扫描的行数(避免进行全表扫描)</strong></li>
-<li>我们在进行多表连接的时候,可以使用索引加速表之间的连接</li>
+<li>使用主键索引或者唯一索引，可以保证数据库中的表的数据是唯一</li>
+<li><strong>通过建立索引可以大大的提高数据检索的效率，减少表扫描的行数(避免进行全表扫描)</strong></li>
+<li>我们在进行多表连接的时候，可以使用索引加速表之间的连接</li>
 </ul>
 <hr>
 <p><strong>缺点</strong>：</p>
 <ul>
-<li>在创建索引和维护索引时都需要耗费时间;</li>
-<li>索引文件会占用物理存储空间,除了表的数据占用一部分空间,索引文件也会占用一部分空间;</li>
+<li>在创建索引和维护索引时都需要耗费时间</li>
+<li>索引文件会占用物理存储空间，除了表的数据占用一部分空间，索引文件也会占用一部分空间;</li>
 <li><strong>设置为<code>text</code>和<code>blob</code>类型的字段强烈不建议添加索引</strong></li>
 </ul>
 <h1 id="索引优化-联合索引"><a href="#索引优化-联合索引" class="headerlink" title="索引优化-联合索引"></a>索引优化-联合索引</h1><p><strong>回表</strong>：</p>
 <ul>
-<li>在InnoDB存储引擎下，二级索引查询到的索引列，如果需要查找所有列的数据，则需要到主键索引里面去取出数据。这个过程就称为回表。因为行的数据都是存在主键B+tree的叶子节点里面，二级索引的B+树叶子节点都是存放的(索引列,主键)。</li>
+<li>在 InnoDB 存储引擎下，二级索引查询到的索引列，如果需要查找所有列的数据，则需要到主键索引里面去取出数据。这个过程就称为回表。因为行的数据都是存在主键 B+tree 的叶子节点里面，二级索引的B+树叶子节点都是存放的(索引列,主键)。</li>
 </ul>
 <p><strong>覆盖索引</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select * from s1 where id=123;</span><br><span class="line">该sql命中了索引，但未覆盖索引。</span><br><span class="line">利用id=123到索引的数据结构中定位到该id在硬盘中的位置，或者说再数据表中的位置。</span><br><span class="line">但是我们select的字段为*，除了id以外还需要其他字段，这就意味着，我们通过索引结构取到id还不够，</span><br><span class="line">还需要利用该id再去找到该id所在行的其他字段值，这是需要时间的，很明显，如果我们只select id，</span><br><span class="line">就减去了这份苦恼，如下</span><br><span class="line">select id from s1 where id=123;</span><br><span class="line">这条就是覆盖索引了，命中索引，且从索引的数据结构直接就取到了id在硬盘的地址，速度很快</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select * from s1 where id=123;</span><br><span class="line">该 sql命中了索引，但未覆盖索引。</span><br><span class="line">利用 id=123 到索引的数据结构中定位到该 id 在硬盘中的位置，或者说在数据表中的位置。</span><br><span class="line">但是我们 select 的字段为*，除了id以外还需要其他字段，这就意味着，我们通过索引结构取到id还不够，</span><br><span class="line">还需要利用该id再去找到该id所在行的其他字段值，这是需要时间的，很明显，如果我们只select id，</span><br><span class="line">就减去了这份苦恼，如下</span><br><span class="line">select id from s1 where id=123;</span><br><span class="line">这条就是覆盖索引了，命中索引，且从索引的数据结构直接就取到了id在硬盘的地址，速度很快</span><br></pre></td></tr></table></figure>
 
 <p><strong>最左匹配</strong>：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">create index ix_name_email on s1(name,email,)</span><br><span class="line">- 最左前缀匹配：必须按照从左到右的顺序匹配</span><br><span class="line">select * from s1 where name=&#x27;egon&#x27;; #可以</span><br><span class="line">select * from s1 where name=&#x27;egon&#x27; and email=&#x27;asdf&#x27;; #可以</span><br><span class="line">select * from s1 where email=&#x27;alex@oldboy.com&#x27;; #不可以</span><br><span class="line">select * from s1 where email=&#x27;asdf&#x27; and  name=&#x27;egon&#x27;; #可以</span><br><span class="line">mysql会一直向右匹配直到遇到范围查询(&gt;、&lt;、between、like)就停止匹配，</span><br><span class="line">比如a = 1 and b = 2 and c &gt; 3 and d = 4 如果建立(a,b,c,d)顺序的索引，</span><br><span class="line">d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整。</span><br></pre></td></tr></table></figure>
 
 <p><strong>索引下推</strong>：</p>
 <ul>
-<li><p>索引条件下推(Index Condition Pushdown),简称ICP。MySQL5.6新添加，用于优化数据的查询。</p>
+<li><p>索引条件下推(Index Condition Pushdown)，简称 ICP。MySQL5.6新添加，用于优化数据的查询。</p>
 </li>
-<li><p>当你不使用ICP,通过使用非主键索引（普通索引or二级索引）进行查询，存储引擎通过索引检索数据，然后返回给MySQL服务器，服务器再判断是否符合条件。</p>
+<li><p>当你不使用 ICP，通过使用非主键索引（普通索引or二级索引）进行查询，存储引擎通过索引检索数据，然后返回给 MySQL 服务器，服务器再判断是否符合条件。</p>
 </li>
-<li><p>使用ICP，当存在索引的列做为判断条件时，MySQL服务器将这一部分判断条件传递给存储引擎，然后存储引擎通过判断索引是否符合MySQL服务器传递的条件，只有当索引符合条件时才会将数据检索出来返回给MySQL服务器。</p>
+<li><p>使用 ICP，当存在索引的列做为判断条件时，MySQL 服务器将这一部分判断条件传递给存储引擎，然后存储引擎通过判断索引是否符合 MySQL 服务器传递的条件，只有当索引符合条件时才会将数据检索出来返回给 MySQL 服务器。</p>
 </li>
 <li><p>示例</p>
 <ul>
-<li><p>当我们创建一个用户表(userinfo),其中有字段：id,name,age,addr。我们将name,age建立联合索引。</p>
+<li><p>当我们创建一个用户表(userinfo)，其中有字段：id,name,age,addr。我们将 name,age 建立联合索引。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当我们执行：select * from userinfo where name like &quot;ming%&quot; and age=20;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>对于MySQL5.6之前：我们在索引内部首先通过name进行查找，在联合索引name,，age树形查询结果可能存在多个，然后再拿着id值去回表查询，整个过程需要回表多次。</p>
+<li><p>对于MySQL5.6之前：我们在索引内部首先通过 name 进行查找，再联合索引 name,，age 树形查询结果可能存在多个，然后再拿着 id 值去回表查询，整个过程需要回表多次。</p>
 <p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAxOS8xMi8xMC8xNmVlZDY2N2YzOGZkM2Vl?x-oss-process=image/format,png" alt="img"></p>
 </li>
-<li><p>对于MySQL5.6之后：我们是在索引内部就判断age是否等于20，对于不等于20跳过。因此在联合索引name,age索引树只匹配一个记录，此时拿着这个id去主键索引树种回表查询全部数据，整个过程就回一次表。</p>
+<li><p>对于MySQL5.6之后：我们是在索引内部就判断 age 是否等于20，对于不等于 20 跳过。因此在联合索引 name,age 索引树只匹配一个记录，此时拿着这个 id 去主键索引树种回表查询全部数据，整个过程就回一次表。</p>
 <p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAxOS8xMi8xMC8xNmVlZDY2YWUwZDI2OThh?x-oss-process=image/format,png" alt="img"></p>
 </li>
 <li><p>如下：</p>
@@ -340,7 +340,7 @@
 <h1 id="索引优化-聚簇索引与非聚簇索引"><a href="#索引优化-聚簇索引与非聚簇索引" class="headerlink" title="索引优化-聚簇索引与非聚簇索引"></a>索引优化-聚簇索引与非聚簇索引</h1><ul>
 <li><p>聚簇(集)索引的叶子节点就是数据节点。</p>
 </li>
-<li><p>非聚簇(集)索引的叶子节点仍然是索引节点，只不过有指向对应数据块的指针。非聚簇(集)索引在innodb引擎中，又叫做二级索引，辅助索引等。</p>
+<li><p>非聚簇(集)索引的叶子节点仍然是索引节点，只不过有指向对应数据块的指针。非聚簇(集)索引在 innodb 引擎中，又叫做二级索引，辅助索引等。</p>
 </li>
 <li><p>聚簇索引并不是一种单独的索引类型，而是一种数据存储方式。术语‘聚簇’表示数据行和相邻的键值聚簇的存储在一起。如下图，左侧的索引就是聚簇索引，因为数据行在磁盘的排列和索引排序保持一致。、</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20210509163323414.png" alt="img"></p>
@@ -348,18 +348,18 @@
 </ul>
 <p><strong>聚集索引（聚簇索引）</strong></p>
 <p>以 InnoDB 作为存储引擎的表，表中的数据都会有一个主键，即使你不创建主键，系统也会帮你创建一个隐式的主键。</p>
-<p>这是因为 InnoDB 是把数据存放在 B+ 树中的，而 B+ 树的键值就是主键，在 B+ 树的叶子节点中，存储了表中所有的数据。</p>
-<p>这种以主键作为 B+ 树索引的键值而构建的 B+ 树索引，我们称之为聚集索引。</p>
+<p>这是因为 InnoDB 是把数据存放在 B+树中的，而 B+树的键值就是主键，在 B+树的叶子节点中，存储了表中所有的数据。</p>
+<p>这种以主键作为 B+树索引的键值而构建的 B+树索引，我们称之为聚集索引。</p>
 <p><strong>非聚集索引（非聚簇索引）</strong></p>
 <p>以主键以外的列值作为键值构建的 B+树索引，我们称之为非聚集索引。</p>
 <p><strong>非聚集索引与聚集索引的区别在于</strong></p>
 <p>非聚集索引的叶子节点不存储表中的数据，而是存储该列对应的主键，想要查找数据我们还需要根据主键再去聚集索引中进行查找，这个再根据聚集索引查找数据的过程，我们称为回表。</p>
 <p>明白了聚集索引和非聚集索引的定义，我们应该明白这样一句话：<strong>数据即索引，索引即数据</strong>。</p>
 <p><strong>聚簇索引的好处</strong>：</p>
-<p>按照聚簇索引排列顺序，查询显示一定范围数据的时候，由于数据都是紧密相连，数据库不用从多个数据块中提取数据，所以节省了大量的io操作。</p>
+<p>按照聚簇索引排列顺序，查询显示一定范围数据的时候，由于数据都是紧密相连，数据库不用从多个数据块中提取数据，所以节省了大量的 io 操作。</p>
 <p><strong>聚簇索引的限制</strong>：</p>
-<p>对于mysql 数据库目前只有innodb 数据引擎支持聚簇索引，而Myisam 并不支持聚簇索引。由于数据物理存储排序方式只能有一种，所以每个Mysql 的表只能有一个聚簇索引。一般情况下就是该表的主键。</p>
-<p>为了充分利用聚簇索引的聚簇的特性，所以innodb 表的主键列尽量选用有序的顺序id，而不建议用无序的id，比如uuid 这种。</p>
+<p>对于 mysql 数据库目前只有 innodb 数据引擎支持聚簇索引，而 Myisam 并不支持聚簇索引。由于数据物理存储排序方式只能有一种，所以每个 Mysql 的表只能有一个聚簇索引。一般情况下就是该表的主键。</p>
+<p>为了充分利用聚簇索引的聚簇的特性，所以 innodb 表的主键列尽量选用有序的顺序 id，而不建议用无序的 id，比如uuid 这种。</p>
 <h1 id="优化细节"><a href="#优化细节" class="headerlink" title="优化细节"></a>优化细节</h1><ol>
 <li><p>对查询进行优化，应尽量避免全表扫描，首先应考虑在 where 及 order by 涉及的列上建立索引。</p>
 </li>
@@ -597,8 +597,6 @@
 <p>这里我像大家介绍一本书马丁.福勒《NoSQL精粹》，这本书我重复看了好几遍，也很好全面介绍各种 NoSQL 优缺点和使用场景。</p>
 <p>当然替换存储的时候，我这里也有个建议：加入一个中间版本，该版本做好数据同步与业务开关，数据同步要保证全量与增加的处理，随时可以重来，业务开关主要是为了后续版本的更新做的一个临时型的功能，主要避免后续版本更新不顺利或者因为版本更新时导致的数据不一致的情况出现。</p>
 <p>在跑了一段时间后，验证了两个不同的存储系统数据是一致的后，接下来就可以把数据访问层的底层调用替换了。如此一来就可以平滑的更新切换。</p>
-<h1 id="B-树添加和删除数据"><a href="#B-树添加和删除数据" class="headerlink" title="B+树添加和删除数据"></a>B+树添加和删除数据</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/%E6%A0%91%E6%B7%BB%E5%8A%A0%E5%92%8C%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE%E5%9B%BE%E8%A7%A3.png" alt="B+树添加和删除数据图解"></p>
-<h1 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/%E7%BA%A2%E9%BB%91%E6%A0%91%20(1).jpg" alt="红黑树"></p>
  
       <!-- reward -->
       
