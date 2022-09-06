@@ -89,7 +89,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">782</span>
+            <span class="post-count">787</span>
         </span>
     </span>
 
@@ -114,18 +114,18 @@
     <div class="article-entry" itemprop="articleBody">
        
   <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><ul>
-<li><p>在jdk8的时候引入了元空间，而元空间使用的就是直接内存。</p>
+<li><p>在 jdk8 的时候引入了元空间，而元空间使用的就是直接内存。</p>
 </li>
 <li><p>直接内存不是虚拟机运行时数据区的一部分，也不是《Java虚拟机规范》中定义的内存区域。</p>
 </li>
-<li><p>直接内存是在Java堆外的、直接向系统申请的内存区间。</p>
+<li><p>直接内存是在 <strong>Java 堆外</strong>的、直接向系统申请的内存区间。</p>
 </li>
-<li><p>来源于NIO(其实在jdk1.4引入NIO时就有了操作本地内存的概念，后来在jdk1.7时引入了NIO2)，通过存在堆中的DirectByteBuffer操作Native内存</p>
+<li><p>来源于 NIO (其实在 jdk1.4 引入 NIO 时就有了操作本地内存的概念，后来在 jdk1.7 时引入了 NIO2)，通过存在堆中的DirectByteBuffer 操作 Native 内存</p>
 </li>
-<li><p>通常，<strong>访问直接内存的速度会优于Java堆</strong>。即读写性能高。</p>
+<li><p>通常，<strong>访问直接内存的速度会优于 Java 堆</strong>。即读写性能高。</p>
 <ul>
 <li>因此出于性能考虑，读写频繁的场合可能会考虑使用直接内存。</li>
-<li>Java的NIO库允许Java程序使用直接内存，用于数据缓冲区</li>
+<li>Java 的 NIO 库允许 Java 程序使用直接内存，用于数据缓冲区</li>
 </ul>
 </li>
 </ul>
@@ -144,11 +144,11 @@
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/2073658-20210308165422888-1665701747.png" alt="img"></p>
 <p>如何理解上面的内容：我们的java程序，想要操作本地磁盘，首先命令会到用户地址空间(jvm中)，然后这个jvm映射会到内核地址空间(这个应该是操作系统提供的映射物理磁盘的)，最终到物理磁盘。而NIO直接操作一个映射文件，是java程序直接到物理磁盘的。</p>
 <h1 id="直接内存与OOM"><a href="#直接内存与OOM" class="headerlink" title="直接内存与OOM"></a>直接内存与OOM</h1><ul>
-<li>直接内存也可能导致OutofMemoryError异常</li>
-<li>由于直接内存在Java堆外，因此它的大小不会直接受限于-Xmx指定的最大堆大小，但是系统内存是有限的，Java堆和直接内存的总和依然受限于操作系统能给出的最大内存。</li>
+<li>直接内存也可能导致 OutofMemoryError 异常</li>
+<li>由于直接内存在 Java 堆外，因此它的大小不会直接受限于-Xmx指定的最大堆大小，但是系统内存是有限的，Java 堆和直接内存的总和依然受限于操作系统能给出的最大内存。</li>
 <li>直接内存的缺点为：<ul>
 <li>分配回收成本较高</li>
-<li>不受JVM内存回收管理</li>
+<li>不受 JVM 内存回收管理</li>
 </ul>
 </li>
 <li>直接内存大小可以通过<strong>MaxDirectMemorySize</strong>设置</li>

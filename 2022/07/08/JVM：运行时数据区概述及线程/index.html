@@ -89,7 +89,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">972</span>
+            <span class="post-count">955</span>
         </span>
     </span>
 
@@ -115,16 +115,16 @@
        
   <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/f6c83bec90974ab2b54c644e05f869d8.png" alt="JVM结构"></p>
 <h1 id="运行时数据区"><a href="#运行时数据区" class="headerlink" title="运行时数据区"></a>运行时数据区</h1><h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><ul>
-<li>内存是非常重要的系统资源，是硬盘和CPU的中间仓库及桥梁，承载着操作系统和应用程序的实时运行。JVM内存布局规定了Java在<strong>运行过程中内存申请、分配、管理的策略</strong>，保证了JVM的高效稳定运行。</li>
-<li><strong>不同的JVM对于内存的划分方式和管理机制存在着部分差异</strong>。结合JVM虚拟机规范，来探讨一下经典的JVM内存布局。</li>
-<li>我们通过磁盘或者网络IO得到的数据，都需要先加载到内存中，然后CPU从内存中获取数据进行读取，也就是说内存充当了CPU和磁盘之间的桥梁</li>
+<li>内存是非常重要的系统资源，是硬盘和 CPU 的中间仓库及桥梁，承载着操作系统和应用程序的实时运行。JVM 内存布局规定了 Java 在<strong>运行过程中内存申请、分配、管理的策略</strong>，保证了 JVM 的高效稳定运行。</li>
+<li><strong>不同的 JVM 对于内存的划分方式和管理机制存在着部分差异</strong>。</li>
+<li>我们通过磁盘或者网络 IO 得到的数据，都需要先加载到内存中，然后 CPU 从内存中获取数据进行读取，也就是说内存充当了 CPU 和磁盘之间的桥梁</li>
 </ul>
 <h2 id="运行时数据区-1"><a href="#运行时数据区-1" class="headerlink" title="运行时数据区"></a>运行时数据区</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/Snipaste_2022-07-08_14-26-43.png" alt="运行时数据区结构"></p>
 <ul>
-<li>方法区在JVM规范中是一个逻辑概念，由虚拟机自己进行具体实现，<strong>jdk7和以前</strong>的版本使用的是<strong>堆上的永久代实现的方法区</strong>，而在<strong>jdk8及以后</strong>使用的是<strong>元数据区实现方法区</strong></li>
+<li>方法区在 JVM 规范中是一个逻辑概念，由虚拟机自己进行具体实现，<strong>jdk7 和以前</strong>的版本使用的是<strong>堆上的永久代实现的方法区</strong>，而在<strong>jdk8 及以后</strong>使用的是<strong>元数据区实现方法区</strong></li>
 </ul>
 <h1 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h1><h2 id="线程的内存空间"><a href="#线程的内存空间" class="headerlink" title="线程的内存空间"></a>线程的内存空间</h2><ul>
-<li>Java虚拟机定义了若干种程序运行期间会使用到的运行时数据区，其中有一些会随着虚拟机启动而创建，随着虚拟机的退出而销毁。另外一些则是与线程一一对应的，这些与线程对应的数据区域会随着线程开始和结束而创建和销毁。</li>
+<li>Java 虚拟机定义了若干种程序运行期间会使用到的运行时数据区，其中有一些会随着虚拟机启动而创建，随着虚拟机的退出而销毁。另外一些则是与线程一一对应的，这些与线程对应的数据区域会随着线程开始和结束而创建和销毁。</li>
 </ul>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220708150614885.png" alt="image-20220708150614885"></p>
 <ul>
@@ -134,31 +134,31 @@
 <li><strong>线程间共享</strong>：堆、堆外内存（永久代或元空间、代码缓存）</li>
 </ol>
 </li>
-<li><p><code>每个JVM只有一个Runtime实例</code>。即为运行时环境，相当于内存结构的中间的那个框框：运行时环境。</p>
+<li><p><code>每个 JVM 只有一个 Runtime 实例</code>。即为运行时环境，相当于内存结构的中间的那个框框：运行时环境。</p>
 </li>
 </ul>
-<h2 id="JVM线程"><a href="#JVM线程" class="headerlink" title="JVM线程"></a>JVM线程</h2><ul>
-<li><p>线程是一个程序里的运行单元。<strong>JVM允许一个应用有多个线程并行的执行</strong></p>
+<h2 id="JVM-线程"><a href="#JVM-线程" class="headerlink" title="JVM 线程"></a>JVM 线程</h2><ul>
+<li><p>线程是一个程序里的运行单元。<strong>JVM 允许一个应用有多个线程并行的执行</strong></p>
 </li>
-<li><p><strong>在Hotspot JVM里，每个线程都与操作系统的本地线程直接映射</strong></p>
+<li><p><strong>在 Hotspot JVM 里，每个线程都与操作系统的本地线程直接映射</strong></p>
 <ul>
-<li>当一个Java线程准备好执行以后，此时一个操作系统的本地线程也同时创建。Java线程执行终止后，本地线程也会回收</li>
+<li>当一个 Java 线程准备好执行以后，此时一个操作系统的本地线程也同时创建。Java 线程执行终止后，本地线程也会回收</li>
 </ul>
 </li>
-<li><p>操作系统负责将线程安排调度到任何一个可用的CPU上。<strong>一旦本地线程初始化成功，它就会调用Java线程中的run( )方法</strong></p>
+<li><p>操作系统负责将线程安排调度到任何一个可用的 CPU 上。<strong>一旦本地线程初始化成功，它就会调用 Java 线程中的 run( ) 方法</strong></p>
 </li>
 <li><p>如果一个线程抛异常，并且该线程是进程中最后一个守护线程，那么进程将停止</p>
 </li>
 </ul>
 <h2 id="JVM系统线程"><a href="#JVM系统线程" class="headerlink" title="JVM系统线程"></a>JVM系统线程</h2><ul>
 <li>使用 <code>jconsole</code> 或者是任何一个调试工具，都能看到在后台有许多线程在运行。</li>
-<li><code>这些后台线程不包括调用public static void main(String [ ])的main线程</code>以及<code>所有由这个main方法自己创建的线程</code>。</li>
-<li>这些主要的后台系统线程在Hotspot JVM里主要是以下几个：<ul>
-<li><strong>虚拟机线程</strong>：这种线程的操作是需要JVM达到安全点才会出现。这些操作必须在不同的线程中发生的原因是他们都需要JVM达到安全点，这样堆才不会变化。这种线程的执行类型括”stop-the-world”的垃圾收集，线程栈收集，线程挂起以及偏向锁撤销</li>
+<li><code>这些后台线程不包括调用 public static void main(String [ ]) 的 main 线程</code>以及<code>所有由这个 main 方法自己创建的线程</code>。</li>
+<li>这些主要的后台系统线程在 Hotspot JVM 里主要是以下几个：<ul>
+<li><strong>虚拟机线程</strong>：这种线程的操作是需要 JVM 达到安全点才会出现。这些操作必须在不同的线程中发生的原因是他们都需要 JVM 达到安全点，这样堆才不会变化。这种线程的执行类型括”stop-the-world”的垃圾收集，线程栈收集，线程挂起以及偏向锁撤销</li>
 <li><strong>周期任务线程</strong>：这种线程是时间周期事件的体现（比如中断），他们一般用于周期性操作的调度执行</li>
-<li><strong>GC线程</strong>：这种线程对在JVM里不同种类的垃圾收集行为提供了支持（重点）</li>
-<li><strong>编译线程</strong>：这种线程在运行时会将字节码编译成 本地代码</li>
-<li><strong>信号调度线程</strong>：这种线程接收信号并发送给JVM，在它内部通过调用适当的方法进行处理</li>
+<li><strong>GC 线程</strong>：这种线程对在 JVM 里不同种类的垃圾收集行为提供了支持（重点）</li>
+<li><strong>编译线程</strong>：这种线程在运行时会将字节码编译成本地代码</li>
+<li><strong>信号调度线程</strong>：这种线程接收信号并发送给 JVM，在它内部通过调用适当的方法进行处理</li>
 </ul>
 </li>
 </ul>

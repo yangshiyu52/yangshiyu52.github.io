@@ -115,24 +115,24 @@
        
   <h1 id="标记阶段：引用计数算法"><a href="#标记阶段：引用计数算法" class="headerlink" title="标记阶段：引用计数算法"></a>标记阶段：引用计数算法</h1><h2 id="标记阶段的目的"><a href="#标记阶段的目的" class="headerlink" title="标记阶段的目的"></a>标记阶段的目的</h2><p><strong>垃圾标记阶段：对象存活判断</strong></p>
 <ol>
-<li>在堆里存放着几乎所有的Java对象实例，在GC执行垃圾回收之前，首先<strong>需要区分出内存中哪些是存活对象，哪些是已经死亡的对象。</strong>只有被标记为己经死亡的对象，GC才会在执行垃圾回收时，释放掉其所占用的内存空间，因此这个过程我们可以称为<strong>垃圾标记阶段</strong>。</li>
-<li>那么在JVM中究竟是如何标记一个死亡对象呢？简单来说，当一个对象已经不再被任何的存活对象继续引用时，就可以宣判为已经死亡。</li>
+<li>在堆里存放着几乎所有的 Java 对象实例，在 GC 执行垃圾回收之前，首先<strong>需要区分出内存中哪些是存活对象，哪些是已经死亡的对象。</strong>只有被标记为己经死亡的对象，GC 才会在执行垃圾回收时，释放掉其所占用的内存空间，因此这个过程我们可以称为<strong>垃圾标记阶段</strong>。</li>
+<li>那么在 JVM 中究竟是如何标记一个死亡对象呢？简单来说，当一个对象已经<strong>不再被任何的存活对象继续引用</strong>时，就可以宣判为已经死亡。</li>
 <li>判断对象存活一般有两种方式：<strong>引用计数算法</strong>和<strong>可达性分析算法</strong>。</li>
 </ol>
 <h2 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h2><ol>
 <li>引用计数算法（Reference Counting）比较简单，对每个对象保存一个整型的<strong>引用计数器属性，用于记录对象被引用的情况</strong>。</li>
-<li>对于一个对象A，只要有任何一个对象引用了A，则A的引用计数器就加1；当引用失效时，引用计数器就减1。只要对象A的引用计数器的值为0，即表示对象A不可能再被使用，可进行回收。</li>
+<li>对于一个对象 A，只要有任何一个对象引用了 A，则 A 的引用计数器就加 1；当引用失效时，引用计数器就减 1。只要对象 A 的引用计数器的值为 0，即表示对象 A 不可能再被使用，可进行回收。</li>
 <li>优点：<strong>实现简单，垃圾对象便于辨识；判定效率高，回收没有延迟性</strong>。</li>
 <li>缺点：<ul>
 <li>它需要单独的字段存储计数器，这样的做法增加了<strong>存储空间的开销</strong>。</li>
 <li>每次赋值都需要更新计数器，伴随着加法和减法操作，这增加了<strong>时间开销</strong>。</li>
-<li>引用计数器有一个严重的问题，即<strong>无法处理循环引用</strong>的情况。这是一条致命缺陷，导致在Java的垃圾回收器中没有使用这类算法。</li>
+<li>引用计数器有一个严重的问题，即<strong>无法处理循环引用</strong>的情况。这是一条致命缺陷，导致在 Java 的垃圾回收器中没有使用这类算法。</li>
 </ul>
 </li>
 </ol>
 <h2 id="循环引用"><a href="#循环引用" class="headerlink" title="循环引用"></a>循环引用</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220724145704530.png" alt="image-20220724145704530"></p>
-<p>当p的指针断开的时候，内部的引用形成一个循环，计数器都还算1，无法被回收，这就是循环引用，从而造成内存泄漏</p>
-<h2 id="证明：java使用的不是引用计数算法"><a href="#证明：java使用的不是引用计数算法" class="headerlink" title="证明：java使用的不是引用计数算法"></a>证明：java使用的不是引用计数算法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * -XX:+PrintGCDetails</span></span><br><span class="line"><span class="comment"> * 证明：java使用的不是引用计数算法</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RefCountGC</span> &#123;</span><br><span class="line">    <span class="comment">//这个成员属性唯一的作用就是占用一点内存</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">byte</span>[] bigSize = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">5</span> * <span class="number">1024</span> * <span class="number">1024</span>];<span class="comment">//5MB</span></span><br><span class="line"></span><br><span class="line">    <span class="type">Object</span> <span class="variable">reference</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">RefCountGC</span> <span class="variable">obj1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RefCountGC</span>();</span><br><span class="line">        <span class="type">RefCountGC</span> <span class="variable">obj2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RefCountGC</span>();</span><br><span class="line"></span><br><span class="line">        obj1.reference = obj2;</span><br><span class="line">        obj2.reference = obj1;</span><br><span class="line"></span><br><span class="line">        obj1 = <span class="literal">null</span>;</span><br><span class="line">        obj2 = <span class="literal">null</span>;</span><br><span class="line">        <span class="comment">//显式的执行垃圾回收行为</span></span><br><span class="line">        <span class="comment">//这里发生GC，obj1和obj2能否被回收？</span></span><br><span class="line">        System.gc();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当 p 的指针断开的时候，内部的引用形成一个循环，计数器都还算1，无法被回收，这就是循环引用，从而造成内存泄漏</p>
+<h2 id="证明：java-使用的不是引用计数算法"><a href="#证明：java-使用的不是引用计数算法" class="headerlink" title="证明：java 使用的不是引用计数算法"></a>证明：java 使用的不是引用计数算法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * -XX:+PrintGCDetails</span></span><br><span class="line"><span class="comment"> * 证明：java使用的不是引用计数算法</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RefCountGC</span> &#123;</span><br><span class="line">    <span class="comment">//这个成员属性唯一的作用就是占用一点内存</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">byte</span>[] bigSize = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">5</span> * <span class="number">1024</span> * <span class="number">1024</span>];<span class="comment">//5MB</span></span><br><span class="line"></span><br><span class="line">    <span class="type">Object</span> <span class="variable">reference</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">RefCountGC</span> <span class="variable">obj1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RefCountGC</span>();</span><br><span class="line">        <span class="type">RefCountGC</span> <span class="variable">obj2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RefCountGC</span>();</span><br><span class="line"></span><br><span class="line">        obj1.reference = obj2;</span><br><span class="line">        obj2.reference = obj1;</span><br><span class="line"></span><br><span class="line">        obj1 = <span class="literal">null</span>;</span><br><span class="line">        obj2 = <span class="literal">null</span>;</span><br><span class="line">        <span class="comment">//显式的执行垃圾回收行为</span></span><br><span class="line">        <span class="comment">//这里发生GC，obj1和obj2能否被回收？</span></span><br><span class="line">        System.gc();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220724150232414.png" alt="image-20220724150232414"></p>
 <ul>
@@ -148,25 +148,25 @@
 <p>打开那行代码的注释</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[GC (System.gc()) [PSYoungGen: 13569K-&gt;808K(38400K)] 13569K-&gt;816K(125952K), <span class="number">0.0012717</span> secs] [Times: user=<span class="number">0.00</span> sys=<span class="number">0.00</span>, real=<span class="number">0.00</span> secs] </span><br><span class="line">[Full <span class="title function_">GC</span> <span class="params">(System.gc()</span>) [PSYoungGen: 808K-&gt;0K(38400K)] [ParOldGen: 8K-&gt;670K(87552K)] 816K-&gt;670K(125952K), [Metaspace: 3491K-&gt;3491K(1056768K)], <span class="number">0.0051769</span> secs] [Times: user=<span class="number">0.00</span> sys=<span class="number">0.00</span>, real=<span class="number">0.00</span> secs] </span><br><span class="line">Heap</span><br><span class="line"> PSYoungGen      total 38400K, used 333K [<span class="number">0x00000000d5f80000</span>, <span class="number">0x00000000d8a00000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space 33280K, <span class="number">1</span>% used [<span class="number">0x00000000d5f80000</span>,<span class="number">0x00000000d5fd34a8</span>,<span class="number">0x00000000d8000000</span>)</span><br><span class="line">  from space 5120K, <span class="number">0</span>% used [<span class="number">0x00000000d8000000</span>,<span class="number">0x00000000d8000000</span>,<span class="number">0x00000000d8500000</span>)</span><br><span class="line">  to   space 5120K, <span class="number">0</span>% used [<span class="number">0x00000000d8500000</span>,<span class="number">0x00000000d8500000</span>,<span class="number">0x00000000d8a00000</span>)</span><br><span class="line"> ParOldGen       total 87552K, used 670K [<span class="number">0x0000000081e00000</span>, <span class="number">0x0000000087380000</span>, <span class="number">0x00000000d5f80000</span>)</span><br><span class="line">  object space 87552K, <span class="number">0</span>% used [<span class="number">0x0000000081e00000</span>,<span class="number">0x0000000081ea7990</span>,<span class="number">0x0000000087380000</span>)</span><br><span class="line"> Metaspace       used 3498K, capacity 4498K, committed 4864K, reserved 1056768K</span><br><span class="line">  <span class="keyword">class</span> <span class="title class_">space</span>    used 387K, capacity 390K, committed 512K, reserved 1048576K</span><br><span class="line"></span><br><span class="line">Process finished with exit code <span class="number">0</span></span><br></pre></td></tr></table></figure>
 
-<p>1、从打印日志就可以明显看出来，已经进行了GC</p>
-<p>2、如果使用引用计数算法，那么这两个对象将会无法回收。而现在两个对象被回收了，说明Java使用的不是引用计数算法来进行标记的。</p>
+<p>1、从打印日志就可以明显看出来，已经进行了 GC</p>
+<p>2、如果使用引用计数算法，那么这两个对象将会无法回收。而现在两个对象被回收了，说明 Java 使用的不是引用计数算法来进行标记的。</p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ol>
-<li>引用计数算法，是很多语言的资源回收选择，例如因人工智能而更加火热的Python，它更是同时支持引用计数和垃圾收集机制。</li>
+<li>引用计数算法，是很多语言的资源回收选择，例如因人工智能而更加火热的 Python，它更是同时支持引用计数和垃圾收集机制。</li>
 <li>具体哪种最优是要看场景的，业界有大规模实践中仅保留引用计数机制，以提高吞吐量的尝试。</li>
-<li>Java并没有选择引用计数，是因为其存在一个基本的难题，也就是很难处理循环引用关系。</li>
-<li>Python如何解决循环引用？<ul>
+<li>Java 并没有选择引用计数，是因为其存在一个基本的难题，也就是很难处理循环引用关系。</li>
+<li>Python 如何解决循环引用？<ul>
 <li><strong>手动解除</strong>：很好理解，就是在合适的时机，解除引用关系。</li>
-<li>使用<strong>弱引用weakref</strong>，weakref是Python提供的标准库，旨在解决循环引用。</li>
+<li>使用<strong>弱引用 weakref</strong>，weakref 是 Python 提供的标准库，旨在解决循环引用。</li>
 </ul>
 </li>
 </ol>
 <h1 id="标记阶段：可达性分析算法"><a href="#标记阶段：可达性分析算法" class="headerlink" title="标记阶段：可达性分析算法"></a>标记阶段：可达性分析算法</h1><p><strong>可达性分析算法：也可以称为根搜索算法、追踪性垃圾收集</strong></p>
 <ol>
 <li>相对于引用计数算法而言，可达性分析算法不仅同样具备实现简单和执行高效等特点，更重要的是该算法可以有效地<strong>解决在引用计数算法中循环引用的问题，防止内存泄漏的发生</strong>。</li>
-<li>相较于引用计数算法，这里的可达性分析就是<strong>Java、C#选择的</strong>。这种类型的垃圾收集通常也叫作<strong>追踪性垃圾收集</strong>（Tracing Garbage Collection）</li>
+<li>相较于引用计数算法，这里的可达性分析就是 <strong>Java、C# 选择的</strong>。这种类型的垃圾收集通常也叫作<strong>追踪性垃圾收集</strong>（Tracing Garbage Collection）</li>
 </ol>
 <h2 id="可达性分析实现思路"><a href="#可达性分析实现思路" class="headerlink" title="可达性分析实现思路"></a>可达性分析实现思路</h2><ul>
-<li>所谓”GCRoots”根集合就是一组必须活跃的引用</li>
+<li>所谓”<strong>GCRoots</strong>”根集合就是一组必须活跃的引用</li>
 <li>其基本思路如下：<ol>
 <li>可达性分析算法是<strong>以根对象集合（GCRoots）为起始点</strong>，按照从上至下的方式<strong>搜索被根对象集合所连接的目标对象是否可达。</strong></li>
 <li>使用可达性分析算法后，内存中的存活对象都会被根对象集合直接或间接连接着，搜索所走过的路径称为<strong>引用链</strong>（Reference Chain）</li>
@@ -177,54 +177,54 @@
 </ul>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220724150955840.png" alt="image-20220724150955840"></p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220724151137406.png" alt="image-20220724151137406"></p>
-<h2 id="GC-Roots可以是哪些元素？"><a href="#GC-Roots可以是哪些元素？" class="headerlink" title="GC Roots可以是哪些元素？"></a>GC Roots可以是哪些元素？</h2><ol>
+<h2 id="GC-Roots-可以是哪些元素？"><a href="#GC-Roots-可以是哪些元素？" class="headerlink" title="GC Roots 可以是哪些元素？"></a>GC Roots 可以是哪些元素？</h2><ol>
 <li><strong>虚拟机栈中引用的对象</strong><ul>
 <li>比如：各个线程被调用的方法中使用到的参数、局部变量等。</li>
 </ul>
 </li>
-<li><strong>本地方法栈内JNI（通常说的本地方法）引用的对象</strong></li>
+<li><strong>本地方法栈内 JNI（通常说的本地方法）引用的对象</strong></li>
 <li><strong>方法区中类静态属性引用的对象</strong><ul>
-<li>比如：Java类的引用类型静态变量</li>
+<li>比如：Java 类的引用类型静态变量</li>
 </ul>
 </li>
 <li><strong>方法区中常量引用的对象</strong><ul>
 <li>比如：字符串常量池（StringTable）里的引用</li>
 </ul>
 </li>
-<li><strong>所有被同步锁synchronized持有的对象</strong></li>
-<li>Java虚拟机内部的引用。<ul>
-<li>基本数据类型对应的Class对象，一些常驻的异常对象（如：NullPointerException、OutofMemoryError），系统类加载器。</li>
+<li><strong>所有被同步锁 synchronized 持有的对象</strong></li>
+<li>Java 虚拟机内部的引用。<ul>
+<li>基本数据类型对应的 Class 对象，一些常驻的异常对象（如：NullPointerException、OutofMemoryError），系统类加载器。</li>
 </ul>
 </li>
-<li>反映java虚拟机内部情况的JMXBean、JVMTI中注册的回调、本地代码缓存等。</li>
+<li>反映 java 虚拟机内部情况的 JMXBean、JVMTI 中注册的回调、本地代码缓存等。</li>
 </ol>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220724151326744.png" alt="image-20220724151326744"></p>
 <ul>
-<li><p>总结一句话就是，堆空间的周边，比如：虚拟机栈、本地方法栈、方法区、字符串常量池等地方对堆空间进行引用的，都可以作为GC Roots进行可达性分析</p>
+<li><p>总结一句话就是，<strong>堆空间的周边</strong>，比如：虚拟机栈、本地方法栈、方法区、字符串常量池等地方对堆空间进行引用的，都可以作为 GC Roots 进行可达性分析</p>
 </li>
-<li><p>除了这些固定的GC Roots集合以外，根据用户所选用的垃圾收集器以及当前回收的内存区域不同，还可以有其他对象“临时性”地加入，共同构成完整GC Roots集合。比如：<strong>分代收集</strong>和<strong>局部回收（PartialGC）</strong>。</p>
+<li><p>除了这些固定的 GC Roots 集合以外，根据用户所选用的垃圾收集器以及当前回收的内存区域不同，还可以有其他对象“临时性”地加入，共同构成完整 GC Roots 集合。比如：<strong>分代收集</strong>和<strong>局部回收（PartialGC）</strong>。</p>
 <ul>
-<li>如果只针对Java堆中的某一块区域进行垃圾回收（比如：典型的只针对新生代），必须考虑到内存区域是虚拟机自己的实现细节，更不是孤立封闭的，这个区域的对象完全有可能被其他区域的对象所引用，这时候就需要一并将关联的区域对象也加入GC Roots集合中去考虑，才能保证可达性分析的准确性。</li>
+<li>如果只针对 Java 堆中的某一块区域进行垃圾回收（比如：典型的只针对新生代），必须考虑到内存区域是虚拟机自己的实现细节，更不是孤立封闭的，这个区域的对象完全有可能被其他区域的对象所引用，这时候就需要一并将关联的区域对象也加入 GC Roots 集合中去考虑，才能保证可达性分析的准确性。</li>
 </ul>
 </li>
 <li><p><strong>小技巧</strong></p>
 <ul>
-<li>由于Root采用栈方式存放变量和指针，所以如果一个指针，它保存了堆内存里面的对象，但是自己又不存放在堆内存里面，那它就是一个Root</li>
+<li>由于 Root 采用栈方式存放变量和指针，所以如果一个指针，它保存了堆内存里面的对象，但是自己又不存放在堆内存里面，那它就是一个 Root</li>
 </ul>
 </li>
 </ul>
 <h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ol>
 <li>如果要使用可达性分析算法来判断内存是否可回收，那么分析工作必须在一个能保障一致性的快照中进行。这点不满足的话分析结果的准确性就无法保证。</li>
-<li>这点也是导致GC进行时必须“Stop The World”的一个重要原因。<ul>
-<li>即使是号称（几乎）不会发生停顿的CMS收集器中，<strong>枚举根节点时也是必须要停顿的</strong>。</li>
+<li>这点也是导致 GC 进行时必须 “Stop The World” 的一个重要原因。<ul>
+<li>即使是号称（几乎）不会发生停顿的 CMS 收集器中，<strong>枚举根节点时也是必须要停顿的</strong>。</li>
 </ul>
 </li>
 </ol>
 <h1 id="对象的-finalization-机制"><a href="#对象的-finalization-机制" class="headerlink" title="对象的 finalization 机制"></a>对象的 finalization 机制</h1><h2 id="finalize-方法机制"><a href="#finalize-方法机制" class="headerlink" title="finalize() 方法机制"></a>finalize() 方法机制</h2><p><strong>对象销毁前的回调函数：finalize()</strong></p>
 <ol>
-<li><p>Java语言提供了对象终止（finalization）机制来允许开发人员提供<strong>对象被销毁之前的自定义处理逻辑</strong>。</p>
+<li><p>Java 语言提供了对象终止（finalization）机制来允许开发人员提供<strong>对象被销毁之前的自定义处理逻辑</strong>。</p>
 </li>
-<li><p>当垃圾回收器发现没有引用指向一个对象，即：垃圾回收此对象之前，总会先调用这个对象的finalize()方法。</p>
+<li><p>当垃圾回收器发现没有引用指向一个对象，即：垃圾回收此对象之前，总会先调用这个对象的 finalize() 方法。</p>
 </li>
 <li><p>finalize() 方法允许在子类中被重写，<strong>用于在对象被回收时进行资源释放</strong>。通常在这个方法中进行一些资源释放和清理的工作，比如关闭文件、套接字和数据库连接等。</p>
 </li>
@@ -233,35 +233,35 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 等待被重写</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">finalize</span><span class="params">()</span> <span class="keyword">throws</span> Throwable &#123; &#125;</span><br></pre></td></tr></table></figure>
 
 <ol start="4">
-<li><p>永远不要主动调用某个对象的finalize()方法，应该交给垃圾回收机制调用。理由包括下面三点：</p>
+<li><p>永远不要主动调用某个对象的 finalize() 方法，应该交给垃圾回收机制调用。理由包括下面三点：</p>
 <ol>
-<li>在finalize()时可能会导致对象复活。</li>
-<li>finalize()方法的执行时间是没有保障的，它完全由GC线程决定，极端情况下，若不发生GC，则finalize()方法将没有执行机会。</li>
-<li>一个糟糕的finalize()会严重影响GC的性能。比如finalize是个死循环</li>
+<li>在 finalize() 时可能会导致对象复活。</li>
+<li>finalize() 方法的执行时间是没有保障的，它完全由 GC 线程决定，极端情况下，若不发生 GC，则 finalize() 方法将没有执行机会。</li>
+<li>一个糟糕的 finalize() 会严重影响 GC 的性能。比如 finalize 是个死循环</li>
 </ol>
 </li>
-<li><p>从功能上来说，finalize()方法与C++中的析构函数比较相似，但是Java采用的是基于垃圾回收器的自动内存管理机制，所以finalize()方法在<strong>本质上不同于C++中的析构函数</strong>。</p>
+<li><p>从功能上来说，finalize() 方法与 C++ 中的析构函数比较相似，但是 Java 采用的是基于垃圾回收器的自动内存管理机制，所以finalize() 方法在<strong>本质上不同于 C++ 中的析构函数</strong>。</p>
 </li>
-<li><p>finalize()方法对应了一个finalize线程，因为优先级比较低，即使主动调用该方法，也不会因此就直接进行回收</p>
+<li><p>finalize() 方法对应了一个 finalize 线程，因为优先级比较低，即使主动调用该方法，也不会因此就直接进行回收</p>
 </li>
 </ol>
-<h2 id="生存还是死亡？"><a href="#生存还是死亡？" class="headerlink" title="生存还是死亡？"></a>生存还是死亡？</h2><p>由于finalize()方法的存在，<strong>虚拟机中的对象一般处于三种可能的状态。</strong></p>
+<h2 id="生存还是死亡？"><a href="#生存还是死亡？" class="headerlink" title="生存还是死亡？"></a>生存还是死亡？</h2><p>由于 finalize() 方法的存在，<strong>虚拟机中的对象一般处于三种可能的状态。</strong></p>
 <ol>
 <li>如果从所有的根节点都无法访问到某个对象，说明对象己经不再使用了。一般来说，此对象需要被回收。但事实上，也并非是“非死不可”的，这时候它们暂时处于“缓刑”阶段。<strong>一个无法触及的对象有可能在某一个条件下“复活”自己</strong>，如果这样，那么对它立即进行回收就是不合理的。为此，定义虚拟机中的对象可能的三种状态。如下：<ol>
 <li><strong>可触及的</strong>：从根节点开始，可以到达这个对象。</li>
-<li><strong>可复活的</strong>：对象的所有引用都被释放，但是对象有可能在finalize()中复活。</li>
-<li><strong>不可触及的</strong>：对象的finalize()被调用，并且没有复活，那么就会进入不可触及状态。不可触及的对象不可能被复活，<strong>因为finalize()只会被调用一次</strong>。</li>
+<li><strong>可复活的</strong>：对象的所有引用都被释放，但是对象有可能在 finalize() 中复活。</li>
+<li><strong>不可触及的</strong>：对象的 finalize() 被调用，并且没有复活，那么就会进入不可触及状态。不可触及的对象不可能被复活，<strong>因为finalize() 只会被调用一次</strong>。</li>
 </ol>
 </li>
-<li>以上3种状态中，是由于finalize()方法的存在，进行的区分。只有在对象不可触及时才可以被回收。</li>
+<li>以上3种状态中，是由于 finalize() 方法的存在，进行的区分。只有在对象不可触及时才可以被回收。</li>
 </ol>
-<h2 id="具体过程"><a href="#具体过程" class="headerlink" title="具体过程"></a>具体过程</h2><p>判定一个对象objA是否可回收，至少要经历<strong>两次标记</strong>过程：</p>
+<h2 id="具体过程"><a href="#具体过程" class="headerlink" title="具体过程"></a>具体过程</h2><p>判定一个对象 objA 是否可回收，至少要经历<strong>两次标记</strong>过程：</p>
 <ol>
-<li>如果对象objA到GC Roots没有引用链，则进行第一次标记。</li>
-<li>进行筛选，判断此对象是否有必要执行finalize()方法<ol>
-<li>如果对象objA没有重写finalize()方法，或者finalize()方法已经被虚拟机调用过，则虚拟机视为“没有必要执行”，objA被判定为不可触及的。</li>
-<li>如果对象objA重写了finalize()方法，且还未执行过，那么objA会被插入到F-Queue队列中，由一个虚拟机自动创建的、低优先级的Finalizer线程触发其finalize()方法执行。</li>
-<li><strong>finalize()方法是对象逃脱死亡的最后机会</strong>，稍后GC会对F-Queue队列中的对象进行第二次标记。<strong>如果objA在finalize()方法中与引用链上的任何一个对象建立了联系</strong>，那么在第二次标记时，objA会被移出“即将回收”集合。之后，如果对象再次出现没有引用存在的情况，在这个情况下，finalize()方法不会被再次调用，对象会直接变成不可触及的状态，也就是说，一个对象的finalize()方法只会被调用一次。</li>
+<li>如果对象 objA 到 GC Roots 没有引用链，则进行第一次标记。</li>
+<li>进行筛选，判断此对象是否有必要执行 finalize() 方法<ol>
+<li>如果对象 objA 没有重写 finalize() 方法，或者 finalize() 方法已经被虚拟机调用过，则虚拟机视为“没有必要执行”，objA 被判定为不可触及的。</li>
+<li>如果对象 objA 重写了 finalize() 方法，且还未执行过，那么 objA 会被插入到 F-Queue 队列中，由一个虚拟机自动创建的、低优先级的 Finalizer 线程触发其 finalize() 方法执行。</li>
+<li><strong>finalize() 方法是对象逃脱死亡的最后机会</strong>，稍后 GC 会对 F-Queue 队列中的对象进行第二次标记。<strong>如果 objA 在 finalize() 方法中与引用链上的任何一个对象建立了联系</strong>，那么在第二次标记时，objA 会被移出“即将回收”集合。之后，如果对象再次出现没有引用存在的情况，在这个情况下，finalize() 方法不会被再次调用，对象会直接变成不可触及的状态，也就是说，一个对象的finalize() 方法只会被调用一次。</li>
 </ol>
 </li>
 </ol>
@@ -281,7 +281,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">第<span class="number">1</span>次 gc</span><br><span class="line">调用当前类重写的finalize()方法</span><br><span class="line">obj is still alive</span><br><span class="line">第<span class="number">2</span>次 gc</span><br><span class="line">obj is dead</span><br></pre></td></tr></table></figure>
 
 <p>第一次自救成功，但由于 finalize() 方法只会执行一次，所以第二次自救失败</p>
-<h1 id="MAT与JProfiler的GC-Roots溯源"><a href="#MAT与JProfiler的GC-Roots溯源" class="headerlink" title="MAT与JProfiler的GC Roots溯源"></a>MAT与JProfiler的GC Roots溯源</h1><h2 id="MAT-介绍"><a href="#MAT-介绍" class="headerlink" title="MAT 介绍"></a>MAT 介绍</h2><ol>
+<h1 id="MAT-与-JProfiler-的-GC-Roots-溯源"><a href="#MAT-与-JProfiler-的-GC-Roots-溯源" class="headerlink" title="MAT 与 JProfiler 的 GC Roots 溯源"></a>MAT 与 JProfiler 的 GC Roots 溯源</h1><h2 id="MAT-介绍"><a href="#MAT-介绍" class="headerlink" title="MAT 介绍"></a>MAT 介绍</h2><ol>
 <li>MAT是Memory Analyzer的简称，它是一款功能强大的Java堆内存分析器。用于查找内存泄漏以及查看内存消耗情况。</li>
 <li>MAT是基于Eclipse开发的，是一款免费的性能分析工具。</li>
 <li>大家可以在<a target="_blank" rel="noopener" href="http://www.eclipse.org/mat/%E4%B8%8B%E8%BD%BD%E5%B9%B6%E4%BD%BF%E7%94%A8MAT">http://www.eclipse.org/mat/下载并使用MAT</a></li>
@@ -358,7 +358,7 @@
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220724160712731.png" alt="image-20220724160712731"></p>
 <h1 id="清除阶段：标记-清除算法"><a href="#清除阶段：标记-清除算法" class="headerlink" title="清除阶段：标记-清除算法"></a>清除阶段：标记-清除算法</h1><p><strong>垃圾清除阶段</strong></p>
 <ul>
-<li>当成功区分出内存中存活对象和死亡对象后，GC接下来的任务就是执行垃圾回收，释放掉无用对象所占用的内存空间，以便有足够的可用内存空间为新对象分配内存。目前在JVM中比较常见的三种垃圾收集算法是<ol>
+<li>当成功区分出内存中存活对象和死亡对象后，GC 接下来的任务就是执行垃圾回收，释放掉无用对象所占用的内存空间，以便有足够的可用内存空间为新对象分配内存。目前在 JVM 中比较常见的三种垃圾收集算法是<ol>
 <li><strong>标记-清除算法（Mark-Sweep）</strong></li>
 <li><strong>复制算法（Copying）</strong></li>
 <li><strong>标记-压缩算法（Mark-Compact）</strong></li>
@@ -366,22 +366,22 @@
 </li>
 </ul>
 <p><strong>背景</strong></p>
-<p>标记-清除算法（Mark-Sweep）是一种非常基础和常见的垃圾收集算法，该算法被J.McCarthy等人在1960年提出并并应用于Lisp语言。</p>
+<p>标记-清除算法（Mark-Sweep）是一种非常基础和常见的垃圾收集算法，该算法被 J.McCarthy 等人在1960年提出并并应用于Lisp语言。</p>
 <p><strong>执行过程</strong></p>
 <p>当堆中的有效内存空间（available memory）被耗尽的时候，就会停止整个程序（也被称为stop the world），然后进行两项工作，第一项则是标记，第二项则是清除</p>
 <ol>
-<li><strong>标记</strong>：Collector从引用根节点开始遍历，<strong>标记所有被引用的对象</strong>。一般是在对象的Header中记录为可达对象。<ul>
-<li>注意：标记的是被引用的对象，也就是可达对象，并非标记的是即将被清除的垃圾对象</li>
+<li><strong>标记</strong>：Collector 从引用根节点开始遍历，<strong>标记所有被引用的对象</strong>。一般是在对象的 Header 中记录为可达对象。<ul>
+<li>注意：标记的是<strong>被引用的对象</strong>，也就是<strong>可达对象</strong>，并非标记的是即将被清除的垃圾对象</li>
 </ul>
 </li>
-<li><strong>清除</strong>：Collector对堆内存从头到尾进行线性的遍历，如果发现某个对象在其Header中没有标记为可达对象，则将其回收</li>
+<li><strong>清除</strong>：Collector 对堆内存从头到尾进行线性的遍历，如果发现某个对象在其 Header 中没有标记为可达对象，则将其回收</li>
 </ol>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220724172142532.png" alt="image-20220724172142532"></p>
 <p><strong>标记-清除算法的缺点</strong></p>
 <ol>
 <li>标记清除算法的效率不算高</li>
-<li>在进行GC的时候，需要停止整个应用程序，用户体验较差</li>
-<li>这种方式清理出来的空闲内存是不连续的，产生内碎片，需要维护一个空闲列表</li>
+<li>在进行 GC 的时候，需要停止整个应用程序，用户体验较差</li>
+<li>这种方式清理出来的空闲内存是不连续的，<strong>产生内存碎片</strong>，<strong>需要维护一个空闲列表</strong></li>
 </ol>
 <p><strong>注意：何为清除？</strong></p>
 <ul>
@@ -408,17 +408,17 @@
 <li>将活着的内存空间分为两块，每次只使用其中一块，在垃圾回收时将正在使用的内存中的存活对象复制到未被使用的内存块中，之后清除正在使用的内存块中的所有对象，交换两个内存的角色，最后完成垃圾回收</li>
 </ul>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220724172811930.png" alt="image-20220724172811930"></p>
-<p>新生代里面就用到了复制算法，Eden区和S0区存活对象整体复制到S1区</p>
+<p>新生代里面就用到了复制算法，Eden 区和 S0 区存活对象整体复制到 S1 区</p>
 <p><strong>复制算法的优缺点</strong></p>
 <p><strong>优点</strong></p>
 <ol>
 <li>没有标记和清除过程，实现简单，<strong>运行高效</strong></li>
-<li>复制过去以后保证空间的连续性，不会出现“碎片”问题。</li>
+<li>复制过去以后保证空间的连续性，<strong>不会出现“碎片”问题</strong>。</li>
 </ol>
 <p><strong>缺点</strong></p>
 <ol>
 <li>此算法的缺点也是很明显的，就是<strong>需要两倍的内存空间</strong>。</li>
-<li>对于G1这种分拆成为大量region的GC，复制而不是移动，意味着GC需要维护region之间对象引用关系，不管是内存占用或者时间开销也不小</li>
+<li>对于 G1 这种分拆成为大量 region 的 GC，复制而不是移动，意味着 GC 需要维护 region 之间对象引用关系，不管是内存占用或者时间开销也不小</li>
 </ol>
 <p><strong>复制算法的应用场景</strong></p>
 <ol>
@@ -433,7 +433,7 @@
 <ol>
 <li><p>复制算法的高效性是建立在存活对象少、垃圾对象多的前提下的。这种情况在新生代经常发生，但是在老年代，更常见的情况是大部分对象都是存活对象。如果依然使用复制算法，由于存活对象较多，复制的成本也将很高。因此，<strong>基于老年代垃圾回收的特性，需要使用其他的算法。</strong></p>
 </li>
-<li><p>标记-清除算法的确可以应用在老年代中，但是该算法不仅执行效率低下，而且在执行完内存回收后还会产生内存碎片，所以JVM的设计者需要在此基础之上进行改进。标记-压缩（Mark-Compact）算法由此诞生。</p>
+<li><p>标记-清除算法的确可以应用在老年代中，但是该算法不仅执行效率低下，而且在执行完内存回收后还会产生内存碎片，所以 JVM 的设计者需要在此基础之上进行改进。<strong>标记-压缩（Mark-Compact）算法</strong>由此诞生。</p>
 </li>
 <li><p>1970年前后，G.L.Steele、C.J.Chene和D.s.Wise等研究者发布标记-压缩算法。在许多现代的垃圾收集器中，人们都使用了标记-压缩算法或其改进版本。</p>
 </li>
@@ -452,13 +452,13 @@
 </li>
 <li><p>二者的本质差异在于标记-清除算法是一种<strong>非移动式的回收算法</strong>，标记-压缩是<strong>移动式的</strong>。是否移动回收后的存活对象是一项优缺点并存的风险决策。</p>
 </li>
-<li><p>可以看到，标记的存活对象将会被整理，按照内存地址依次排列，而未被标记的内存会被清理掉。如此一来，当我们需要给新对象分配内存时，JVM只需要持有一个内存的起始地址即可，这比维护一个空闲列表显然少了许多开销。</p>
+<li><p>可以看到，标记的存活对象将会被整理，按照内存地址依次排列，而未被标记的内存会被清理掉。如此一来，当我们需要给新对象分配内存时，JVM 只需要持有一个内存的起始地址即可，这比维护一个空闲列表显然少了许多开销。</p>
 </li>
 </ol>
 <p><strong>标记-压缩算法的优缺点</strong></p>
 <p><strong>优点</strong></p>
 <ol>
-<li>消除了标记-清除算法当中，内存区域分散的缺点，我们需要给新对象分配内存时，JVM只需要持有一个内存的起始地址即可。</li>
+<li>消除了标记-清除算法当中，内存区域分散的缺点，我们需要给新对象分配内存时，JVM 只需要持有一个内存的起始地址即可。</li>
 <li>消除了复制算法当中，内存减半的高额代价。</li>
 </ol>
 <p><strong>缺点</strong></p>
@@ -510,44 +510,44 @@
 <ol>
 <li><p>前面所有这些算法中，并没有一种算法可以完全替代其他算法，它们都具有自己独特的优势和特点。分代收集算法应运而生。</p>
 </li>
-<li><p>分代收集算法，是基于这样一个事实：<strong>不同的对象的生命周期是不一样的。因此，不同生命周期的对象可以采取不同的收集方式，以便提高回收效率。</strong>一般是把Java堆分为新生代和老年代，这样就可以根据各个年代的特点使用不同的回收算法，以提高垃圾回收的效率。</p>
+<li><p>分代收集算法，是基于这样一个事实：<strong>不同的对象的生命周期是不一样的。因此，不同生命周期的对象可以采取不同的收集方式，以便提高回收效率。</strong>一般是把 Java 堆分为新生代和老年代，这样就可以根据各个年代的特点使用不同的回收算法，以提高垃圾回收的效率。</p>
 </li>
-<li><p>在Java程序运行的过程中，会产生大量的对象，其中有些对象是与业务信息相关:</p>
+<li><p>在 Java 程序运行的过程中，会产生大量的对象，其中有些对象是与业务信息相关:</p>
 <ul>
-<li>比如Http请求中的Session对象、线程、Socket连接，这类对象跟业务直接挂钩，因此生命周期比较长。</li>
-<li>但是还有一些对象，主要是程序运行过程中生成的临时变量，这些对象生命周期会比较短，比如：String对象，由于其不变类的特性，系统会产生大量的这些对象，有些对象甚至只用一次即可回收。</li>
+<li>比如 Http 请求中的 Session 对象、线程、Socket 连接，这类对象跟业务直接挂钩，因此生命周期比较长。</li>
+<li>但是还有一些对象，主要是程序运行过程中生成的临时变量，这些对象生命周期会比较短，比如：String 对象，由于其不变类的特性，系统会产生大量的这些对象，有些对象甚至只用一次即可回收。</li>
 </ul>
 </li>
 </ol>
-<p><strong>目前几乎所有的GC都采用分代手机算法执行垃圾回收的</strong></p>
-<p>在HotSpot中，基于分代的概念，GC所使用的内存回收算法必须结合年轻代和老年代各自的特点。</p>
+<p><strong>目前几乎所有的 GC 都采用分代收集算法执行垃圾回收的</strong></p>
+<p>在 HotSpot 中，基于分代的概念，GC 所使用的内存回收算法必须结合年轻代和老年代各自的特点。</p>
 <ol>
 <li><p>年轻代（Young Gen）</p>
 <ul>
 <li>年轻代特点：区域相对老年代较小，对象生命周期短、存活率低，回收频繁。</li>
-<li>这种情况<strong>复制算法</strong>的回收整理，速度是最快的。复制算法的效率只和当前存活对象大小有关，因此很适用于年轻代的回收。而复制算法内存利用率不高的问题，通过hotspot中的两个survivor的设计得到缓解。</li>
+<li>这种情况<strong>复制算法</strong>的回收整理，速度是最快的。复制算法的效率只和当前存活对象大小有关，因此很适用于年轻代的回收。而复制算法内存利用率不高的问题，通过 hotspot 中的两个 survivor 的设计得到缓解。</li>
 </ul>
 </li>
 <li><p>老年代（Tenured Gen）</p>
 <ul>
 <li>老年代特点：区域较大，对象生命周期长、存活率高，回收不及年轻代频繁。</li>
 <li>这种情况存在大量存活率高的对象，复制算法明显变得不合适。一般是由<strong>标记-清除或者是标记-清除与标记-整理的混合实现</strong>。<ul>
-<li><p>Mark阶段的开销与存活对象的数量成正比。</p>
+<li><p>Mark 阶段的开销与存活对象的数量成正比。</p>
 </li>
-<li><p>Sweep阶段的开销与所管理区域的大小成正相关。</p>
+<li><p>Sweep 阶段的开销与所管理区域的大小成正相关。</p>
 </li>
-<li><p>Compact阶段的开销与存活对象的数据成正比。</p>
-</li>
-</ul>
+<li><p>Compact 阶段的开销与存活对象的数据成正比。</p>
 </li>
 </ul>
 </li>
-<li><p>以HotSpot中的CMS回收器为例，CMS是基于Mark-Sweep实现的，对于对象的回收效率很高。对于碎片问题，CMS采用基于Mark-Compact算法的Serial Old回收器作为补偿措施：当内存回收不佳（碎片导致的Concurrent Mode Failure时），将采用Serial Old执行Full GC以达到对老年代内存的整理。</p>
+</ul>
+</li>
+<li><p>以 HotSpot 中的 CMS 回收器为例，CMS 是基于 Mark-Sweep 实现的，对于对象的回收效率很高。对于碎片问题，CMS 采用基于Mark-Compact 算法的 Serial Old 回收器作为补偿措施：当内存回收不佳（碎片导致的Concurrent Mode Failure时），将采用 Serial Old 执行 Full GC 以达到对老年代内存的整理。 </p>
 </li>
 <li><p>分代的思想被现有的虚拟机广泛使用。几乎所有的垃圾回收器都区分新生代和老年代</p>
 </li>
 </ol>
-<h1 id="增量收集算法"><a href="#增量收集算法" class="headerlink" title="增量收集算法"></a>增量收集算法</h1><p>上述现有的算法，在垃圾回收过程中，应用软件将处于一种Stop the World的状态。在<strong>Stop the World</strong>状态下，应用程序所有的线程都会挂起，暂停一切正常的工作，等待垃圾回收的完成。如果垃圾回收时间过长，应用程序会被挂起很久，将<strong>严重影响用户体验或者系统的稳定性</strong>。为了解决这个问题，即对实时垃圾收集算法的研究直接导致了增量收集（Incremental Collecting）算法的诞生。</p>
+<h1 id="增量收集算法"><a href="#增量收集算法" class="headerlink" title="增量收集算法"></a>增量收集算法</h1><p>上述现有的算法，在垃圾回收过程中，应用软件将处于一种 Stop the World 的状态。在 <strong>Stop the World</strong> 状态下，应用程序所有的线程都会挂起，暂停一切正常的工作，等待垃圾回收的完成。如果垃圾回收时间过长，应用程序会被挂起很久，将<strong>严重影响用户体验或者系统的稳定性</strong>。为了解决这个问题，即对实时垃圾收集算法的研究直接导致了增量收集（Incremental Collecting）算法的诞生。</p>
 <p><strong>增量收集算法基本思想</strong></p>
 <ol>
 <li>如果一次性将所有的垃圾进行处理，需要造成系统长时间的停顿，那么就可以让垃圾收集线程和应用程序线程交替执行。<strong>每次，垃圾收集线程只收集一小片区域的内存空间，接着切换到应用程序线程。依次反复，直到垃圾收集完成。</strong></li>
@@ -556,15 +556,15 @@
 <p><strong>增量收集算法的缺点</strong></p>
 <p>使用这种方式，由于在垃圾回收过程中，间断性地还执行了应用程序代码，所以能减少系统的停顿时间。但是，因为线程切换和上下文转换的消耗，会使得垃圾回收的总体成本上升，<strong>造成系统吞吐量的下降</strong>。</p>
 <h1 id="分区算法"><a href="#分区算法" class="headerlink" title="分区算法"></a>分区算法</h1><blockquote>
-<p>主要针对G1收集器来说的</p>
+<p>主要针对 G1 收集器来说的</p>
 </blockquote>
 <ol>
-<li>一般来说，在相同条件下，堆空间越大，一次GC时所需要的时间就越长，有关GC产生的停顿也越长。为了更好地控制GC产生的停顿时间，将一块大的内存区域分割成多个小块，根据目标的停顿时间，每次合理地回收若干个小区间，而不是整个堆空间，从而减少一次GC所产生的停顿。</li>
+<li>一般来说，在相同条件下，堆空间越大，一次 GC 时所需要的时间就越长，有关 GC 产生的停顿也越长。为了更好地控制 GC 产生的停顿时间，将一块大的内存区域分割成多个小块，根据目标的停顿时间，每次合理地回收若干个小区间，而不是整个堆空间，从而减少一次 GC 所产生的停顿。</li>
 <li>分代算法将按照对象的生命周期长短划分成两个部分，分区算法将整个堆空间划分成连续的不同小区间。</li>
 <li>每一个小区间都独立使用，独立回收。这种算法的好处是可以控制一次回收多少个小区间。</li>
 </ol>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220724175822855.png" alt="image-20220724175822855"></p>
-<h1 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h1><p>注意，这些只是基本的算法思路，实际GC实现过程要复杂的多，目前还在发展中的前沿GC都是复合算法，并且并行和并发兼备。</p>
+<h1 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h1><p>注意，这些只是基本的算法思路，实际 GC 实现过程要复杂的多，目前还在发展中的前沿 GC 都是复合算法，并且并行和并发兼备。</p>
  
       <!-- reward -->
       

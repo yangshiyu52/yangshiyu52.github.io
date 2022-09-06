@@ -129,14 +129,14 @@
 <p><strong>官方文档</strong>：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.4">https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.4</a></p>
 </blockquote>
 <h2 id="方法区在哪里？"><a href="#方法区在哪里？" class="headerlink" title="方法区在哪里？"></a>方法区在哪里？</h2><ol>
-<li>《Java虚拟机规范》中明确说明：尽管所有的方法区在逻辑上是属于堆的一部分，但一些简单的实现可能不会选择去进行垃圾收集或者进行压缩。但对于HotSpotJVM而言，方法区还有一个别名叫做Non-Heap（非堆），目的就是要和堆分开。</li>
-<li>所以，<strong>方法区可以看作是一块独立于Java堆的内存空间</strong>。</li>
+<li>《Java 虚拟机规范》中明确说明：尽管所有的方法区在逻辑上是属于堆的一部分，但一些简单的实现可能不会选择去进行垃圾收集或者进行压缩。但对于 HotSpotJVM 而言，方法区还有一个别名叫做 Non-Heap（非堆），目的就是要和堆分开。</li>
+<li>所以，<strong>方法区可以看作是一块独立于 Java 堆的内存空间</strong>。</li>
 </ol>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220717150314133.png" alt="image-20220717150314133"></p>
 <h2 id="方法区的基本理解"><a href="#方法区的基本理解" class="headerlink" title="方法区的基本理解"></a>方法区的基本理解</h2><p><strong>方法区主要存放的是 Class，而堆中主要存放的是实例化的对象</strong></p>
 <ol>
-<li>方法区（Method Area）与Java堆一样，是各个线程共享的内存区域。多个线程同时加载同一个类时，只能有一个线程能加载该类，其他线程只能等待该线程加载完毕，然后直接使用该类，即类只能加载一次。</li>
-<li>方法区在JVM启动的时候被创建，并且它的实际的物理内存空间中和Java堆区一样都可以是不连续的。</li>
+<li>方法区（Method Area）与 Java 堆一样，是各个线程共享的内存区域。多个线程同时加载同一个类时，只能有一个线程能加载该类，其他线程只能等待该线程加载完毕，然后直接使用该类，即类只能加载一次。</li>
+<li>方法区在 JVM 启动的时候被创建，并且它的实际的物理内存空间中和 Java 堆区一样都可以是不连续的。</li>
 <li>方法区的大小，跟堆空间一样，可以选择固定大小或者可扩展。</li>
 <li>方法区的大小决定了系统可以保存多少个类，如果系统定义了太多的类，导致方法区溢出，虚拟机同样会抛出内存溢出错误：<code>java.lang.OutofMemoryError:PermGen space</code>或者<code>java.lang.OutOfMemoryError:Metaspace</code><ul>
 <li>加载大量的第三方的jar包</li>
@@ -144,7 +144,7 @@
 <li>大量动态的生成反射类</li>
 </ul>
 </li>
-<li>关闭JVM就会释放这个区域的内存</li>
+<li>关闭 JVM 就会释放这个区域的内存</li>
 </ol>
 <p><strong>代码举例</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MethodAreaDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;start...&quot;</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">1000000</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;end...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -152,9 +152,9 @@
 <p>简单的程序，加载了1600多个类</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220717151239529.png" alt="image-20220717151239529"></p>
 <h2 id="HotSpot中方法区的演进"><a href="#HotSpot中方法区的演进" class="headerlink" title="HotSpot中方法区的演进"></a>HotSpot中方法区的演进</h2><ol>
-<li>在 JDK7 及以前，习惯上把方法区，称为永久代。JDK8开始，使用元空间取代了永久代。我们可以将方法区类比为Java中的接口，将永久代或元空间类比为Java中具体的实现类</li>
-<li>本质上，方法区和永久代并不等价。仅是对Hotspot而言的可以看作等价。《Java虚拟机规范》对如何实现方法区，不做统一要求。例如：BEAJRockit &#x2F; IBM J9 中不存在永久代的概念。<ul>
-<li>现在来看，当年使用永久代，不是好的idea。导致Java程序更容易OOm（超过** **上限）</li>
+<li>在 JDK7 及以前，习惯上把方法区，称为永久代。JDK8开始，使用元空间取代了永久代。我们可以将方法区类比为 Java 中的接口，将永久代或元空间类比为 Java 中具体的实现类</li>
+<li>本质上，方法区和永久代并不等价。仅是对 Hotspot 而言的可以看作等价。《Java虚拟机规范》对如何实现方法区，不做统一要求。例如：BEAJRockit &#x2F; IBM J9 中不存在永久代的概念。<ul>
+<li>现在来看，当年使用永久代，不是好的idea。导致Java程序更容易OOM</li>
 </ul>
 </li>
 <li>而到了JDK8，终于完全废弃了永久代的概念，改用与JRockit、J9一样在本地内存中实现的元空间（Metaspace）来代替</li>
@@ -213,7 +213,7 @@
 </ul>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719133402240.png" alt="image-20220719133402240"></p>
 <p><strong>类型信息</strong></p>
-<p>对每个加载的类型（类class、接口interface、枚举enum、注解annotation），JVM必须在方法区中存储以下类型信息：</p>
+<p>对每个加载的类型（类class、接口interface、枚举enum、注解annotation），JVM 必须在方法区中存储以下类型信息：</p>
 <ol>
 <li>这个类型的完整有效名称（全名&#x3D;包名.类名）</li>
 <li>这个类型直接父类的完整有效名（对于interface或是java.lang.Object，都没有父类）</li>
@@ -306,8 +306,8 @@
 <ol>
 <li>方法区，内部包含了运行时常量池</li>
 <li>字节码文件，内部包含了常量池。（之前的字节码文件中已经看到了很多Constant pool的东西，这个就是常量池）</li>
-<li>要弄清楚方法区，需要理解清楚ClassFile，因为加载类的信息都在方法区。</li>
-<li>要弄清楚方法区的运行时常量池，需要理解清楚ClassFile中的常量池。</li>
+<li>要弄清楚方法区，需要理解清楚 ClassFile，因为加载类的信息都在方法区。</li>
+<li>要弄清楚方法区的运行时常量池，需要理解清楚 ClassFile 中的常量池。</li>
 </ol>
 <h3 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h3><ol>
 <li>一个有效的字节码文件中除了包含<strong>类的版本信息、字段、方法以及接口</strong>等描述符信息外。还包含一项信息就是<strong>常量池表</strong>（<strong>Constant Pool Table</strong>），包括各种字面量和对类型、域和方法的符号引用。</li>
@@ -316,7 +316,7 @@
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220719135817127.png" alt="image-20220719135817127"></p>
 <p><strong>为什么需要常量池？</strong></p>
 <ul>
-<li>一个java源文件中的类、接口，编译后产生一个字节码文件。而Java中的字节码需要数据支持，通常这种数据会很大以至于不能直接存到字节码里，换另一种方式，可以存到常量池。这个字节码包含了指向常量池的引用。在动态链接的时候会用到运行时常量池。</li>
+<li>一个 java 源文件中的类、接口，编译后产生一个字节码文件。而 Java 中的字节码需要数据支持，通常这种数据会很大以至于不能直接存到字节码里，换另一种方式，可以存到常量池。这个字节码包含了指向常量池的引用。在动态链接的时候会用到运行时常量池。</li>
 </ul>
 <p>比如：如下的代码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SimpleClass</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sayHello</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -346,15 +346,15 @@
 <h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><ol>
 <li><p>运行时常量池（Runtime Constant Pool）是方法区的一部分。</p>
 </li>
-<li><p>常量池表（Constant Pool Table）是Class字节码文件的一部分，用于存放编译期生成的各种字面量与符号引用，<strong>这部分内容将在类加载后存放到方法区的运行时常量池中</strong>。（运行时常量池就是常量池在程序运行时的称呼）</p>
+<li><p>常量池表（Constant Pool Table）是 Class 字节码文件的一部分，用于存放编译期生成的各种字面量与符号引用，<strong>这部分内容将在类加载后存放到方法区的运行时常量池中</strong>。（运行时常量池就是常量池在程序运行时的称呼）</p>
 </li>
 <li><p>运行时常量池，在加载类和接口到虚拟机后，就会创建对应的运行时常量池。</p>
 </li>
-<li><p>JVM为每个已加载的类型（类或接口）都维护一个常量池。池中的数据项像数组项一样，是<strong>通过索引访问</strong>的。</p>
+<li><p>JVM 为每个已加载的类型（类或接口）都维护一个常量池。池中的数据项像数组项一样，是<strong>通过索引访问</strong>的。</p>
 </li>
 <li><p>运行时常量池中包含多种不同的常量，包括编译期就已经明确的数值字面量，也包括到运行期解析后才能够获得的方法或者字段引用。<strong>此时不再是常量池中的符号地址了，这里换为真实地址</strong>。</p>
 <ul>
-<li>运行时常量池，相对于Class文件常量池的另一重要特征是：<strong>具备动态性</strong>。</li>
+<li>运行时常量池，相对于 Class 文件常量池的另一重要特征是：<strong>具备动态性</strong>。</li>
 </ul>
 </li>
 <li><p>运行时常量池类似于传统编程语言中的符号表（symbol table），但是它所包含的数据却比符号表要更加丰富一些。</p>
@@ -439,7 +439,7 @@
 <p><strong>官方文档</strong>：<a target="_blank" rel="noopener" href="http://openjdk.java.net/jeps/122">http://openjdk.java.net/jeps/122</a></p>
 </blockquote>
 <ol>
-<li>随着Java8的到来，HotSpot VM中再也见不到永久代了。但是这并不意味着类的元数据信息也消失了。这些数据被移到了一个与堆不相连的本地内存区域，这个区域叫做元空间（Metaspace）。</li>
+<li>随着 Java8 的到来，HotSpot VM 中再也见不到永久代了。但是这并不意味着类的元数据信息也消失了。这些数据被移到了一个与堆不相连的本地内存区域，这个区域叫做元空间（Metaspace）。</li>
 <li>由于类的元数据分配在本地内存中，元空间的最大可分配空间就是系统可用内存空间。</li>
 <li>这项改动是很有必要的，原因有：<ol>
 <li><strong>为永久代设置空间大小是很难确定的。</strong>在某些场景下，如果动态加载类过多，容易产生Perm区的OOM。比如某个实际Web工程中，因为功能点比较多，在运行过程中，要不断动态加载很多类，经常出现致命错误。<code>Exception in thread &#39;dubbo client x.x connector&#39; java.lang.OutOfMemoryError:PermGen space</code>而元空间和永久代之间最大的区别在于：元空间并不在虚拟机中，而是使用本地内存。 因此，默认情况下，元空间的大小仅受本地内存限制。</li>
@@ -453,7 +453,7 @@
 </ol>
 <h2 id="字符串常量池"><a href="#字符串常量池" class="headerlink" title="字符串常量池"></a>字符串常量池</h2><p><strong>字符串常量池 StringTable 为什么要调整位置？</strong></p>
 <ul>
-<li><p>JDK7中将StringTable放到了堆空间中。因为永久代的回收效率很低，在Full GC的时候才会执行永久代的垃圾回收，而Full GC是老年代的空间不足、永久代不足时才会触发。</p>
+<li><p>JDK7中将 StringTable 放到了堆空间中。因为永久代的回收效率很低，在Full GC的时候才会执行永久代的垃圾回收，而Full GC是老年代的空间不足、永久代不足时才会触发。</p>
 </li>
 <li><p>这就导致StringTable回收效率不高，而我们开发中会有大量的字符串被创建，回收效率低，导致永久代内存不足。放到堆里，能及时回收内存。</p>
 </li>
@@ -468,14 +468,14 @@
 <p>JDK8环境</p>
 <img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_006/0033.png">
 
-<h3 id="变量-名-存放在哪里？"><a href="#变量-名-存放在哪里？" class="headerlink" title="变量(名)存放在哪里？"></a>变量(名)存放在哪里？</h3><p>这个问题需要用JHSDB工具来进行分析，这个工具是JDK9开始自带的(JDK9以前没有)，在bin目录下可以找到</p>
+<h3 id="变量-名-存放在哪里？"><a href="#变量-名-存放在哪里？" class="headerlink" title="变量(名)存放在哪里？"></a>变量(名)存放在哪里？</h3><p>这个问题需要用 JHSDB 工具来进行分析，这个工具是JDK9开始自带的(JDK9以前没有)，在bin目录下可以找到</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.atguigu.java1;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 《深入理解Java虚拟机》中的案例：</span></span><br><span class="line"><span class="comment"> * staticObj、instanceObj、localObj存放在哪里？</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StaticObjTest</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="type">ObjectHolder</span> <span class="variable">staticObj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectHolder</span>();</span><br><span class="line">        <span class="type">ObjectHolder</span> <span class="variable">instanceObj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectHolder</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">void</span> <span class="title function_">foo</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="type">ObjectHolder</span> <span class="variable">localObj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectHolder</span>();</span><br><span class="line">            System.out.println(<span class="string">&quot;done&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ObjectHolder</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Test</span> <span class="variable">test</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StaticObjTest</span>.Test();</span><br><span class="line">        test.foo();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p><strong>JDK6环境下</strong></p>
-<p>1、staticObj随着Test的类型信息存放在方法区</p>
-<p>2、instanceObj随着Test的对象实例存放在Java堆</p>
-<p>3、localObject则是存放在foo()方法栈帧的局部变量表中。</p>
-<p>4、测试发现：三个对象的数据在内存中的地址都落在Eden区范围内，所以结论：<strong>只要是对象实例必然会在Java堆中分配</strong>。</p>
+<p>1、staticObj 随着 Test 的类型信息存放在方法区</p>
+<p>2、instanceObj 随着 Test 的对象实例存放在Java堆</p>
+<p>3、localObject 则是存放在 foo() 方法栈帧的局部变量表中。</p>
+<p>4、测试发现：三个对象的数据在内存中的地址都落在 Eden 区范围内，所以结论：<strong>只要是对象实例必然会在 Java 堆中分配</strong>。</p>
 <img src="https://npm.elemecdn.com/youthlql@1.0.8/JVM/chapter_006/0034.png">
 
 <blockquote>

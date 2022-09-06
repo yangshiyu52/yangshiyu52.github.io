@@ -89,7 +89,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">5.7k</span>
+            <span class="post-count">6k</span>
         </span>
     </span>
 
@@ -98,7 +98,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">21 min</span>
+            <span class="post-count">22 min</span>
         </span>
     </span>
 </div>
@@ -681,6 +681,57 @@
 </li>
 </ul>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220812213839865.png" alt="image-20220812213839865"></p>
+<h2 id="TCP-UDP区别"><a href="#TCP-UDP区别" class="headerlink" title="TCP UDP区别"></a>TCP UDP区别</h2><table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">TCP</th>
+<th align="center">UDP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">定义</td>
+<td align="center">传输控制协议</td>
+<td align="center">用户数据报协议</td>
+</tr>
+<tr>
+<td align="center">连接方式</td>
+<td align="center">需要建立连接，形成传输数据的通道</td>
+<td align="center">不需要建立连接，将数据源和目的封装到数据包中</td>
+</tr>
+<tr>
+<td align="center">数据传输的大小</td>
+<td align="center">数据大小不受限制</td>
+<td align="center">数据大小限制在 64K 之内</td>
+</tr>
+<tr>
+<td align="center">安全性</td>
+<td align="center">通过三次握手完成连接，可靠协议，安全送达</td>
+<td align="center">无需建立连接，故不可靠</td>
+</tr>
+<tr>
+<td align="center">效率性</td>
+<td align="center">必须建立连接，故效率低</td>
+<td align="center">速度快</td>
+</tr>
+</tbody></table>
+<h1 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h1><ul>
+<li>Socket就是为网络服务提供的一种机制</li>
+<li>通信的两端都是Socket</li>
+<li>网络通信其实就是Socket间的通信</li>
+<li>数据在两个Socket间通过IO传输</li>
+<li>Socket 抽象层是位于应用层和传输层之间的一层</li>
+<li>可以只传送数据本身而不用进行XML封装，大大降低数据传输的开销(JSON)</li>
+<li>Socket允许使用长连接，允许应用程序运行在异步模式（提高效率)，只有在需要的时候才接收数据<ul>
+<li>常用的两种Socket类型<ul>
+<li>**流式Socket (SocK_STREAM)**：流式是一种面向连接的Socket，针对于面向连接的TCP服务应用</li>
+<li>**数据报式Socket (SOcK_DGRAM)**：数据报式Socket是一种无连接的Socket，对应于无连接的UDP服务应用</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Socket-基本操作"><a href="#Socket-基本操作" class="headerlink" title="Socket 基本操作"></a>Socket 基本操作</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220906204611488.png" alt="image-20220906204611488"></p>
  
       <!-- reward -->
       
