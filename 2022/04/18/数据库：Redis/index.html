@@ -89,7 +89,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">3.6k</span>
+            <span class="post-count">4.2k</span>
         </span>
     </span>
 
@@ -98,7 +98,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">14 min</span>
+            <span class="post-count">16 min</span>
         </span>
     </span>
 </div>
@@ -364,7 +364,7 @@
 
 <h1 id="16-Redis可视化工具"><a href="#16-Redis可视化工具" class="headerlink" title="16. Redis可视化工具"></a>16. Redis可视化工具</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RedisDesktopManager</span><br></pre></td></tr></table></figure>
 
-<h1 id="17-SpringBoot集成Redis"><a href="#17-SpringBoot集成Redis" class="headerlink" title="17.SpringBoot集成Redis"></a>17.SpringBoot集成Redis</h1><ul>
+<h1 id="17-SpringBoot集成Redis"><a href="#17-SpringBoot集成Redis" class="headerlink" title="17. SpringBoot集成Redis"></a>17. SpringBoot集成Redis</h1><ul>
 <li><p>引入依赖</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0.3.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 </li>
@@ -405,6 +405,29 @@
 <li>确保redis是未启动状态</li>
 <li>把备份的rdb或者aof文件放入redis的安装路径 <code>/opt/redis</code></li>
 <li>启动redis,会主动加载rdb或者aof备份文件,加载哪个文件取决于是否开启aof,没开启默认加载rdb,开启了优先加载aof;</li>
+</ol>
+<h1 id="19-redis-的雪崩、穿透和击穿"><a href="#19-redis-的雪崩、穿透和击穿" class="headerlink" title="19. redis 的雪崩、穿透和击穿"></a>19. redis 的雪崩、穿透和击穿</h1><h2 id="redis缓存雪崩"><a href="#redis缓存雪崩" class="headerlink" title="redis缓存雪崩"></a>redis缓存雪崩</h2><p>所谓的 redis 缓存雪崩指的是：<strong>redis 中大量 key 集中过期或者 redis 服务器宕机，从而导致大量请求从数据库获取数据，导致数据库服务器访问压力过大。</strong></p>
+<p><strong>解决方式：</strong></p>
+<ol>
+<li>若是由于大量 key 过期所造成的，可以给 key 的 ttl 设置一个过期时间</li>
+<li>若是因为 redis 服务器宕机所导致的，可以搭建 redis 集群，保证高可用</li>
+<li>可以从请求量层面进行解决，对缓存业务添加限流和服务降级策略</li>
+<li>可以添加多级缓存，比如说 nginx 缓存</li>
+</ol>
+<h2 id="redis-缓存击穿"><a href="#redis-缓存击穿" class="headerlink" title="redis 缓存击穿"></a>redis 缓存击穿</h2><p>所谓的 redis 缓存击穿指的是：<strong>热点 key 的过期，从而导致大量访问热点 key 的请求访问数据库，从而导致数据库压力过大。</strong></p>
+<p><strong>解决方式</strong>：热点 key 通常是我们通过后台进行批量添加的，比如秒杀活动，解决热点 key 失效，可以重建缓存</p>
+<ol>
+<li>互斥锁实现：只允许一个线程对 redis 缓存进行重建，其他线程处于等待状态，可以通过 redis 当中的 setnx 实现。缺点是串行化执行，效率低。优点是一致性高。</li>
+<li>逻辑过期：给需要缓存的数据添加一个逻辑过期字段，通过对逻辑过期字段的判断，判断数据有无过期，如果过期则开启一个线程进行缓存重建，并且返回之前的数据。缺点是数据的一致性低，优点是相应速度快。</li>
+</ol>
+<h2 id="redis缓存穿透"><a href="#redis缓存穿透" class="headerlink" title="redis缓存穿透"></a>redis缓存穿透</h2><p>所谓的 redis 缓存穿透指的是：redis 当中没有数据，数据库当中也没有数据，请求每次都是访问数据库，而数据库有没有数据返回。</p>
+<p><strong>解决方式：</strong></p>
+<ol>
+<li>缓存空值。缺点是有点浪费内存空间，如果这样的请求过多，会导致redis当中有大量这种无用缓存，可以给其设置一个ttl。</li>
+<li>使用布隆过滤器。布隆过滤器原理是一个二进制的数组，存储的是0或1，在添加元素时进行多次hash运算，得到多个0或1，存储到相应位置。</li>
+<li>热点参数的限流降级</li>
+<li>进行权限校验</li>
+<li>做好数据格式的校验</li>
 </ol>
  
       <!-- reward -->
