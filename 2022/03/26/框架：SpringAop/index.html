@@ -113,11 +113,11 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="1-Spring中的AOP简介"><a href="#1-Spring中的AOP简介" class="headerlink" title="1. Spring中的AOP简介"></a>1. Spring中的AOP简介</h1><ul>
+  <h1 id="1-Spring-中的-AOP-简介"><a href="#1-Spring-中的-AOP-简介" class="headerlink" title="1. Spring 中的 AOP 简介"></a>1. Spring 中的 AOP 简介</h1><ul>
 <li>AOP Aspect Oriented Programing 面向切面编程 </li>
 <li>AOP 采取横向抽取机制，取代了传统纵向继承体系重复性代码（性能监视、事务管理、安全检查、缓存） </li>
-<li>Spring 中的 Aop 是纯 Java 来实现的,使用<strong>动态代理</strong>的方式增强代码</li>
-<li>Spring 使用动态代理的机制是判断<strong>委托类是否实现了接口</strong>，如果实现了接口则使用<strong>jdk的动态代理</strong>，如果没有实现接口则使用<strong>cglib的动态代理</strong></li>
+<li>Spring 中的 Aop 是纯 Java 来实现的，使用<strong>动态代理</strong>的方式增强代码</li>
+<li>Spring 使用动态代理的机制是判断<strong>委托类是否实现了接口</strong>，如果实现了接口则使用 <strong>jdk 的动态代理</strong>，如果没有实现接口则使用 <strong>cglib 的动态代理</strong></li>
 <li>AOP 不是由 Spring 提出来的,是由 <strong>AOP 联盟</strong>定义的</li>
 </ul>
 <h1 id="2-代理模式"><a href="#2-代理模式" class="headerlink" title="2. 代理模式"></a>2. 代理模式</h1><ul>
@@ -143,7 +143,7 @@
 <h2 id="2-2-动态代理"><a href="#2-2-动态代理" class="headerlink" title="2.2 动态代理"></a>2.2 动态代理</h2><h3 id="2-2-1-基于原生的-JDK-的动态代理"><a href="#2-2-1-基于原生的-JDK-的动态代理" class="headerlink" title="2.2.1 基于原生的 JDK 的动态代理"></a>2.2.1 基于原生的 JDK 的动态代理</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Pan</span> <span class="variable">pan</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Pan</span>();</span><br><span class="line"><span class="comment">//创建代理对象</span></span><br><span class="line"><span class="type">WindWoman</span> <span class="variable">windWoman</span> <span class="operator">=</span> (WindWoman) Proxy.newProxyInstance(Test.class.getClassLoader(),pan.getClass().getInterfaces(), <span class="keyword">new</span> <span class="title class_">InvocationHandler</span>() &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;--------------我给你说呀,他这个女人真的很漂亮,她让我告诉你下面的内容--------------:&quot;</span>);</span><br><span class="line">		<span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> method.invoke(pan, args);</span><br><span class="line">		System.out.println(<span class="string">&quot;--------------记得啊,完事以后要给我好多钱,很辛苦的--------------&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> obj;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">windWoman.say();</span><br></pre></td></tr></table></figure>
 
 <h3 id="2-2-2-基于CGLIB的动态代理"><a href="#2-2-2-基于CGLIB的动态代理" class="headerlink" title="2.2.2 基于CGLIB的动态代理"></a>2.2.2 基于CGLIB的动态代理</h3><ul>
-<li>因为原生的 jdk 的动态代理存在缺陷，代理类和委托类必须实现同一个接口**</li>
+<li>因为原生的 jdk 的动态代理存在缺陷，代理类和委托类必须实现同一个接口</li>
 <li>所以有个开源的动态代理框架出现了(CGLIB)</li>
 <li>CGLIB不要求委托类必须实现接口&#x3D;&#x3D;&#x3D;&gt;因为CGLIB底层是基于<strong>继承</strong>实现的</li>
 </ul>
@@ -166,7 +166,7 @@
 <li><strong>Aspect(切面)<strong>：是</strong>切点</strong>和<strong>通知</strong>的结合</li>
 </ul>
 <h1 id="4-基于-Jdk-动态代理实现自定义AOP"><a href="#4-基于-Jdk-动态代理实现自定义AOP" class="headerlink" title="4. 基于 Jdk 动态代理实现自定义AOP"></a>4. 基于 Jdk 动态代理实现自定义AOP</h1><ul>
-<li><p><strong>使用JDK的动态代理，使用Proxy类里面的方法创建代理对象</strong></p>
+<li><p><strong>使用 JDK 的动态代理，使用 Proxy 类里面的方法创建代理对象</strong></p>
 </li>
 <li><p>调用 <strong>newProxyInstance(1:ClassLoder,2:类&lt;？&gt;[] interfances,3:InvocationHand)</strong></p>
 <p>参数的作用：1. 类的加载器；2. 增强方法所在类，这个类实现的接口，支持多个接口，所以以数组的形式展出；3. 实现这个接口InvocationHand，创建代理的对象，写增强的方法。</p>
@@ -279,11 +279,11 @@
 <h1 id="9-基于-Aspectj-的-AOP"><a href="#9-基于-Aspectj-的-AOP" class="headerlink" title="9.  基于 Aspectj 的 AOP"></a>9.  基于 Aspectj 的 AOP</h1><ul>
 <li>AspectJ 是一个基于 Java 语言的面向切面的 AOP 框架</li>
 <li>Spring2.0 以后新增了对 AspectJ <strong>切点表达式</strong>支持 </li>
-<li>@AspectJ 是AspectJ1.5新增功能，通过JDK5注解技术，允许直接在Bean类中定义切面 </li>
-<li>新版本Spring框架，建议使用AspectJ方式来开发AOP</li>
+<li>@AspectJ 是 AspectJ1.5 新增功能，通过 JDK5 注解技术，允许直接在 Bean 类中定义切面 </li>
+<li>新版本 Spring 框架，建议使用 AspectJ 方式来开发 AOP</li>
 </ul>
-<h2 id="9-1-AspectJ的增强类型"><a href="#9-1-AspectJ的增强类型" class="headerlink" title="9.1 AspectJ的增强类型"></a>9.1 AspectJ的增强类型</h2><ul>
-<li>@Before 前置通知，相当于BeforeAdvice</li>
+<h2 id="9-1-AspectJ-的增强类型"><a href="#9-1-AspectJ-的增强类型" class="headerlink" title="9.1 AspectJ 的增强类型"></a>9.1 AspectJ 的增强类型</h2><ul>
+<li>@Before 前置通知，相当于 BeforeAdvice</li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Before(&quot;execution(* com.uplooking.aop.UserDao.add*(..))&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">beforeAdvice</span><span class="params">()</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;前置通知....&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -307,7 +307,7 @@
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@After(value = &quot;execution(* com.uplooking.aop.UserDao.add*(..))&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterAdvice</span><span class="params">()</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;最终通知....&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="9-2-基于Aspectj的Aop"><a href="#9-2-基于Aspectj的Aop" class="headerlink" title="9.2.  基于Aspectj的Aop"></a>9.2.  基于Aspectj的Aop</h2><ul>
+<h2 id="9-2-基于-Aspectj-的Aop"><a href="#9-2-基于-Aspectj-的Aop" class="headerlink" title="9.2.  基于 Aspectj 的Aop"></a>9.2.  基于 Aspectj 的Aop</h2><ul>
 <li><strong>pom依赖</strong></li>
 </ul>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-context<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.3.10.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--Spring整合Aspectj的包--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-aspects<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.3.10.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>

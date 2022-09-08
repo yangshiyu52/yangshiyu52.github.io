@@ -89,7 +89,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">9.7k</span>
+            <span class="post-count">11k</span>
         </span>
     </span>
 
@@ -98,7 +98,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">35 min</span>
+            <span class="post-count">39 min</span>
         </span>
     </span>
 </div>
@@ -468,6 +468,19 @@
 </ul>
 </li>
 </ul>
+<h2 id="大表优化"><a href="#大表优化" class="headerlink" title="大表优化"></a>大表优化</h2><p>当MySQL单表记录数过⼤时，数据库的CRUD性能会明显下降，⼀些常⻅的优化措施如下：</p>
+<h3 id="限定数据的范围"><a href="#限定数据的范围" class="headerlink" title="限定数据的范围"></a><strong>限定数据的范围</strong></h3><p>务必禁⽌不带任何限制数据范围条件的查询语句。⽐如：我们当⽤户在查询订单历史的时候，我们可以控制在⼀个⽉的范围内；</p>
+<h3 id="读-x2F-写分离"><a href="#读-x2F-写分离" class="headerlink" title="读&#x2F;写分离"></a>读&#x2F;写分离</h3><p>经典的数据库拆分⽅案，主库负责写，从库负责读；</p>
+<h3 id="垂直分区"><a href="#垂直分区" class="headerlink" title="垂直分区"></a>垂直分区</h3><p><strong>根据数据库⾥⾯数据表的相关性进⾏拆分。</strong> 例如，⽤户表中既有⽤户的登录信息⼜有⽤户的基本信息，可以将⽤户表拆分成两个单独的表，甚⾄放到单独的库做分库。</p>
+<p><strong>简单来说垂直拆分是指数据表列的拆分，把⼀张列⽐较多的表拆分为多张表。</strong> 如下图所示，这样来说⼤家应该就更容易理解了</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220908103814804.png" alt="image-20220908103814804"></p>
+<p><strong>垂直拆分的优点：</strong> 可以使得列数据变⼩，在查询时减少读取的Block数，减少I&#x2F;O次数。此外，垂直分区可以简化表的结构，易于维护。</p>
+<p><strong>垂直拆分的缺点：</strong> 主键会出现冗余，需要管理冗余列，并会引起Join操作，可以通过在应⽤层进⾏Join来解决。此外，垂直分区会让事务变得更加复杂；</p>
+<h3 id="水平分区"><a href="#水平分区" class="headerlink" title="水平分区"></a>水平分区</h3><p><strong>保持数据表结构不变，通过某种策略存储数据分⽚。这样每⼀⽚数据分散到不同的表或者库中，达到了分布式的⽬的。 ⽔平拆分可以⽀撑⾮常⼤的数据量。</strong></p>
+<p>⽔平拆分是指数据表⾏的拆分，表的⾏数超过200万⾏时，就会变慢，这时可以把⼀张的表的数据拆成多张表来存放。举个例⼦：我们可以将⽤户信息表拆分成多个⽤户信息表，这样就可以避免单⼀表数据量过⼤对性能造成影响。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220908104021379.png" alt="image-20220908104021379"></p>
+<p>⽔平拆分可以⽀持⾮常⼤的数据量。需要注意的⼀点是：分表仅仅是解决了单⼀表数据过⼤的问题，但由于表的数据还是在同⼀台机器上，其实对于提升MySQL并发能⼒没有什么意义，所以<strong>⽔平拆分最好分库</strong> 。</p>
+<p>⽔平拆分能够 <strong>⽀持⾮常⼤的数据量存储，应⽤端改造也少</strong>，但 <strong>分⽚事务难以解决</strong> ，跨节点Join性能较差，逻辑复杂。《Java⼯程师修炼之道》的作者推荐 <strong>尽量不要对数据进⾏分⽚，因为拆分会带来逻辑、部署、运维的各种复杂度</strong> ，⼀般的数据表在优化得当的情况下⽀撑千万以下的数据量是没有太⼤问题的。如果实在要分⽚，尽量选择客户端分⽚架构，这样可以减少⼀次和中间件的⽹络I&#x2F;O。</p>
 <h2 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h2><p>首先分库分表分为垂直和水平两个方式，一般来说我们拆分的顺序是先垂直后水平。</p>
 <ul>
 <li><strong>垂直分库</strong></li>
@@ -485,14 +498,14 @@
 <p>首先根据业务场景来决定使用什么字段作为分表字段(sharding_key)，比如我们现在日订单1000万，我们大部分的场景来源于C端，我们可以用user_id作为sharding_key，数据查询支持到最近3个月的订单，超过3个月的做归档处理，那么3个月的数据量就是9亿，可以分1024张表，那么每张表的数据大概就在100万左右。</p>
 <p>比如用户id为100，那我们都经过hash(100)，然后对1024取模，就可以落到对应的表上了。</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/63c2909f-0c5f-496f-9fe5-ee9176b31aba.jpg" alt="img"></p>
-<h2 id="分表后的ID怎么保证唯一性"><a href="#分表后的ID怎么保证唯一性" class="headerlink" title="分表后的ID怎么保证唯一性"></a>分表后的ID怎么保证唯一性</h2><p>因为我们主键默认都是自增的，那么分表之后的主键在不同表就肯定会有冲突了。有几个办法考虑：</p>
+<h2 id="分表后的-ID-怎么保证唯一性"><a href="#分表后的-ID-怎么保证唯一性" class="headerlink" title="分表后的 ID 怎么保证唯一性"></a>分表后的 ID 怎么保证唯一性</h2><p>因为我们主键默认都是自增的，那么分表之后的主键在不同表就肯定会有冲突了。有几个办法考虑：</p>
 <ul>
 <li>设定步长，比如1-1024张表我们分别设定1-1024的基础步长，这样主键落到不同的表就不会冲突了。</li>
-<li>分布式ID，自己实现一套分布式ID生成算法或者使用开源的比如雪花算法这种</li>
+<li>分布式 ID，自己实现一套分布式 ID 生成算法或者使用开源的比如雪花算法这种</li>
 <li>分表后不使用主键作为查询依据，而是每张表单独新增一个字段作为唯一主键使用，比如订单表订单号是唯一的，不管最终落在哪张表都基于订单号作为查询依据，更新也一样。</li>
 </ul>
-<h2 id="分表后非sharding-key的查询怎么处理"><a href="#分表后非sharding-key的查询怎么处理" class="headerlink" title="分表后非sharding_key的查询怎么处理"></a>分表后非sharding_key的查询怎么处理</h2><ul>
-<li>可以做一个mapping表，比如这时候商家要查询订单列表怎么办呢？不带user_id查询的话你总不能扫全表吧？所以我们可以做一个映射关系表，保存商家和用户的关系，查询的时候先通过商家查询到用户列表，再通过user_id去查询。</li>
+<h2 id="分表后非-sharding-key-的查询怎么处理"><a href="#分表后非-sharding-key-的查询怎么处理" class="headerlink" title="分表后非 sharding_key 的查询怎么处理"></a>分表后非 sharding_key 的查询怎么处理</h2><ul>
+<li>可以做一个 mapping 表，比如这时候商家要查询订单列表怎么办呢？不带user_id查询的话你总不能扫全表吧？所以我们可以做一个映射关系表，保存商家和用户的关系，查询的时候先通过商家查询到用户列表，再通过user_id去查询。</li>
 <li>大宽表，一般而言，商户端对数据实时性要求并不是很高，比如查询订单列表，可以把订单表同步到离线（实时）数仓，再基于数仓去做成一张宽表，再基于其他如es提供查询服务。</li>
 <li>数据量不是很大的话，比如后台的一些查询之类的，也可以通过多线程扫表，然后再聚合结果的方式来做。或者异步的形式也是可以的。</li>
 </ul>
@@ -519,7 +532,16 @@
 </ul>
 <p>读写分离常用代理方式来实现，代理服务器接收应用层传来的读写请求，然后决定转发到哪个服务器。</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/master-slave-proxy.png" alt="img"></p>
-<h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><h2 id="什么是Redis，为什么用Redis？"><a href="#什么是Redis，为什么用Redis？" class="headerlink" title="什么是Redis，为什么用Redis？"></a>什么是Redis，为什么用Redis？</h2><p>Redis 是一种支持 key-value 等多种数据结构的存储系统。可用于缓存，事件发布或订阅，高速队列等场景。支持网络，提供字符串，哈希，列表，队列，集合结构直接存取，<strong>基于内存，可持久化</strong>。</p>
+<h2 id="池化设计思想"><a href="#池化设计思想" class="headerlink" title="池化设计思想"></a>池化设计思想</h2><p>池化设计应该不是⼀个新名词。我们常⻅的如 java 线程池、jdbc 连接池、redis 连接池等就是这类设计的代表实现。这种设计会初始预设资源，解决的问题就是抵消每次获取资源的消耗，如创建线程的开销，获取远程连接的开销等。就好⽐你去⻝堂打饭，打饭的⼤妈会先把饭盛好⼏份放那⾥，你来了就直接拿着饭盒加菜即可，不⽤再临时⼜盛饭⼜打菜，效率就⾼了。除了初始化资源，池化设计还包括如下这些特征：池⼦的初始值、池⼦的活跃值、池⼦的最⼤值等，这些特征可以直接映射到java线程池和数据库连接池的成员属性中。这篇⽂章对池化设计思想介绍的还不错，直接复制过来，避免重复造轮⼦了。</p>
+<p>数据库连接本质就是⼀个 socket 的连接。数据库服务端还要维护⼀些缓存和⽤户权限信息之类的 所以占⽤了⼀些内存。我们可以把数据库连接池是看做是维护的数据库连接的缓存，以便将来需要对数据库的请求时可以重⽤这些连接。为每个⽤户打开和维护数据库连接，尤其是对动态数据库驱动的⽹站应⽤程序的请求，既昂贵⼜浪费资源。<strong>在连接池中，创建连接后，将其放置在池中，并再次使⽤它，因此不必建⽴新的连接。如果使⽤了所有连接，则会建⽴⼀个新连接并将其添加到池中。</strong> 连接池还减少了⽤户必须等待建⽴与数据库的连接的时间。</p>
+<h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><h2 id="mysql与redis的区别"><a href="#mysql与redis的区别" class="headerlink" title="mysql与redis的区别"></a>mysql与redis的区别</h2><p><strong>类型上</strong></p>
+<p>从类型上来说，mysql 是关系型数据库，redis 是缓存数据库</p>
+<p><strong>作用上</strong></p>
+<p>mysql 用于持久化的存储数据到硬盘，功能强大，速度较慢，基于磁盘，读写速度没有Redis快，但是不受空间容量限制，性价比高</p>
+<p>redis用于存储使用较为频繁的数据到缓存中，读取速度快，基于内存，读写速度快，也可做持久化，但是内存空间有限，当数据量超过内存空间时，需扩充内存，但内存价格贵</p>
+<p><strong>需求上</strong></p>
+<p>mysql 和 redis 因为需求的不同，一般都是配合使用。需要高性能的地方使用 Redis，不需要高性能的地方使用 MySQL。存储数据在MySQL和Redis之间做同步。</p>
+<h2 id="什么是Redis，为什么用Redis？"><a href="#什么是Redis，为什么用Redis？" class="headerlink" title="什么是Redis，为什么用Redis？"></a>什么是Redis，为什么用Redis？</h2><p>Redis 是一种支持 key-value 等多种数据结构的存储系统。可用于缓存，事件发布或订阅，高速队列等场景。支持网络，提供字符串，哈希，列表，队列，集合结构直接存取，<strong>基于内存，可持久化</strong>。</p>
 <ul>
 <li><strong>读写性能优异</strong><ul>
 <li>Redis能读的速度是110000次&#x2F;s,写的速度是81000次&#x2F;s （测试条件见下一节）。</li>
