@@ -6,7 +6,7 @@
   <link href="https://yangshiyu52.github.io/atom.xml" rel="self"/>
   
   <link href="https://yangshiyu52.github.io/"/>
-  <updated>2022-09-19T14:44:10.409Z</updated>
+  <updated>2022-09-04T13:32:19.531Z</updated>
   <id>https://yangshiyu52.github.io/</id>
   
   <author>
@@ -15,21 +15,6 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>index</title>
-    <link href="https://yangshiyu52.github.io/2022/09/19/index/"/>
-    <id>https://yangshiyu52.github.io/2022/09/19/index/</id>
-    <published>2022-09-19T14:44:10.000Z</published>
-    <updated>2022-09-19T14:44:10.409Z</updated>
-    
-    
-    
-    
-    <category term="框架" scheme="https://yangshiyu52.github.io/categories/%E6%A1%86%E6%9E%B6/"/>
-    
-    
-  </entry>
   
   <entry>
     <title>树</title>
@@ -468,6 +453,31 @@
         
         
     <summary type="html">&lt;h1 id=&quot;功能&quot;&gt;&lt;a href=&quot;#功能&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="计算机基础知识" scheme="https://yangshiyu52.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
+    
+    <category term="计算机网络" scheme="https://yangshiyu52.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>物理层</title>
+    <link href="https://yangshiyu52.github.io/2022/08/11/ji-suan-ji-wang-luo-wu-li-ceng/"/>
+    <id>https://yangshiyu52.github.io/2022/08/11/ji-suan-ji-wang-luo-wu-li-ceng/</id>
+    <published>2022-08-11T07:37:25.000Z</published>
+    <updated>2022-08-11T08:21:00.189Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;基本概念&quot;&gt;&lt;a href=&quot;#基本概念&quot; class=&quot;headerlink&quot;</summary>
         
       
     
