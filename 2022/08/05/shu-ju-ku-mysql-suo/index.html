@@ -1,0 +1,1456 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="mysql锁, Healer">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>mysql锁 | Healer</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Healer" type="application/atom+xml">
+</head>
+
+
+
+   <style>
+    body{
+       background-image: url(https://ysy-java.oss-cn-hangzhou.aliyuncs.com/girl.jpg);
+       background-repeat:no-repeat;
+       background-size:cover;
+       background-attachment:fixed;
+    }
+</style>
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">Healer</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Healer</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">mysql锁</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="post-category">
+                                数据库
+                            </a>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/" class="post-category">
+                                mysql
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2022-08-05
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    9.5k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    34 分
+                </div>
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="锁机制"><a href="#锁机制" class="headerlink" title="锁机制"></a>锁机制</h1><ul>
+<li>事务与锁是不同的。事务具有ACID( 原子性、一致性、隔离性和持久性)，锁是用于<strong>解决隔离级别</strong>的一种机制。事务的隔离级别通过锁的机制来实现。</li>
+<li>为了保证数据并发访问时的<strong>一致性和有效性</strong>，任何一个数据库都存在锁机制。锁机制的优劣直接影响到数据库的并发处理能力和系统性能，所以锁机制也就成为了各种数据库的核心技术之一。</li>
+<li>锁机制是为了解决数据库的<strong>并发控制</strong>问题而产生的。如在同一时刻，客户端对同一个表做更新或查询操作，为了保证数据的一致性，必须对并发操作进行控制。同时，锁机制也为实现 MySQL 的各个隔离级别提供了保证。</li>
+<li>可以将锁机制理解为使各种资源在被并发访问时变得有序所设计的一种规则。</li>
+<li>如何保证数据并发访问的一致性、有效性是所有数据库必须解决的一个问题，锁冲突也是影响数据库并发访问性能的一个重要因素。从这个角度来说，锁对数据库显得尤其重要，也更加复杂。</li>
+</ul>
+<h1 id="锁分类"><a href="#锁分类" class="headerlink" title="锁分类"></a>锁分类</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/7d4abdeb78b66d9ba4110d54beec4855.png" alt="img"></p>
+<ol>
+<li>按照锁的粒度划分：<strong>行锁、表锁、页锁</strong></li>
+<li>按照锁的使用方式划分：<strong>共享锁、排它锁</strong>（悲观锁的一种实现）</li>
+<li>还有两种思想上的锁：<strong>悲观锁、乐观锁</strong>。</li>
+<li>InnoDB 中有几种行级锁类型：Record Lock、Gap Lock、Next-key Lock</li>
+<li>按<strong>锁级别分类，可分为共享锁、排他锁和意向锁。</strong></li>
+</ol>
+<p>MySQL 的锁机制最显著的特点是不同的存储引擎支持不同的锁机制。比如，MyISAM 和 MEMORY 存储引擎采用的是表级锁，<strong>不支持行锁</strong>；BDB 存储引擎采用的是页面锁，但也支持表级锁；InnoDB 存储引擎<strong>既支持行级锁，也支持表级锁</strong>，但默认情况下是采用<strong>行级锁</strong>。不支持行锁意味着并发控制只能使用表锁，对于这种引擎的表，同 一张表上任何时刻只能有一个更新在执行，这就会影响到业务并发度。<strong>InnoDB 是支持行锁的， 这也是 MyISAM 被 InnoDB 替代的重要原因之一。</strong></p>
+<h1 id="行锁（row-level-locking）"><a href="#行锁（row-level-locking）" class="headerlink" title="行锁（row-level locking）"></a>行锁（row-level locking）</h1><ul>
+<li>行级锁的锁定颗粒度在 MySQL 中是最小的，<strong>只针对操作的当前行进行加锁</strong>，所以<strong>行级锁发生锁定资源争用的概率也最小</strong>。</li>
+<li>行级锁能够给予应用程序尽可能大的并发处理能力，从而提高需要高并发应用系统的整体性能。虽然行级锁在并发处理能力上面有较大的优势，但也因此带来了不少弊端。</li>
+<li><strong>由于锁定资源的颗粒度很小，所以每次获取锁和释放锁需要做的事情也就更多，带来的消耗自然也就更大。</strong>此外，<strong>行级锁也最容易发生死锁</strong>。所以说<strong>行级锁最大程度地支持并发处理的同时，也带来了最大的锁开销</strong>。</li>
+<li>行级锁主要应用于 <strong>InnoDB 存储引擎</strong>。</li>
+<li><strong>随着锁定资源颗粒度的减小，锁定相同数据量的数据所需要消耗的内存数量也越来越多，实现算法也会越来越复杂。不过，随着锁定资源颗粒度的减小，应用程序的访问请求遇到锁等待的可能性也会随之降低，系统整体并发度也会随之提升。</strong></li>
+<li><strong>行级锁按照使用方式分为共享锁和排他锁。</strong></li>
+</ul>
+<h1 id="表锁（table-level-locking）"><a href="#表锁（table-level-locking）" class="headerlink" title="表锁（table-level locking）"></a>表锁（table-level locking）</h1><ul>
+<li>表级锁为表级别的锁定，会锁定整张表，<strong>可以很好的避免死锁</strong>，是 MySQL 中最大颗粒度的锁定机制。</li>
+<li>一个用户在对表进行写操作(插入、删除、更新等)时，需要先获得写锁(也叫排斥锁)，这会阻塞其它用户对该表的所有读写操作。没有写锁时，其它读取的用户才能获得读锁，读锁之间是不相互阻塞的。</li>
+<li>表级锁最大的特点就是<strong>实现逻辑非常简单，带来的系统负面影响最小</strong>。所以获取锁和释放锁的速度很快。当然，锁定颗粒度大带来最大的负面影响就是<strong>出现锁定资源争用的概率会很高</strong>，致使并发度大打折扣。</li>
+<li>不过在某些特定的场景中，表级锁也可以有良好的性能。例如，READ LOCAL 表级锁支持某些类型的并发写操作。另外，写锁也比读锁有更高的优先级，因此一个写锁请求可能会被插入到读锁队列的前面(写锁可以插入到锁队列中读锁的前面，反之读锁则不能插入到写锁的前面)。</li>
+<li>使用表级锁的主要是 MyISAM，MEMORY，CSV 等一些非事务性存储引擎。</li>
+<li>尽管存储引擎可以管理自己的锁，MySQL 本身还是会使用各种有效的表级锁来实现不同的目的。例如，服务器会为诸如 ALTER TABLE 之类的语句使用表级锁，而忽略存储引擎的锁机制。</li>
+</ul>
+<h1 id="页锁（page-level-locking）"><a href="#页锁（page-level-locking）" class="headerlink" title="页锁（page-level locking）"></a>页锁（page-level locking）</h1><ul>
+<li>页级锁是 MySQL 中比较独特的一种锁定级别，在其他数据库管理软件中并不常见。</li>
+<li>页级锁的颗粒度<strong>介于行级锁与表级锁之间</strong>，所以获取锁定所需要的资源开销，以及所能提供的并发处理能力同样也是介于上面二者之间。另外，页级锁和行级锁一样，会发生死锁。</li>
+<li>页级锁主要应用于 BDB 存储引擎。</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/78c7b27c7fd257f074da21aef869b491.png" alt="img"></p>
+<h1 id="共享锁（Shared-Lock）"><a href="#共享锁（Shared-Lock）" class="headerlink" title="共享锁（Shared Lock）"></a>共享锁（Shared Lock）</h1><ul>
+<li><p>共享锁的代号是 <code>S</code>，是 <code>Share</code> 的缩写，也可称为<strong>读锁</strong>。是一种<strong>可以查看但无法修改和删除的数据锁</strong>。</p>
+</li>
+<li><p><strong>共享锁的锁粒度是行或者元组(多个行)<strong>。</strong>一个事务获取了共享锁之后，可以对锁定范围内的数据执行读操作。会阻止其它事务获得相同数据集的排他锁。</strong></p>
+</li>
+<li><p><strong>加锁方式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-- 行级读锁</span><br><span class="line">select * from T where id=1 lock in share mode;</span><br><span class="line">-- 表级读锁</span><br><span class="line">lock table user_info read;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>释放方式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">commit、rollback;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="排他锁（EXclusive-Lock）"><a href="#排他锁（EXclusive-Lock）" class="headerlink" title="排他锁（EXclusive Lock）"></a>排他锁（EXclusive Lock）</h1><ul>
+<li><p>排他锁的代号是<code>X</code>，是 <code>eXclusive</code> 的缩写，也可称为<strong>写锁</strong>，是基本的锁类型。</p>
+</li>
+<li><p>排他锁的粒度与共享锁相同，也是<strong>行或者元组</strong>。<strong>一个事务获取了排他锁之后，可以对锁定范围内的数据执行写操作。允许获得排他锁的事务更新数据，阻止其它事务取得相同数据集的共享锁和排他锁。</strong></p>
+</li>
+<li><p>当有事务对数据加写锁后，其他事务不能再对锁定的数据加任何锁，又因为 InnoDB 对 select 语句默认不加锁，所以其他事务<strong>除了不能写操作外，照样是允许读的（尽管不允许加读锁）</strong>。</p>
+</li>
+<li><p><strong>主要为了在事务进行写操作时，不允许其他事务修改。</strong></p>
+</li>
+<li><p><strong>加锁方式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-- 行级写锁</span><br><span class="line">自动：DML语句默认加写锁</span><br><span class="line">手动：select * from T where id=1 for update;</span><br><span class="line">-- 表级写锁</span><br><span class="line">lock table user_info write;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>释放方式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">commit、rollback;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="意向锁（Intention-Lock）"><a href="#意向锁（Intention-Lock）" class="headerlink" title="意向锁（Intention Lock）"></a>意向锁（Intention Lock）</h1><ul>
+<li>又称<strong>I锁</strong>。针对<strong>表锁</strong>。</li>
+<li>为了允许行锁和表锁共存，实现多粒度锁机制，InnoDB 还有两种内部使用的意向锁。</li>
+<li>意向锁是一种表锁，锁定的粒度是整张表，分为**意向共享锁(IS)和意向排他锁(IX)**两类。</li>
+<li>意向共享锁表示一个事务有意对数据上共享锁或者排他锁。“有意”表示事务想执行操作但还没有真正执行。</li>
+<li>当有事务给表的数据行加了共享锁或排他锁，同时会给表设置一个标识，代表已经有行锁了，其他事务要想对表加表锁时，就不必逐行判断有没有行锁可能跟表锁冲突了，直接读这个标识就可以确定自己该不该加表锁。特别是表中的记录很多时，逐行判断加表锁的方式效率很低。而<strong>这个标识就是意向锁</strong>。<ul>
+<li>意向共享锁，IS锁，对整个表加共享锁之前，需要先获取到意向共享锁。</li>
+<li>意向排他锁，IX锁，对整个表加排他锁之前，需要先获取到意向排他锁。</li>
+</ul>
+</li>
+</ul>
+<p>主要是为了提高加表锁的效率。</p>
+<ul>
+<li><p>加锁方式：</p>
+<p>无法手动创建。</p>
+</li>
+</ul>
+<p>锁和锁之间的关系，要么是相容的，要么是互斥的。</p>
+<ul>
+<li>锁 a 和锁 b 相容是指：操作同样一组数据时，如果事务 t1 获取了锁 a，另一个事务 t2 还可以获取锁 b；</li>
+<li>锁 a 和锁 b 互斥是指：操作同样一组数据时，如果事务 t1 获取了锁 a，另一个事务 t2 在 t1 释放锁 a 之前无法获取锁 b</li>
+</ul>
+<p>其中<strong>共享锁</strong>、<strong>排他锁</strong>、<strong>意向共享锁、意向排他锁</strong>相互之间的兼容&#x2F;互斥关系如下表所示，其中 Y 表示相容，N 表示互斥。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/24c690732b2a23eaaf35d230f986d830.png" alt="image-20220303132033771"></p>
+<p><strong>如果一个事务请求的锁模式与当前的锁兼容，InnoDB 就将请求的锁授予该事务；反之，如果两者不兼容，该事务就要等待锁释放。</strong></p>
+<p><strong>为了尽可能提高数据库的并发量，需每次锁定的数据范围越小越好，越小的锁其耗费的系统资源越多，系统性能下降。为在高并发响应和系统性能两方面进行平衡，这样就产生了“锁粒度”的概念。</strong></p>
+<h1 id="并发控制"><a href="#并发控制" class="headerlink" title="并发控制"></a>并发控制</h1><ul>
+<li><p>当程序中可能出现并发的情况时，就需要保证在并发情况下数据的准确性，以此确保当前用户和其他用户一起操作时，所得到的结果和他单独操作时的结果是一样的，这就叫做并发控制。并发控制的目的是<strong>保证一个用户的工作不会对另一个用户的工作产生不合理的影响</strong>。</p>
+</li>
+<li><p><strong>没有做好并发控制，就可能导致脏读、幻读和不可重复读等问题。</strong></p>
+</li>
+</ul>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/16b34e4c9b6784337b498623ea0dd849.png" alt="img"></p>
+<p>常说的并发控制，一般都和数据库管理系统(DBMS)有关。在 DBMS 中并发控制的任务，是<strong>确保多个事务同时增删改查同一数据时，不破坏事务的隔离性、一致性和数据库的统一性</strong>。</p>
+<p><code>实现并发控制的主要手段分为乐观并发控制和悲观并发控制两种</code></p>
+<p>无论是悲观锁还是乐观锁，都是人们定义出来的概念，<strong>可以认为是一种思想</strong>。其实不仅仅是关系型数据库系统中有乐观锁和悲观锁的概念，像 hibernate、tair、memcache 等都有类似的概念。所以，不应该拿乐观锁、悲观锁和其他的数据库锁等进行对比。<strong>乐观锁比较适用于读多写少的情况(多读场景)，悲观锁比较适用于写多读少的情况(多写场景)。</strong></p>
+<h1 id="悲观锁（Pessimistic-Lock）"><a href="#悲观锁（Pessimistic-Lock）" class="headerlink" title="悲观锁（Pessimistic Lock）"></a>悲观锁（Pessimistic Lock）</h1><ul>
+<li><p>在关系数据库管理系统里，悲观并发控制（又名“悲观锁”，Pessimistic Concurrency Control，缩写“PCC”）是一种并发控制的方法。它可以阻止一个事务以影响其他用户的方式来修改数据。<strong>如果一个事务执行的操作对某行数据应用了锁，那只有当这个事务把锁释放，其他事务才能够执行与该锁冲突的操作</strong>。悲观并发控制主要用于数据争用激烈的环境，以及发生并发冲突时使用锁保护数据的成本要低于回滚事务的成本的环境中。</p>
+</li>
+<li><p>悲观锁，具有强烈的独占和排他特性，正如其名，它指的是对数据被外界（包括本系统当前的其他事务，以及来自外部系统的事务处理）修改持保守态度(悲观)，因此，<strong>在整个数据处理过程中，将数据处于锁定状态</strong>。 <code>悲观锁的实现，往往依靠数据库提供的锁机制 （也只有数据库层提供的锁机制才能真正保证数据访问的排他性，否则，即使在本系统中实现了加锁机制，也无法保证外部系统不会修改数据）</code></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/e0a7bb67259e9c0de800ae7913bf0fd2.png" alt="img"></p>
+</li>
+<li><p>之所以叫做悲观锁，是因为这是一种对数据的修改持有悲观态度的并发控制方式。总是假设最坏的情况，每次读取数据的时候都默认其他线程会更改数据，因此需要进行加锁操作，当其他线程想要访问数据时，都需要阻塞挂起。</p>
+</li>
+<li><p>悲观锁的实现：</p>
+<ol>
+<li>传统的关系型数据库使用这种锁机制，比如行锁、表锁、读锁、写锁等，都是在操作之前先上锁。</li>
+<li>Java 里面的同步<code>synchronized</code>关键字的实现。</li>
+</ol>
+</li>
+<li><p>悲观锁主要分为<strong>共享锁和排他锁</strong></p>
+</li>
+<li><p>mysql中实现悲观锁的具体流程：</p>
+<ol>
+<li>在对任意记录进行修改前，先尝试为该记录加上排他锁（exclusive locking）</li>
+<li>如果加锁失败，说明该记录正在被修改，那么当前查询可能要等待或者抛出异常。 具体响应方式由开发者根据实际需要决定。</li>
+<li>如果成功加锁，那么就可以对记录做修改，事务完成后就会解锁了。</li>
+<li>期间如果有其他对该记录做修改或加排他锁的操作，都会等待我们解锁或直接抛出异常。</li>
+<li><strong>总而言之就是一句话：mysql 中悲观锁的实现是通过排他锁来实现的</strong></li>
+</ol>
+</li>
+</ul>
+<p><strong>在 mysql(InnoDB) 中使用悲观锁：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1.开始事务</span><br><span class="line">begin;/begin work;/start transaction; (三者选一就可以)</span><br><span class="line">2.查询出商品信息</span><br><span class="line">select ... for update;(这里是使用的行锁的排他锁)</span><br><span class="line">4.提交事务</span><br><span class="line">commit;/commit work;</span><br></pre></td></tr></table></figure>
+
+<p>通过下面的例子来说明：</p>
+<p><strong>1. 当你手动加上排它锁，但是并没有关闭 mysql 中的 autocommit。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">1.这里先给user表所有的行加上行锁的排他锁</span><br><span class="line">mysql&gt; select * from user for update;</span><br><span class="line">+----+------+--------+</span><br><span class="line">| id | name | psword |</span><br><span class="line">+----+------+--------+</span><br><span class="line">|  1 | a    | 1      |</span><br><span class="line">|  2 | b    | 2      |</span><br><span class="line">|  3 | c    | 3      |</span><br><span class="line">+----+------+--------+</span><br><span class="line">3 rows in set</span><br><span class="line"></span><br><span class="line">2.再对加了排他锁的行更改数据时，这里他会一直提示Unknown</span><br><span class="line">mysql&gt; update user set name=aa where id=1;</span><br><span class="line">1054 - Unknown column &#x27;aa&#x27; in &#x27;field list&#x27;</span><br><span class="line">mysql&gt; insert into user values(4,d,4);</span><br><span class="line">1054 - Unknown column &#x27;d&#x27; in &#x27;field list&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 关闭 mysql 中的 autocommit 后的正常流程</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">窗口1：</span><br><span class="line">mysql&gt; set autocommit=0;（先关闭mysql中的autocommit）</span><br><span class="line">Query OK, 0 rows affected</span><br><span class="line">我这里锁的是表中的所有行</span><br><span class="line">mysql&gt; select * from user for update;</span><br><span class="line">+----+-------+</span><br><span class="line">| id | price |</span><br><span class="line">+----+-------+</span><br><span class="line">|  1 |   500 |</span><br><span class="line">|  2 |   800 |</span><br><span class="line">+----+-------+</span><br><span class="line">2 rows in set</span><br><span class="line"></span><br><span class="line">窗口2：</span><br><span class="line">mysql&gt; update user set price=price-100 where id=1;</span><br><span class="line">执行上面操作的时候，会显示等待状态，一直到窗口1执行commit提交事务才会出现下面的显示结果</span><br><span class="line">Database changed</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 0</span><br><span class="line"></span><br><span class="line">窗口1：执行commit手动提交事务</span><br><span class="line">mysql&gt; commit;</span><br><span class="line">Query OK, 0 rows affected</span><br><span class="line">再查询一下user表，发现已经执行了窗口2的更新操作</span><br><span class="line">mysql&gt; select * from user;</span><br><span class="line">+----+-------+</span><br><span class="line">| id | price |</span><br><span class="line">+----+-------+</span><br><span class="line">|  1 |   400 |</span><br><span class="line">|  2 |   800 |</span><br><span class="line">+----+-------+</span><br><span class="line">2 rows in set</span><br></pre></td></tr></table></figure>
+
+<p>上面的例子展示了排它锁的原理：一个锁在某一时刻只能被一个线程占有，其它线程必须等待锁被释放之后才可能获取到锁或者进行数据的操作。</p>
+<ul>
+<li><p><strong>悲观锁的优点和不足</strong></p>
+<p>悲观锁实际上是采取了“先取锁再访问”的策略，为数据的处理安全提供了保证，但是在效率方面，由于额外的加锁机制产生了额外的开销，并且<strong>增加了死锁的机会</strong>。并且降低了并发性；当一个事务加锁一行数据的时候，其他事务必须等待该事务提交之后，才能操作这行数据。</p>
+</li>
+</ul>
+<h1 id="乐观锁（Optimistic-Locking）"><a href="#乐观锁（Optimistic-Locking）" class="headerlink" title="乐观锁（Optimistic Locking）"></a>乐观锁（Optimistic Locking）</h1><ul>
+<li><p>在关系数据库管理系统里，乐观并发控制（又名“乐观锁”，Optimistic Concurrency Control，缩写“OCC”）是一种并发控制的方法。它假设多用户并发的事务在处理时不会彼此互相影响，各事务能够在不产生锁的情况下处理各自影响的那部分数据。在提交数据更新之前，每个事务会先检查在该事务读取数据后，有没有其他事务又修改了该数据。如果其他事务有更新的话，正在提交的事务会进行<strong>回滚</strong>。</p>
+</li>
+<li><p>乐观锁（ Optimistic Locking ） 相对悲观锁而言，乐观锁假设认为数据一般情况下不会造成冲突，所以在数据进行提交更新的时候，才会正式对数据的冲突与否进行检测，如果发现冲突了，则让返回用户错误的信息，让用户决定如何去做。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/569ff4e1a29633f4039ff83c0438346d.png" alt="img"></p>
+</li>
+<li><p>相对于悲观锁，在对数据库进行处理的时候，乐观锁并不会使用数据库提供的锁机制。</p>
+</li>
+<li><p>mysql 实现乐观锁一般来说有3种方式：</p>
+<ol>
+<li>使用<strong>数据版本（Version）记录机制</strong>实现，这是乐观锁最常用的一种实现方式。一般是通过为数据库表增加一个数字类型的 “version” 字段，表示数据被修改的次数。当读取数据时，将 version 字段的值一同读出，数据每更新一次，对此 version 值加一。当提交更新的时候，判断数据库表对应记录的当前版本信息与第一次取出来的 version 值进行比对，如果数据库表当前版本号与第一次取出来的 version 值相等，就进行更新操作，否则认为是过期数据，正在提交的事务会进行回滚。</li>
+<li>第二种实现方式和第一种差不多，同样是在需要乐观锁控制的 table 中增加一个字段，名称无所谓，字段类型使用<strong>时间戳</strong>（timestamp）, 和上面的 version 类似，也是在更新提交的时候检查当前数据库中数据的时间戳和自己更新前取到的时间戳进行对比，如果一致就更新，否则就是版本冲突。</li>
+<li>CAS 实现：Java 中 java.util.concurrent.atomic 包下面的原子变量使用了乐观锁的一种 CAS 实现方式</li>
+</ol>
+</li>
+<li><p>乐观锁的优点和不足</p>
+<p>乐观并发控制相信事务之间的数据竞争(data race)的概率是比较小的，因此尽可能直接做下去，直到提交的时候才去锁定，所以<strong>不会产生任何锁和死锁</strong>。但如果直接简单这么做，还是有可能会遇到不可预期的结果，例如两个事务都读取了数据库的某一行，经过修改以后写回数据库，这时就遇到了问题。</p>
+</li>
+<li><p>具体流程</p>
+<ul>
+<li>主要就是两个步骤：<strong>冲突检测和数据更新</strong>。比较典型的就是 CAS (Compare and Swap)。</li>
+<li><strong>CAS 即比较并交换</strong>。是解决多线程并行情况下使用锁造成性能损耗的一种机制，CAS 操作包含三个操作数——<strong>内存位置(V)、预期原值(A)和新值(B)<strong>。如果内存位置的值(V)与预期原值(A)相匹配，那么处理器会自动将该位置值更新为新值(B)。否则，处理器不做任何操作。无论哪种情况，它都会在 CAS 指令之前返回该位置的值。CAS 有效地说明了“我认为位置(V)应该包含值(A)。如果包含该值，则将新值(B)放到这个位置；否则，不要更改该位置，只告诉我这个位置现在的值即可”。Java 中，</strong>sun.misc.Unsafe</strong> 类提供了硬件级别的原子操作来实现这个 CAS。<strong>java.util.concurrent</strong> 包下大量的类都使用了这个 Unsafe.java 类的 CAS 操作。</li>
+<li>当多个线程尝试使用 CAS 同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败，失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。比如前面的扣减库存问题，</li>
+</ul>
+</li>
+<li><p>通过乐观锁可以实现如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">查出商品库存信息，quantity=3</span><br><span class="line">select quantity from items where id=1;</span><br><span class="line">修改商品库存为2</span><br><span class="line">update items set quantity=2 where id=1 and quantity = 3;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>在更新之前，先查询一下库存表中当前库存数(quantity)，然后在做 update 的时候，以库存数作为一个修改条件。当提交更新的时候，判断数据库表对应记录的当前库存数与第一次取出来的库存数进行比对，如果数据库表当前库存数与第一次取出来的库存数相等，则予以更新，否则认为是过期数据。</p>
+</li>
+<li><p>以上更新语句存在一个比较严重的问题，即 <strong>ABA问题</strong>：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/b67b363facf7760af75bfbad53b4e593.png" alt="img"></p>
+<ol>
+<li>比如说线程一从数据库中取出库存数 3，这时候线程二也从数据库中取出库存数 3，并且线程二进行了一些操作变成了 2。</li>
+<li>然后线程二又将库存数变成 3，这时候线程一进行 CAS 操作发现数据库中仍然是 3，然后线程一操作成功。</li>
+<li>尽管线程一的 CAS 操作成功，但是不代表这个过程就是没有问题的。</li>
+</ol>
+</li>
+<li><p>一个比较好的解决办法，就是通过一个单独的可以顺序递增的 version 字段。优化如下：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/d5de6b18dd097c35937d73caa0b6db1b.png" alt="img"></p>
+<ul>
+<li><p>乐观锁每次在执行数据修改操作时，都会带上一个版本号，一旦版本号和数据的版本号一致就可以执行修改操作并对版本号执行 +1 操作，否则就执行失败。因为每次操作的版本号都会随之增加，所以不会出现 ABA 问题。除了 version 以外，还可以使用时间戳，因为时间戳天然具有顺序递增性。</p>
+</li>
+<li><p>以上 SQL 其实还是有一定的问题的，就是一旦遇上高并发的时候，就只有一个线程可以修改成功，那么就会存在大量的失败。对于像淘宝这样的电商网站，高并发是常有的事，总让用户感知到失败显然是不合理的。所以，还是要想办法<strong>减少乐观锁的粒度</strong>。一个比较好的建议，就是<strong>减小乐观锁力度，最大程度的提升吞吐率，提高并发能力</strong>！如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">修改商品库存</span><br><span class="line">update item set quantity=quantity-1 where id=1 and quantity-1 &gt; 0;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>以上 SQL 语句中，如果用户下单数为 1，则通过<code>quantity - 1 &gt; 0</code>的方式进行乐观锁控制。在执行过程中，会在一次原子操作中查询一遍 quantity 的值，并将其扣减掉 1。</li>
+<li>高并发环境下锁粒度把控是一门重要的学问。选择一个好的锁，在保证数据安全的情况下，可以大大提升吞吐率，进而提升性能。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="理解-CAS-底层"><a href="#理解-CAS-底层" class="headerlink" title="理解 CAS 底层"></a>理解 CAS 底层</h1><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/885eeb9d953fac34d4fdc53b31215b78.png" alt="img"></p>
+<p>假如说有 3 个线程并发的要修改一个AtomicInteger的值，底层机制如下：</p>
+<ol>
+<li>首先，每个线程都会先获取当前的值，接着走一个原子的 CAS 操作。原子的意思就是这个 CAS 操作一定是自己完整执行完的，不会被别人打断。</li>
+<li>然后 CAS 操作里，会比较一下，现在的值是不是刚才获取到的那个值。如果是，说明没人改过这个值，然后设置成累加 1 之后的一个值。</li>
+<li>同理，如果有人在执行 CAS 的时候，发现之前获取的值跟当前的值不一样，会导致 CAS 失败。失败之后，进入一个无限循环，再次获取值，接着执行 CAS 操作。</li>
+</ol>
+<h1 id="CAS-典型应用"><a href="#CAS-典型应用" class="headerlink" title="CAS 典型应用"></a>CAS 典型应用</h1><p>java.util.concurrent.atomic 包下的类大多是使用 CAS 操作来实现的，比如 AtomicInteger、AtomicBoolean、AtomicLong。一般在竞争不是特别激烈的时候，使用该包下的原子操作性能比使用 synchronized 关键字的方式高效的多(查看 getAndSet()，可知如果资源竞争十分激烈的话，这个 for 循环可能会持续很久都不能成功跳出。不过这种情况可能需要考虑降低资源竞争才是)。</p>
+<p>在较多的场景都可能会使用到这些原子类操作。一个典型应用就是计数了，在多线程的情况下需要考虑线程安全问题。</p>
+<ol>
+<li>支持计数功能 Demo 实现</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Increment</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">()</span> &#123;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在并发环境下对 count 进行自增运算是不安全的，为什么不安全以及如何解决这个问题呢？</p>
+<ol start="2">
+<li>为什么并发环境下的 count 自增操作不安全？因为 count++ 不是原子操作，而是三个原子操作的组合：<ol>
+<li>读取内存中的 count 值赋值给局部变量 temp；</li>
+<li>执行 temp+1 操作；</li>
+<li>将 temp 赋值给 count。</li>
+</ol>
+</li>
+</ol>
+<p>所以如果两个线程同时执行 count++ 的话，不能保证线程一按顺序执行完上述三步后线程二才开始执行。</p>
+<ol start="3">
+<li>并发环境下 count++ 不安全问题的解决方案</li>
+</ol>
+<p>方案①：<strong>synchronized加锁</strong>。同一时间只有一个线程能加锁，其他线程需要等待锁，这样就不会出现 count 计数不准确的问题了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Increment</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">()</span> &#123;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是引入 synchronized 会造成多个线程排队的问题，相当于让各个线程串行化了，一个接一个的排队、加锁、处理数据、释放锁，下一个再进来。同一时间只有一个线程执行，这样的锁有点“重量级”了。这类似于悲观锁的实现，需要获取这个资源，就给它加锁，别的线程都无法访问该资源，直到操作完后释放对该资源的锁。虽然随着 Java 版本更新，也对 synchronized 做了很多优化，但是处理这种简单的累加操作，仍然显得“太重了”。</p>
+<p>方案②：<strong>Atomic 原子类</strong>。对于 count++ 的操作，完全可以换一种做法，Java 并发包下面提供了一系列的 Atomic 原子类，比如说 AtomicInteger：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//import java.util.concurrent.atomic.AtomicInteger;</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">AtomicInteger</span> <span class="variable">count</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">increase</span><span class="params">()</span> &#123;</span><br><span class="line">        count.incrementAndGet();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>多个线程可以并发的执行 AtomicInteger 的 incrementAndGet()，意思就是把 count 的值累加 1，接着返回累加后最新的值。实际上，Atomic 原子类底层用的不是传统意义的锁机制，而是无锁化的 CAS 机制，通过 CAS 机制保证多线程修改一个数值的安全性。</p>
+<h1 id="CAS-性能优化"><a href="#CAS-性能优化" class="headerlink" title="CAS 性能优化"></a>CAS 性能优化</h1><p>从流程图可以看出来，大量的线程同时并发修改一个 AtomicInteger，可能有很多线程会不停的自旋，进入一个无限重复的循环中。这些线程不停地获取值，然后发起 CAS 操作，但是发现这个值被别人改过了，于是再次进入下一个循环，获取值，发起 CAS 操作又失败了，再次进入下一个循环。在大量线程高并发更新 AtomicInteger 的时候，这种问题可能会比较明显，导致大量线程空循环，自旋转，性能和效率都不是特别好。那么如何优化呢？</p>
+<p>Java8 有一个新的类，LongAdder，它就是尝试使用分段 CAS 以及自动分段迁移的方式来大幅度提升多线程高并发执行 CAS 操作的性能，这个类具体是如何优化性能的呢？如图：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/7abe51c80744d2eab1495895ec3fe11e.png" alt="img"></p>
+<p><strong>LongAdder</strong></p>
+<p>LongAdder 核心思想就是热点分离，这一点和 ConcurrentHashMap 的设计思想相似。就是将 value 值分离成一个数组，当多线程访问时，通过 hash 算法映射到其中的一个数字进行计数。而最终的结果，就是这些数组的求和累加。这样一来，就减小了锁的粒度。</p>
+<p>LongAddr 的兄弟类如下：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/60ca62457379f485d4482cc848269fb5.png" alt="img"></p>
+<p>LongAdder兄弟类</p>
+<h1 id="如何选择"><a href="#如何选择" class="headerlink" title="如何选择"></a>如何选择</h1><p>在乐观锁与悲观锁的选择上面，主要看下两者的区别以及适用场景就可以了。</p>
+<ol>
+<li><strong>响应效率</strong>：如果需要非常高的响应速度，建议采用乐观锁方案，成功就执行，不成功就失败，不需要等待其他并发去释放锁。乐观锁并未真正加锁，效率高。一旦锁的粒度掌握不好，更新失败的概率就会比较高，容易发生业务失败。</li>
+<li><strong>冲突频率</strong>：如果冲突频率非常高，建议采用悲观锁，保证成功率。冲突频率大，选择乐观锁会需要多次重试才能成功，代价比较大。</li>
+<li><strong>重试代价</strong>：如果重试代价大，建议采用悲观锁。悲观锁依赖数据库锁，效率低。更新失败的概率比较低。</li>
+<li>乐观锁如果有人在你之前更新了，你的更新应当是被拒绝的，可以让用户从新操作。悲观锁则会等待前一个更新完成。这也是区别。</li>
+</ol>
+<p>随着互联网**三高架构(高并发、高性能、高可用)**的提出，悲观锁已经越来越少的被应用到生产环境中了，尤其是并发量比较大的业务场景。</p>
+<h1 id="乐观锁和MVCC的区别？"><a href="#乐观锁和MVCC的区别？" class="headerlink" title="乐观锁和MVCC的区别？"></a>乐观锁和MVCC的区别？</h1><p>在数据库中，并发控制是指在多个用户&#x2F;进程&#x2F;线程同时对数据库进行操作时，如何保证事务的一致性和隔离性的，同时最大程度地并发。</p>
+<p>当多个用户&#x2F;进程&#x2F;线程同时对数据库进行操作时，会出现3种冲突情形：</p>
+<ol>
+<li>读-读，不存在任何问题</li>
+<li>读-写，有隔离性问题，可能遇到脏读（会读到未提交的数据） ，幻影读等。</li>
+<li>写-写，可能丢失更新</li>
+</ol>
+<p><strong>要解决冲突，一种办法是是锁，即基于锁的并发控制，比如2PL两阶段锁协议，这种方式开销比较高，而且无法避免死锁。而基于无锁的并发控制有两种方式：就是MVCC多版本并发控制和OCC乐观并发控制，这两种方式分别解决上面的第2,3种情况。</strong></p>
+<p><strong>多版本并发控制（MVCC）是一种用来解决读-写冲突的无锁并发控制</strong>，也就是为事务分配单向增长的时间戳，为每个修改保存一个版本，版本与事务时间戳关联，读操作只读该事务开始前的数据库的快照。 这样在读操作不用阻塞写操作，写操作不用阻塞读操作的同时，避免了脏读和不可重复读</p>
+<p><strong>乐观并发控制（OCC）是一种用来解决写-写冲突的无锁并发控制</strong>，认为事务间争用没有那么多，所以先进行修改，在提交事务前，检查一下事务开始后，有没有新提交改变，如果没有就提交，如果有就放弃并重试。乐观并发控制类似自旋锁。乐观并发控制适用于低数据争用，写冲突比较少的环境。</p>
+<p><strong>多版本并发控制可以结合基于锁的并发控制来解决写-写冲突</strong>，即 MVCC+2PL，也可以结合乐观并发控制来解决写-写冲突。</p>
+<h1 id="InnoDB-锁的特性"><a href="#InnoDB-锁的特性" class="headerlink" title="InnoDB 锁的特性"></a>InnoDB 锁的特性</h1><ol>
+<li><p>在不通过索引条件查询的时候，InnoDB 使用的确实是表锁（锁的是整张表）！</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">price属性并没有加索引，因此这时候虽然是用的行锁，锁的却是整张表</span><br><span class="line">窗口1：</span><br><span class="line">mysql&gt; select * from product where price=88 for update;</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line">| id | name | price | num |</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line">|  2 | 蒙牛 |    88 |   1 |</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line"></span><br><span class="line">窗口2：</span><br><span class="line">mysql&gt; update product set price=price-100 where id=6;</span><br><span class="line">这里会等待，直到窗口1 commit后显示下面结果！</span><br><span class="line">Query OK, 1 row affected</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>由于 MySQL 的行锁是<strong>针对索引加的锁</strong>，不是针对记录加的锁，所以虽然是访问不同行的记录，但是如果是使用相同的索引键，是会出现锁冲突的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">这里的num属性 加上了普通索引，price属性并没有索引</span><br><span class="line">窗口1：</span><br><span class="line">mysql&gt; set autocommit=0;</span><br><span class="line">Query OK, 0 rows affected</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from product where num=1 and price=68 for update;</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line">| id | name | price | num |</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line">|  1 | 伊利 |    68 |   1 |</span><br><span class="line">+----+------+-------+-----+</span><br><span class="line"></span><br><span class="line">窗口2：</span><br><span class="line">mysql&gt; update product set price=price+100 where num=1 and price=88;</span><br><span class="line">这里会发生等待，直到窗口1 commit 显示下面结果</span><br><span class="line">Query OK, 1 row affected</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 0</span><br><span class="line">mysql&gt; select * from product;</span><br><span class="line">+----+----------+-------+-----+</span><br><span class="line">| id | name     | price | num |</span><br><span class="line">+----+----------+-------+-----+</span><br><span class="line">|  1 | 伊利     |    68 |   1 |</span><br><span class="line">|  2 | 蒙牛     |   188 |   1 |</span><br><span class="line">+----+----------+-------+-----+</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>当表有多个索引的时候，不同的事务可以使用不同的索引锁定不同的行，另外，不论是使用主键索引、唯一索引或普通索引，InnoDB 都会使用行锁来对数据加锁。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">锁一行数据，DML操作其他行并没有影响</span><br><span class="line">窗口1：</span><br><span class="line">mysql&gt; select * from user where id=1 for update;</span><br><span class="line">+----+-------+</span><br><span class="line">| id | price |</span><br><span class="line">+----+-------+</span><br><span class="line">|  1 |   400 |</span><br><span class="line">+----+-------+</span><br><span class="line"></span><br><span class="line">窗口2：</span><br><span class="line">mysql&gt; update user set price=price+100 where id=2;</span><br><span class="line">无需等待窗口1 commit</span><br><span class="line">Database changed</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>即便在条件中使用了索引字段，但是否使用索引来检索数据是由 MySQL 通过判断不同执行计划的代价来决定的，如果 MySQL 认为全表扫效率更高，比如对一些很小的表，它就不会使用索引，这种情况下 InnoDB 将使用表锁，而不是行锁。因此，在分析锁冲突时, 别忘了检查SQL 的执行计划（explain查看），以确认是否真正使用了索引。</p>
+</li>
+</ol>
+<h1 id="死锁的原理及分析"><a href="#死锁的原理及分析" class="headerlink" title="死锁的原理及分析"></a>死锁的原理及分析</h1><h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><p>MySQL InnoDB 存储引擎，实现的是基于多版本并发控制协议—MVCC(Multi-Version Concurrency Control) MVCC最大的好处，相信也是耳熟能详：<strong>读不加锁，读写不冲突</strong>。在读多写少的 OLTP 应用中，读写不冲突是非常重要的，极大的增加了系统的并发性能，这也是为什么现阶段，几乎所有的 RDBMS，都支持了 MVCC。</p>
+<h2 id="PL：Two-Phase-Locking"><a href="#PL：Two-Phase-Locking" class="headerlink" title="PL：Two-Phase Locking"></a>PL：Two-Phase Locking</h2><p>传统 RDBMS（关系数据库管理系统）加锁的一个原则，就是 2PL (二阶段锁)：Two-Phase Locking。相对而言，2PL 比较容易理解，说的是锁操作分为两个阶段：<strong>加锁阶段与解锁阶段</strong>，并且保证加锁阶段与解锁阶段不相交。下面，仍旧以 MySQL 为例，来简单看看 2PL 在MySQL 中的实现。</p>
+<table>
+<thead>
+<tr>
+<th align="center">transaction</th>
+<th align="center">mysql</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">begin;</td>
+<td align="center">加锁阶段</td>
+</tr>
+<tr>
+<td align="center">insert into</td>
+<td align="center">加insert对应的锁</td>
+</tr>
+<tr>
+<td align="center">update table</td>
+<td align="center">加update对应的锁</td>
+</tr>
+<tr>
+<td align="center">delete from</td>
+<td align="center">加delete对应的锁</td>
+</tr>
+<tr>
+<td align="center">commit</td>
+<td align="center">解锁阶段</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">将insert、update、delete的锁全部解开</td>
+</tr>
+</tbody></table>
+<p>上面的例子可以看出2PL就是将加锁、解锁分为两个阶段，并且互相不干扰。加锁阶段只加锁，解锁阶段只解锁。</p>
+<h2 id="为什么会发生死锁"><a href="#为什么会发生死锁" class="headerlink" title="为什么会发生死锁"></a>为什么会发生死锁</h2><p>MyISAM 中是不会产生死锁的，因为 MyISAM 总是一次性获得所需的全部锁，要么全部满足，要么全部等待。而在 InnoDB 中，锁是逐步获得的，就造成了死锁的可能。（不过现在一般都是 InnoDB 引擎，关于MyISAM不做考虑）</p>
+<p>在 InnoDB 中，行级锁并不是直接锁记录，而是锁索引。索引分为主键索引和非主键索引两种，如果一条 sql 语句操作了主键索引，MySQL 就会锁定这条主键索引；如果一条语句操作了非主键索引，MySQL 会先锁定该非主键索引，再锁定相关的主键索引。</p>
+<p>当两个事务同时执行，一个锁住了主键索引，在等待其他相关索引。另一个锁定了非主键索引，在等待主键索引。这样就会发生死锁。</p>
+<p>通过两个SQL死锁的例子来说明</p>
+<ol>
+<li><strong>两个session的两条语句</strong></li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20190406184514611.jpg" alt="img"></p>
+<p>这种情况很好理解，首先 session1 获得 id&#x3D;1 的锁 session2 获得 id&#x3D;5 的锁，然后 session 想要获取 id&#x3D;5 的锁等待，session2 想要获取id&#x3D;1 的锁 ，也等待！</p>
+<ol start="2">
+<li><strong>两个session的一条语句</strong></li>
+</ol>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20190406184524757.jpg" alt="img"></p>
+<p>这种情况需要我们了解<strong>数据的索引的检索顺序</strong>原理简单说下：<strong>普通索引上面保存了主键索引，当我们使用普通索引检索数据时，如果所需的信息不够，那么会继续遍历主键索引。</strong></p>
+<p>假设默认情况是 RR 隔离级别，针对 session 1 从 name 索引出发，检索到的是（hdc,1）（hdc,6）不仅会加 name 索引上的记录 X 锁，而且会加聚簇索引上的记录 X 锁，加锁顺序为先[1,hdc,100]，后[6,hdc,10] 这个顺序是因为 B+树 结构的有序性。而 Session 2，从pubtime 索引出发，[10,6]、[100,1]均满足过滤条件，同样也会加聚簇索引上的记录 X 锁，加锁顺序为[6,hdc,10]，后[1,hdc,100]。发现没有，跟 Session 1的加锁顺序正好相反，如果两个Session恰好都持有了第一把锁，请求加第二把锁，死锁就发生了。</p>
+<p><strong>避免死锁，这里只介绍常见的三种</strong></p>
+<ol>
+<li>如果不同程序会并发存取多个表，尽量约定<strong>以相同的顺序访问表</strong>，可以大大降低死锁机会。</li>
+<li>在同一个事务中，尽可能做到一次锁定所需要的所有资源，减少死锁产生概率；</li>
+<li>对于非常容易产生死锁的业务部分，可以尝试使用<strong>升级锁定颗粒度</strong>，通过表级锁定来减少死锁产生的概率；</li>
+</ol>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">Yang Shiyu</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://yangshiyu52.github.io/2022/08/05/shu-ju-ku-mysql-suo/">https://yangshiyu52.github.io/2022/08/05/shu-ju-ku-mysql-suo/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">Yang Shiyu</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2022/08/05/shu-ju-ku-mysql-suo-yin/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="mysql索引">
+                        
+                        <span class="card-title">mysql索引</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-08-05
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="post-category">
+                                    数据库
+                                </a>
+                            
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/" class="post-category">
+                                    mysql
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/08/02/juc-xian-cheng-yu-jin-cheng/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="线程与进程">
+                        
+                        <span class="card-title">线程与进程</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-08-02
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/JUC/" class="post-category">
+                                    JUC
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2021-2022</span>
+            
+            <span id="year">2021</span>
+            <a href="/about" target="_blank">Yang Shiyu</a>
+            
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">489.9k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2021";
+                    var startMonth = "1";
+                    var startDate = "20";
+                    var startHour = "0";
+                    var startMinute = "0";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/yangshiyu52" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:706425658@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=706425658" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 706425658" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+	
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="/libs/background/canvas-nest.js"></script>
+    
+
+    
+    
+    <script type="text/javascript" size="150" alpha='0.6'
+        zIndex="-1" src="/libs/background/ribbon-refresh.min.js" async="async"></script>
+    
+
+    
+    <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

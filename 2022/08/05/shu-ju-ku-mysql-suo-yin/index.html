@@ -1,0 +1,1614 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="mysql索引, Healer">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>mysql索引 | Healer</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Healer" type="application/atom+xml">
+</head>
+
+
+
+   <style>
+    body{
+       background-image: url(https://ysy-java.oss-cn-hangzhou.aliyuncs.com/girl.jpg);
+       background-repeat:no-repeat;
+       background-size:cover;
+       background-attachment:fixed;
+    }
+</style>
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">Healer</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Healer</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/5.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">mysql索引</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="post-category">
+                                数据库
+                            </a>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/" class="post-category">
+                                mysql
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2022-08-05
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    10.7k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    37 分
+                </div>
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h1><h2 id="局部性原理"><a href="#局部性原理" class="headerlink" title="局部性原理"></a>局部性原理</h2><p>程序和数据的访问都有聚集成群的倾向，在一个时间段内，仅使用其中一小部分，称为<strong>空间局部性</strong></p>
+<p>最近访问过的程序代码和数据，很快又被访问的可能性很大，称为<strong>时间局部性</strong></p>
+<h2 id="磁盘预读"><a href="#磁盘预读" class="headerlink" title="磁盘预读"></a>磁盘预读</h2><ul>
+<li>预读的长度一般为页（page）的整数倍</li>
+<li>页是存储器的逻辑块，操作系统往往将主存和磁盘存储区分割为连续的大小相等的块，每个存储块称为一页（在许多操作系统中，页大小通常为4K），主存和磁盘以页为单位交换数据</li>
+<li>考虑到磁盘 IO 是非常高昂的操作，计算机操作系统做了一些优化，<strong>当一次 IO 时，不光把当前磁盘地址的数据，而是把相邻的数据也都读取到内存缓冲区内</strong>，因为局部预读性原理告诉我们，当计算机访问一个地址的数据的时候，与其相邻的数据也会很快被访问到。每一次 IO 读取的数据我们称之为一页(page)。具体一页有多大数据跟操作系统有关，一般为4k或8k，也就是我们读取一页内的数据时候，实际上才发生了一次 IO，这个理论对于索引的数据结构设计非常有帮助。</li>
+</ul>
+<h1 id="索引概述"><a href="#索引概述" class="headerlink" title="索引概述"></a>索引概述</h1><ul>
+<li><p>MySql官方对索引的定义为：<strong>索引是帮助 MySql 高效获取数据的数据结构</strong>。在数据之外，数据库系统还维护着满足特定查找算法的数据结构，这些数据结构以某种方式引用数据，这样就可以在这些数据结构上实现高级查找算法，这种数据结构就是索引。</p>
+</li>
+<li><p>索引存储在文件系统中</p>
+</li>
+<li><p>索引的文件存储形式与存储引擎有关</p>
+</li>
+<li><p>索引文件的结构：B+树</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/mysql%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E9%80%89%E6%8B%A9.jpg" alt="mysql数据结构选择"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/mysql%E7%B4%A2%E5%BC%95%E7%B3%BB%E7%BB%9F.jpg" alt="mysql索引系统"></p>
+</li>
+</ul>
+<h1 id="索引的分类"><a href="#索引的分类" class="headerlink" title="索引的分类"></a>索引的分类</h1><p>通过给字段添加索引可以提高数据的读取速度，提高项目的并发能力和抗压能力</p>
+<ul>
+<li><p>普通索引</p>
+<ul>
+<li><p>基本的索引类型，值可以为空，没有唯一性的限制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-- 创建索引的第一种方式</span><br><span class="line">CREATE INDEX idx_nickname ON account(nickname); </span><br><span class="line"></span><br><span class="line">-- 创建索引的第二种方式(不常用)</span><br><span class="line">ALTER TABLE account ADD INDEX idx_nickname1(nickname);</span><br><span class="line"></span><br><span class="line">-- 创建索引的第三种方式</span><br><span class="line">CREATE TABLE u1(nickname VARCHAR(64),age TINYINT UNSIGNED,KEY idx_nickname(nickname));</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>主键索引</p>
+<ul>
+<li><p>一种唯一性索引，但它必须指定为PRIMARY KEY，每个表只能有一个主键</p>
+</li>
+<li><p>主键索引的列的数据非空,唯一的</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 声明为主键的列就是自动添加主键索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1(id <span class="type">INT</span> ,nickname <span class="type">VARCHAR</span>(<span class="number">64</span>),age TINYINT UNSIGNED,<span class="keyword">PRIMARY</span> KEY(id));</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>唯一索引</p>
+<ul>
+<li><p>索引列的值都只能出现一次，即值必须唯一，值可以为空</p>
+</li>
+<li><p>如果一列被约束为<code>UNIQUE</code>,则在这一列默认添加唯一索引</p>
+</li>
+<li><p>添加唯一索引的列可以为<code>NULL</code>值,这也是和主键索引,不同的地方</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建索引的第一种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> INDEX uk_nickname <span class="keyword">ON</span> u1(nickname); </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建表时创建唯一索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1 (</span><br><span class="line">  id <span class="type">INT</span>,</span><br><span class="line">  nickname <span class="type">VARCHAR</span> (<span class="number">64</span>) ,</span><br><span class="line">  age TINYINT UNSIGNED,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (id),</span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY uk_nickname(nickname) </span><br><span class="line">) ;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>全文索引</p>
+<blockquote>
+<p>全文索引,通过建立<code>倒排索引</code>,可以提高数据的检索效率,解决判断字段中 <code>是否包含</code> 的问题;</p>
+</blockquote>
+<ul>
+<li><p>索引类型为FULLTEXT。全文索引在varchar、char、text类型的列上创建</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 我们已经给nickname字段添加了普通索引</span></span><br><span class="line"><span class="comment">-- 会使用索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> nickname<span class="operator">=</span><span class="string">&#x27;小明&#x27;</span>;</span><br><span class="line"><span class="comment">-- 会使用索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> nickname <span class="keyword">LIKE</span> <span class="string">&#x27;小明%&#x27;</span>;</span><br><span class="line"><span class="comment">-- 不会使用索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> nickname <span class="keyword">LIKE</span> <span class="string">&#x27;%小明%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>不使用到索引我们如果进行大规模数据检索时,效率会大大的降低,所以前面我们说过 <code>我们只在简单业务或者数据量小的时候才考虑使用like关键字</code>;</p>
+<blockquote>
+<p>全文索引注意的地方:</p>
+</blockquote>
+<ul>
+<li><p>mysql5.6以前,只有<code>MYISAM</code>存储引擎支持全文索引</p>
+</li>
+<li><p>在5.6中<code>INNODB</code>存储引擎加入了对全文索引的支持,<strong>但是只支持英文的全文索引,不支持中文的全文索引</strong></p>
+</li>
+<li><p><strong>在5.7.6中,mysql内置了<code>ngram</code>分词器,用来支持中文;</strong></p>
+</li>
+</ul>
+<blockquote>
+<p>配置ngram分词的最小长度:      </p>
+</blockquote>
+<p>默认长度为2,当然我们也可以设置成1,但是设置成1的话就会浪费大量的空间,不是很好,<code>mysql建议我们配置为2</code>;</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">ngram分词器对分词最小长度(也就是说分词器,分词的时候最小也是两个词一分)</span></span><br><span class="line">[mysqld]</span><br><span class="line">ft_min_word_len=2</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>创建全文索引</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建索引的第一种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> FULLTEXT INDEX ft_nickname <span class="keyword">ON</span> account(nickname) <span class="keyword">WITH</span> PARSER ngram ; </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建索引的第二种方式(不常用)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> account <span class="keyword">ADD</span> FULLTEXT INDEX ft_nickname(nickname) <span class="keyword">WITH</span> PARSER ngram;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建索引的第三种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1(nickname <span class="type">VARCHAR</span>(<span class="number">64</span>),age TINYINT UNSIGNED,FULLTEXT KEY ft_nickname(nickname) <span class="keyword">WITH</span> PARSER ngram );</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>使用全文索引</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> <span class="keyword">MATCH</span>(nickname) AGAINST(&quot;你觉得华为笔记本合小米手机哪个好&quot;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>match</code>中的字段和创建全文建索引时的字段<strong>必须一致</strong>;</li>
+</ul>
+<blockquote>
+<p>全文索引的检索流程</p>
+</blockquote>
+<p>用户输入词—&gt;sql执行引擎—&gt;<code>ngram</code>分词器对用户输入的词进行分词(配置了最小的分词个数)—&gt;把分词器分的词依次的去倒排索引中去查找,找出相应的记录返回;</p>
+</li>
+</ul>
+</li>
+<li><p>组合索引</p>
+<ul>
+<li><p>多列值组成一个索引，专门用于组合搜索</p>
+</li>
+<li><p><strong>包含多个字段的索引</strong>称为组合索引;</p>
+<blockquote>
+<p>组合索引包含</p>
+</blockquote>
+<ul>
+<li>组合普通索引</li>
+<li>组合主键索引</li>
+<li>组合唯一索引</li>
+<li>组合全文索引</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建复合索引时必须指定索引的名称,不能省略</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX mu_title_content <span class="keyword">ON</span> article(title,content,publish_time);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> article <span class="keyword">WHERE</span> title <span class="keyword">LIKE</span> <span class="string">&#x27;小米%&#x27;</span>; <span class="comment">-- 使用到索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> article <span class="keyword">WHERE</span> title <span class="keyword">LIKE</span> <span class="string">&#x27;小米%&#x27;</span> <span class="keyword">AND</span> content <span class="keyword">LIKE</span> <span class="string">&#x27;小米%&#x27;</span>; <span class="comment">-- 使用了索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> article <span class="keyword">WHERE</span>  content <span class="keyword">LIKE</span> <span class="string">&#x27;小米%&#x27;</span>; <span class="comment">-- 没有索引</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>建议多列索引的列不要超过2个列</strong></p>
+<ul>
+<li><p>以上这个复合索引相当于建立了这3个索引</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(title),(title,content),(title,content,publish_time)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>多列索引遵循<strong>最左前缀</strong>的原则</p>
+</li>
+<li><p>多列索引在创建的时候,如果其中有字段时<code>TEXT</code>或<code>BLOB</code>类型,就必须指定索引的长度;</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="MySQL存储引擎"><a href="#MySQL存储引擎" class="headerlink" title="MySQL存储引擎"></a>MySQL存储引擎</h1><table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">MyISAM</th>
+<th align="center">InnoDB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">索引类型</td>
+<td align="center">非聚簇索引</td>
+<td align="center">聚簇索引</td>
+</tr>
+<tr>
+<td align="center">支持事务</td>
+<td align="center">否</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">支持表锁</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">支持行锁</td>
+<td align="center">否</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">支持外键</td>
+<td align="center">否</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">支持全文索引</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">适合操作类型</td>
+<td align="center">大量select</td>
+<td align="center">大量insert、delete、updata</td>
+</tr>
+</tbody></table>
+<h1 id="索引优化-基本知识"><a href="#索引优化-基本知识" class="headerlink" title="索引优化-基本知识"></a>索引优化-基本知识</h1><p><strong>原因</strong>：</p>
+<ul>
+<li>索引在 MySQL 中也叫做“键”，是存储引擎用于快速找到记录的一种数据结构。索引对于良好的性能非常关键，尤其是当表中的数据量越来越大时，索引对于性能的影响愈发重要。索引优化应该是对查询性能优化最有效的手段了。索引能够轻易将查询性能提高好几个数量级。索引相当于字典的音序表，如果要查某个字，如果不使用音序表，则需要从几百页中逐页去查。</li>
+</ul>
+<p><strong>优点</strong>：</p>
+<ul>
+<li>使用主键索引或者唯一索引，可以保证数据库中的表的数据是唯一</li>
+<li><strong>通过建立索引可以大大的提高数据检索的效率，减少表扫描的行数(避免进行全表扫描)</strong></li>
+<li>我们在进行多表连接的时候，可以使用索引加速表之间的连接</li>
+</ul>
+<hr>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li>在创建索引和维护索引时都需要耗费时间</li>
+<li>索引文件会占用物理存储空间，除了表的数据占用一部分空间，索引文件也会占用一部分空间;</li>
+<li><strong>设置为<code>text</code>和<code>blob</code>类型的字段强烈不建议添加索引</strong></li>
+</ul>
+<h1 id="索引优化-联合索引"><a href="#索引优化-联合索引" class="headerlink" title="索引优化-联合索引"></a>索引优化-联合索引</h1><p><strong>回表</strong>：</p>
+<ul>
+<li>在 InnoDB 存储引擎下，二级索引查询到的索引列，如果需要查找所有列的数据，则需要到主键索引里面去取出数据。这个过程就称为回表。因为行的数据都是存在主键 B+tree 的叶子节点里面，二级索引的B+树叶子节点都是存放的(索引列,主键)。</li>
+</ul>
+<p><strong>覆盖索引</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select * from s1 where id=123;</span><br><span class="line">该 sql命中了索引，但未覆盖索引。</span><br><span class="line">利用 id=123 到索引的数据结构中定位到该 id 在硬盘中的位置，或者说在数据表中的位置。</span><br><span class="line">但是我们 select 的字段为*，除了id以外还需要其他字段，这就意味着，我们通过索引结构取到id还不够，</span><br><span class="line">还需要利用该id再去找到该id所在行的其他字段值，这是需要时间的，很明显，如果我们只select id，</span><br><span class="line">就减去了这份苦恼，如下</span><br><span class="line">select id from s1 where id=123;</span><br><span class="line">这条就是覆盖索引了，命中索引，且从索引的数据结构直接就取到了id在硬盘的地址，速度很快</span><br></pre></td></tr></table></figure>
+
+<p><strong>最左匹配</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">create index ix_name_email on s1(name,email,)</span><br><span class="line">- 最左前缀匹配：必须按照从左到右的顺序匹配</span><br><span class="line">select * from s1 where name=&#x27;egon&#x27;; #可以</span><br><span class="line">select * from s1 where name=&#x27;egon&#x27; and email=&#x27;asdf&#x27;; #可以</span><br><span class="line">select * from s1 where email=&#x27;alex@oldboy.com&#x27;; #不可以</span><br><span class="line">select * from s1 where email=&#x27;asdf&#x27; and  name=&#x27;egon&#x27;; #可以</span><br><span class="line">mysql会一直向右匹配直到遇到范围查询(&gt;、&lt;、between、like)就停止匹配，</span><br><span class="line">比如a = 1 and b = 2 and c &gt; 3 and d = 4 如果建立(a,b,c,d)顺序的索引，</span><br><span class="line">d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整。</span><br></pre></td></tr></table></figure>
+
+<p><strong>索引下推</strong>：</p>
+<ul>
+<li><p>索引条件下推(Index Condition Pushdown)，简称 ICP。MySQL5.6新添加，用于优化数据的查询。</p>
+</li>
+<li><p>当你不使用 ICP，通过使用非主键索引（普通索引or二级索引）进行查询，存储引擎通过索引检索数据，然后返回给 MySQL 服务器，服务器再判断是否符合条件。</p>
+</li>
+<li><p>使用 ICP，当存在索引的列做为判断条件时，MySQL 服务器将这一部分判断条件传递给存储引擎，然后存储引擎通过判断索引是否符合 MySQL 服务器传递的条件，只有当索引符合条件时才会将数据检索出来返回给 MySQL 服务器。</p>
+</li>
+<li><p>示例</p>
+<ul>
+<li><p>当我们创建一个用户表(userinfo)，其中有字段：id,name,age,addr。我们将 name,age 建立联合索引。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当我们执行：select * from userinfo where name like &quot;ming%&quot; and age=20;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>对于MySQL5.6之前：我们在索引内部首先通过 name 进行查找，再联合索引 name,，age 树形查询结果可能存在多个，然后再拿着 id 值去回表查询，整个过程需要回表多次。</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAxOS8xMi8xMC8xNmVlZDY2N2YzOGZkM2Vl?x-oss-process=image/format,png" alt="img"></p>
+</li>
+<li><p>对于MySQL5.6之后：我们是在索引内部就判断 age 是否等于20，对于不等于 20 跳过。因此在联合索引 name,age 索引树只匹配一个记录，此时拿着这个 id 去主键索引树种回表查询全部数据，整个过程就回一次表。</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAxOS8xMi8xMC8xNmVlZDY2YWUwZDI2OThh?x-oss-process=image/format,png" alt="img"></p>
+</li>
+<li><p>如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/53e290c6646dca211a8f214e11bfe7b5.png" alt="img"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当Extra值为：Using index condition.表示使用索引下推。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过索引下推对于非主键索引进行优化，<strong>可有效减少回表次数</strong>，从而提高效率。</p>
+</li>
+<li><p>关闭索引下推命令</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> optimizer_switch=<span class="string">&#x27;index_condition_pushdown=off&#x27;</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h1 id="索引优化-聚簇索引与非聚簇索引"><a href="#索引优化-聚簇索引与非聚簇索引" class="headerlink" title="索引优化-聚簇索引与非聚簇索引"></a>索引优化-聚簇索引与非聚簇索引</h1><ul>
+<li><p>聚簇(集)索引的叶子节点就是数据节点。</p>
+</li>
+<li><p>非聚簇(集)索引的叶子节点仍然是索引节点，只不过有指向对应数据块的指针。非聚簇(集)索引在 innodb 引擎中，又叫做二级索引，辅助索引等。</p>
+</li>
+<li><p>聚簇索引并不是一种单独的索引类型，而是一种数据存储方式。术语‘聚簇’表示数据行和相邻的键值聚簇的存储在一起。如下图，左侧的索引就是聚簇索引，因为数据行在磁盘的排列和索引排序保持一致。、</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20210509163323414.png" alt="img"></p>
+</li>
+</ul>
+<p><strong>聚集索引（聚簇索引）</strong></p>
+<p>以 InnoDB 作为存储引擎的表，表中的数据都会有一个主键，即使你不创建主键，系统也会帮你创建一个隐式的主键。</p>
+<p>这是因为 InnoDB 是把数据存放在 B+树中的，而 B+树的键值就是主键，在 B+树的叶子节点中，存储了表中所有的数据。</p>
+<p>这种以主键作为 B+树索引的键值而构建的 B+树索引，我们称之为聚集索引。</p>
+<p><strong>非聚集索引（非聚簇索引）</strong></p>
+<p>以主键以外的列值作为键值构建的 B+树索引，我们称之为非聚集索引。</p>
+<p><strong>非聚集索引与聚集索引的区别在于</strong></p>
+<p>非聚集索引的叶子节点不存储表中的数据，而是存储该列对应的主键，想要查找数据我们还需要根据主键再去聚集索引中进行查找，这个再根据聚集索引查找数据的过程，我们称为回表。</p>
+<p>明白了聚集索引和非聚集索引的定义，我们应该明白这样一句话：<strong>数据即索引，索引即数据</strong>。</p>
+<p><strong>聚簇索引的好处</strong>：</p>
+<p>按照聚簇索引排列顺序，查询显示一定范围数据的时候，由于数据都是紧密相连，数据库不用从多个数据块中提取数据，所以节省了大量的 io 操作。</p>
+<p><strong>聚簇索引的限制</strong>：</p>
+<p>对于 mysql 数据库目前只有 innodb 数据引擎支持聚簇索引，而 Myisam 并不支持聚簇索引。由于数据物理存储排序方式只能有一种，所以每个 Mysql 的表只能有一个聚簇索引。一般情况下就是该表的主键。</p>
+<p>为了充分利用聚簇索引的聚簇的特性，所以 innodb 表的主键列尽量选用有序的顺序 id，而不建议用无序的 id，比如uuid 这种。</p>
+<h1 id="优化细节"><a href="#优化细节" class="headerlink" title="优化细节"></a>优化细节</h1><ol>
+<li><p>对查询进行优化，应尽量避免全表扫描，首先应考虑在 where 及 order by 涉及的列上建立索引。</p>
+</li>
+<li><p>应尽量避免在 where 子句中使用!&#x3D;或&lt;&gt;操作符，否则将引擎放弃使用索引而进行全表扫描。</p>
+</li>
+<li><p>应尽量避免在 where 子句中对字段进行 null 值判断，否则将导致引擎放弃使用索引而进行全表扫描，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id from t where num is null </span><br></pre></td></tr></table></figure>
+
+<p>可以在num上设置默认值0，确保表中num列没有null值，然后这样查询：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id from t where num=0 </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>应尽量避免在 where 子句中使用 or 来连接条件，否则将导致引擎放弃使用索引而进行全表扫描，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id from t where num=10 or num=20 </span><br></pre></td></tr></table></figure>
+
+<p> 可以这样查询：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select id from t where num=10 </span><br><span class="line">union all </span><br><span class="line">select id from t where num=20 </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下面的查询也将导致全表扫描：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id from t where name like &#x27;%abc%&#x27; </span><br></pre></td></tr></table></figure>
+
+<p>  若要提高效率，可以考虑全文检索。</p>
+</li>
+<li><p>in 和 not in 也要慎用，否则会导致全表扫描，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id from t where num in(1,2,3) </span><br></pre></td></tr></table></figure>
+
+<p>对于连续的数值，能用 between 就不要用 in 了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id from t where num between 1 and 3 </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果在 where 子句中使用参数，也会导致全表扫描。因为SQL只有在运行时才会解析局部变量，但优化程序不能将访问计划的选择推迟到运行时；它必须在编译时进行选择。然而，如果在编译时建立访问计划，变量的值还是未知的，因而无法作为索引选择的输入项。如下面语句将进行全表扫描：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id from t where num=@num </span><br></pre></td></tr></table></figure>
+
+<p> 可以改为强制查询使用索引：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id from t with(index(索引名)) where num=@num </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>应尽量避免在 where 子句中对字段进行表达式操作，这将导致引擎放弃使用索引而进行全表扫描。如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id from t where num/2=100 </span><br></pre></td></tr></table></figure>
+
+<p>应改为:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id from t where num=100*2 </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>应尽量避免在where子句中对字段进行函数操作，这将导致引擎放弃使用索引而进行全表扫描。如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select id from t where substring(name,1,3)=&#x27;abc&#x27;--name以abc开头的id </span><br><span class="line">select id from t where datediff(day,createdate,&#x27;2005-11-30&#x27;)=0--&#x27;2005-11-30&#x27;生成的id </span><br></pre></td></tr></table></figure>
+
+<p>应改为:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select id from t where name like &#x27;abc%&#x27; </span><br><span class="line">select id from t where createdate&gt;=&#x27;2005-11-30&#x27; and createdate&lt;&#x27;2005-12-1&#x27; </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>不要在 where 子句中的“&#x3D;”左边进行函数、算术运算或其他表达式运算，否则系统将可能无法正确使用索引。</p>
+</li>
+<li><p>在使用索引字段作为条件时，如果该索引是复合索引，那么必须使用到该索引中的第一个字段作为条件时才能保证系统使用该索引，否则该索引将不会被使用，并且应尽可能的让字段顺序与索引顺序相一致。</p>
+</li>
+<li><p>不要写一些没有意义的查询，如需要生成一个空表结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select col1,col2 into #t from t where 1=0 </span><br></pre></td></tr></table></figure>
+
+<p>这类代码不会返回任何结果集，但是会消耗系统资源的，应改成这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table #t(...) </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>很多时候用 exists 代替 in 是一个好的选择：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select num from a where num in(select num from b) </span><br></pre></td></tr></table></figure>
+
+<p>用下面的语句替换：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select num from a where exists(select 1 from b where num=a.num) </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>并不是所有索引对查询都有效，SQL是根据表中数据来进行查询优化的，当索引列有大量数据重复时，SQL查询可能不会去利用索引，如一表中有字段sex，male、female几乎各一半，那么即使在sex上建了索引也对查询效率起不了作用。</p>
+</li>
+<li><p>索引并不是越多越好，索引固然可以提高相应的 select 的效率，但同时也降低了 insert 及 update 的效率，因为 insert 或 update 时有可能会重建索引，所以怎样建索引需要慎重考虑，视具体情况而定。一个表的索引数最好不要超过6个，若太多则应考虑一些不常使用到的列上建的索引是否有必要。</p>
+</li>
+<li><p>应尽可能的避免更新 clustered 索引数据列，因为 clustered 索引数据列的顺序就是表记录的物理存储顺序，一旦该列值改变将导致整个表记录的顺序的调整，会耗费相当大的资源。若应用系统需要频繁更新 clustered 索引数据列，那么需要考虑是否应将该索引建为 clustered 索引。</p>
+</li>
+<li><p>尽量使用数字型字段，若只含数值信息的字段尽量不要设计为字符型，这会降低查询和连接的性能，并会增加存储开销。这是因为引擎在处理查询和连接时会逐个比较字符串中每一个字符，而对于数字型而言只需要比较一次就够了。</p>
+</li>
+<li><p>尽可能的使用 varchar&#x2F;nvarchar 代替 char&#x2F;nchar ，因为首先变长字段存储空间小，可以节省存储空间，其次对于查询来说，在一个相对较小的字段内搜索效率显然要高些。</p>
+</li>
+<li><p>任何地方都不要使用 select * from t ，用具体的字段列表代替“*”，不要返回用不到的任何字段。</p>
+</li>
+<li><p>尽量使用表变量来代替临时表。如果表变量包含大量数据，请注意索引非常有限（只有主键索引）。</p>
+</li>
+<li><p>避免频繁创建和删除临时表，以减少系统表资源的消耗。</p>
+</li>
+<li><p>临时表并不是不可使用，适当地使用它们可以使某些例程更有效，例如，当需要重复引用大型表或常用表中的某个数据集时。但是，对于一次性事件，最好使用导出表。</p>
+</li>
+<li><p>在新建临时表时，如果一次性插入数据量很大，那么可以使用 select into 代替 create table，避免造成大量 log ，以提高速度；如果数据量不大，为了缓和系统表的资源，应先create table，然后insert。</p>
+</li>
+<li><p>如果使用到了临时表，在存储过程的最后务必将所有的临时表显式删除，先 truncate table ，然后 drop table ，这样可以避免系统表的较长时间锁定。</p>
+</li>
+<li><p>尽量避免使用游标，因为游标的效率较差，如果游标操作的数据超过1万行，那么就应该考虑改写。</p>
+</li>
+<li><p>使用基于游标的方法或临时表方法之前，应先寻找基于集的解决方案来解决问题，基于集的方法通常更有效。</p>
+</li>
+<li><p>与临时表一样，游标并不是不可使用。对小型数据集使用 FAST_FORWARD 游标通常要优于其他逐行处理方法，尤其是在必须引用几个表才能获得所需的数据时。在结果集中包括“合计”的例程通常要比使用游标执行的速度快。如果开发时间允许，基于游标的方法和基于集的方法都可以尝试一下，看哪一种方法的效果更好。</p>
+</li>
+<li><p>在所有的存储过程和触发器的开始处设置 SET NOCOUNT ON ，在结束时设置 SET NOCOUNT OFF 。无需在执行存储过程和触发器的每个语句后向客户端发送 DONE_IN_PROC 消息。</p>
+</li>
+<li><p>尽量避免向客户端返回大数据量，若数据量过大，应该考虑相应需求是否合理。</p>
+</li>
+<li><p>尽量避免大事务操作，提高系统并发能力。</p>
+</li>
+</ol>
+<h1 id="八大数据库性能优化方案"><a href="#八大数据库性能优化方案" class="headerlink" title="八大数据库性能优化方案"></a>八大数据库性能优化方案</h1><h2 id="为什么数据库会慢？"><a href="#为什么数据库会慢？" class="headerlink" title="为什么数据库会慢？"></a>为什么数据库会慢？</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823191531927.png" alt="image-20220823191531927"></p>
+<p>无论是关系型数据库还是 NoSQL，任何存储系统决定于其查询性能的主要有三种：</p>
+<ul>
+<li>查找的时间复杂度</li>
+<li>数据总量</li>
+<li>高负载</li>
+</ul>
+<p>而决定于查找时间复杂度主要有两个因素：</p>
+<ul>
+<li>查找算法</li>
+<li>存储数据结构</li>
+</ul>
+<p>无论是哪种存储，数据量越少，自然查询性能就越高，随着数据量增多，资源的消耗（CPU、磁盘读写繁忙）、耗时也会越来越高。</p>
+<p>从关系型数据库角度出发，索引结构基本固定是 B+Tree，时间复杂度是 O(log n)，存储结构是行式存储。因此咱们对于关系数据库能优化的一般只有数据量。</p>
+<p>而高负载造成原因有高并发请求、复杂查询等，导致 CPU、磁盘繁忙等，而服务器资源不足则会导致慢查询等问题。该类型问题一般会选择集群、数据冗余的方式分担压力。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823191549365.png" alt="image-20220823191549365"></p>
+<h2 id="应该站在哪个层面思考优化？"><a href="#应该站在哪个层面思考优化？" class="headerlink" title="应该站在哪个层面思考优化？"></a>应该站在哪个层面思考优化？</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823191616569.png" alt="image-20220823191616569"></p>
+<p>从上图可见，自顶向下的一共有四层，分别是<strong>硬件、存储系统、存储结构、具体实现</strong>。</p>
+<p>层与层之间是紧密联系的，每一层的上层是该层的载体；因此越往顶层越能决定性能的上限，同时优化的成本也相对会比较高，性价比也随之越低。</p>
+<p>以最底层的具体实现为例，那么索引的优化的成本应该是最小的，可以说加了索引后无论是 CPU 消耗还是响应时间都是立竿见影降低。</p>
+<p>然而一个简单的语句，无论如何优化加索引也是有局限的，当在具体实现这层没有任何优化空间的时候就得往上一层【存储结构】思考，思考是否从物理表设计的层面出发优化（如分库分表、压缩数据量等），如果是文档型数据库得思考下文档聚合的结果。</p>
+<p>如果在存储结构这层优化得没效果，得继续往再上一次进行考虑，是否关系型数据库应该不适合用在现在得业务场景？如果要换存储，那么得换怎样得 NoSQL?</p>
+<p>所以咱们优化的思路，出于性价比的优先考虑具体实现，实在没有优化空间了再往上一层考虑。当然如果公司有钱，直接使用钞能力，绕过了前面三层，这也是一种便捷的应急处理方式。</p>
+<p>不讨论顶与底的两个层面的优化，主要从<strong>存储结构、存储系统</strong>中间两层的角度出发进行探讨。</p>
+<h2 id="八大方案总结"><a href="#八大方案总结" class="headerlink" title="八大方案总结"></a>八大方案总结</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823191715117.png" alt="image-20220823191715117"></p>
+<p>数据库的优化方案核心本质有三种：<strong>减少数据量、用空间换性能、选择合适的存储系统</strong>，这也对应了开篇讲解的慢的三个原因：数据总量、高负载、查找的时间复杂度。</p>
+<p>收益类型：短期收益，处理成本低，能紧急应对，久了则会有技术债务；长期收益则跟短期收益相反，短期内处理成本高，但是效果能长久使用，扩展性会更好。</p>
+<p>静态数据意思是，相对改动频率比较低的，也无需过多联表的，where 过滤比较少。动态数据与之相反，更新频率高，通过动态条件筛选过滤。</p>
+<h3 id="减少数据量"><a href="#减少数据量" class="headerlink" title="减少数据量"></a>减少数据量</h3><p>减少数据量类型共有四种方案：<strong>数据序列化存储、数据归档、中间表生成、分库分表</strong>。</p>
+<p>就如上面所说的，无论是哪种存储，数据量越少，自然查询性能就越高，随着数据量增多，资源的消耗（CPU、磁盘读写繁忙）、耗时也会越来越高。</p>
+<p>主要针对关系型数据库进行处理。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823191754506.png" alt="image-20220823191754506"></p>
+<h4 id="数据归档"><a href="#数据归档" class="headerlink" title="数据归档"></a>数据归档</h4><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823191829900.png" alt="image-20220823191829900"></p>
+<p>注意点：别一次性迁移数量过多，建议低频率多次限量迁移。像 MySQL 由于删除数据后是不会释放空间的，可以执行命令 OPTIMIZE TABLE 释放存储空间，但是会锁表，如果存储空间还满足，可以不执行。</p>
+<p>建议优先考虑该方案，主要通过数据库作业把非热点数据迁移到历史表，如果需要查历史数据，可新增业务入口路由到对应的历史表（库）。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823191926126.png" alt="image-20220823191926126"></p>
+<p>在数据库以序列化存储的方式，对于一些不需要结构化存储的业务来说是一种很好减少数据量的方式，特别是对于一些 M*N 的数据量的业务场景，如果以 M 作为主表优化，那么就可以把数据量维持最多是 M 的量级。</p>
+<p>另外像订单的地址信息，这种业务一般是不需要根据里面的字段检索出来，也比较适合。</p>
+<p>这种方案我认为属于一种临时性的优化方案，无论是从序列化后丢失了部份字段的查询能力，还是这方案的可优化性都是有限的。</p>
+<h4 id="中间表（结果表）"><a href="#中间表（结果表）" class="headerlink" title="中间表（结果表）"></a>中间表（结果表）</h4><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823191954169.png" alt="image-20220823191954169"></p>
+<p>中间表（结果表）其实就是利用调度任务把复杂查询的结果跑出来存储到一张额外的物理表，因为这张物理表存放的是通过跑批汇总后的数据，因此可以理解成根据原有的业务进行了高度的数据压缩。</p>
+<p>以报表为例，如果一个月的源数据有数十万，我们通过调度任务以月的维度生成，那么等于把原有的数据压缩了几十万分之一。</p>
+<p>接下来的季报和年报可以根据月报*N 来进行统计，以这种方式处理的数据，就算三年、五年甚至十年数据量都可以在接受范围之内，而且可以精确计算得到。那么数据的压缩比率是否越低越好？</p>
+<p>下面有一段口诀：</p>
+<ul>
+<li>字段越多，粒度越细，灵活性越高，可以以中间表进行不同业务联表处理。</li>
+<li>字段越少，粒度越粗，灵活性越低，一般作为结果表查询出来。</li>
+</ul>
+<h4 id="数据序列化存储"><a href="#数据序列化存储" class="headerlink" title="数据序列化存储"></a>数据序列化存储</h4><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823192220504.png" alt="image-20220823192220504"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823192027292.png" alt="image-20220823192027292"></p>
+<h4 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h4><p>分库分表作为数据库优化的一种非常经典的优化方案，特别是在以前 NoSQL 还不是很成熟的年代，这个方案就如救命草一般的存在。</p>
+<p>如今也有不少同行也会选择这种优化方式，但是从我角度来看，分库分表是一种优化成本很大的方案。</p>
+<p>这里我有几个建议：</p>
+<ul>
+<li>分库分表是实在没有办法的办法，应放到最后选择。</li>
+<li>优先选择 NoSQL 代替，因为 NoSQL 诞生基本上为了扩展性与高性能。</li>
+<li>究竟分库还是分表？量大则分表，并发高则分库</li>
+<li>不考虑扩容，一部做到位。因为技术更新太快了，每 3-5 年一大变。</li>
+</ul>
+<p><strong>拆分方式如下图：</strong></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823192310637.png" alt="image-20220823192310637"></p>
+<p>只要涉及到这个拆，那么无论是微服务也好，分库分表也好，拆分的方式主要分两种：垂直拆分、水平拆分。</p>
+<p>垂直拆分更多是从业务角度进行拆分，主要是为了降低业务耦合度；此外以 SQL Server 为例，一页是 8KB 存储，如果在一张表里字段越多，一行数据自然占的空间就越大，那么一页数据所存储的行数就自然越少，那么每次查询所需要 IO 则越高因此性能自然也越慢。</p>
+<p>因此反之，减少字段也能很好提高性能。之前我听说某些同行的表有 80 个字段，几百万的数据就开始慢了。</p>
+<p>水平拆分更多是从技术角度进行拆分，拆分后每张表的结构是一模一样的，简而言之就是把原有一张表的数据，通过技术手段进行分片到多张表存储，从根本上解决了数据量的问题。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823192338394.png" alt="image-20220823192338394"></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823192348810.png" alt="image-20220823192348810"></p>
+<p><strong>路由方式如下图：</strong></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823192414777.png" alt="image-20220823192414777"></p>
+<p>进行水平拆分后，根据分区键（sharding key）原来应该在同一张表的数据拆解写到不同的物理表里，那么查询也得根据分区键进行定位到对应的物理表从而把数据给查询出来。</p>
+<p>路由方式一般有三种区间范围、Hash、分片映射表，每种路由方式都有自己的优点和缺点，可以根据对应的业务场景进行选择。</p>
+<p>区间范围根据某个元素的区间的进行拆分，以时间为例子，假如有个业务我们希望以月为单位拆分那么表就会拆分像 table_2022-04，这种对于文档型、ElasticSearch 这类型的 NoSQL 也适用，无论是定位查询，还是日后清理维护都是非常的方便的。</p>
+<p>那么缺点也明显，会因为业务独特性导致数据不平均，甚至不同区间范围之间的数据量差异很大。</p>
+<p>Hash 也是一种常用的路由方式，根据 Hash 算法取模以数据量均匀分别存储在物理表里，缺点是对于带分区键的查询依赖特别强。</p>
+<p>如果不带分区键就无法定位到具体的物理表导致相关所有表都查询一次，而且在分库的情况下对于 Join、聚合计算、分页等一些 RDBMS 的特性功能还无法使用。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823192545808.png" alt="image-20220823192545808"></p>
+<p>一般分区键就一个，假如有时候业务场景得用不是分区键的字段进行查询，那么难道就必须得全部扫描一遍？</p>
+<p>其实可以使用分片映射表的方式，简单来说就是额外有一张表记录额外字段与分区键的映射关系。</p>
+<p>举个例子，有张订单表，原本是以 UserID 作为分区键拆分的，现在希望用 OrderID 进行查询，那么得有额外得一张物理表记录了 OrderID 与 UserID 的映射关系。</p>
+<p>因此得先查询一次映射表拿到分区键，再根据分区键的值路由到对应的物理表查询出来。</p>
+<p>可能有些朋友会问，那这映射表是否多一个映射关系就多一张表，还是多个映射关系在同一张表。</p>
+<p>我优先建议单独处理，如果说映射表字段过多，那跟不进行水平拆分时的状态其实就是一致的，这又跑回去的老问题。</p>
+<h3 id="用空间换性能"><a href="#用空间换性能" class="headerlink" title="用空间换性能"></a>用空间换性能</h3><p>该类型的两个方案都是用来应对高负载的场景，方案有以下两种：<code>分布式缓存</code>、<code>一主多从</code>。</p>
+<p>与其说这个方案叫用空间换性能，我认为用空间换资源更加贴切一些。因此两个方案的本质主要通数据冗余、集群等方式分担负载压力。</p>
+<p>对于关系型数据库而言，因为他的 ACID 特性让它天生不支持写的分布式存储，但是它依然天然的支持分布式读。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823192622545.png" alt="image-20220823192622545"></p>
+<h4 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h4><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823192652779.png" alt="image-20220823192652779"></p>
+<p>缓存层级可以分好几种：客户端缓存、API 服务本地缓存和分布式缓存，咱们这次只聊分布式缓存。</p>
+<p>一般我们选择分布式缓存系统都会优先选择 NoSQL 的键值型数据库，例如 Memcached、Redis，如今 Redis 的数据结构多样性，高性能，易扩展性也逐渐占据了分布式缓存的主导地位。</p>
+<p>缓存策略也主要有很多种：Cache-Aside、Read&#x2F;Wirte-Through、Write-Back，咱们用得比较多的方式主要 Cache-Aside。</p>
+<p>具体流程可看下图：</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823192817947.png" alt="image-20220823192817947"></p>
+<p><strong>注意：</strong></p>
+<ol>
+<li><h5 id="避免滥用缓存"><a href="#避免滥用缓存" class="headerlink" title="避免滥用缓存"></a>避免滥用缓存</h5><p>缓存应该是按需使用，从 28 法则来看，80% 的性能问题由主要的 20% 的功能引起。滥用缓存的后果会导致维护成本增大，而且有一些数据一致性的问题也不好定位。</p>
+<p>特别像一些动态条件的查询或者分页，key 的组装是多样化的，量大又不好用 keys 指令去处理，当然我们可以用额外的一个 key 把记录数据的 key 以集合方式存储，删除时候做两次查询，先查 Key 的集合，然后再遍历 Key 集合把对应的内容删除。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823192921882.png" alt="image-20220823192921882"></p>
+</li>
+<li><p><strong>避免缓存击穿</strong></p>
+<p>当缓存没有数据，就得跑去数据库查询出来，这就是缓存穿透。</p>
+<p>假如某个时间临界点数据是空的例如周排行榜，穿透过去的无论查找多少次数据库仍然是空，而且该查询消耗 CPU 相对比较高，并发一进来因为缺少了缓存层的对高并发的应对，这个时候就会因为并发导致数据库资源消耗过高，这就是缓存击穿。数据库资源消耗过高就会导致其他查询超时等问题。</p>
+<p>该问题的解决方案也简单，对于查询到数据库的空结果也缓存起来，但是给一个相对快过期的时间。有些同行可能又会问，这样不就会造成了数据不一致了么？</p>
+<p>一般有数据同步的方案像分布式缓存、后续会说的一主多从、CQRS，只要存在数据同步这几个字，那就意味着会存在数据一致性的问题，因此如果使用上述方案，对应的业务场景应允许容忍一定的数据不一致。</p>
+</li>
+<li><p><strong>不是所有慢查询都适用</strong></p>
+<p>一般来说，慢的查询都意味着比较吃资源的（CPU、磁盘 I&#x2F;O）。</p>
+<p>举个例子，假如某个查询功能需要 3 秒时间，串行查询的时候并没什么问题，我们继续假设这功能每秒大概 QPS 为 100，那么在第一次查询结果返回之前，接下来的所有查询都应该穿透到数据库。</p>
+<p>也就意味着这几秒时间有 300 个请求到数据库，如果这个时候数据库 CPU 达到了 100%，那么接下来的所有查询都会超时，也就是无法有第一个查询结果缓存起来，从而还是形成了缓存击穿。</p>
+</li>
+</ol>
+<h4 id="一主多从"><a href="#一主多从" class="headerlink" title="一主多从"></a>一主多从</h4><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823193112225.png" alt="image-20220823193112225"></p>
+<p>常用的分担数据库压力还有一种常用做法，就是读写分离、一主多从。咱们都是知道关系型数据库天生是不具备分布式分片存储的，也就是不支持分布式写，但是它天然的支持分布式读。</p>
+<p>一主多从是部署多台从库只读实例，通过冗余主库的数据来分担读请求的压力，路由算法可有代码实现或者中间件解决，具体可以根据团队的运维能力与代码组件支持视情况选择。</p>
+<p>一主多从在还没找到根治方案前是一个非常好的应急解决方案，特别是在现在云服务的年代，扩展从库是一件非常方便的事情，而且一般情况只需要运维或者 DBA 解决就行，无需开发人员接入。</p>
+<p>当然这方案也有缺点，因为数据无法分片，所以主从的数据量完全冗余过去，也会导致高的硬件成本。从库也有其上限，从库过多了会主库的多线程同步数据的压力。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823193128926.png" alt="image-20220823193128926"></p>
+<h3 id="选择合适的存储系统"><a href="#选择合适的存储系统" class="headerlink" title="选择合适的存储系统"></a>选择合适的存储系统</h3><p>NoSQL 主要以下五种类型：键值型、文档型、列型、图型、搜素引擎，不同的存储系统直接决定了查找算法、存储数据结构，也应对了需要解决的不同的业务场景。NoSQL 的出现也解决了关系型数据库之前面临的难题（性能、高并发、扩展性等）。</p>
+<p>例如，ElasticSearch 的查找算法是倒排索引，可以用来代替关系型数据库的低性能、高消耗的 Like 搜索（全表扫描）。而 Redis 的 Hash 结构决定了时间复杂度为 O(1)，还有它的内存存储，结合分片集群存储方式以至于可以支撑数十万 QPS。</p>
+<p>因此本类型的方案主要有两种：<strong>CQRS、替换（选择）存储</strong>，这两种方案的最终本质基本是一样的主要使用合适存储来弥补关系型数据库的缺点，只不过切换过渡的方式会有点不一样。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823193617424.png" alt="image-20220823193617424"></p>
+<h4 id="CQRS"><a href="#CQRS" class="headerlink" title="CQRS"></a>CQRS</h4><p>CQS（命令查询分离）指同一个对象中作为查询或者命令的方法，每个方法或者返回的状态，要么改变状态，但不能两者兼备。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823193717219.png" alt="image-20220823193717219"></p>
+<p>某个对象的数据访问的方法里，要么只是查询，要么只是写入（更新）。</p>
+<p>而 CQRS（命令查询职责分离）基于 CQS 的基础上，用物理数据库来写入（更新），而用另外的存储系统来查询数据。</p>
+<p>因此我们在某些业务场景进行存储架构设计时，可以通过关系型数据库的 ACID 特性进行数据的更新与写入，用 NoSQL 的高性能与扩展性进行数据的查询处理。</p>
+<p>这样的好处就是关系型数据库和 NoSQL 的优点都可以兼得，同时对于某些业务不适于一刀切的替换存储的也可以有一个平滑的过渡。</p>
+<p>从代码实现角度来看，不同的存储系统只是调用对应的接口 API，因此 CQRS 的难点主要在于如何进行数据同步。</p>
+<h5 id="数据同步方式"><a href="#数据同步方式" class="headerlink" title="数据同步方式"></a>数据同步方式</h5><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823193755489.png" alt="image-20220823193755489"></p>
+<p>一般讨论到数据同步的方式主要是分推和拉：</p>
+<ul>
+<li>推指的是由数据变更端通过直接或者间接的方式把数据变更的记录发送到接收端，从而进行数据的一致性处理，这种主动的方式优点是实时性高。</li>
+<li>拉指的是接收端定时的轮询数据库检查是否有数据需要进行同步，这种被动的方式从实现角度来看比推简单，因为推是需要数据变更端支持变更日志的推送的。</li>
+</ul>
+<p>而推的方式又分两种：CDC（变更数据捕获）和领域事件。对于一些旧的项目来说，某些业务的数据入口非常多，无法完整清晰的梳理清楚，这个时候 CDC 就是一种非常好的方式，只要从最底层数据库层面把变更记录取到就可。</p>
+<p>对于已经服务化的项目来说领域事件是一种比较舒服的方式，因为 CDC 是需要数据库额外开启功能或者部署额外的中间件，而领域事件则不需要，从代码可读性来看会更高，也比较开发人员的维护思维模式。</p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220823193817691.png" alt="image-20220823193817691"></p>
+<h4 id="替换（选择）存储系统"><a href="#替换（选择）存储系统" class="headerlink" title="替换（选择）存储系统"></a>替换（选择）存储系统</h4><p>因为从本质来看该模式与 CQRS 的核心本质是一样的，主要是要对 NoSQL 的优缺点有一个全面认识，这样才能在对应业务场景选择与判断出一个合适的存储系统。</p>
+<p>这里我像大家介绍一本书马丁.福勒《NoSQL精粹》，这本书我重复看了好几遍，也很好全面介绍各种 NoSQL 优缺点和使用场景。</p>
+<p>当然替换存储的时候，我这里也有个建议：加入一个中间版本，该版本做好数据同步与业务开关，数据同步要保证全量与增加的处理，随时可以重来，业务开关主要是为了后续版本的更新做的一个临时型的功能，主要避免后续版本更新不顺利或者因为版本更新时导致的数据不一致的情况出现。</p>
+<p>在跑了一段时间后，验证了两个不同的存储系统数据是一致的后，接下来就可以把数据访问层的底层调用替换了。如此一来就可以平滑的更新切换。</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">Yang Shiyu</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://yangshiyu52.github.io/2022/08/05/shu-ju-ku-mysql-suo-yin/">https://yangshiyu52.github.io/2022/08/05/shu-ju-ku-mysql-suo-yin/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">Yang Shiyu</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2022/08/06/cao-zuo-xi-tong-gai-nian/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="概念">
+                        
+                        <span class="card-title">概念</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-08-06
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="post-category">
+                                    计算机基础知识
+                                </a>
+                            
+                            <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="post-category">
+                                    操作系统
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/08/05/shu-ju-ku-mysql-suo/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="mysql锁">
+                        
+                        <span class="card-title">mysql锁</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-08-05
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="post-category">
+                                    数据库
+                                </a>
+                            
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/" class="post-category">
+                                    mysql
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+    <div class="container row center-align" style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2021-2022</span>
+            
+            <span id="year">2021</span>
+            <a href="/about" target="_blank">Yang Shiyu</a>
+            
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">489.9k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <span id="sitetime">载入运行时间...</span>
+            <script>
+                function siteTime() {
+                    var seconds = 1000;
+                    var minutes = seconds * 60;
+                    var hours = minutes * 60;
+                    var days = hours * 24;
+                    var years = days * 365;
+                    var today = new Date();
+                    var startYear = "2021";
+                    var startMonth = "1";
+                    var startDate = "20";
+                    var startHour = "0";
+                    var startMinute = "0";
+                    var startSecond = "0";
+                    var todayYear = today.getFullYear();
+                    var todayMonth = today.getMonth() + 1;
+                    var todayDate = today.getDate();
+                    var todayHour = today.getHours();
+                    var todayMinute = today.getMinutes();
+                    var todaySecond = today.getSeconds();
+                    var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                    var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                    var diff = t2 - t1;
+                    var diffYears = Math.floor(diff / years);
+                    var diffDays = Math.floor((diff / days) - diffYears * 365);
+                    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+                    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) /
+                        minutes);
+                    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours -
+                        diffMinutes * minutes) / seconds);
+                    if (startYear == todayYear) {
+                        document.getElementById("year").innerHTML = todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    } else {
+                        document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
+                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                    }
+                }
+                setInterval(siteTime, 1000);
+            </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/yangshiyu52" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:706425658@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=706425658" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 706425658" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+	
+    
+    <script type="text/javascript" color="0,0,255"
+        pointColor="0,0,255" opacity='0.7'
+        zIndex="-1" count="99"
+        src="/libs/background/canvas-nest.js"></script>
+    
+
+    
+    
+    <script type="text/javascript" size="150" alpha='0.6'
+        zIndex="-1" src="/libs/background/ribbon-refresh.min.js" async="async"></script>
+    
+
+    
+    <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
