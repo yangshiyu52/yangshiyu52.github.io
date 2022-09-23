@@ -333,9 +333,17 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                                <span class="chip bg-color">数据库</span>
+                            </a>
+                        
+                            <a href="/tags/Redis/">
+                                <span class="chip bg-color">Redis</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -404,7 +412,7 @@
 </ul>
 <h1 id="3-Redis的优势"><a href="#3-Redis的优势" class="headerlink" title="3. Redis的优势"></a>3. Redis的优势</h1><ul>
 <li><strong>性能极高——Redis读的速度为11w&#x2F;s，写的速度为8.1w&#x2F;s</strong> </li>
-<li>丰富的数据类型 (Strings,Lists,Hashes,Sets即Ordered Sets )</li>
+<li>丰富的数据类型 (Strings，Lists，Hashes，Sets即Ordered Sets )</li>
 <li>原子性——Redis的所有操作都是原子性的，同时Redis还支持对几个操作合并后的原子性执行 </li>
 <li>丰富的特性——Redis还支持publish&#x2F;subscribe，通知，key过期等特性。</li>
 </ul>
@@ -511,7 +519,7 @@
 <li><p>添加具有过期时间的键值对</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">setex  age1 5 20  # 5s的过期时间 </span><br><span class="line">ttl key # 查看redis中的过期时间,-1代表永久有效</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>给value追加字符串</p>
+<li><p>给 value 追加字符串</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">APPEND age1 hello</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>单独给某个key对应的值设置过期时间</p>
@@ -549,11 +557,11 @@
 <p><strong>列表最多可存储 2^32-1元素 (4294967295, 每个列表可存储40多亿)</strong> </p>
 <h1 id="11-数据类型之Set-集合"><a href="#11-数据类型之Set-集合" class="headerlink" title="11. 数据类型之Set(集合)"></a>11. 数据类型之Set(集合)</h1><p><strong>Redis的Set是string类型的无序集合。</strong> </p>
 <ul>
-<li><p>集合中添加元素: <code>SADD key member member ,member ...</code></p>
+<li><p>集合中添加元素: <code>SADD key member member member ...</code></p>
 </li>
 <li><p>获取集合中所有的元素: <code>SMEMBERS loves</code></p>
 </li>
-<li><p>集合中的元素是不能重复,如果添加的value已经存在在redis中则返回0,不存在则返回1</p>
+<li><p>集合中的元素是不能重复，如果添加的 value 已经存在在 redis 中则返回0，不存在则返回1</p>
 </li>
 <li><p>判断元素是否在集合中: <code>SISMEMBER loves java</code></p>
 </li>
@@ -561,7 +569,7 @@
 </li>
 <li><p>获取集合中元素的个数 : <code>SCARD loves</code></p>
 </li>
-<li><p>随机获取集合中的元素: <code>SRANDMEMBER loves 2 </code> ;随机从集合中取出两个元素</p>
+<li><p>随机获取集合中的元素: <code>SRANDMEMBER loves 2 </code> ；随机从集合中取出两个元素</p>
 </li>
 <li><p>随机移除元素: <code>spop loves</code></p>
 </li>
@@ -577,9 +585,9 @@
 </li>
 </ul>
 <h1 id="12-数据类型之ZSet-有序集合"><a href="#12-数据类型之ZSet-有序集合" class="headerlink" title="12.  数据类型之ZSet(有序集合)"></a>12.  数据类型之ZSet(有序集合)</h1><ul>
-<li><p>Redis zset和set一样也是string类型元素的集合,且不允许重复的成员。不同的是每个元素都会关联一个double类型的分数。redis正是通过分数来为集合中的成员进行从小到大的排序 </p>
+<li><p>Redis zset和set一样也是string类型元素的集合，且不允许重复的成员。不同的是每个元素都会关联一个double类型的分数。redis正是通过分数来为集合中的成员进行从小到大的排序 </p>
 </li>
-<li><p>zset的成员是唯一的,但分数(score)却可以重复 </p>
+<li><p>zset的成员是唯一的，但分数(score)却可以重复 </p>
 </li>
 <li><p>给zset添加数据: ZADD loves  5  java </p>
 </li>
@@ -631,9 +639,9 @@
 <li><p><strong>常用操作</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.uplooking.bigdata.redis;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.junit.Test;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisTest</span> &#123;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//创建Jedis</span></span><br><span class="line">        <span class="type">Jedis</span> <span class="variable">jedis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Jedis</span>(<span class="string">&quot;uplooking03&quot;</span>);</span><br><span class="line">        jedis.select(<span class="number">0</span>);</span><br><span class="line">        jedis.set(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;value&quot;</span>);</span><br><span class="line">        System.out.println(jedis.get(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testHash</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//创建Jedis</span></span><br><span class="line">        <span class="type">Jedis</span> <span class="variable">jedis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Jedis</span>(<span class="string">&quot;uplooking03&quot;</span>);</span><br><span class="line">        jedis.select(<span class="number">0</span>);</span><br><span class="line">        jedis.hset(<span class="string">&quot;info&quot;</span>, <span class="string">&quot;name&quot;</span>, <span class="string">&quot;admin&quot;</span>);</span><br><span class="line">        jedis.hset(<span class="string">&quot;info&quot;</span>, <span class="string">&quot;age&quot;</span>, <span class="number">12</span> + <span class="string">&quot;&quot;</span>);</span><br><span class="line">        System.out.println(jedis.hget(<span class="string">&quot;info&quot;</span>, <span class="string">&quot;name&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testList</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//创建Jedis</span></span><br><span class="line">        <span class="type">Jedis</span> <span class="variable">jedis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Jedis</span>(<span class="string">&quot;uplooking03&quot;</span>);</span><br><span class="line">        jedis.select(<span class="number">0</span>);</span><br><span class="line">        jedis.rpush(<span class="string">&quot;loves&quot;</span>, <span class="string">&quot;java&quot;</span>, <span class="string">&quot;c++&quot;</span>, <span class="string">&quot;python&quot;</span>);</span><br><span class="line">        jedis.lpop(<span class="string">&quot;loves&quot;</span>);</span><br><span class="line">        System.out.println(jedis.lrange(<span class="string">&quot;loves&quot;</span>, <span class="number">0</span>, <span class="number">10000</span>));</span><br><span class="line">        System.out.println(jedis.rpop(<span class="string">&quot;loves&quot;</span>));</span><br><span class="line">        System.out.println(jedis.lrange(<span class="string">&quot;loves&quot;</span>, <span class="number">0</span>, <span class="number">10000</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ul>
-<h1 id="15-Redis设置密码"><a href="#15-Redis设置密码" class="headerlink" title="15. Redis设置密码"></a>15. Redis设置密码</h1> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requirepass root  #配置密码为root</span><br></pre></td></tr></table></figure>
+<h1 id="15-Redis设置密码"><a href="#15-Redis设置密码" class="headerlink" title="15. Redis设置密码"></a>15. Redis设置密码</h1> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requirepass root  #配置密码为root</span><br></pre></td></tr></table></figure>
 
- <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">登录redis:</span><br><span class="line">    redis-cli -h node1</span><br><span class="line">    auth root</span><br></pre></td></tr></table></figure>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">登录redis:</span><br><span class="line">    redis<span class="operator">-</span>cli <span class="operator">-</span>h node1</span><br><span class="line">    auth root</span><br></pre></td></tr></table></figure>
 
 
 <h1 id="16-Redis可视化工具"><a href="#16-Redis可视化工具" class="headerlink" title="16. Redis可视化工具"></a>16. Redis可视化工具</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RedisDesktopManager</span><br></pre></td></tr></table></figure>
@@ -648,7 +656,7 @@
 <h1 id="18-Redis的持久化策略"><a href="#18-Redis的持久化策略" class="headerlink" title="18. Redis的持久化策略"></a>18. Redis的持久化策略</h1><p>reids是一个<strong>key-value</strong>存储系统，为了保证效率，缓存在内存中，但是<strong>redis</strong>会周期性的把更新的数据写入磁盘或者把修改操作写入追加的记录文件，以保证数据的持久化;</p>
 <p>所以：<strong>redis</strong>是一个支持持久化的内存数据库，可以将内存中的数据同步到磁盘保证持久化;</p>
 <p>Redis的持久化策略：2种</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rdb: rdb数据快照形式,是直接把内存中的数据保存到一个dump文件中，定时保存;</span><br><span class="line">aof：把所有的对redis的服务器进行&#x27;写操作&#x27;的命令都存到一个文件里，命令的集合</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rdb: rdb数据快照形式,是直接把内存中的数据保存到一个dump文件中，定时保存;</span><br><span class="line">aof：把所有的对redis的服务器进行&#x27;写操作&#x27;的命令都存到一个文件里，命令的集合;</span><br></pre></td></tr></table></figure>
 
 <p>默认redis只开启的是rdb策略,我们可以手动开启aof策略,当开启aof策略时,服务器启动时优先使用aof策略;</p>
 <h2 id="rdb策略"><a href="#rdb策略" class="headerlink" title="rdb策略"></a>rdb策略</h2><blockquote>
@@ -674,7 +682,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">appendfsync always：每次收到写命令就立即强制写入磁盘，是最有保证的完全的持久化，但速度也是最慢的，一般不推荐使用</span><br><span class="line">appendfsync everysec：每秒钟都调用fsync刷新到AOF文件，很快，但可能会丢失一秒以内的数据；(推荐)</span><br><span class="line">appendfsync no：依靠OS进行刷新(一般30s左右一次刷新)，redis不主动刷新AOF，但安全性就差。</span><br><span class="line">默认并推荐每秒刷新，这样在速度和安全上都做到了兼顾。</span><br></pre></td></tr></table></figure>
 
 <h2 id="redis-持久化策略优先级"><a href="#redis-持久化策略优先级" class="headerlink" title="redis 持久化策略优先级"></a>redis 持久化策略优先级</h2><p>AOF优先于RDB<br>RDB性能优于AOF，因为里面没有重复<br>Redis一次性将数据加载到内存中，一次性预热</p>
-<h2 id="生产环境的备份"><a href="#生产环境的备份" class="headerlink" title="生产环境的备份"></a>生产环境的备份</h2><p>为以防万一（机器坏掉或磁盘坏掉），最好定期把使用filesnapshotting 或 Append-only 生成的*rdb *.aof文件备份到远程机器上，然后可以用crontab定时（比如每半小时）scp一次。如果没有使用redis的主从功能 ，半小时备份一次应该是可以了；并且如果应用数据量不大的话，可以单机部署，做主从有点浪费。具体还是要根据应用而定。</p>
+<h2 id="生产环境的备份"><a href="#生产环境的备份" class="headerlink" title="生产环境的备份"></a>生产环境的备份</h2><p>为以防万一（机器坏掉或磁盘坏掉），最好定期把使用filesnapshotting 或 Append-only 生成的 rdb .aof 文件备份到远程机器上，然后可以用crontab定时（比如每半小时）scp一次。如果没有使用redis的主从功能 ，半小时备份一次应该是可以了；并且如果应用数据量不大的话，可以单机部署，做主从有点浪费。具体还是要根据应用而定。</p>
 <h2 id="生产环境恢复数据"><a href="#生产环境恢复数据" class="headerlink" title="生产环境恢复数据"></a>生产环境恢复数据</h2><ol>
 <li>确保redis是未启动状态</li>
 <li>把备份的rdb或者aof文件放入redis的安装路径 <code>/opt/redis</code></li>
@@ -683,7 +691,7 @@
 <h1 id="19-redis-的雪崩、穿透和击穿"><a href="#19-redis-的雪崩、穿透和击穿" class="headerlink" title="19. redis 的雪崩、穿透和击穿"></a>19. redis 的雪崩、穿透和击穿</h1><h2 id="redis-缓存雪崩"><a href="#redis-缓存雪崩" class="headerlink" title="redis 缓存雪崩"></a>redis 缓存雪崩</h2><p>所谓的 redis 缓存雪崩指的是：大量的应用请求无法在 Redis 缓存中进行处理，紧接着，应用将大量请求发送到数据库层，导致数据库层的压力激增。<strong>redis 中大量 key 集中过期或者 redis 服务器宕机，从而导致大量请求从数据库获取数据，导致数据库服务器访问压力过大。</strong></p>
 <p><strong>解决方式：</strong></p>
 <ol>
-<li>若是由于大量 key 过期所造成的，可以给 key 的 ttl 设置一个过期时间</li>
+<li>若是由于大量 key 过期所造成的，可以给 key 的 ttl( Time To Live) 设置一个过期时间</li>
 <li>若是因为 redis 服务器宕机所导致的，可以搭建 redis 集群，保证高可用</li>
 <li>可以从请求量层面进行解决，对缓存业务添加限流和服务降级策略</li>
 <li>可以添加多级缓存，比如说 nginx 缓存</li>
@@ -691,15 +699,15 @@
 <h2 id="redis-缓存击穿"><a href="#redis-缓存击穿" class="headerlink" title="redis 缓存击穿"></a>redis 缓存击穿</h2><p>所谓的 redis 缓存击穿指的是：<strong>热点 key 的过期，从而导致大量访问热点 key 的请求访问数据库，从而导致数据库压力过大。key 中对应数据存在，当 key 中对应的数据在缓存中过期，而此时又有大量请求访问该数据，缓存中过期了，请求会直接访问数据库并回设到缓存中，高并发访问数据库会导致数据库崩溃。</strong></p>
 <p><strong>解决方式</strong>：热点 key 通常是我们通过后台进行批量添加的，比如秒杀活动，解决热点 key 失效，可以重建缓存</p>
 <ol>
-<li>互斥锁实现：只允许一个线程对 redis 缓存进行重建，其他线程处于等待状态，可以通过 redis 当中的 setnx 实现。缺点是串行化执行，效率低。优点是一致性高。</li>
-<li>逻辑过期：给需要缓存的数据添加一个逻辑过期字段，通过对逻辑过期字段的判断，判断数据有无过期，如果过期则开启一个线程进行缓存重建，并且返回之前的数据。缺点是数据的一致性低，优点是相应速度快。</li>
+<li><strong>互斥锁实现</strong>：只允许一个线程对 redis 缓存进行重建，其他线程处于等待状态，可以通过 redis 当中的 setnx 实现。缺点是串行化执行，效率低。优点是一致性高。</li>
+<li><strong>逻辑过期</strong>：给需要缓存的数据添加一个逻辑过期字段，通过对逻辑过期字段的判断，判断数据有无过期，如果过期则开启一个线程进行缓存重建，并且返回之前的数据。缺点是数据的一致性低，优点是相应速度快。</li>
 <li>在缓存访问非常频繁的热点数据时，不要设置过期时间</li>
 </ol>
 <h2 id="redis-缓存穿透"><a href="#redis-缓存穿透" class="headerlink" title="redis 缓存穿透"></a>redis 缓存穿透</h2><p>所谓的 redis 缓存穿透指的是：redis 当中没有数据，数据库当中也没有数据，请求每次都是访问数据库，而数据库有没有数据返回。这样一来，缓存也就成了“摆设”，如果应用持续有大量请求访问数据，就会同时给缓存和数据库带来巨大压力</p>
 <p><strong>解决方式：</strong></p>
 <ol>
-<li>缓存空值。缺点是有点浪费内存空间，如果这样的请求过多，会导致redis当中有大量这种无用缓存，可以给其设置一个ttl。</li>
-<li>使用布隆过滤器。布隆过滤器原理是一个二进制的数组，存储的是0或1，在添加元素时进行多次hash运算，得到多个0或1，存储到相应位置。</li>
+<li><strong>缓存空值</strong>。缺点是有点浪费内存空间，如果这样的请求过多，会导致redis当中有大量这种无用缓存，可以给其设置一个ttl。</li>
+<li>使用<strong>布隆过滤器</strong>。布隆过滤器原理是一个二进制的数组，存储的是0或1，在添加元素时进行多次hash运算，得到多个0或1，存储到相应位置。</li>
 <li>热点参数的限流降级</li>
 <li>进行权限校验</li>
 <li>做好数据格式的校验</li>
@@ -767,7 +775,15 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                                    <span class="chip bg-color">数据库</span>
+                                </a>
+                            
+                                <a href="/tags/Redis/">
+                                    <span class="chip bg-color">Redis</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -1155,7 +1171,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">489.9k</span>&nbsp;字
+                class="white-color">519.8k</span>&nbsp;字
             
             
             

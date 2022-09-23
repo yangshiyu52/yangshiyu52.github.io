@@ -546,7 +546,8 @@
 <li>在对float型进行赋值时，在结尾必须添加“F”或者“f”，例：float i &#x3D; 5正确；float i &#x3D; 5.0错误;。</li>
 </ol>
 <h3 id="字符类型"><a href="#字符类型" class="headerlink" title="字符类型"></a>字符类型</h3><p>字符类型可以表示单个字符,字符类型是 char，char 是两个字节(可以存放汉字)，多个字符用字符串 String</p>
-<p>字符型存储到计算机中，是对应的ASCII码值</p>
+<p>字符型存储到计算机中，是对应的 ASCII 码值</p>
+<p>java 的字符类型采用的是 Unicode 编码</p>
 <h3 id="布尔类型"><a href="#布尔类型" class="headerlink" title="布尔类型"></a>布尔类型</h3><p>只允许取值 true 和 false，无 null，占一个字节</p>
 <h3 id="数据的默认值"><a href="#数据的默认值" class="headerlink" title="数据的默认值"></a>数据的默认值</h3><table>
 <thead>
@@ -581,7 +582,7 @@
 </tr>
 <tr>
 <td align="center">char</td>
-<td align="center">空格</td>
+<td align="center">空格&#x2F;‘\u0000’</td>
 </tr>
 <tr>
 <td align="center">boolean</td>
@@ -595,6 +596,7 @@
 <h2 id="基本数据类型转换"><a href="#基本数据类型转换" class="headerlink" title="基本数据类型转换"></a>基本数据类型转换</h2><h3 id="自动类型转换"><a href="#自动类型转换" class="headerlink" title="自动类型转换"></a>自动类型转换</h3><ul>
 <li>进行赋值或运算时，精度小的类型自动转换为精度大的数据类型(<code>byte--&gt;short--&gt;int--&gt;long--&gt;float--&gt;double)(char--&gt;int--&gt;long--&gt;float--&gt;double</code>)</li>
 <li>byte, short 和 char 之间不会相互自动转换，但可以计算，在计算时首先转换成 int 类型</li>
+<li>精度大的转换为精度小的必须要进行强制类型转换，否则报错</li>
 </ul>
 <h3 id="强制类型转换"><a href="#强制类型转换" class="headerlink" title="强制类型转换"></a>强制类型转换</h3><ul>
 <li>将容量大的数据类型转换成容量小的数据类型</li>
@@ -608,6 +610,7 @@
 <h2 id="字符编码"><a href="#字符编码" class="headerlink" title="字符编码"></a>字符编码</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517191425976.png" alt="image-20220517191425976"></p>
 <p>Unicode：将世界上所有的符号都纳入其中，每个符号都给予一个独一无二的编码，使用Unicode没有乱码问题</p>
 <h1 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h1><p>一般而言，<code>单目运算符优先级较高，赋值运算符优先级较低</code>。<code>算术运算符优先级较高，关系和逻辑运算符优先级较低。多数运算符具有左结合性，单目运算符、三目运算符、赋值运算符具有右结合性。</code></p>
+<p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220923201256361.png" alt="image-20220923201256361"></p>
 <h2 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h2><p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220517193700932.png" alt="image-20220517193700932"></p>
 <h2 id="赋值运算符"><a href="#赋值运算符" class="headerlink" title="赋值运算符"></a>赋值运算符</h2><ol>
 <li><p>基本赋值运算符   int a &#x3D; 10;</p>
@@ -858,7 +861,7 @@
 <li>使用类的静态成员时</li>
 </ul>
 </li>
-<li><p>普通代码块，在创建对象实例时，会被隐式的调用<strong>创建一次，调用一次</strong></p>
+<li><p>普通代码块，在创建对象实例时，会被隐式的调用，<strong>创建一次，调用一次</strong></p>
 </li>
 <li><p>创建对象时，类的调用顺序</p>
 <ul>
@@ -2357,7 +2360,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">489.9k</span>&nbsp;字
+                class="white-color">519.8k</span>&nbsp;字
             
             
             

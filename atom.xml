@@ -6,7 +6,7 @@
   <link href="https://yangshiyu52.github.io/atom.xml" rel="self"/>
   
   <link href="https://yangshiyu52.github.io/"/>
-  <updated>2022-09-04T13:32:19.531Z</updated>
+  <updated>2022-09-23T14:52:10.265Z</updated>
   <id>https://yangshiyu52.github.io/</id>
   
   <author>
@@ -15,6 +15,85 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ACM模式输入</title>
+    <link href="https://yangshiyu52.github.io/2022/09/23/shu-ju-jie-gou-yu-suan-fa-acm-mo-shi-shu-ru/"/>
+    <id>https://yangshiyu52.github.io/2022/09/23/shu-ju-jie-gou-yu-suan-fa-acm-mo-shi-shu-ru/</id>
+    <published>2022-09-23T14:29:10.000Z</published>
+    <updated>2022-09-23T14:52:10.265Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;类型A&quot;&gt;&lt;a href=&quot;#类型A&quot; class=&quot;headerlink&quot; title=&quot;类型A&quot;&gt;&lt;/a&gt;类型A&lt;/h1&gt;&lt;h2 id=&quot;输入描述&quot;&gt;&lt;a href=&quot;#输入描述&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="数据结构与算法" scheme="https://yangshiyu52.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    
+    <category term="数据结构与算法" scheme="https://yangshiyu52.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    <category term="ACM" scheme="https://yangshiyu52.github.io/tags/ACM/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>博客管理系统</title>
+    <link href="https://yangshiyu52.github.io/2022/09/23/xiang-mu-bo-ke-guan-li-xi-tong/"/>
+    <id>https://yangshiyu52.github.io/2022/09/23/xiang-mu-bo-ke-guan-li-xi-tong/</id>
+    <published>2022-09-23T06:06:01.000Z</published>
+    <updated>2022-09-23T06:07:03.453Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;项目介绍&quot;&gt;&lt;a href=&quot;#项目介绍&quot; class=&quot;headerlink&quot; title=&quot;项目介绍&quot;&gt;&lt;/a&gt;项目介绍&lt;/h1&gt;&lt;p&gt;&lt;img</summary>
+        
+      
+    
+    
+    
+    <category term="项目" scheme="https://yangshiyu52.github.io/categories/%E9%A1%B9%E7%9B%AE/"/>
+    
+    
+    <category term="java" scheme="https://yangshiyu52.github.io/tags/java/"/>
+    
+    <category term="项目" scheme="https://yangshiyu52.github.io/tags/%E9%A1%B9%E7%9B%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>面试之中兴</title>
+    <link href="https://yangshiyu52.github.io/2022/09/23/mian-shi-zhi-zhong-xing/"/>
+    <id>https://yangshiyu52.github.io/2022/09/23/mian-shi-zhi-zhong-xing/</id>
+    <published>2022-09-23T06:01:22.000Z</published>
+    <updated>2022-09-23T06:02:30.027Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;redis-的雪崩、穿透和击穿&quot;&gt;&lt;a href=&quot;#redis-的雪崩、穿透和击穿&quot; class=&quot;headerlink&quot; title=&quot;redis 的雪崩、穿透和击穿&quot;&gt;&lt;/a&gt;redis 的雪崩、穿透和击穿&lt;/h1&gt;&lt;h2</summary>
+        
+      
+    
+    
+    
+    <category term="面试" scheme="https://yangshiyu52.github.io/categories/%E9%9D%A2%E8%AF%95/"/>
+    
+    
+    <category term="中兴" scheme="https://yangshiyu52.github.io/tags/%E4%B8%AD%E5%85%B4/"/>
+    
+  </entry>
   
   <entry>
     <title>树</title>
@@ -403,81 +482,6 @@
         
         
     <summary type="html">&lt;h1 id=&quot;计算机网络的体系结构&quot;&gt;&lt;a href=&quot;#计算机网络的体系结构&quot; class=&quot;headerlink&quot; title=&quot;计算机网络的体系结构&quot;&gt;&lt;/a&gt;计算机网络的体系结构&lt;/h1&gt;&lt;p&gt;&lt;img</summary>
-        
-      
-    
-    
-    
-    <category term="计算机基础知识" scheme="https://yangshiyu52.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
-    
-    <category term="计算机网络" scheme="https://yangshiyu52.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>IP服务</title>
-    <link href="https://yangshiyu52.github.io/2022/08/11/ji-suan-ji-wang-luo-ip-fu-wu/"/>
-    <id>https://yangshiyu52.github.io/2022/08/11/ji-suan-ji-wang-luo-ip-fu-wu/</id>
-    <published>2022-08-11T13:33:16.000Z</published>
-    <updated>2022-09-07T11:14:13.761Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;IP基础知识&quot;&gt;&lt;a href=&quot;#IP基础知识&quot; class=&quot;headerlink&quot; title=&quot;IP基础知识&quot;&gt;&lt;/a&gt;IP基础知识&lt;/h1&gt;&lt;h2 id=&quot;IP概念&quot;&gt;&lt;a href=&quot;#IP概念&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="计算机基础知识" scheme="https://yangshiyu52.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
-    
-    <category term="计算机网络" scheme="https://yangshiyu52.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>数据链路层</title>
-    <link href="https://yangshiyu52.github.io/2022/08/11/ji-suan-ji-wang-luo-shu-ju-lian-lu-ceng/"/>
-    <id>https://yangshiyu52.github.io/2022/08/11/ji-suan-ji-wang-luo-shu-ju-lian-lu-ceng/</id>
-    <published>2022-08-11T08:21:31.000Z</published>
-    <updated>2022-09-07T11:36:53.435Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;功能&quot;&gt;&lt;a href=&quot;#功能&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="计算机基础知识" scheme="https://yangshiyu52.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
-    
-    <category term="计算机网络" scheme="https://yangshiyu52.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>物理层</title>
-    <link href="https://yangshiyu52.github.io/2022/08/11/ji-suan-ji-wang-luo-wu-li-ceng/"/>
-    <id>https://yangshiyu52.github.io/2022/08/11/ji-suan-ji-wang-luo-wu-li-ceng/</id>
-    <published>2022-08-11T07:37:25.000Z</published>
-    <updated>2022-08-11T08:21:00.189Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;基本概念&quot;&gt;&lt;a href=&quot;#基本概念&quot; class=&quot;headerlink&quot;</summary>
         
       
     
