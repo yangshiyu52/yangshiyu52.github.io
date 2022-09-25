@@ -479,9 +479,8 @@
 </tr>
 </tbody></table>
 <blockquote>
-<p>总结：<br>在刚刚的案例中，虽然使用ThreadLocal和synchronized都能解决问题,但是使用ThreadLocal更为合适,因为这样可以使程序拥有更高的并发性。</p>
+<p>总结：<br>在刚刚的案例中，虽然使用ThreadLocal和synchronized都能解决问题，但是使用ThreadLocal更为合适，因为这样可以使程序拥有更高的并发性。</p>
 </blockquote>
-<p><em><code>一句话理解ThreadLocal，threadlocl是作为当前线程中属性ThreadLocalMap集合中的某一个Entry的key值。Entry（threadlocl,value），虽然不同的线程之间threadlocal这个key值是一样，但是不同的线程所拥有的ThreadLocalMap是独一无二的，也就是不同的线程间同一个ThreadLocal（key）对应存储的值(value)不一样，从而到达了线程间变量隔离的目的，但是在同一个线程中这个value变量地址是一样的。</code></em></p>
 <h1 id="运用场景-事务操作"><a href="#运用场景-事务操作" class="headerlink" title="运用场景-事务操作"></a>运用场景-事务操作</h1><h2 id="转账案例"><a href="#转账案例" class="headerlink" title="转账案例"></a>转账案例</h2><h3 id="场景构建"><a href="#场景构建" class="headerlink" title="场景构建"></a>场景构建</h3><p>先构建一个简单的转账场景： 有一个数据表account，里面有两个用户Jack和Rose，用户Jack 给用户Rose 转账。</p>
 <p>案例的实现主要用mysql数据库，JDBC 和 C3P0 框架。以下是详细代码 ：</p>
 <ol>
@@ -578,6 +577,7 @@
 <li>对于不同的线程，每次获取副本值时，别的线程并不能获取到当前线程的副本值，形成了副本的隔离，互不干扰。</li>
 </ul>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/20210124120125266.png" alt="ThreadLocal过程"></p>
+<p><em><code>一句话理解ThreadLocal，threadlocl是作为当前线程中属性ThreadLocalMap集合中的某一个Entry的key值。Entry（threadlocl,value），虽然不同的线程之间threadlocal这个key值是一样，但是不同的线程所拥有的ThreadLocalMap是独一无二的，也就是不同的线程间同一个ThreadLocal（key）对应存储的值(value)不一样，从而到达了线程间变量隔离的目的，但是在同一个线程中这个value变量地址是一样的。</code></em></p>
 <h2 id="这样设计的好处"><a href="#这样设计的好处" class="headerlink" title="这样设计的好处"></a>这样设计的好处</h2><p>这个设计与我们一开始说的设计刚好相反，这样设计有如下两个优势：</p>
 <ul>
 <li>这样设计之后每个 Map 存储的 Entry 数量就会变少。因为之前的存储数量由 Thread 的数量决定，现在是由 ThreadLocal 的数量决定。在实际运用当中，往往 ThreadLocal 的数量要少于 Thread 的数量。</li>
@@ -1229,7 +1229,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">519.8k</span>&nbsp;字
+                class="white-color">521.7k</span>&nbsp;字
             
             
             

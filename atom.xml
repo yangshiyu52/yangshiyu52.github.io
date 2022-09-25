@@ -6,7 +6,7 @@
   <link href="https://yangshiyu52.github.io/atom.xml" rel="self"/>
   
   <link href="https://yangshiyu52.github.io/"/>
-  <updated>2022-09-23T14:52:10.265Z</updated>
+  <updated>2022-09-25T12:51:48.512Z</updated>
   <id>https://yangshiyu52.github.io/</id>
   
   <author>
@@ -17,18 +17,45 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>linux</title>
+    <link href="https://yangshiyu52.github.io/2022/09/25/linux/"/>
+    <id>https://yangshiyu52.github.io/2022/09/25/linux/</id>
+    <published>2022-09-25T12:49:54.000Z</published>
+    <updated>2022-09-25T12:51:48.512Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;1-操作系统的接口分类&quot;&gt;&lt;a href=&quot;#1-操作系统的接口分类&quot; class=&quot;headerlink&quot; title=&quot;1. 操作系统的接口分类?&quot;&gt;&lt;/a&gt;1.</summary>
+        
+      
+    
+    
+    
+    <category term="linux" scheme="https://yangshiyu52.github.io/categories/linux/"/>
+    
+    
+    <category term="linux" scheme="https://yangshiyu52.github.io/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
     <title>ACM模式输入</title>
     <link href="https://yangshiyu52.github.io/2022/09/23/shu-ju-jie-gou-yu-suan-fa-acm-mo-shi-shu-ru/"/>
     <id>https://yangshiyu52.github.io/2022/09/23/shu-ju-jie-gou-yu-suan-fa-acm-mo-shi-shu-ru/</id>
     <published>2022-09-23T14:29:10.000Z</published>
-    <updated>2022-09-23T14:52:10.265Z</updated>
+    <updated>2022-09-24T02:46:52.871Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h1 id=&quot;类型A&quot;&gt;&lt;a href=&quot;#类型A&quot; class=&quot;headerlink&quot; title=&quot;类型A&quot;&gt;&lt;/a&gt;类型A&lt;/h1&gt;&lt;h2 id=&quot;输入描述&quot;&gt;&lt;a href=&quot;#输入描述&quot; class=&quot;headerlink&quot;</summary>
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;hasNext()&lt;/code&gt;方法会判断接下来是否有非空字符。如果有，则返回&lt;code&gt;true&lt;/code&gt;，否则返回&lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hasNextLine()&lt;/code&gt;</summary>
         
       
     
@@ -289,7 +316,7 @@
     <link href="https://yangshiyu52.github.io/2022/08/22/juc-threadlocal/"/>
     <id>https://yangshiyu52.github.io/2022/08/22/juc-threadlocal/</id>
     <published>2022-08-22T01:39:20.000Z</published>
-    <updated>2022-09-09T07:12:09.772Z</updated>
+    <updated>2022-09-24T09:57:09.584Z</updated>
     
     
       
@@ -465,31 +492,6 @@
     
     
     <category term="JUC" scheme="https://yangshiyu52.github.io/categories/JUC/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>面试题</title>
-    <link href="https://yangshiyu52.github.io/2022/08/12/ji-suan-ji-wang-luo-mian-shi-ti/"/>
-    <id>https://yangshiyu52.github.io/2022/08/12/ji-suan-ji-wang-luo-mian-shi-ti/</id>
-    <published>2022-08-12T14:05:52.000Z</published>
-    <updated>2022-09-08T13:18:54.766Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;计算机网络的体系结构&quot;&gt;&lt;a href=&quot;#计算机网络的体系结构&quot; class=&quot;headerlink&quot; title=&quot;计算机网络的体系结构&quot;&gt;&lt;/a&gt;计算机网络的体系结构&lt;/h1&gt;&lt;p&gt;&lt;img</summary>
-        
-      
-    
-    
-    
-    <category term="计算机基础知识" scheme="https://yangshiyu52.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"/>
-    
-    <category term="计算机网络" scheme="https://yangshiyu52.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
     
   </entry>

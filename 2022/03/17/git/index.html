@@ -446,7 +446,7 @@
 
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push -f: 强制push(挨打的骚操作)</span><br></pre></td></tr></table></figure>
 
-<h1 id="8-Git中的冲突问题解决"><a href="#8-Git中的冲突问题解决" class="headerlink" title="8. Git中的冲突问题解决"></a>8. Git中的冲突问题解决</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a: 从远程仓库拉取最新的内容到本地仓库和工作区 </span><br><span class="line">a: 修改了文件readme.txt,但是并没有push到远程仓库</span><br><span class="line">b: 从远程仓库拉取最新的内容到本地仓库和工作区</span><br><span class="line">b: 修改了文件readme.txt,但是并没有push到远程仓库</span><br><span class="line">a: push修改到远程仓库(没有任何问题)</span><br><span class="line">b: push修改到远程仓库就会出现问题,解决方案: 先pull到中央仓库最新的数据,在工作区中会有一个冲突文件,和其他组员商量之后,修改文件内容重新push</span><br></pre></td></tr></table></figure>
+<h1 id="8-Git中的冲突问题解决"><a href="#8-Git中的冲突问题解决" class="headerlink" title="8. Git中的冲突问题解决"></a>8. Git中的冲突问题解决</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a: 从远程仓库拉取最新的内容到本地仓库和工作区 </span><br><span class="line">a: 修改了文件readme.txt,但是并没有push到远程仓库</span><br><span class="line">b: 从远程仓库拉取最新的内容到本地仓库和工作区</span><br><span class="line">b: 修改了文件readme.txt,但是并没有push到远程仓库</span><br><span class="line">a: push修改到远程仓库(没有任何问题)</span><br><span class="line">b: push修改到远程仓库就会出现问题</span><br><span class="line">解决方案: 先pull到中央仓库最新的数据,在工作区中会有一个冲突文件,和其他组员商量之后,修改文件内容重新push</span><br></pre></td></tr></table></figure>
 
 <h1 id="9-Git中的分支管理"><a href="#9-Git中的分支管理" class="headerlink" title="9. Git中的分支管理"></a>9. Git中的分支管理</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git branch: 列出本地分支</span><br><span class="line">git branch -a:列出远程分支</span><br><span class="line">git branch dev:创建本地分支dev</span><br><span class="line">git checkout dev:切换分支到dev分支</span><br><span class="line">git checkout -b  dev:创建本地分支并且切换到本地分支dev</span><br><span class="line">git checkout -D dev:删除分支</span><br><span class="line">git push origin dev1:dev1  ==等价==&gt; git push origin dev1: 把本地分支dev1同步到远程仓库分支dev1(如果远程仓库没有dev1分支,则会新建dev1分支)</span><br><span class="line">git merge master: 合并当前分支到master分支</span><br></pre></td></tr></table></figure>
                 
@@ -899,7 +899,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">519.8k</span>&nbsp;字
+                class="white-color">521.7k</span>&nbsp;字
             
             
             

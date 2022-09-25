@@ -369,14 +369,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    10.7k
+                    11.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    37 分
+                    40 分
                 </div>
                 
 
@@ -396,10 +396,10 @@
 <h2 id="磁盘预读"><a href="#磁盘预读" class="headerlink" title="磁盘预读"></a>磁盘预读</h2><ul>
 <li>预读的长度一般为页（page）的整数倍</li>
 <li>页是存储器的逻辑块，操作系统往往将主存和磁盘存储区分割为连续的大小相等的块，每个存储块称为一页（在许多操作系统中，页大小通常为4K），主存和磁盘以页为单位交换数据</li>
-<li>考虑到磁盘 IO 是非常高昂的操作，计算机操作系统做了一些优化，<strong>当一次 IO 时，不光把当前磁盘地址的数据，而是把相邻的数据也都读取到内存缓冲区内</strong>，因为局部预读性原理告诉我们，当计算机访问一个地址的数据的时候，与其相邻的数据也会很快被访问到。每一次 IO 读取的数据我们称之为一页(page)。具体一页有多大数据跟操作系统有关，一般为4k或8k，也就是我们读取一页内的数据时候，实际上才发生了一次 IO，这个理论对于索引的数据结构设计非常有帮助。</li>
+<li>考虑到磁盘 IO 是非常高昂的操作，计算机操作系统做了一些优化，<strong>当一次 IO 时，不光把当前磁盘地址的数据，而是把相邻的数据也都读取到内存缓冲区内</strong>，因为局部预读性原理告诉我们，当计算机访问一个地址的数据的时候，与其相邻的数据也会很快被访问到。每一次 IO 读取的数据我们称之为一页(page)。具体一页有多大数据跟操作系统有关，一般为 4 k或 8 k，也就是我们读取一页内的数据时候，实际上才发生了一次 IO，这个理论对于索引的数据结构设计非常有帮助。</li>
 </ul>
 <h1 id="索引概述"><a href="#索引概述" class="headerlink" title="索引概述"></a>索引概述</h1><ul>
-<li><p>MySql官方对索引的定义为：<strong>索引是帮助 MySql 高效获取数据的数据结构</strong>。在数据之外，数据库系统还维护着满足特定查找算法的数据结构，这些数据结构以某种方式引用数据，这样就可以在这些数据结构上实现高级查找算法，这种数据结构就是索引。</p>
+<li><p>MySql 官方对索引的定义为：<strong>索引是帮助 MySql 高效获取数据的数据结构</strong>。在数据之外，数据库系统还维护着满足特定查找算法的数据结构，这些数据结构以某种方式引用数据，这样就可以在这些数据结构上实现高级查找算法，这种数据结构就是索引。</p>
 </li>
 <li><p>索引存储在文件系统中</p>
 </li>
@@ -422,50 +422,50 @@
 <ul>
 <li><p>一种唯一性索引，但它必须指定为PRIMARY KEY，每个表只能有一个主键</p>
 </li>
-<li><p>主键索引的列的数据非空,唯一的</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 声明为主键的列就是自动添加主键索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1(id <span class="type">INT</span> ,nickname <span class="type">VARCHAR</span>(<span class="number">64</span>),age TINYINT UNSIGNED,<span class="keyword">PRIMARY</span> KEY(id));</span><br></pre></td></tr></table></figure></li>
+<li><p>主键索引的列的数据非空，唯一的</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 声明为主键的列就是自动添加主键索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1(id <span class="type">INT</span>, nickname <span class="type">VARCHAR</span>(<span class="number">64</span>), age TINYINT UNSIGNED, <span class="keyword">PRIMARY</span> KEY(id));</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 <li><p>唯一索引</p>
 <ul>
 <li><p>索引列的值都只能出现一次，即值必须唯一，值可以为空</p>
 </li>
-<li><p>如果一列被约束为<code>UNIQUE</code>,则在这一列默认添加唯一索引</p>
+<li><p>如果一列被约束为<code>UNIQUE</code>，则在这一列默认添加唯一索引</p>
 </li>
-<li><p>添加唯一索引的列可以为<code>NULL</code>值,这也是和主键索引,不同的地方</p>
+<li><p>添加唯一索引的列可以为<code>NULL</code>值，这也是和主键索引，不同的地方</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建索引的第一种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> INDEX uk_nickname <span class="keyword">ON</span> u1(nickname); </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建表时创建唯一索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1 (</span><br><span class="line">  id <span class="type">INT</span>,</span><br><span class="line">  nickname <span class="type">VARCHAR</span> (<span class="number">64</span>) ,</span><br><span class="line">  age TINYINT UNSIGNED,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (id),</span><br><span class="line">  <span class="keyword">UNIQUE</span> KEY uk_nickname(nickname) </span><br><span class="line">) ;</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 <li><p>全文索引</p>
 <blockquote>
-<p>全文索引,通过建立<code>倒排索引</code>,可以提高数据的检索效率,解决判断字段中 <code>是否包含</code> 的问题;</p>
+<p>全文索引，通过建立<code>倒排索引</code>，可以提高数据的检索效率，解决判断字段中 <code>是否包含</code> 的问题;</p>
 </blockquote>
 <ul>
 <li><p>索引类型为FULLTEXT。全文索引在varchar、char、text类型的列上创建</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 我们已经给nickname字段添加了普通索引</span></span><br><span class="line"><span class="comment">-- 会使用索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> nickname<span class="operator">=</span><span class="string">&#x27;小明&#x27;</span>;</span><br><span class="line"><span class="comment">-- 会使用索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> nickname <span class="keyword">LIKE</span> <span class="string">&#x27;小明%&#x27;</span>;</span><br><span class="line"><span class="comment">-- 不会使用索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> account <span class="keyword">WHERE</span> nickname <span class="keyword">LIKE</span> <span class="string">&#x27;%小明%&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
-<p>不使用到索引我们如果进行大规模数据检索时,效率会大大的降低,所以前面我们说过 <code>我们只在简单业务或者数据量小的时候才考虑使用like关键字</code>;</p>
+<p>不使用到索引我们如果进行大规模数据检索时，效率会大大的降低，所以前面我们说过 <code>我们只在简单业务或者数据量小的时候才考虑使用like关键字</code>;</p>
 <blockquote>
 <p>全文索引注意的地方:</p>
 </blockquote>
 <ul>
 <li><p>mysql5.6以前,只有<code>MYISAM</code>存储引擎支持全文索引</p>
 </li>
-<li><p>在5.6中<code>INNODB</code>存储引擎加入了对全文索引的支持,<strong>但是只支持英文的全文索引,不支持中文的全文索引</strong></p>
+<li><p>在5.6中<code>INNODB</code>存储引擎加入了对全文索引的支持,<strong>但是只支持英文的全文索引，不支持中文的全文索引</strong></p>
 </li>
-<li><p><strong>在5.7.6中,mysql内置了<code>ngram</code>分词器,用来支持中文;</strong></p>
+<li><p><strong>在5.7.6中,mysql内置了<code>ngram</code>分词器，用来支持中文;</strong></p>
 </li>
 </ul>
 <blockquote>
-<p>配置ngram分词的最小长度:      </p>
+<p>配置 ngram 分词的最小长度：</p>
 </blockquote>
-<p>默认长度为2,当然我们也可以设置成1,但是设置成1的话就会浪费大量的空间,不是很好,<code>mysql建议我们配置为2</code>;</p>
+<p>默认长度为2，当然我们也可以设置成1，但是设置成1的话就会浪费大量的空间，不是很好，<code>mysql建议我们配置为2</code>;</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">ngram分词器对分词最小长度(也就是说分词器,分词的时候最小也是两个词一分)</span></span><br><span class="line">[mysqld]</span><br><span class="line">ft_min_word_len=2</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>创建全文索引</p>
 </blockquote>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建索引的第一种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> FULLTEXT INDEX ft_nickname <span class="keyword">ON</span> account(nickname) <span class="keyword">WITH</span> PARSER ngram ; </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建索引的第二种方式(不常用)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> account <span class="keyword">ADD</span> FULLTEXT INDEX ft_nickname(nickname) <span class="keyword">WITH</span> PARSER ngram;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建索引的第三种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1(nickname <span class="type">VARCHAR</span>(<span class="number">64</span>),age TINYINT UNSIGNED,FULLTEXT KEY ft_nickname(nickname) <span class="keyword">WITH</span> PARSER ngram );</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建索引的第一种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> FULLTEXT INDEX ft_nickname <span class="keyword">ON</span> account(nickname) <span class="keyword">WITH</span> PARSER ngram; </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建索引的第二种方式(不常用)</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> account <span class="keyword">ADD</span> FULLTEXT INDEX ft_nickname(nickname) <span class="keyword">WITH</span> PARSER ngram;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建索引的第三种方式</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> u1(nickname <span class="type">VARCHAR</span>(<span class="number">64</span>),age TINYINT UNSIGNED,FULLTEXT KEY ft_nickname(nickname) <span class="keyword">WITH</span> PARSER ngram);</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>使用全文索引</p>
@@ -507,7 +507,7 @@
 </li>
 <li><p>多列索引遵循<strong>最左前缀</strong>的原则</p>
 </li>
-<li><p>多列索引在创建的时候,如果其中有字段时<code>TEXT</code>或<code>BLOB</code>类型,就必须指定索引的长度;</p>
+<li><p>多列索引在创建的时候，如果其中有字段时<code>TEXT</code>或<code>BLOB</code>类型，就必须指定索引的长度;</p>
 </li>
 </ul>
 </li>
@@ -568,11 +568,10 @@
 <li><strong>通过建立索引可以大大的提高数据检索的效率，减少表扫描的行数(避免进行全表扫描)</strong></li>
 <li>我们在进行多表连接的时候，可以使用索引加速表之间的连接</li>
 </ul>
-<hr>
 <p><strong>缺点</strong>：</p>
 <ul>
-<li>在创建索引和维护索引时都需要耗费时间</li>
-<li>索引文件会占用物理存储空间，除了表的数据占用一部分空间，索引文件也会占用一部分空间;</li>
+<li>在创建索引和维护索引时都需要耗费时间；</li>
+<li>索引文件会占用物理存储空间，除了表的数据占用一部分空间，索引文件也会占用一部分空间；</li>
 <li><strong>设置为<code>text</code>和<code>blob</code>类型的字段强烈不建议添加索引</strong></li>
 </ul>
 <h1 id="索引优化-联合索引"><a href="#索引优化-联合索引" class="headerlink" title="索引优化-联合索引"></a>索引优化-联合索引</h1><p><strong>回表</strong>：</p>
@@ -638,6 +637,59 @@
 <p><strong>聚簇索引的限制</strong>：</p>
 <p>对于 mysql 数据库目前只有 innodb 数据引擎支持聚簇索引，而 Myisam 并不支持聚簇索引。由于数据物理存储排序方式只能有一种，所以每个 Mysql 的表只能有一个聚簇索引。一般情况下就是该表的主键。</p>
 <p>为了充分利用聚簇索引的聚簇的特性，所以 innodb 表的主键列尽量选用有序的顺序 id，而不建议用无序的 id，比如uuid 这种。</p>
+<h1 id="索引失效"><a href="#索引失效" class="headerlink" title="索引失效"></a>索引失效</h1><ul>
+<li>范围查询右边的列，不能使用索引</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> t <span class="keyword">where</span> name <span class="operator">=</span><span class="string">&#x27;test&#x27;</span> <span class="keyword">and</span> status <span class="operator">&gt;</span><span class="string">&#x27;1&#x27;</span> <span class="keyword">and</span> address<span class="operator">=</span><span class="string">&#x27;北京市&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>前面的两个字段name，status查询是走索引的，都是最后一个条件address没有用到索引</p>
+<ul>
+<li>不要在索引列上进行运算操作，索引将失效</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> t <span class="keyword">where</span> <span class="built_in">substring</span>(name,<span class="number">3</span>,<span class="number">2</span>)<span class="operator">=</span><span class="string">&#x27;科技&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>字符串不加单引号，造成索引失效</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> t <span class="keyword">where</span> name <span class="operator">=</span><span class="string">&#x27;test&#x27;</span> <span class="keyword">and</span> status <span class="operator">=</span><span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>用or分隔的条件，如果or前的条件中的列有索引，而后面的列中没有索引，那么涉及到的索引都不会被用到。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> t <span class="keyword">where</span> name <span class="operator">=</span><span class="string">&#x27;test&#x27;</span> <span class="keyword">or</span> createtime<span class="operator">=</span><span class="string">&#x27;2020-04-05 12:00:00&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>name是索引列，createtime不是索引列，之间or进行连接，那么会导致name列也不走索引</p>
+<ul>
+<li>以%开头的like模糊查询，索引失效</li>
+</ul>
+<p>如果仅仅是尾部的模糊匹配，索引不会失效，如果是头部模糊匹配，索引失效，但是如果使用覆盖索引，那么索引仍然会生效</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> name <span class="keyword">from</span> t <span class="keyword">where</span> name <span class="keyword">like</span> <span class="string">&#x27;%test&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>如果MySql评估使用索引比全表扫描更慢，则不使用索引</p>
+</li>
+<li><p>is null，is not null 有时索引失效</p>
+</li>
+<li><p>is null，如果数据库中，该字段为空值的记录数更多，那么MySql评估使用索引比全表扫描更慢，则不使用索引</p>
+</li>
+<li><p>is not null 如果数据库中，该字段不为空值的记录数更多，那么MySql评估使用索引比全表扫描更慢，则不使用索引</p>
+</li>
+<li><p>in 走索引，not in 索引失效</p>
+</li>
+<li><p>使用不等于(!&#x3D;或者&lt;&gt;)的时候，索引失效，会导致全表扫描</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> name <span class="keyword">from</span> t <span class="keyword">where</span> name <span class="operator">!=</span> <span class="string">&#x27;test&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>MYSQL针对函数或存储过程中传递进的参数,如果是varchar类型时则默认会进行转换字符集校对规则与数据库保持一致，这个时候如果数据库编码和表编码不一致时（比如utf8和utf8mb4），就会出现索引失效的情况</li>
+</ul>
+<h1 id="最佳索引使用策略"><a href="#最佳索引使用策略" class="headerlink" title="最佳索引使用策略"></a>最佳索引使用策略</h1><ul>
+<li>对查询频次较高,且数据量比较大的表建立索引</li>
+<li>索引字段的选择,最佳候选列应当从 where子句的条件中提取,如果where子句中的组合比较多,那么应当挑选最常用、过滤效果最好的列的组合</li>
+<li>索引可以有效的提升查询数据的效率,但索引数昰不是多多益善,索引越多,维护索引的代价自然也就水涨船高。对于插入、更新、删除等DML操作比较频繁的表来说,索引过多,会引入相当高的维护代价,降低DM操作的效率,增加相应操作的时间消耗。另外索引过多的话, MySQL也会犯选择困难病,虽然最终仍然会找到一个可用的索引,但无疑提高了选择的代价</li>
+<li>独立的列</li>
+</ul>
 <h1 id="优化细节"><a href="#优化细节" class="headerlink" title="优化细节"></a>优化细节</h1><ol>
 <li><p>对查询进行优化，应尽量避免全表扫描，首先应考虑在 where 及 order by 涉及的列上建立索引。</p>
 </li>
@@ -1334,7 +1386,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">519.8k</span>&nbsp;字
+                class="white-color">521.7k</span>&nbsp;字
             
             
             

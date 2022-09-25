@@ -1011,22 +1011,24 @@
 <p>元注解的种类：</p>
 <ol>
 <li><p><strong>Retention</strong> &#x2F;&#x2F;指定注解的作用范围，三种 <strong>SOURCE，CLASS，RUNTIME</strong> </p>
-<p>只能用于修饰一个 Annotation 定义, 用于指定该 Annotation 可以保留多长时间, @Rentention 包含一个 RetentionPolicy 类型的成员变量, 使用 @Rentention 时必须为该 value</p>
-<p>@Retention 的三种值 </p>
+<p>只能用于修饰一个 Annotation 定义，用于指定该 Annotation 可以保留多长时间，@Rentention 包含一个 RetentionPolicy 类型的成员变量，使用 @Rentention 时必须为该 value @Retention 的三种值 </p>
 <ul>
-<li>RetentionPolicy.SOURCE: 编译器使用后，直接丢弃这种策略的注释 </li>
-<li>RetentionPolicy.CLASS: 编译器将把注解记录在 class 文件中。当运行 Java 程序时，JVM 不会保留注解。 这是默认值</li>
+<li>RetentionPolicy.SOURCE: 编译器使用后，直接丢弃这种策略的注释</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>RetentionPolicy.CLASS: 编译器将把注解记录在 class 文件中。当运行 Java 程序时，JVM 不会保留注解。 这是默认值<ul>
 <li>RetentionPolicy.RUNTIME：编译器将把注解记录在 class 文件中. 当运行 Java 程序时, JVM 会保留注解。程序可以通过反射获取该注解</li>
 </ul>
 </li>
-<li><p><strong>Target</strong> &#x2F;&#x2F; 指定注解可以在哪些地方使用 </p>
-</li>
-<li><p><strong>Documented</strong> &#x2F;&#x2F;指定该注解是否会在 javadoc 体现</p>
-</li>
-<li><p><strong>Inherited</strong> &#x2F;&#x2F;子类会继承父类注解</p>
-</li>
+</ul>
+<ol start="2">
+<li><strong>Target</strong> &#x2F;&#x2F; 指定注解可以在哪些地方使用 </li>
+<li><strong>Documented</strong> &#x2F;&#x2F;指定该注解是否会在 javadoc 体现</li>
+<li><strong>Inherited</strong> &#x2F;&#x2F;子类会继承父类注解</li>
 </ol>
-<h2 id="异常-Exception"><a href="#异常-Exception" class="headerlink" title="异常-Exception"></a>异常-Exception</h2><p>java语言中，将程序执行中发生的不正常情况称为“异常”(开发过程中的语法错误和逻辑错误不是异常)</p>
+<h2 id="异常-Exception"><a href="#异常-Exception" class="headerlink" title="异常-Exception"></a>异常-Exception</h2><p>java 语言中，将程序执行中发生的不正常情况称为“异常”(开发过程中的语法错误和逻辑错误不是异常)</p>
 <p>两类：</p>
 <ol>
 <li>Error—Java虚拟机无法解决的严重问题，如：JVM系统内部错误、资源耗尽等情况</li>
@@ -1330,7 +1332,7 @@
 <li>entrySet：获取所有关系</li>
 <li>values：获取所有的值</li>
 </ol>
-<h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><p>是 Map 接口使用频率最高的实现类</p>
+<h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><p>是 Map 接口使用频率最高的实现类，HashMap 的底层是<code>数组+链表+红黑树</code></p>
 <p>以 <strong>key-value</strong> 对的方式来存储数据( HashMap$Node 类型)</p>
 <p>key 不能重复，但是值可以，允许使用 null 键和 null 值</p>
 <p>如果添加相同的 key，则会覆盖原来的 key-value，等同于修改</p>
@@ -1338,7 +1340,7 @@
 <p>Hash 没有实现同步，因此是<strong>线程不安全</strong>的，方法没有做同步互斥的操作，没有 synchronized</p>
 <p>扩容机制</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/image-20220512151107133.png" alt="image-20220512151107133"></p>
-<h3 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h3><p>在HashMap的基础上，具备顺序存储的功能。底层实现是hashMap+双向列表的组合，线程不安全</p>
+<h3 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h3><p>在HashMap的基础上，具备顺序存储的功能。底层实现是hashMap+双向链表的组合，线程不安全</p>
 <p><img src="https://ysy-java.oss-cn-hangzhou.aliyuncs.com/bd8bdbd2ec9883948f28f56ee9c62d85.png" alt="img"></p>
 <h3 id="HashTable"><a href="#HashTable" class="headerlink" title="HashTable"></a>HashTable</h3><p>存放的元素是键值对：k-v</p>
 <p>hashTable 的键和值都<strong>不能为 null</strong>，否则会抛出 NullPointerException</p>
@@ -2360,7 +2362,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">519.8k</span>&nbsp;字
+                class="white-color">521.7k</span>&nbsp;字
             
             
             
